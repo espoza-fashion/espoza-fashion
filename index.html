@@ -1,18 +1,589 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espoza Fashion</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Espoza Fashion | أناقتك تبدأ من هنا</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #faf8f6;
+      color: #222;
+      line-height: 1.7;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* الهيدر */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: auto;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      color: #888;
+      margin-top: -4px;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #777;
+    }
+
+    .cart {
+      border: 1px solid #222;
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+    }
+
+    /* الهيرو */
+    .hero {
+      min-height: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 20px;
+      background:
+        linear-gradient(rgba(255,255,255,.78), rgba(255,255,255,.78)),
+        radial-gradient(circle at 20% 20%, #eadfd7, transparent 40%),
+        radial-gradient(circle at 80% 80%, #ded7d1, transparent 45%);
+    }
+
+    .hero-content {
+      max-width: 720px;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: #777;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(45px, 9vw, 85px);
+      line-height: 1;
+      margin-bottom: 20px;
+      letter-spacing: -2px;
+    }
+
+    .hero p {
+      max-width: 560px;
+      margin: auto;
+      color: #666;
+      font-size: 17px;
+    }
+
+    .hero-buttons {
+      margin-top: 35px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 30px;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: .2s;
+    }
+
+    .btn-dark {
+      background: #222;
+      color: white;
+    }
+
+    .btn-light {
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* الأقسام */
+    .section {
+      max-width: 1200px;
+      margin: auto;
+      padding: 75px 20px;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-heading small {
+      color: #888;
+      letter-spacing: 2px;
+    }
+
+    .section-heading h2 {
+      font-size: 35px;
+      margin-top: 5px;
+    }
+
+    /* التصنيفات */
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .category {
+      min-height: 230px;
+      background: #eee;
+      display: flex;
+      align-items: flex-end;
+      padding: 25px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category:nth-child(1) {
+      background: linear-gradient(135deg, #e9ded7, #c9bbb2);
+    }
+
+    .category:nth-child(2) {
+      background: linear-gradient(135deg, #ddd, #aaa);
+    }
+
+    .category:nth-child(3) {
+      background: linear-gradient(135deg, #eee9e4, #c7b9ad);
+    }
+
+    .category div {
+      position: relative;
+      z-index: 2;
+    }
+
+    .category h3 {
+      font-size: 25px;
+      margin-bottom: 4px;
+    }
+
+    .category p {
+      font-size: 13px;
+      color: #555;
+    }
+
+    /* المنتجات */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .product {
+      background: white;
+      border: 1px solid #eee;
+      overflow: hidden;
+    }
+
+    .product-image {
+      height: 330px;
+      background: linear-gradient(145deg, #eee9e5, #d5ccc5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 13px;
+    }
+
+    .product-info {
+      padding: 17px;
+    }
+
+    .product-info h3 {
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+
+    .product-info p {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* مميزات */
+    .features {
+      background: #222;
+      color: white;
+    }
+
+    .features-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 60px 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .feature h3 {
+      margin-bottom: 5px;
+    }
+
+    .feature p {
+      color: #bbb;
+      font-size: 13px;
+    }
+
+    /* دعوة */
+    .cta {
+      text-align: center;
+      padding: 90px 20px;
+      background: #eee8e3;
+    }
+
+    .cta h2 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    /* الفوتر */
+    footer {
+      background: #111;
+      color: white;
+      padding: 50px 20px 25px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+    }
+
+    footer h3 {
+      margin-bottom: 12px;
+    }
+
+    footer p,
+    footer a {
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .copyright {
+      max-width: 1200px;
+      margin: 40px auto 0;
+      padding-top: 20px;
+      border-top: 1px solid #333;
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+    }
+
+    /* واتساب */
+    .whatsapp {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #25d366;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.2);
+      z-index: 2000;
+    }
+
+    /* الموبايل */
+    @media (max-width: 800px) {
+      nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: 560px;
+      }
+
+      .categories,
+      .products,
+      .features-inner,
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .product-image {
+        height: 260px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .categories,
+      .products,
+      .features-inner,
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 55px;
+      }
+
+      .category {
+        min-height: 190px;
+      }
+
+      .product-image {
+        height: 340px;
+      }
+
+      .footer-inner {
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1>Espoza Fashion</h1>
+<header>
+  <div class="nav">
+    <a href="#" class="logo">
+      ESPOZA
+      <span>FASHION</span>
+    </a>
 
-    <p>أهلًا وسهلًا في متجرنا ❤️</p>
+    <nav>
+      <a href="#home">الرئيسية</a>
+      <a href="#categories">التصنيفات</a>
+      <a href="#products">المنتجات</a>
+      <a href="#contact">تواصل معنا</a>
+    </nav>
 
-    <button>تسوقي الآن</button>
+    <a href="#products" class="cart">تسوقي الآن</a>
+  </div>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="eyebrow">ESPOZA FASHION</div>
+
+    <h1>أناقتك تبدأ هنا</h1>
+
+    <p>
+      اكتشفي تشكيلتنا المختارة من الأزياء النسائية
+      بتصاميم أنيقة ولمسة مميزة تناسب ذوقك.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#products" class="btn btn-dark">تسوقي الآن</a>
+      <a href="#categories" class="btn btn-light">اكتشفي المجموعة</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="categories">
+  <div class="section-heading">
+    <small>SHOP BY CATEGORY</small>
+    <h2>تسوّقي حسب القسم</h2>
+  </div>
+
+  <div class="categories">
+    <a href="#products" class="category">
+      <div>
+        <h3>فساتين</h3>
+        <p>تصاميم أنيقة لكل مناسبة</p>
+      </div>
+    </a>
+
+    <a href="#products" class="category">
+      <div>
+        <h3>أطقم</h3>
+        <p>إطلالات متكاملة ومميزة</p>
+      </div>
+    </a>
+
+    <a href="#products" class="category">
+      <div>
+        <h3>عبايات</h3>
+        <p>أناقة راقية بتفاصيل جميلة</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="section-heading">
+    <small>NEW COLLECTION</small>
+    <h2>أحدث القطع</h2>
+  </div>
+
+  <div class="products">
+
+    <article class="product">
+      <div class="product-image">صورة المنتج</div>
+      <div class="product-info">
+        <h3>فستان Espoza</h3>
+        <p>متوفر بعدة مقاسات وألوان</p>
+        <div class="price">₪ 250</div>
+      </div>
+    </article>
+
+    <article class="product">
+      <div class="product-image">صورة المنتج</div>
+      <div class="product-info">
+        <h3>طقم Espoza</h3>
+        <p>تصميم أنيق ومريح</p>
+        <div class="price">₪ 270</div>
+      </div>
+    </article>
+
+    <article class="product">
+      <div class="product-image">صورة المنتج</div>
+      <div class="product-info">
+        <h3>عباية Espoza</h3>
+        <p>خامة فاخرة وتفاصيل مميزة</p>
+        <div class="price">₪ 290</div>
+      </div>
+    </article>
+
+    <article class="product">
+      <div class="product-image">صورة المنتج</div>
+      <div class="product-info">
+        <h3>فستان جديد</h3>
+        <p>وصل حديثًا إلى المجموعة</p>
+        <div class="price">₪ 300</div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-inner">
+
+    <div class="feature">
+      <div class="feature-icon">✦</div>
+      <h3>اختيارات مميزة</h3>
+      <p>نختار لك تصاميم تناسب ذوقك.</p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">♡</div>
+      <h3>جودة وأناقة</h3>
+      <p>نهتم بالتفاصيل حتى تظهري بأجمل إطلالة.</p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">⌁</div>
+      <h3>توصيل</h3>
+      <p>نوصل طلبك إلى مختلف المناطق.</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="cta">
+  <h2>جاهزة لإطلالتك الجديدة؟</h2>
+  <p>اختاري قطعتك المفضلة وتواصلي معنا للطلب.</p>
+  <a href="#products" class="btn btn-dark">شاهدي المجموعة</a>
+</section>
+
+<footer id="contact">
+  <div class="footer-inner">
+
+    <div>
+      <h3>ESPOZA FASHION</h3>
+      <p>
+        متجر أزياء نسائية يهتم بالأناقة والتفاصيل
+        ويقدم لك اختيارات مميزة بعناية.
+      </p>
+    </div>
+
+    <div>
+      <h3>روابط</h3>
+      <p><a href="#home">الرئيسية</a></p>
+      <p><a href="#products">المنتجات</a></p>
+      <p><a href="#categories">التصنيفات</a></p>
+    </div>
+
+    <div>
+      <h3>تواصل</h3>
+      <p>واتساب</p>
+      <p>إنستغرام</p>
+      <p>فيسبوك</p>
+    </div>
+
+  </div>
+
+  <div class="copyright">
+    © 2026 Espoza Fashion — جميع الحقوق محفوظة
+  </div>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/" target="_blank">✆</a>
 
 </body>
 </html>
+```
+
