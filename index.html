@@ -3,967 +3,2378 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Espoza Fashion</title>
 
+<meta name="description"
+content="Espoza Fashion — أناقتك تبدأ هنا">
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Tahoma,sans-serif;background:#faf8f6;color:#222;line-height:1.7}
-a{text-decoration:none;color:inherit}
-button,input,select,textarea{font-family:inherit}
-
-header{background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:1000}
-.nav{max-width:1200px;margin:auto;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.logo{font-size:25px;font-weight:800;letter-spacing:1px}
-.logo span{display:block;font-size:11px;font-weight:400;letter-spacing:3px;color:#888;margin-top:-4px}
-
-nav{display:flex;gap:25px;font-size:14px}
-nav a:hover{color:#777}
-
-.lang-btn{border:1px solid #222;background:white;padding:8px 14px;border-radius:30px;cursor:pointer;font-size:13px}
-
-.hero{min-height:620px;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 20px;background:linear-gradient(rgba(255,255,255,.78),rgba(255,255,255,.78)),radial-gradient(circle at 20% 20%,#eadfd7,transparent 40%),radial-gradient(circle at 80% 80%,#ded7d1,transparent 45%)}
-.hero-content{max-width:720px}
-.eyebrow{font-size:13px;letter-spacing:4px;color:#777;margin-bottom:18px}
-.hero h1{font-size:clamp(45px,9vw,85px);line-height:1;margin-bottom:20px}
-.hero p{max-width:560px;margin:auto;color:#666;font-size:17px}
-.hero-buttons{margin-top:35px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-
-.btn{display:inline-block;padding:14px 30px;border-radius:4px;font-weight:bold;cursor:pointer}
-.btn-dark{background:#222;color:white}
-.btn-light{background:white;border:1px solid #ddd}
-
-.section{max-width:1200px;margin:auto;padding:75px 20px}
-.section-heading{text-align:center;margin-bottom:40px}
-.section-heading small{color:#888;letter-spacing:2px}
-.section-heading h2{font-size:35px;margin-top:5px}
-
-.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.category{min-height:230px;display:flex;align-items:flex-end;padding:25px;background:linear-gradient(135deg,#e9ded7,#c9bbb2)}
-.category:nth-child(2){background:linear-gradient(135deg,#ddd,#aaa)}
-.category:nth-child(3){background:linear-gradient(135deg,#eee9e4,#c7b9ad)}
-.category h3{font-size:25px}
-.category p{font-size:13px;color:#555}
-
-.products{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.product{background:white;border:1px solid #eee;overflow:hidden}
-.product-image{height:330px;background:linear-gradient(145deg,#eee9e5,#d5ccc5);display:flex;align-items:center;justify-content:center;color:#999}
-.product-info{padding:17px}
-.product-info h3{font-size:17px}
-.product-info p{font-size:13px;color:#888;margin-bottom:8px}
-.price{font-weight:bold;font-size:16px;margin-bottom:14px}
-.order-btn{width:100%;background:#222;color:white;border:0;padding:12px;cursor:pointer;border-radius:4px;font-weight:bold}
-
-.features{background:#222;color:white}
-.features-inner{max-width:1200px;margin:auto;padding:60px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;text-align:center}
-.feature-icon{font-size:28px}
-.feature p{color:#bbb;font-size:13px}
-
-.cta{text-align:center;padding:90px 20px;background:#eee8e3}
-.cta h2{font-size:42px;margin-bottom:10px}
-.cta p{color:#666;margin-bottom:25px}
-
-footer{background:#111;color:white;padding:50px 20px 25px}
-.footer-inner{max-width:1200px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px}
-footer h3{margin-bottom:12px}
-footer p,footer a{color:#aaa;font-size:13px}
-.copyright{max-width:1200px;margin:40px auto 0;padding-top:20px;border-top:1px solid #333;text-align:center;color:#777;font-size:12px}
-
-.whatsapp{position:fixed;bottom:20px;left:20px;width:58px;height:58px;border-radius:50%;background:#25d366;color:white;display:flex;align-items:center;justify-content:center;font-size:25px;box-shadow:0 5px 20px rgba(0,0,0,.2);z-index:2000}
-
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:5000;overflow-y:auto;padding:25px 15px}
-.modal-box{max-width:650px;margin:30px auto;background:white;padding:28px;border-radius:10px;position:relative}
-.close-modal{position:absolute;left:18px;top:14px;font-size:28px;cursor:pointer;color:#777;background:none;border:0}
-.modal-title{text-align:center;margin-bottom:25px}
-.modal-title h2{font-size:27px}
-.modal-title p{color:#888;font-size:13px}
-.selected-product{background:#f6f3f0;padding:15px;border-radius:7px;margin-bottom:20px}
-.selected-product strong{display:block;font-size:17px}
-
-.form-group{margin-bottom:17px}
-.form-group label{display:block;font-weight:bold;font-size:14px;margin-bottom:6px}
-.form-group input,.form-group select,.form-group textarea{width:100%;border:1px solid #ddd;border-radius:5px;padding:12px;font-size:14px;background:white}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-.delivery-box{background:#f7f7f7;padding:17px;border-radius:7px;margin:20px 0}
-.summary-line{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px}
-.total-line{border-top:1px solid #ddd;padding-top:12px;margin-top:10px;font-size:18px;font-weight:bold}
-
-.cash-note{background:#f2eee9;padding:12px;border-radius:6px;text-align:center;font-size:13px;margin-bottom:18px}
-.whatsapp-submit{width:100%;background:#25d366;color:white;border:0;padding:15px;border-radius:5px;font-size:16px;font-weight:bold;cursor:pointer}
-.region-label{font-size:12px;color:#777;margin-top:5px}
-
-@media(max-width:800px){
-nav{display:none}
-.categories,.products,.features-inner,.footer-inner{grid-template-columns:1fr 1fr}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
-@media(max-width:520px){
-.categories,.products,.features-inner,.footer-inner{grid-template-columns:1fr}
-.hero h1{font-size:55px}
-.form-row{grid-template-columns:1fr}
-.modal-box{padding:22px 16px}
-.footer-inner{text-align:center}
+
+:root{
+  --wine:#704552;
+  --wine-dark:#50303a;
+  --cream:#fbf8f6;
+  --soft:#f3eaec;
+  --text:#292428;
+  --muted:#777078;
+  --white:#fff;
+  --border:#e7dfe1;
+  --whatsapp:#25D366;
 }
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  line-height:1.6;
+}
+
+button,
+input,
+select{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* ================= HEADER ================= */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+
+.nav{
+  max-width:1200px;
+  min-height:74px;
+  margin:auto;
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  text-decoration:none;
+  color:var(--text);
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:2px;
+  line-height:1;
+}
+
+.logo span{
+  display:block;
+  color:var(--wine);
+  font-size:10px;
+  letter-spacing:5px;
+  margin-top:5px;
+}
+
+.lang-btn{
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  padding:8px 15px;
+  border-radius:999px;
+  font-weight:800;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+  max-width:1200px;
+  margin:22px auto;
+  padding:82px 25px;
+  border-radius:30px;
+  text-align:center;
+  color:white;
+  background:
+    linear-gradient(135deg,#875766,#54333e);
+  box-shadow:0 15px 45px rgba(70,40,50,.12);
+}
+
+.hero small{
+  display:block;
+  font-size:11px;
+  letter-spacing:5px;
+  opacity:.85;
+  margin-bottom:13px;
+}
+
+.hero h1{
+  font-size:clamp(38px,7vw,65px);
+  font-weight:900;
+  margin-bottom:12px;
+}
+
+.hero p{
+  font-size:17px;
+  opacity:.92;
+}
+
+/* ================= TRUST ================= */
+
+.trust{
+  max-width:1000px;
+  margin:35px auto;
+  padding:0 20px;
+}
+
+.trust-box{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:30px 20px;
+  text-align:center;
+  box-shadow:0 10px 35px rgba(70,40,50,.05);
+}
+
+.trust-number{
+  color:var(--wine);
+  font-size:42px;
+  font-weight:900;
+}
+
+.trust-text{
+  color:var(--muted);
+  font-size:15px;
+}
+
+/* ================= STORY ================= */
+
+.story{
+  max-width:1000px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+.story-box{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:35px 25px;
+  text-align:center;
+}
+
+.since{
+  color:var(--wine);
+  font-size:16px;
+  letter-spacing:3px;
+  font-weight:900;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.story-box h2{
+  font-size:29px;
+  margin-bottom:8px;
+}
+
+.story-box p{
+  color:var(--muted);
+  max-width:700px;
+  margin:auto;
+}
+
+/* ================= SOCIAL STATS ================= */
+
+.stats{
+  max-width:1000px;
+  margin:35px auto 55px;
+  padding:0 20px;
+}
+
+.stats-title{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.stats-title h2{
+  font-size:27px;
+}
+
+.stats-title p{
+  color:var(--muted);
+}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.stat-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px 10px;
+  text-align:center;
+  transition:.2s;
+}
+
+.stat-card:hover{
+  transform:translateY(-3px);
+}
+
+.stat-name{
+  font-size:14px;
+  font-weight:900;
+  color:var(--wine);
+}
+
+.stat-number{
+  font-size:25px;
+  font-weight:900;
+  margin-top:3px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* ================= CATEGORIES ================= */
+
+.categories{
+  max-width:1200px;
+  margin:25px auto;
+  padding:0 20px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.category-btn{
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  padding:11px 23px;
+  border-radius:999px;
+  font-weight:800;
+}
+
+.category-btn.active,
+.category-btn:hover{
+  background:var(--wine);
+  border-color:var(--wine);
+  color:#fff;
+}
+
+/* ================= PRODUCTS ================= */
+
+.products-section{
+  max-width:1200px;
+  margin:35px auto 75px;
+  padding:0 20px;
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:28px;
+}
+
+.section-title h2{
+  font-size:30px;
+  font-weight:900;
+}
+
+.section-title p{
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.product-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:21px;
+  overflow:hidden;
+  transition:.25s;
+}
+
+.product-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 15px 40px rgba(80,50,60,.12);
+}
+
+.product-image{
+  width:100%;
+  aspect-ratio:4/5;
+  object-fit:cover;
+  display:block;
+  background:#eee;
+}
+
+.product-info{
+  padding:16px;
+}
+
+.product-name{
+  font-size:19px;
+  font-weight:900;
+}
+
+.price{
+  color:var(--wine);
+  font-size:19px;
+  font-weight:900;
+  margin:4px 0 8px;
+}
+
+.old-price{
+  color:#999;
+  text-decoration:line-through;
+  font-size:14px;
+  margin-right:5px;
+}
+
+.sizes{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:11px;
+}
+
+.colors{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-bottom:12px;
+}
+
+.color-tag{
+  background:var(--soft);
+  color:var(--wine-dark);
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.order-btn{
+  width:100%;
+  border:0;
+  background:var(--wine);
+  color:#fff;
+  padding:12px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:15px;
+}
+
+.order-btn:hover{
+  background:var(--wine-dark);
+}
+
+/* ================= SOCIAL LINKS ================= */
+
+.social-section{
+  max-width:1000px;
+  margin:0 auto 70px;
+  padding:0 20px;
+  text-align:center;
+}
+
+.social-section h2{
+  font-size:28px;
+}
+
+.social-section p{
+  color:var(--muted);
+  margin:5px 0 20px;
+}
+
+.socials{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.social{
+  text-decoration:none;
+  background:white;
+  color:var(--text);
+  border:1px solid var(--border);
+  padding:12px 20px;
+  border-radius:999px;
+  font-weight:900;
+  transition:.2s;
+}
+
+.social:hover{
+  background:var(--wine);
+  color:white;
+}
+
+/* ================= WHATSAPP ================= */
+
+.whatsapp-float{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  z-index:1500;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:var(--whatsapp);
+  color:white;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:27px;
+  box-shadow:0 8px 25px rgba(0,0,0,.22);
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  background:rgba(20,15,18,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:100%;
+  max-width:560px;
+  max-height:92vh;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:25px;
+  padding:25px;
+  position:relative;
+}
+
+.close{
+  position:absolute;
+  left:18px;
+  top:12px;
+  border:0;
+  background:none;
+  font-size:29px;
+  color:#777;
+}
+
+.modal-title{
+  font-size:25px;
+  font-weight:900;
+}
+
+.modal-subtitle{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:18px;
+}
+
+.selected-product{
+  background:var(--soft);
+  border-radius:14px;
+  padding:13px;
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+.field{
+  margin-bottom:14px;
+}
+
+.field label{
+  display:block;
+  font-size:14px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.field input,
+.field select{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  outline:none;
+  font-size:15px;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--wine);
+}
+
+.summary{
+  background:#faf7f8;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:15px;
+  margin:18px 0;
+}
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+}
+
+.summary-total{
+  border-top:1px solid var(--border);
+  padding-top:10px;
+  margin-top:10px;
+  color:var(--wine);
+  font-size:19px;
+  font-weight:900;
+}
+
+.whatsapp-order{
+  width:100%;
+  border:0;
+  background:var(--whatsapp);
+  color:white;
+  padding:14px;
+  border-radius:13px;
+  font-size:16px;
+  font-weight:900;
+}
+
+.cod-note{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:9px;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+  background:#292226;
+  color:white;
+  text-align:center;
+  padding:42px 20px 27px;
+}
+
+footer strong{
+  font-size:21px;
+  letter-spacing:2px;
+}
+
+.footer-note{
+  color:#d3c9cd;
+  margin-top:8px;
+  font-size:13px;
+}
+
+.developer{
+  display:inline-block;
+  margin-top:22px;
+  color:white;
+  text-decoration:none;
+  font-size:12px;
+  opacity:.82;
+}
+
+/* ================= ENGLISH ================= */
+
+body.en{
+  direction:ltr;
+}
+
+body.en .modal-box{
+  direction:ltr;
+}
+
+body.en .close{
+  left:auto;
+  right:18px;
+}
+
+body.en .old-price{
+  margin-right:0;
+  margin-left:5px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:950px){
+
+  .products-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .stats-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:700px){
+
+  .hero{
+    margin:12px;
+    padding:58px 18px;
+  }
+
+  .products-section{
+    padding:0 12px;
+  }
+
+  .categories{
+    padding:0 12px;
+  }
+
+  .products-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+
+  .product-info{
+    padding:12px;
+  }
+
+  .product-name{
+    font-size:16px;
+  }
+
+  .price{
+    font-size:17px;
+  }
+
+  .sizes{
+    font-size:12px;
+  }
+
+  .order-btn{
+    font-size:13px;
+    padding:10px;
+  }
+
+  .trust-number{
+    font-size:32px;
+  }
+
+  .story-box{
+    padding:28px 18px;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- ================= HEADER ================= -->
+
 <header>
-<div class="nav">
 
-<a href="#" class="logo">
-ESPOZA
-<span>FASHION</span>
-</a>
+  <div class="nav">
 
-<nav>
-<a href="#home" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
-<a href="#categories" data-ar="التصنيفات" data-en="Categories">التصنيفات</a>
-<a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a>
-<a href="#contact" data-ar="تواصل معنا" data-en="Contact">تواصل معنا</a>
-</nav>
+    <a href="#" class="logo">
+      ESPOZA
+      <span>FASHION</span>
+    </a>
 
-<button class="lang-btn" onclick="toggleLanguage()">English</button>
+    <button
+      class="lang-btn"
+      onclick="toggleLanguage()"
+      id="languageBtn">
+      EN
+    </button>
 
-</div>
+  </div>
+
 </header>
 
 
-<section class="hero" id="home">
+<!-- ================= HERO ================= -->
 
-<div class="hero-content">
+<section class="hero">
 
-<div class="eyebrow">ESPOZA FASHION</div>
+  <small>ESPOZA FASHION</small>
 
-<h1 data-ar="أناقتك تبدأ هنا" data-en="Your Elegance Starts Here">
-أناقتك تبدأ هنا
-</h1>
+  <h1 id="heroTitle">
+    أناقتك تبدأ هنا
+  </h1>
 
-<p data-ar="اكتشفي تشكيلتنا المختارة من الأزياء النسائية بتصاميم أنيقة ولمسة مميزة تناسب ذوقك."
-data-en="Discover our carefully selected women's fashion collection, designed with elegance and a unique touch.">
-اكتشفي تشكيلتنا المختارة من الأزياء النسائية بتصاميم أنيقة ولمسة مميزة تناسب ذوقك.
-</p>
+  <p id="heroText">
+    اختاري إطلالتك المفضلة وخلي أناقتك تحكي عنك ✨
+  </p>
 
-<div class="hero-buttons">
-
-<a href="#products" class="btn btn-dark"
-data-ar="تسوقي الآن" data-en="Shop Now">
-تسوقي الآن
-</a>
-
-<a href="#categories" class="btn btn-light"
-data-ar="اكتشفي المجموعة" data-en="Discover Collection">
-اكتشفي المجموعة
-</a>
-
-</div>
-
-</div>
 </section>
 
 
-<section class="section" id="categories">
+<!-- ================= CUSTOMERS ================= -->
 
-<div class="section-heading">
-<small>SHOP BY CATEGORY</small>
-<h2 data-ar="تسوّقي حسب القسم" data-en="Shop by Category">
-تسوّقي حسب القسم
-</h2>
-</div>
+<section class="trust">
+
+  <div class="trust-box">
+
+    <div class="trust-number">
+      5,775+
+    </div>
+
+    <div
+      class="trust-text"
+      id="trustText">
+      زبونة اختارت Espoza Fashion 🤍
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= STORY ================= -->
+
+<section class="story">
+
+  <div class="story-box">
+
+    <div class="since">
+      Since 2019
+    </div>
+
+    <h2 id="storyTitle">
+      حكاية أناقة بدأت من 2019
+    </h2>
+
+    <p id="storyText">
+      من أول خطوة إلى اليوم، Espoza Fashion مستمرة بتقديم
+      اختيارات أنيقة للمرأة اللي بتحب تتميز بإطلالتها 🤍
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- ================= SOCIAL STATS ================= -->
+
+<section class="stats">
+
+  <div class="stats-title">
+
+    <h2 id="statsTitle">
+      مجتمع Espoza Fashion
+    </h2>
+
+    <p id="statsText">
+      آلاف المتابعين معنا على منصات التواصل 🤍
+    </p>
+
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-name">Facebook</div>
+      <div class="stat-number">22,021</div>
+      <div class="stat-label">Followers</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-name">Instagram</div>
+      <div class="stat-number">900</div>
+      <div class="stat-label">Followers</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-name">TikTok</div>
+      <div class="stat-number">700</div>
+      <div class="stat-label">Followers</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-name">Snapchat</div>
+      <div class="stat-number">500</div>
+      <div class="stat-label">Followers</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CATEGORIES ================= -->
 
 <div class="categories">
 
-<a href="#products" class="category">
-<div>
-<h3 data-ar="فساتين" data-en="Dresses">فساتين</h3>
-<p data-ar="تصاميم أنيقة لكل مناسبة" data-en="Elegant designs for every occasion">
-تصاميم أنيقة لكل مناسبة
-</p>
-</div>
-</a>
+  <button
+    class="category-btn active"
+    onclick="filterProducts('all',this)"
+    id="allBtn">
+    الكل
+  </button>
 
-<a href="#products" class="category">
-<div>
-<h3 data-ar="أطقم" data-en="Sets">أطقم</h3>
-<p data-ar="إطلالات متكاملة ومميزة" data-en="Complete and stylish looks">
-إطلالات متكاملة ومميزة
-</p>
-</div>
-</a>
+  <button
+    class="category-btn"
+    onclick="filterProducts('dresses',this)"
+    id="dressesBtn">
+    فساتين
+  </button>
 
-<a href="#products" class="category">
-<div>
-<h3 data-ar="عبايات" data-en="Abayas">عبايات</h3>
-<p data-ar="أناقة راقية بتفاصيل جميلة" data-en="Elegant abayas with beautiful details">
-أناقة راقية بتفاصيل جميلة
-</p>
-</div>
-</a>
+  <button
+    class="category-btn"
+    onclick="filterProducts('sets',this)"
+    id="setsBtn">
+    أطقم
+  </button>
 
-</div>
-</section>
-
-
-<section class="section" id="products">
-
-<div class="section-heading">
-<small>NEW COLLECTION</small>
-<h2 data-ar="أحدث القطع" data-en="Latest Collection">
-أحدث القطع
-</h2>
-</div>
-
-<div class="products">
-
-<article class="product">
-
-<div class="product-image">صورة المنتج</div>
-
-<div class="product-info">
-<h3>Espoza Dress</h3>
-<p data-ar="متوفر بعدة مقاسات وألوان" data-en="Available in different sizes and colors">
-متوفر بعدة مقاسات وألوان
-</p>
-<div class="price">₪ 250</div>
-
-<button class="order-btn"
-onclick="openOrder('Espoza Dress',250)"
-data-ar="اطلبي الآن" data-en="Order Now">
-اطلبي الآن
-</button>
-</div>
-
-</article>
-
-
-<article class="product">
-
-<div class="product-image">صورة المنتج</div>
-
-<div class="product-info">
-<h3>Espoza Set</h3>
-<p data-ar="تصميم أنيق ومريح" data-en="Elegant and comfortable design">
-تصميم أنيق ومريح
-</p>
-<div class="price">₪ 270</div>
-
-<button class="order-btn"
-onclick="openOrder('Espoza Set',270)"
-data-ar="اطلبي الآن" data-en="Order Now">
-اطلبي الآن
-</button>
-</div>
-
-</article>
-
-
-<article class="product">
-
-<div class="product-image">صورة المنتج</div>
-
-<div class="product-info">
-<h3>Espoza Abaya</h3>
-<p data-ar="خامة فاخرة وتفاصيل مميزة" data-en="Premium fabric and beautiful details">
-خامة فاخرة وتفاصيل مميزة
-</p>
-<div class="price">₪ 290</div>
-
-<button class="order-btn"
-onclick="openOrder('Espoza Abaya',290)"
-data-ar="اطلبي الآن" data-en="Order Now">
-اطلبي الآن
-</button>
-</div>
-
-</article>
-
-
-<article class="product">
-
-<div class="product-image">صورة المنتج</div>
-
-<div class="product-info">
-<h3>New Espoza Dress</h3>
-<p data-ar="وصل حديثًا إلى المجموعة" data-en="New arrival">
-وصل حديثًا إلى المجموعة
-</p>
-<div class="price">₪ 300</div>
-
-<button class="order-btn"
-onclick="openOrder('New Espoza Dress',300)"
-data-ar="اطلبي الآن" data-en="Order Now">
-اطلبي الآن
-</button>
-</div>
-
-</article>
+  <button
+    class="category-btn"
+    onclick="filterProducts('abayas',this)"
+    id="abayasBtn">
+    عبايات
+  </button>
 
 </div>
-</section>
 
 
-<section class="features">
+<!-- ================= PRODUCTS ================= -->
 
-<div class="features-inner">
+<main class="products-section">
 
-<div class="feature">
-<div class="feature-icon">✦</div>
-<h3 data-ar="اختيارات مميزة" data-en="Special Selection">اختيارات مميزة</h3>
-<p data-ar="نختار لك تصاميم تناسب ذوقك." data-en="We select designs that match your style.">
-نختار لك تصاميم تناسب ذوقك.
-</p>
-</div>
+  <div class="section-title">
 
-<div class="feature">
-<div class="feature-icon">♡</div>
-<h3 data-ar="جودة وأناقة" data-en="Quality & Elegance">جودة وأناقة</h3>
-<p data-ar="نهتم بالتفاصيل حتى تظهري بأجمل إطلالة." data-en="We care about every detail.">
-نهتم بالتفاصيل حتى تظهري بأجمل إطلالة.
-</p>
-</div>
+    <h2 id="collectionTitle">
+      تشكيلة الفساتين
+    </h2>
 
-<div class="feature">
-<div class="feature-icon">⌁</div>
-<h3 data-ar="توصيل" data-en="Delivery">توصيل</h3>
-<p data-ar="نوصل طلبك إلى مختلف المناطق." data-en="We deliver to different areas.">
-نوصل طلبك إلى مختلف المناطق.
-</p>
-</div>
+    <p id="collectionText">
+      اختاري القطعة اللي بتحبيها واطلبيها بسهولة عبر واتساب
+    </p>
 
-</div>
-</section>
+  </div>
+
+  <div
+    class="products-grid"
+    id="productsGrid">
+  </div>
+
+</main>
 
 
-<section class="cta">
+<!-- ================= SOCIAL LINKS ================= -->
 
-<h2 data-ar="جاهزة لإطلالتك الجديدة؟" data-en="Ready for Your New Look?">
-جاهزة لإطلالتك الجديدة؟
-</h2>
+<section class="social-section">
 
-<p data-ar="اختاري قطعتك المفضلة وتواصلي معنا للطلب."
-data-en="Choose your favorite piece and place your order.">
-اختاري قطعتك المفضلة وتواصلي معنا للطلب.
-</p>
+  <h2 id="socialTitle">
+    تابعينا على صفحاتنا 🤍
+  </h2>
 
-<a href="#products" class="btn btn-dark"
-data-ar="شاهدي المجموعة" data-en="View Collection">
-شاهدي المجموعة
-</a>
+  <p id="socialText">
+    كوني أول وحدة تشوفي جديد Espoza Fashion
+  </p>
+
+  <div class="socials">
+
+    <a
+      class="social"
+      href="https://www.facebook.com/share/1DTqKE5crZ/?mibextid=wwXIfr"
+      target="_blank"
+      rel="noopener">
+      Facebook
+    </a>
+
+    <a
+      class="social"
+      href="https://www.instagram.com/espoza_fashion?igsi=MWx0OGhveWlqcnIybg=="
+      target="_blank"
+      rel="noopener">
+      Instagram
+    </a>
+
+    <a
+      class="social"
+      href="https://www.tiktok.com/@espoza.fashion?_r=1&_t=ZS-99OhXhFNkqf"
+      target="_blank"
+      rel="noopener">
+      TikTok
+    </a>
+
+    <a
+      class="social"
+      href="https://snapchat.com/t/X93VR0o5"
+      target="_blank"
+      rel="noopener">
+      Snapchat
+    </a>
+
+  </div>
 
 </section>
 
 
-<footer id="contact">
+<!-- ================= WHATSAPP FLOAT ================= -->
 
-<div class="footer-inner">
+<a
+  class="whatsapp-float"
+  href="https://wa.me/972595461861"
+  target="_blank"
+  rel="noopener"
+  aria-label="WhatsApp">
+  ☎
+</a>
 
-<div>
-<h3>ESPOZA FASHION</h3>
-<p data-ar="متجر أزياء نسائية يهتم بالأناقة والتفاصيل ويقدم لك اختيارات مميزة بعناية."
-data-en="A women's fashion store focused on elegance, quality and carefully selected pieces.">
-متجر أزياء نسائية يهتم بالأناقة والتفاصيل ويقدم لك اختيارات مميزة بعناية.
-</p>
+
+<!-- ================= ORDER MODAL ================= -->
+
+<div
+  class="modal"
+  id="orderModal">
+
+  <div class="modal-box">
+
+    <button
+      class="close"
+      onclick="closeModal()">
+      ×
+    </button>
+
+    <div
+      class="modal-title"
+      id="modalTitle">
+      إتمام الطلب
+    </div>
+
+    <div
+      class="modal-subtitle"
+      id="modalSubtitle">
+      عبّي البيانات، ورح يتحول طلبك مباشرة إلى واتساب.
+    </div>
+
+    <div
+      class="selected-product"
+      id="selectedProduct">
+    </div>
+
+
+    <!-- COLOR -->
+
+    <div
+      class="field"
+      id="colorField"
+      style="display:none;">
+
+      <label
+        for="color"
+        id="colorLabel">
+        اللون
+      </label>
+
+      <select
+        id="color">
+      </select>
+
+    </div>
+
+
+    <!-- SIZE -->
+
+    <div class="field">
+
+      <label
+        for="size"
+        id="sizeLabel">
+        المقاس
+      </label>
+
+      <select
+        id="size"
+        required>
+      </select>
+
+    </div>
+
+
+    <!-- NAME -->
+
+    <div class="field">
+
+      <label
+        for="name"
+        id="nameLabel">
+        الاسم الكامل
+      </label>
+
+      <input
+        id="name"
+        type="text"
+        required
+        placeholder="اكتبي اسمك الكامل">
+
+    </div>
+
+
+    <!-- PHONE -->
+
+    <div class="field">
+
+      <label
+        for="phone"
+        id="phoneLabel">
+        رقم الهاتف
+      </label>
+
+      <input
+        id="phone"
+        type="tel"
+        required
+        placeholder="05XXXXXXXX">
+
+    </div>
+
+
+    <!-- CITY -->
+
+    <div class="field">
+
+      <label
+        for="city"
+        id="cityLabel">
+        المدينة / المنطقة
+      </label>
+
+      <select
+        id="city"
+        required
+        onchange="updateDelivery()">
+
+        <option value="">
+          اختاري المدينة / المنطقة
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ADDRESS -->
+
+    <div class="field">
+
+      <label
+        for="address"
+        id="addressLabel">
+        العنوان بالتفصيل
+      </label>
+
+      <input
+        id="address"
+        type="text"
+        required
+        placeholder="الحي، الشارع، رقم البيت...">
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+      <div class="summary-row">
+
+        <span id="productSummaryLabel">
+          سعر القطعة
+        </span>
+
+        <strong id="productPrice">
+          ₪0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row">
+
+        <span id="deliverySummaryLabel">
+          التوصيل
+        </span>
+
+        <strong id="deliveryPrice">
+          ₪0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-row summary-total">
+
+        <span id="totalLabel">
+          المجموع
+        </span>
+
+        <strong id="totalPrice">
+          ₪0
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="whatsapp-order"
+      onclick="sendOrder()"
+      id="whatsappOrderBtn">
+
+      📱 تأكيد الطلب عبر واتساب
+
+    </button>
+
+
+    <div
+      class="cod-note"
+      id="codNote">
+      الدفع عند الاستلام 💵
+    </div>
+
+  </div>
+
 </div>
 
-<div>
-<h3 data-ar="روابط" data-en="Links">روابط</h3>
-<p><a href="#home" data-ar="الرئيسية" data-en="Home">الرئيسية</a></p>
-<p><a href="#products" data-ar="المنتجات" data-en="Products">المنتجات</a></p>
-<p><a href="#categories" data-ar="التصنيفات" data-en="Categories">التصنيفات</a></p>
-</div>
 
-<div>
-<h3 data-ar="تواصل" data-en="Contact">تواصل</h3>
-<p>WhatsApp</p>
-<p>Instagram</p>
-<p>Facebook</p>
-</div>
+<!-- ================= FOOTER ================= -->
 
-</div>
+<footer>
 
-<div class="copyright">
-© 2026 Espoza Fashion — <span data-ar="جميع الحقوق محفوظة" data-en="All Rights Reserved">جميع الحقوق محفوظة</span>
-</div>
+  <strong>
+    ESPOZA FASHION
+  </strong>
+
+  <p
+    class="footer-note"
+    id="footerText">
+    أناقتك تبدأ هنا 🤍
+  </p>
+
+  <p class="footer-note">
+    © 2026 Espoza Fashion
+  </p>
+
+  <a
+    class="developer"
+    href="#"
+    onclick="return false;">
+    Designed &amp; Developed by Yousef Ajra
+  </a>
 
 </footer>
 
 
-<!-- ORDER MODAL -->
-
-<div class="modal" id="orderModal">
-
-<div class="modal-box">
-
-<button class="close-modal" onclick="closeOrder()">×</button>
-
-<div class="modal-title">
-
-<h2 data-ar="إتمام الطلب" data-en="Complete Your Order">
-إتمام الطلب
-</h2>
-
-<p data-ar="املئي البيانات التالية وسيتم تحويلك إلى واتساب"
-data-en="Fill in the details below and continue to WhatsApp">
-املئي البيانات التالية وسيتم تحويلك إلى واتساب
-</p>
-
-</div>
-
-
-<div class="selected-product">
-
-<strong id="selectedProduct"></strong>
-
-<span id="selectedPrice"></span>
-
-</div>
-
-
-<div class="form-row">
-
-<div class="form-group">
-
-<label data-ar="المقاس" data-en="Size">المقاس</label>
-
-<select id="size">
-
-<option value="" data-ar="اختاري المقاس" data-en="Choose Size">
-اختاري المقاس
-</option>
-
-<option>38</option>
-<option>40</option>
-<option>42</option>
-<option>44</option>
-<option>46</option>
-<option>48</option>
-<option>50</option>
-<option>52</option>
-<option>54</option>
-
-</select>
-
-</div>
-
-
-<div class="form-group">
-
-<label data-ar="اللون" data-en="Color">اللون</label>
-
-<select id="color">
-
-<option value="" data-ar="اختاري اللون" data-en="Choose Color">
-اختاري اللون
-</option>
-
-<option data-ar="أسود" data-en="Black">أسود</option>
-<option data-ar="أبيض" data-en="White">أبيض</option>
-<option data-ar="أوف وايت" data-en="Off White">أوف وايت</option>
-<option data-ar="بيج" data-en="Beige">بيج</option>
-<option data-ar="بني" data-en="Brown">بني</option>
-<option data-ar="خمري" data-en="Burgundy">خمري</option>
-<option data-ar="كحلي" data-en="Navy">كحلي</option>
-<option data-ar="وردي" data-en="Pink">وردي</option>
-<option data-ar="بنفسجي" data-en="Purple">بنفسجي</option>
-<option data-ar="أخضر" data-en="Green">أخضر</option>
-<option data-ar="رمادي" data-en="Gray">رمادي</option>
-
-</select>
-
-</div>
-
-</div>
-
-
-<div class="form-group">
-
-<label data-ar="الاسم الكامل" data-en="Full Name">الاسم الكامل</label>
-
-<input id="customerName" type="text"
-placeholder="اكتبي الاسم الكامل">
-
-</div>
-
-
-<div class="form-group">
-
-<label data-ar="رقم الهاتف" data-en="Phone Number">رقم الهاتف</label>
-
-<input id="customerPhone" type="tel"
-placeholder="0591234567">
-
-</div>
-
-
-<div class="form-group">
-
-<label data-ar="المدينة / البلدة" data-en="City / Town">
-المدينة / البلدة
-</label>
-
-<select id="city" onchange="updateDelivery()">
-
-<option value="" data-ar="اختاري المدينة أو البلدة" data-en="Choose City / Town">
-اختاري المدينة أو البلدة
-</option>
-
-
-<optgroup label="الضفة الغربية">
-
-<option data-region="west">رام الله</option>
-<option data-region="west">البيرة</option>
-<option data-region="west">نابلس</option>
-<option data-region="west">الخليل</option>
-<option data-region="west">بيت لحم</option>
-<option data-region="west">طولكرم</option>
-<option data-region="west">جنين</option>
-<option data-region="west">قلقيلية</option>
-<option data-region="west">سلفيت</option>
-<option data-region="west">أريحا</option>
-<option data-region="west">طوباس</option>
-<option data-region="west">دورا</option>
-<option data-region="west">يطا</option>
-<option data-region="west">الظاهرية</option>
-<option data-region="west">بيت جالا</option>
-<option data-region="west">بيت ساحور</option>
-<option data-region="west">بيتونيا</option>
-
-</optgroup>
-
-
-<optgroup label="القدس وضواحيها">
-
-<option data-region="jerusalem">القدس</option>
-<option data-region="jerusalem">بيت حنينا</option>
-<option data-region="jerusalem">شعفاط</option>
-<option data-region="jerusalem">مخيم شعفاط</option>
-<option data-region="jerusalem">العيسوية</option>
-<option data-region="jerusalem">الشيخ جراح</option>
-<option data-region="jerusalem">وادي الجوز</option>
-<option data-region="jerusalem">الطور</option>
-<option data-region="jerusalem">رأس العامود</option>
-<option data-region="jerusalem">سلوان</option>
-<option data-region="jerusalem">جبل المكبر</option>
-<option data-region="jerusalem">صور باهر</option>
-<option data-region="jerusalem">أم طوبا</option>
-<option data-region="jerusalem">بيت صفافا</option>
-<option data-region="jerusalem">شرفات</option>
-<option data-region="jerusalem">كفر عقب</option>
-<option data-region="jerusalem">الرام</option>
-<option data-region="jerusalem">عناتا</option>
-<option data-region="jerusalem">حزما</option>
-<option data-region="jerusalem">الزعيم</option>
-<option data-region="jerusalem">أبو ديس</option>
-<option data-region="jerusalem">العيزرية</option>
-<option data-region="jerusalem">السواحرة الشرقية</option>
-<option data-region="jerusalem">السواحرة الغربية</option>
-<option data-region="jerusalem">قلنديا</option>
-<option data-region="jerusalem">مخيم قلنديا</option>
-<option data-region="jerusalem">الجيب</option>
-<option data-region="jerusalem">بيت دقو</option>
-<option data-region="jerusalem">بيت عنان</option>
-<option data-region="jerusalem">بيت سوريك</option>
-<option data-region="jerusalem">بيت إكسا</option>
-<option data-region="jerusalem">قطنة</option>
-<option data-region="jerusalem">بدو</option>
-<option data-region="jerusalem">بير نبالا</option>
-
-</optgroup>
-
-
-<optgroup label="الداخل">
-
-<option data-region="inside">الناصرة</option>
-<option data-region="inside">أم الفحم</option>
-<option data-region="inside">باقة الغربية</option>
-<option data-region="inside">جت</option>
-<option data-region="inside">عرعرة</option>
-<option data-region="inside">كفر قرع</option>
-<option data-region="inside">سخنين</option>
-<option data-region="inside">عرابة</option>
-<option data-region="inside">دير حنا</option>
-<option data-region="inside">مجد الكروم</option>
-<option data-region="inside">البعنة</option>
-<option data-region="inside">دير الأسد</option>
-<option data-region="inside">نحف</option>
-<option data-region="inside">الرامة</option>
-<option data-region="inside">كفر ياسيف</option>
-<option data-region="inside">أبو سنان</option>
-<option data-region="inside">جديدة المكر</option>
-<option data-region="inside">يافا</option>
-<option data-region="inside">اللد</option>
-<option data-region="inside">الرملة</option>
-<option data-region="inside">عكا</option>
-<option data-region="inside">حيفا</option>
-<option data-region="inside">شفاعمرو</option>
-<option data-region="inside">طمرة</option>
-<option data-region="inside">كفر كنا</option>
-<option data-region="inside">الرينة</option>
-<option data-region="inside">المشهد</option>
-<option data-region="inside">إكسال</option>
-<option data-region="inside">عين ماهل</option>
-<option data-region="inside">دالية الكرمل</option>
-<option data-region="inside">عسفيا</option>
-<option data-region="inside">رهط</option>
-<option data-region="inside">حورة</option>
-<option data-region="inside">اللقية</option>
-<option data-region="inside">عرعرة النقب</option>
-<option data-region="inside">كسيفة</option>
-<option data-region="inside">تل السبع</option>
-<option data-region="inside">الطيبة</option>
-<option data-region="inside">الطيرة</option>
-<option data-region="inside">قلنسوة</option>
-<option data-region="inside">كفر قاسم</option>
-<option data-region="inside">جلجولية</option>
-<option data-region="inside">كفر برا</option>
-<option data-region="inside">جسر الزرقاء</option>
-<option data-region="inside">الفريديس</option>
-<option data-region="inside">إعبلين</option>
-<option data-region="inside">كابول</option>
-<option data-region="inside">كفر مندا</option>
-<option data-region="inside">طرعان</option>
-
-</optgroup>
-
-</select>
-
-<div class="region-label" id="regionLabel">
-سيتم تحديد منطقة التوصيل تلقائيًا
-</div>
-
-</div>
-
-
-<div class="form-group">
-
-<label data-ar="العنوان بالتفصيل" data-en="Detailed Address">
-العنوان بالتفصيل
-</label>
-
-<textarea id="address" rows="3"
-placeholder="الشارع، الحي، رقم البيت، وأي تفاصيل تساعد في التوصيل"></textarea>
-
-</div>
-
-
-<div class="delivery-box">
-
-<div class="summary-line">
-<span data-ar="سعر المنتج" data-en="Product Price">سعر المنتج</span>
-<strong id="summaryProduct">₪0</strong>
-</div>
-
-<div class="summary-line">
-<span data-ar="التوصيل" data-en="Delivery">التوصيل</span>
-<strong id="deliveryPrice">₪0</strong>
-</div>
-
-<div class="summary-line total-line">
-<span data-ar="المجموع" data-en="Total">المجموع</span>
-<strong id="totalPrice">₪0</strong>
-</div>
-
-</div>
-
-
-<div class="cash-note">
-💵 <span data-ar="طريقة الدفع: الدفع عند الاستلام"
-data-en="Payment Method: Cash on Delivery">
-طريقة الدفع: <strong>الدفع عند الاستلام</strong>
-</span>
-</div>
-
-
-<button class="whatsapp-submit" onclick="sendOrder()"
-data-ar="📲 تأكيد الطلب عبر واتساب"
-data-en="📲 Confirm Order via WhatsApp">
-📲 تأكيد الطلب عبر واتساب
-</button>
-
-</div>
-</div>
-
-
-<a class="whatsapp" href="https://wa.me/972595461861" target="_blank">✆</a>
-
-
 <script>
 
-let currentProduct="";
-let currentPrice=0;
-let language="ar";
+/* =====================================================
+   WHATSAPP
+===================================================== */
 
-const deliveryPrices={
-west:20,
-jerusalem:30,
-inside:70
+const WHATSAPP_NUMBER = "972595461861";
+
+
+/* =====================================================
+   DELIVERY
+===================================================== */
+
+const DELIVERY = {
+  westBank:20,
+  jerusalem:30,
+  inside:70
 };
 
 
-function toggleLanguage(){
+/* =====================================================
+   CITIES
+===================================================== */
 
-language=language==="ar"?"en":"ar";
+const cities = {
 
-document.documentElement.lang=language;
+  jerusalem:[
+    "القدس",
+    "بيت حنينا",
+    "شعفاط",
+    "العيسوية",
+    "الطور",
+    "سلوان",
+    "جبل المكبر",
+    "صور باهر",
+    "أم طوبا",
+    "بيت صفافا",
+    "الرام",
+    "ضاحية البريد",
+    "كفر عقب",
+    "مخيم شعفاط",
+    "العيزرية",
+    "أبو ديس",
+    "الزعيم"
+  ],
 
-document.documentElement.dir=language==="ar"?"rtl":"ltr";
+  westBank:[
+    "رام الله",
+    "البيرة",
+    "نابلس",
+    "طولكرم",
+    "قلقيلية",
+    "جنين",
+    "سلفيت",
+    "طوباس",
+    "الخليل",
+    "بيت لحم",
+    "أريحا",
+    "الظاهرية",
+    "دورا",
+    "يطا",
+    "بيت جالا",
+    "بيت ساحور",
+    "الدوحة",
+    "مخيم بلاطة",
+    "مخيم جنين",
+    "مخيم الدهيشة"
+  ],
 
-document.querySelector(".lang-btn").textContent=
-language==="ar"?"English":"العربية";
+  inside:[
+    "حيفا",
+    "يافا",
+    "تل أبيب",
+    "عكا",
+    "الناصرة",
+    "أم الفحم",
+    "رهط",
+    "الرملة",
+    "اللد",
+    "الرينة",
+    "كفر قاسم",
+    "الطيبة",
+    "الطيرة",
+    "قلنسوة",
+    "شفاعمرو",
+    "سخنين",
+    "عرابة",
+    "طمرة",
+    "باقة الغربية",
+    "القدس الغربية"
+  ]
 
-document.querySelectorAll("[data-ar]").forEach(el=>{
+};
 
-if(el.tagName==="OPTION"){
 
-el.textContent=el.getAttribute("data-"+language);
+/* =====================================================
+   PRODUCTS
+===================================================== */
 
-}else{
+const products = [
 
-el.textContent=el.getAttribute("data-"+language);
+  {
+    id:1,
+    name:"سيليست",
+    nameEn:"Celeste",
+    price:400,
+    sizes:[38,40,42,44,46],
+    images:[
+      "B08EE5A6-A22B-4060-866C-30CA4B0D5A5B.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:2,
+    name:"سيلفانا",
+    nameEn:"Silvana",
+    price:250,
+    sizes:[42,44,46,48,50,52,54],
+    images:[
+      "1d2e71eb-887f-4c5c-acfe-5844cacd3d80.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:3,
+    name:"أستريا",
+    nameEn:"Astria",
+    price:280,
+    sizes:[44,46,48,50,52,54,56],
+    images:[
+      "IMG_3062.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:4,
+    name:"فلورانس",
+    nameEn:"Florence",
+    price:300,
+    sizes:[42,44,46,48,50,52,54,56],
+    images:[
+      "bba65b45-65ac-4bcf-9951-ccd0aee6b7e3.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:5,
+    name:"سكارليت",
+    nameEn:"Scarlett",
+    price:300,
+    sizes:[42,44,46,48,50,52,54],
+    images:[
+      "a5824a77-f846-495a-8b9b-f017e5db60b1.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:6,
+    name:"ريبيكا",
+    nameEn:"Rebecca",
+    price:350,
+    oldPrice:650,
+    sizes:[38,40,42,44],
+    images:[
+      "d5b1682e-b1af-43bd-a07c-4b10ec765d54.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:7,
+    name:"روزاليا",
+    nameEn:"Rosalia",
+    price:280,
+    sizes:[40,42,44,46],
+    images:[
+      "96d63dcc-5bb1-41f5-afc0-12cc18a95987.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:8,
+    name:"داليا",
+    nameEn:"Dalia",
+    price:260,
+    sizes:[42,44,46,48,50,52,54],
+    images:[
+      "f1cdadad-8329-4409-9e0f-6cafaac54118.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:9,
+    name:"كاميليا",
+    nameEn:"Camellia",
+    price:320,
+    sizes:[38,40,42,44,46],
+    images:[
+      "7035804c-9be8-46cb-be3e-b7368f5021c4.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:10,
+    name:"آيرس",
+    nameEn:"Iris",
+    price:280,
+    sizes:[42,44,46,48,50,52,54,56],
+    images:[
+      "76a94ecc-4a8a-4559-9f73-fdfb29b56a76.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:11,
+    name:"لورينا",
+    nameEn:"Lorena",
+    price:250,
+    sizes:[42,44,46,48,50,52,54],
+    images:[
+      "4eeb7b16-4dd3-40f1-b4fc-b47d2d1f8c2f.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:12,
+    name:"فيرونا",
+    nameEn:"Verona",
+    price:400,
+    sizes:[50,52,54],
+    images:[
+      "e8aea098-0346-4cb0-994d-fec2e8ba380c.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:13,
+    name:"إلورا",
+    nameEn:"Elora",
+    price:300,
+    sizes:[38,40,42,44,46],
+    images:[
+      "IMG_3331.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:14,
+    name:"أمارا",
+    nameEn:"Amara",
+    price:280,
+    sizes:[42,44,46,48,50,52,54],
+    images:[
+      "4abd7c1d-5c7c-4ea3-91a8-a5f367d42117.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:15,
+    name:"أريانا",
+    nameEn:"Ariana",
+    price:250,
+    sizes:[42,44,46,48,50,52,54],
+    images:[
+      "21de8edf-b602-4102-98af-3daa451d782a.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:16,
+    name:"نيراليا",
+    nameEn:"Neralia",
+    price:260,
+    sizes:[42,44,46],
+    images:[
+      "d595d10e-d3e1-40b0-b32e-dae06ebc38d4.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:17,
+    name:"سيرافينا",
+    nameEn:"Serafina",
+    price:300,
+    sizes:[44,46,48,50,52,54,56],
+    images:[
+      "0d60249c-784a-4aeb-9c1a-f0e00786b96d.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:18,
+    name:"أوريليا",
+    nameEn:"Aurelia",
+    price:320,
+    sizes:[44,46,48,50,52],
+    images:[
+      "3802415a-fcc0-458d-a9b8-8a776d8b4468.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:19,
+    name:"إيلارا",
+    nameEn:"Elara",
+    price:300,
+    sizes:[44,46,48,50,52,54,56,58],
+    images:[
+      "52b190e5-e6e2-43c4-bc0b-29bd4fff703d.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:20,
+    name:"أليورا",
+    nameEn:"Aliora",
+    price:250,
+    sizes:[48,50,52,54,56,58,60],
+
+    colors:[
+      {
+        ar:"زيتي",
+        en:"Olive",
+        image:"IMG_3413.jpeg"
+      },
+      {
+        ar:"بني",
+        en:"Brown",
+        image:"IMG_3414.jpeg"
+      }
+    ],
+
+    images:[
+      "IMG_3413.jpeg",
+      "IMG_3414.jpeg"
+    ],
+
+    category:"dresses"
+  },
+
+  {
+    id:21,
+    name:"ميلورا",
+    nameEn:"Melora",
+    price:280,
+    sizes:[44,46,48,50,52],
+    images:[
+      "3294543a-5a41-4e3c-aa52-ae9a56166169.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:22,
+    name:"لافيرا",
+    nameEn:"Lavira",
+    price:250,
+    sizes:[42,44,46,48,50,52,54],
+    images:[
+      "1721952f-b2fb-47d4-812e-59d7d1f552d3.jpeg"
+    ],
+    category:"dresses"
+  },
+
+  {
+    id:23,
+    name:"إيلينا",
+    nameEn:"Elina",
+    price:280,
+    sizes:[40,42,44,46,48,50,52,54],
+
+    colors:[
+      {
+        ar:"كحلي",
+        en:"Navy",
+        image:"efb60c11-651a-49cc-bca2-5c4673416142.jpeg"
+      },
+      {
+        ar:"خمري",
+        en:"Burgundy",
+        image:"fcd71140-fe8b-4e20-82c2-15fa10856e17.jpeg"
+      }
+    ],
+
+    images:[
+      "efb60c11-651a-49cc-bca2-5c4673416142.jpeg",
+      "fcd71140-fe8b-4e20-82c2-15fa10856e17.jpeg"
+    ],
+
+    category:"dresses"
+  }
+
+];
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let currentProduct=null;
+let currentLanguage="ar";
+
+
+/* =====================================================
+   RENDER PRODUCTS
+===================================================== */
+
+function renderProducts(category="all"){
+
+  const grid=document.getElementById("productsGrid");
+
+  grid.innerHTML="";
+
+  const filtered=
+    category==="all"
+    ? products
+    : products.filter(p=>p.category===category);
+
+  filtered.forEach(product=>{
+
+    const card=document.createElement("article");
+
+    card.className="product-card";
+
+    let colorsHTML="";
+
+    if(product.colors){
+
+      colorsHTML=`
+
+        <div class="colors">
+
+          ${product.colors.map(color=>`
+
+            <span class="color-tag">
+              ${
+                currentLanguage==="ar"
+                ? color.ar
+                : color.en
+              }
+            </span>
+
+          `).join("")}
+
+        </div>
+
+      `;
+
+    }
+
+    const oldPrice=product.oldPrice
+      ? `<span class="old-price">₪${product.oldPrice}</span>`
+      : "";
+
+    card.innerHTML=`
+
+      <img
+        class="product-image"
+        src="${product.images[0]}"
+        alt="${
+          currentLanguage==="ar"
+          ? "فستان "+product.name
+          : product.nameEn+" dress"
+        }"
+        loading="lazy"
+      >
+
+      <div class="product-info">
+
+        <div class="product-name">
+          ${
+            currentLanguage==="ar"
+            ? "فستان "+product.name
+            : product.nameEn
+          }
+        </div>
+
+        <div class="price">
+          ₪${product.price}
+          ${oldPrice}
+        </div>
+
+        <div class="sizes">
+
+          ${
+            currentLanguage==="ar"
+            ? "المقاسات: "
+            : "Sizes: "
+          }
+
+          ${product.sizes.join("، ")}
+
+        </div>
+
+        ${colorsHTML}
+
+        <button
+          class="order-btn"
+          onclick="openOrder(${product.id})">
+
+          ${
+            currentLanguage==="ar"
+            ? "اطلبي الآن"
+            : "Order Now"
+          }
+
+        </button>
+
+      </div>
+
+    `;
+
+    grid.appendChild(card);
+
+  });
 
 }
 
-});
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+function filterProducts(category,button){
+
+  document
+    .querySelectorAll(".category-btn")
+    .forEach(btn=>btn.classList.remove("active"));
+
+  button.classList.add("active");
+
+  renderProducts(category);
 
 }
 
 
-function openOrder(product,price){
+/* =====================================================
+   OPEN ORDER
+===================================================== */
 
-currentProduct=product;
-currentPrice=price;
+function openOrder(productId){
 
-document.getElementById("selectedProduct").textContent=product;
+  currentProduct=
+    products.find(p=>p.id===productId);
 
-document.getElementById("selectedPrice").textContent=
-language==="ar"?"السعر: ₪"+price:"Price: ₪"+price;
+  if(!currentProduct) return;
 
-document.getElementById("summaryProduct").textContent="₪"+price;
-document.getElementById("deliveryPrice").textContent="₪0";
-document.getElementById("totalPrice").textContent="₪"+price;
+  document.getElementById("selectedProduct").textContent=
+    currentLanguage==="ar"
+    ? "فستان "+currentProduct.name
+    : currentProduct.nameEn;
 
-document.getElementById("orderModal").style.display="block";
+  document.getElementById("productPrice").textContent=
+    "₪"+currentProduct.price;
 
-document.body.style.overflow="hidden";
+
+  /* SIZES */
+
+  const sizeSelect=
+    document.getElementById("size");
+
+  sizeSelect.innerHTML="";
+
+  const sizePlaceholder=
+    document.createElement("option");
+
+  sizePlaceholder.value="";
+
+  sizePlaceholder.textContent=
+    currentLanguage==="ar"
+    ? "اختاري المقاس"
+    : "Choose size";
+
+  sizeSelect.appendChild(sizePlaceholder);
+
+  currentProduct.sizes.forEach(size=>{
+
+    const option=
+      document.createElement("option");
+
+    option.value=size;
+    option.textContent=size;
+
+    sizeSelect.appendChild(option);
+
+  });
+
+
+  /* COLORS */
+
+  const colorField=
+    document.getElementById("colorField");
+
+  const colorSelect=
+    document.getElementById("color");
+
+  if(currentProduct.colors){
+
+    colorField.style.display="block";
+
+    colorSelect.innerHTML="";
+
+    currentProduct.colors.forEach((color,index)=>{
+
+      const option=
+        document.createElement("option");
+
+      option.value=index;
+
+      option.textContent=
+        currentLanguage==="ar"
+        ? color.ar
+        : color.en;
+
+      colorSelect.appendChild(option);
+
+    });
+
+  }else{
+
+    colorField.style.display="none";
+
+    colorSelect.innerHTML="";
+
+  }
+
+
+  document.getElementById("city").value="";
+
+  document.getElementById("deliveryPrice").textContent="₪0";
+
+  document.getElementById("totalPrice").textContent=
+    "₪"+currentProduct.price;
+
+
+  document
+    .getElementById("orderModal")
+    .classList.add("show");
 
 }
 
 
-function closeOrder(){
+/* =====================================================
+   CLOSE
+===================================================== */
 
-document.getElementById("orderModal").style.display="none";
+function closeModal(){
 
-document.body.style.overflow="auto";
+  document
+    .getElementById("orderModal")
+    .classList.remove("show");
 
 }
 
+
+/* =====================================================
+   DELIVERY
+===================================================== */
 
 function updateDelivery(){
 
-const select=document.getElementById("city");
+  const city=
+    document.getElementById("city").value;
 
-const option=select.options[select.selectedIndex];
+  let delivery=0;
 
-const region=option.getAttribute("data-region");
+  if(cities.jerusalem.includes(city)){
 
-let delivery=0;
-let regionName="";
+    delivery=DELIVERY.jerusalem;
 
-if(region==="west"){
-delivery=20;
-regionName=language==="ar"?"الضفة الغربية":"West Bank";
-}
+  }
+  else if(cities.inside.includes(city)){
 
-if(region==="jerusalem"){
-delivery=30;
-regionName=language==="ar"?"القدس وضواحيها":"Jerusalem & Surrounding Areas";
-}
+    delivery=DELIVERY.inside;
 
-if(region==="inside"){
-delivery=70;
-regionName=language==="ar"?"الداخل":"Inside";
-}
+  }
+  else if(cities.westBank.includes(city)){
 
-document.getElementById("deliveryPrice").textContent="₪"+delivery;
+    delivery=DELIVERY.westBank;
 
-document.getElementById("totalPrice").textContent=
-"₪"+(currentPrice+delivery);
+  }
 
-document.getElementById("regionLabel").textContent=
-regionName
-? (language==="ar"
-? "منطقة التوصيل: "+regionName+" — ₪"+delivery
-: "Delivery Area: "+regionName+" — ₪"+delivery)
-: (language==="ar"
-? "سيتم تحديد منطقة التوصيل تلقائيًا"
-: "Delivery area will be selected automatically");
+  document.getElementById("deliveryPrice").textContent=
+    "₪"+delivery;
+
+  if(currentProduct){
+
+    document.getElementById("totalPrice").textContent=
+      "₪"+(currentProduct.price+delivery);
+
+  }
 
 }
 
+
+/* =====================================================
+   CITIES
+===================================================== */
+
+function populateCities(){
+
+  const select=
+    document.getElementById("city");
+
+  function addGroup(title,list){
+
+    const group=
+      document.createElement("optgroup");
+
+    group.label=title;
+
+    list.forEach(city=>{
+
+      const option=
+        document.createElement("option");
+
+      option.value=city;
+      option.textContent=city;
+
+      group.appendChild(option);
+
+    });
+
+    select.appendChild(group);
+
+  }
+
+  addGroup("القدس",cities.jerusalem);
+
+  addGroup("الضفة الغربية",cities.westBank);
+
+  addGroup("الداخل",cities.inside);
+
+}
+
+
+/* =====================================================
+   SEND ORDER TO WHATSAPP
+===================================================== */
 
 function sendOrder(){
 
-const size=document.getElementById("size").value;
-const color=document.getElementById("color").value;
-const name=document.getElementById("customerName").value.trim();
-const phone=document.getElementById("customerPhone").value.trim();
-const city=document.getElementById("city").value;
-const address=document.getElementById("address").value.trim();
+  if(!currentProduct) return;
 
-if(!size){
-alert(language==="ar"?"يرجى اختيار المقاس":"Please choose a size");
-return;
-}
 
-if(!color){
-alert(language==="ar"?"يرجى اختيار اللون":"Please choose a color");
-return;
-}
+  const name=
+    document.getElementById("name").value.trim();
 
-if(!name){
-alert(language==="ar"?"يرجى كتابة الاسم الكامل":"Please enter your full name");
-return;
-}
+  const phone=
+    document.getElementById("phone").value.trim();
 
-if(!phone){
-alert(language==="ar"?"يرجى كتابة رقم الهاتف":"Please enter your phone number");
-return;
-}
+  const city=
+    document.getElementById("city").value;
 
-if(!city){
-alert(language==="ar"?"يرجى اختيار المدينة أو البلدة":"Please choose your city or town");
-return;
-}
+  const address=
+    document.getElementById("address").value.trim();
 
-if(!address){
-alert(language==="ar"?"يرجى كتابة العنوان بالتفصيل":"Please enter your detailed address");
-return;
-}
+  const size=
+    document.getElementById("size").value;
 
-const option=document.getElementById("city").options[
-document.getElementById("city").selectedIndex
-];
 
-const region=option.getAttribute("data-region");
+  if(!name || !phone || !city || !address || !size){
 
-let delivery=0;
-let regionName="";
+    alert(
+      currentLanguage==="ar"
+      ? "يرجى تعبئة جميع البيانات المطلوبة."
+      : "Please complete all required fields."
+    );
 
-if(region==="west"){
-delivery=20;
-regionName=language==="ar"?"الضفة الغربية":"West Bank";
-}
+    return;
 
-if(region==="jerusalem"){
-delivery=30;
-regionName=language==="ar"?"القدس وضواحيها":"Jerusalem & Surrounding Areas";
-}
+  }
 
-if(region==="inside"){
-delivery=70;
-regionName=language==="ar"?"الداخل":"Inside";
-}
 
-const total=currentPrice+delivery;
+  /* COLOR */
 
-let message="";
+  let colorText="";
 
-if(language==="ar"){
+  if(currentProduct.colors){
 
-message=
-`🛍️ *طلب جديد من Espoza Fashion*
+    const index=
+      Number(document.getElementById("color").value);
 
-━━━━━━━━━━━━━━
+    const selected=
+      currentProduct.colors[index];
 
-👗 المنتج: ${currentProduct}
+    if(selected){
 
+      colorText=
+        currentLanguage==="ar"
+        ? selected.ar
+        : selected.en;
+
+    }
+
+  }
+
+
+  /* DELIVERY */
+
+  let delivery=0;
+
+  let deliveryName="";
+
+
+  if(cities.jerusalem.includes(city)){
+
+    delivery=DELIVERY.jerusalem;
+
+    deliveryName=
+      currentLanguage==="ar"
+      ? "القدس"
+      : "Jerusalem";
+
+  }
+  else if(cities.inside.includes(city)){
+
+    delivery=DELIVERY.inside;
+
+    deliveryName=
+      currentLanguage==="ar"
+      ? "الداخل"
+      : "Inside";
+
+  }
+  else if(cities.westBank.includes(city)){
+
+    delivery=DELIVERY.westBank;
+
+    deliveryName=
+      currentLanguage==="ar"
+      ? "الضفة الغربية"
+      : "West Bank";
+
+  }
+
+
+  const total=
+    currentProduct.price+delivery;
+
+
+  const productName=
+    currentLanguage==="ar"
+    ? "فستان "+currentProduct.name
+    : currentProduct.nameEn;
+
+
+  /* ===================================================
+     ARABIC MESSAGE
+  =================================================== */
+
+  let message="";
+
+
+  if(currentLanguage==="ar"){
+
+    message=
+`مرحبًا Espoza Fashion 🤍
+
+أرغب بطلب قطعة جديدة:
+
+👗 القطعة: ${productName}
 📏 المقاس: ${size}
+${colorText ? "🎨 اللون: "+colorText+"\n" : ""}💰 سعر القطعة: ₪${currentProduct.price}
 
-🎨 اللون: ${color}
-
-💰 سعر المنتج: ₪${currentPrice}
-
-━━━━━━━━━━━━━━
-
-👤 اسم الزبونة: ${name}
-
+👤 الاسم: ${name}
 📱 رقم الهاتف: ${phone}
+📍 المدينة / المنطقة: ${city}
+🏠 العنوان بالتفصيل: ${address}
 
-📍 المدينة / البلدة: ${city}
+🚚 منطقة التوصيل: ${deliveryName}
+💵 سعر التوصيل: ₪${delivery}
 
-🗺️ منطقة التوصيل: ${regionName}
+💳 طريقة الدفع: الدفع عند الاستلام
 
-🏠 العنوان: ${address}
+💰 المجموع الكلي: ₪${total}
 
-🚚 التوصيل: ₪${delivery}
+شكرًا لكم 🤍`;
 
-💵 الدفع: عند الاستلام
+  }
 
-━━━━━━━━━━━━━━
 
-💰 الإجمالي: ₪${total}
+  /* ===================================================
+     ENGLISH MESSAGE
+  =================================================== */
 
-شكراً لاختيارك Espoza Fashion ❤️`;
+  else{
 
-}else{
+    message=
+`Hello Espoza Fashion 🤍
 
-message=
-`🛍️ *New Order - Espoza Fashion*
+I would like to place an order:
 
-━━━━━━━━━━━━━━
-
-👗 Product: ${currentProduct}
-
+👗 Item: ${productName}
 📏 Size: ${size}
+${colorText ? "🎨 Color: "+colorText+"\n" : ""}💰 Product price: ₪${currentProduct.price}
 
-🎨 Color: ${color}
-
-💰 Product Price: ₪${currentPrice}
-
-━━━━━━━━━━━━━━
-
-👤 Customer Name: ${name}
-
+👤 Name: ${name}
 📱 Phone: ${phone}
-
-📍 City / Town: ${city}
-
-🗺️ Delivery Area: ${regionName}
-
+📍 City / Area: ${city}
 🏠 Address: ${address}
 
-🚚 Delivery: ₪${delivery}
+🚚 Delivery area: ${deliveryName}
+💵 Delivery fee: ₪${delivery}
 
-💵 Payment: Cash on Delivery
-
-━━━━━━━━━━━━━━
+💳 Payment: Cash on delivery
 
 💰 Total: ₪${total}
 
-Thank you for choosing Espoza Fashion ❤️`;
+Thank you 🤍`;
+
+  }
+
+
+  const url=
+    "https://wa.me/"+
+    WHATSAPP_NUMBER+
+    "?text="+
+    encodeURIComponent(message);
+
+
+  window.open(url,"_blank");
 
 }
 
-const whatsappNumber="972595461861";
 
-const url=
-"https://wa.me/"+whatsappNumber+
-"?text="+encodeURIComponent(message);
+/* =====================================================
+   LANGUAGE
+===================================================== */
 
-window.open(url,"_blank");
+function toggleLanguage(){
+
+  currentLanguage=
+    currentLanguage==="ar"
+    ? "en"
+    : "ar";
+
+  document.body.classList.toggle(
+    "en",
+    currentLanguage==="en"
+  );
+
+  document.documentElement.lang=
+    currentLanguage;
+
+  document.documentElement.dir=
+    currentLanguage==="ar"
+    ? "rtl"
+    : "ltr";
+
+
+  if(currentLanguage==="ar"){
+
+    document.getElementById("languageBtn").textContent="EN";
+
+    document.getElementById("heroTitle").textContent=
+      "أناقتك تبدأ هنا";
+
+    document.getElementById("heroText").textContent=
+      "اختاري إطلالتك المفضلة وخلي أناقتك تحكي عنك ✨";
+
+    document.getElementById("trustText").textContent=
+      "زبونة اختارت Espoza Fashion 🤍";
+
+    document.getElementById("storyTitle").textContent=
+      "حكاية أناقة بدأت من 2019";
+
+    document.getElementById("storyText").textContent=
+      "من أول خطوة إلى اليوم، Espoza Fashion مستمرة بتقديم اختيارات أنيقة للمرأة اللي بتحب تتميز بإطلالتها 🤍";
+
+    document.getElementById("statsTitle").textContent=
+      "مجتمع Espoza Fashion";
+
+    document.getElementById("statsText").textContent=
+      "آلاف المتابعين معنا على منصات التواصل 🤍";
+
+    document.getElementById("allBtn").textContent=
+      "الكل";
+
+    document.getElementById("dressesBtn").textContent=
+      "فساتين";
+
+    document.getElementById("setsBtn").textContent=
+      "أطقم";
+
+    document.getElementById("abayasBtn").textContent=
+      "عبايات";
+
+    document.getElementById("collectionTitle").textContent=
+      "تشكيلة الفساتين";
+
+    document.getElementById("collectionText").textContent=
+      "اختاري القطعة اللي بتحبيها واطلبيها بسهولة عبر واتساب";
+
+    document.getElementById("socialTitle").textContent=
+      "تابعينا على صفحاتنا 🤍";
+
+    document.getElementById("socialText").textContent=
+      "كوني أول وحدة تشوفي جديد Espoza Fashion";
+
+    document.getElementById("modalTitle").textContent=
+      "إتمام الطلب";
+
+    document.getElementById("modalSubtitle").textContent=
+      "عبّي البيانات، ورح يتحول طلبك مباشرة إلى واتساب.";
+
+    document.getElementById("colorLabel").textContent=
+      "اللون";
+
+    document.getElementById("sizeLabel").textContent=
+      "المقاس";
+
+    document.getElementById("nameLabel").textContent=
+      "الاسم الكامل";
+
+    document.getElementById("phoneLabel").textContent=
+      "رقم الهاتف";
+
+    document.getElementById("cityLabel").textContent=
+      "المدينة / المنطقة";
+
+    document.getElementById("addressLabel").textContent=
+      "العنوان بالتفصيل";
+
+    document.getElementById("productSummaryLabel").textContent=
+      "سعر القطعة";
+
+    document.getElementById("deliverySummaryLabel").textContent=
+      "التوصيل";
+
+    document.getElementById("totalLabel").textContent=
+      "المجموع";
+
+    document.getElementById("whatsappOrderBtn").textContent=
+      "📱 تأكيد الطلب عبر واتساب";
+
+    document.getElementById("codNote").textContent=
+      "الدفع عند الاستلام 💵";
+
+    document.getElementById("footerText").textContent=
+      "أناقتك تبدأ هنا 🤍";
+
+  }
+
+  else{
+
+    document.getElementById("languageBtn").textContent="AR";
+
+    document.getElementById("heroTitle").textContent=
+      "Your Elegance Starts Here";
+
+    document.getElementById("heroText").textContent=
+      "Choose your favorite look and let your style speak for you ✨";
+
+    document.getElementById("trustText").textContent=
+      "Customers chose Espoza Fashion 🤍";
+
+    document.getElementById("storyTitle").textContent=
+      "An Elegance Story Since 2019";
+
+    document.getElementById("storyText").textContent=
+      "From the very first step until today, Espoza Fashion continues to offer elegant choices for women who love to stand out 🤍";
+
+    document.getElementById("statsTitle").textContent=
+      "The Espoza Fashion Community";
+
+    document.getElementById("statsText").textContent=
+      "Thousands of followers across our social platforms 🤍";
+
+    document.getElementById("allBtn").textContent=
+      "All";
+
+    document.getElementById("dressesBtn").textContent=
+      "Dresses";
+
+    document.getElementById("setsBtn").textContent=
+      "Sets";
+
+    document.getElementById("abayasBtn").textContent=
+      "Abayas";
+
+    document.getElementById("collectionTitle").textContent=
+      "Dress Collection";
+
+    document.getElementById("collectionText").textContent=
+      "Choose your favorite piece and order easily through WhatsApp";
+
+    document.getElementById("socialTitle").textContent=
+      "Follow Us 🤍";
+
+    document.getElementById("socialText").textContent=
+      "Be the first to discover what's new at Espoza Fashion";
+
+    document.getElementById("modalTitle").textContent=
+      "Complete Your Order";
+
+    document.getElementById("modalSubtitle").textContent=
+      "Fill in your details and your order will open directly in WhatsApp.";
+
+    document.getElementById("colorLabel").textContent=
+      "Color";
+
+    document.getElementById("sizeLabel").textContent=
+      "Size";
+
+    document.getElementById("nameLabel").textContent=
+      "Full Name";
+
+    document.getElementById("phoneLabel").textContent=
+      "Phone Number";
+
+    document.getElementById("cityLabel").textContent=
+      "City / Area";
+
+    document.getElementById("addressLabel").textContent=
+      "Detailed Address";
+
+    document.getElementById("productSummaryLabel").textContent=
+      "Product Price";
+
+    document.getElementById("deliverySummaryLabel").textContent=
+      "Delivery";
+
+    document.getElementById("totalLabel").textContent=
+      "Total";
+
+    document.getElementById("whatsappOrderBtn").textContent=
+      "📱 Confirm Order via WhatsApp";
+
+    document.getElementById("codNote").textContent=
+      "Cash on delivery 💵";
+
+    document.getElementById("footerText").textContent=
+      "Your elegance starts here 🤍";
+
+  }
+
+
+  renderProducts();
 
 }
 
 
-window.onclick=function(event){
+/* =====================================================
+   MODAL OUTSIDE CLICK
+===================================================== */
 
-const modal=document.getElementById("orderModal");
+document
+  .getElementById("orderModal")
+  .addEventListener("click",function(e){
 
-if(event.target===modal){
-closeOrder();
-}
+    if(e.target===this){
+      closeModal();
+    }
 
-};
+  });
+
+
+/* =====================================================
+   START
+===================================================== */
+
+populateCities();
+
+renderProducts();
 
 </script>
 
