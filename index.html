@@ -1,2359 +1,501 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Espoza Fashion | أناقتك تبدأ هنا</title>
-
-<meta name="description" content="Espoza Fashion - متجر أزياء نسائية وفساتين وأطقم مميزة">
-<meta name="google-site-verification" content="KC0y2HwyO9Ljn2KY5dwLdDwKT72LUJiDfFh6d-5VTiM">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    font-family:'Cairo',sans-serif;
-    background:#faf7f2;
-    color:#321f27;
-}
-
-button,
-input,
-select,
-textarea{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-a{
-    text-decoration:none;
-    color:inherit;
-}
-
-:root{
-    --wine:#641f34;
-    --wine-dark:#431321;
-    --cream:#faf7f2;
-    --card:#ffffff;
-    --gold:#b9985a;
-    --text:#321f27;
-    --muted:#8c7d82;
-    --border:#eadfe1;
-}
-
-/* ================= HEADER ================= */
-
-header{
-    position:sticky;
-    top:0;
-    z-index:1000;
-    background:rgba(250,247,242,.96);
-    backdrop-filter:blur(15px);
-    border-bottom:1px solid rgba(100,31,52,.08);
-}
-
-.nav{
-    max-width:1250px;
-    margin:auto;
-    padding:15px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-}
-
-.logo{
-    text-align:center;
-    line-height:1;
-}
-
-.logo-main{
-    font-family:'Playfair Display',serif;
-    font-size:27px;
-    letter-spacing:3px;
-    color:var(--wine);
-    font-weight:700;
-}
-
-.logo-sub{
-    font-size:9px;
-    letter-spacing:4px;
-    color:var(--gold);
-    margin-top:5px;
-}
-
-.nav-actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
-.lang-btn,
-.whatsapp-btn{
-    border:1px solid var(--border);
-    background:white;
-    border-radius:30px;
-    padding:9px 14px;
-    font-size:12px;
-    font-weight:700;
-}
-
-.whatsapp-btn{
-    background:var(--wine);
-    color:white;
-    border-color:var(--wine);
-}
-
-/* ================= HERO SLIDER ================= */
-
-.hero-slider{
-    max-width:1250px;
-    margin:0 auto;
-    padding:25px 20px 10px;
-}
-
-.slider{
-    position:relative;
-    width:100%;
-    overflow:hidden;
-    border-radius:32px;
-    background:#f1e9e6;
-}
-
-.slides{
-    display:flex;
-    direction:ltr;
-    width:100%;
-    transition:transform .6s ease;
-}
-
-.slide{
-    min-width:100%;
-    height:500px;
-    position:relative;
-    overflow:hidden;
-}
-
-.slide img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-
-.slide-overlay{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:flex-end;
-    justify-content:center;
-    padding:35px;
-    background:linear-gradient(
-        to top,
-        rgba(20,10,14,.55),
-        rgba(20,10,14,.08) 55%,
-        transparent
-    );
-}
-
-.slide-content{
-    text-align:center;
-    color:white;
-}
-
-.slide-content h2{
-    font-family:'Playfair Display',serif;
-    font-size:clamp(30px,5vw,55px);
-    margin-bottom:15px;
-}
-
-.slide-content button{
-    border:0;
-    background:white;
-    color:var(--wine);
-    padding:12px 30px;
-    border-radius:30px;
-    font-size:13px;
-    font-weight:800;
-}
-
-.slider-arrow{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:45px;
-    height:45px;
-    border:0;
-    border-radius:50%;
-    background:rgba(255,255,255,.9);
-    color:var(--wine);
-    font-size:25px;
-    z-index:5;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.slider-arrow.prev{
-    left:18px;
-}
-
-.slider-arrow.next{
-    right:18px;
-}
-
-.slider-dots{
-    position:absolute;
-    bottom:15px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:7px;
-    z-index:5;
-}
-
-.slider-dot{
-    width:8px;
-    height:8px;
-    border:0;
-    border-radius:50%;
-    background:rgba(255,255,255,.6);
-    padding:0;
-}
-
-.slider-dot.active{
-    background:white;
-    width:22px;
-    border-radius:10px;
-}
-
-/* ================= HERO ================= */
-
-.hero{
-    max-width:1250px;
-    margin:0 auto;
-    padding:35px 20px 35px;
-}
-
-.hero-box{
-    background:
-    radial-gradient(circle at 10% 20%,rgba(185,152,90,.13),transparent 30%),
-    linear-gradient(135deg,#fffdf9,#f5e9e8);
-    border-radius:32px;
-    padding:60px 35px;
-    position:relative;
-    overflow:hidden;
-}
-
-.hero-box:after{
-    content:"";
-    position:absolute;
-    width:280px;
-    height:280px;
-    border:1px solid rgba(100,31,52,.08);
-    border-radius:50%;
-    left:-100px;
-    bottom:-150px;
-}
-
-.hero h1{
-    font-family:'Playfair Display',serif;
-    color:var(--wine);
-    font-size:clamp(38px,6vw,70px);
-    margin-bottom:15px;
-}
-
-.hero p{
-    max-width:650px;
-    color:#74656a;
-    line-height:2;
-    font-size:15px;
-}
-
-.hero-stats{
-    display:flex;
-    flex-wrap:wrap;
-    gap:15px;
-    margin-top:30px;
-}
-
-.stat{
-    background:white;
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:13px 20px;
-    min-width:145px;
-}
-
-.stat strong{
-    display:block;
-    color:var(--wine);
-    font-size:20px;
-}
-
-.stat span{
-    font-size:11px;
-    color:var(--muted);
-}
-
-/* ================= SEARCH ================= */
-
-.search-wrap{
-    max-width:1250px;
-    margin:auto;
-    padding:10px 20px 20px;
-}
-
-.search input{
-    width:100%;
-    border:1px solid var(--border);
-    background:white;
-    padding:16px 20px;
-    border-radius:18px;
-    outline:none;
-    font-size:14px;
-}
-
-.search input:focus{
-    border-color:var(--gold);
-    box-shadow:0 5px 20px rgba(100,31,52,.06);
-}
-
-/* ================= CATEGORIES ================= */
-
-.categories{
-    max-width:1250px;
-    margin:auto;
-    padding:5px 20px 25px;
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
-}
-
-.categories button{
-    white-space:nowrap;
-    border:1px solid var(--border);
-    background:white;
-    color:var(--wine);
-    padding:10px 20px;
-    border-radius:30px;
-    font-size:13px;
-    font-weight:700;
-}
-
-.categories button.active{
-    background:var(--wine);
-    color:white;
-    border-color:var(--wine);
-}
-
-/* ================= PRODUCTS ================= */
-
-.products-section{
-    max-width:1250px;
-    margin:auto;
-    padding:10px 20px 60px;
-}
-
-.section-title{
-    display:flex;
-    align-items:end;
-    justify-content:space-between;
-    margin-bottom:25px;
-}
-
-.section-title h2{
-    font-family:'Playfair Display',serif;
-    color:var(--wine);
-    font-size:30px;
-}
-
-.section-title span{
-    color:var(--muted);
-    font-size:12px;
-}
-
-.products{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:18px;
-}
-
-.product{
-    background:white;
-    border:1px solid var(--border);
-    border-radius:22px;
-    overflow:hidden;
-    transition:.3s;
-}
-
-.product:hover{
-    transform:translateY(-5px);
-    box-shadow:0 15px 35px rgba(80,30,45,.10);
-}
-
-.product-img{
-    aspect-ratio:4/5;
-    overflow:hidden;
-    position:relative;
-    background:#f1e9e6;
-    cursor:pointer;
-}
-
-.product-img img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transition:.5s;
-}
-
-.product:hover .product-img img{
-    transform:scale(1.04);
-}
-
-.offer-badge{
-    position:absolute;
-    top:12px;
-    right:12px;
-    background:var(--wine);
-    color:white;
-    padding:6px 11px;
-    border-radius:20px;
-    font-size:10px;
-    font-weight:800;
-}
-
-.product-info{
-    padding:15px;
-}
-
-.product-name{
-    font-size:14px;
-    font-weight:800;
-    color:var(--wine);
-    margin-bottom:8px;
-}
-
-.product-price{
-    font-weight:800;
-    font-size:16px;
-}
-
-.old-price{
-    text-decoration:line-through;
-    color:#aaa;
-    font-size:12px;
-    margin-right:5px;
-}
-
-.product-meta{
-    color:var(--muted);
-    font-size:10px;
-    margin-top:6px;
-}
-
-/* ================= SOCIAL ================= */
-
-.social-section{
-    max-width:1250px;
-    margin:auto;
-    padding:0 20px 70px;
-}
-
-.social-box{
-    background:var(--wine);
-    color:white;
-    border-radius:30px;
-    padding:45px 25px;
-    text-align:center;
-}
-
-.social-box h2{
-    font-family:'Playfair Display',serif;
-    font-size:32px;
-    margin-bottom:10px;
-}
-
-.social-box p{
-    color:#e8dadd;
-    font-size:13px;
-}
-
-.total-followers{
-    margin:25px auto;
-    background:rgba(255,255,255,.09);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:22px;
-    padding:18px;
-    max-width:360px;
-}
-
-.total-followers strong{
-    display:block;
-    color:#dfc99d;
-    font-size:30px;
-}
-
-.total-followers span{
-    font-size:11px;
-    color:#eadde0;
-}
-
-.social-grid{
-    margin-top:30px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:12px;
-}
-
-.social-card{
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:20px;
-    padding:20px 10px;
-    transition:.25s;
-}
-
-.social-card:hover{
-    background:rgba(255,255,255,.15);
-    transform:translateY(-4px);
-}
-
-.social-icon{
-    font-size:25px;
-    margin-bottom:8px;
-}
-
-.social-name{
-    font-weight:800;
-    font-size:13px;
-}
-
-.social-followers{
-    margin-top:5px;
-    color:#dfc99d;
-    font-size:12px;
-}
-
-/* ================= MODALS ================= */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(20,10,14,.65);
-    backdrop-filter:blur(7px);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:2000;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-content{
-    width:min(950px,100%);
-    max-height:92vh;
-    overflow:auto;
-    background:#fff;
-    border-radius:28px;
-    padding:22px;
-    position:relative;
-}
-
-.close{
-    position:absolute;
-    top:15px;
-    left:15px;
-    width:38px;
-    height:38px;
-    border:0;
-    border-radius:50%;
-    background:#f5eeee;
-    color:var(--wine);
-    font-size:20px;
-    z-index:20;
-}
-
-.product-detail{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:25px;
-}
-
-/* ================= PRODUCT IMAGE SLIDER ================= */
-
-.detail-gallery{
-    position:relative;
-    width:100%;
-}
-
-.detail-image{
-    background:#f5efec;
-    border-radius:20px;
-    overflow:hidden;
-    position:relative;
-    touch-action:pan-y;
-    user-select:none;
-}
-
-.detail-image img{
-    width:100%;
-    height:auto;
-    max-height:650px;
-    min-height:400px;
-    object-fit:cover;
-    display:block;
-    pointer-events:none;
-}
-
-.detail-arrow{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:42px;
-    height:42px;
-    border:0;
-    border-radius:50%;
-    background:rgba(255,255,255,.9);
-    color:var(--wine);
-    font-size:24px;
-    z-index:5;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
-}
-
-.detail-arrow.prev{
-    left:12px;
-}
-
-.detail-arrow.next{
-    right:12px;
-}
-
-.detail-dots{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:7px;
-    margin-top:12px;
-}
-
-.detail-dot{
-    width:8px;
-    height:8px;
-    border:0;
-    border-radius:50%;
-    background:#d9cdd0;
-    padding:0;
-}
-
-.detail-dot.active{
-    background:var(--wine);
-    width:22px;
-    border-radius:10px;
-}
-
-.thumbnails{
-    display:flex;
-    gap:8px;
-    margin-top:12px;
-    overflow-x:auto;
-    justify-content:center;
-}
-
-.thumbnails img{
-    width:58px;
-    height:70px;
-    object-fit:cover;
-    border-radius:10px;
-    cursor:pointer;
-    border:2px solid transparent;
-    opacity:.7;
-}
-
-.thumbnails img.active{
-    border-color:var(--wine);
-    opacity:1;
-}
-
-.detail-info{
-    padding:20px 5px;
-}
-
-.detail-info h2{
-    color:var(--wine);
-    font-family:'Playfair Display',serif;
-    font-size:30px;
-}
-
-.detail-price{
-    margin:15px 0;
-    font-size:24px;
-    font-weight:800;
-    color:var(--wine);
-}
-
-.detail-text{
-    color:var(--muted);
-    font-size:13px;
-    line-height:2;
-}
-
-.sizes{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:18px;
-}
-
-.size{
-    border:1px solid var(--border);
-    padding:7px 12px;
-    border-radius:10px;
-    font-size:12px;
-}
-
-.order-btn{
-    width:100%;
-    border:0;
-    background:var(--wine);
-    color:white;
-    padding:15px;
-    border-radius:15px;
-    margin-top:22px;
-    font-weight:800;
-}
-
-/* ================= FORM ================= */
-
-.order-form{
-    padding:20px 5px;
-}
-
-.order-form h2{
-    color:var(--wine);
-    font-family:'Playfair Display',serif;
-    font-size:28px;
-    margin-bottom:20px;
-}
-
-.form-group{
-    margin-bottom:14px;
-}
-
-.form-group label{
-    display:block;
-    font-size:12px;
-    font-weight:700;
-    margin-bottom:6px;
-    color:var(--wine);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    width:100%;
-    padding:13px;
-    border:1px solid var(--border);
-    border-radius:12px;
-    outline:none;
-    background:#fff;
-}
-
-.form-group textarea{
-    resize:vertical;
-    min-height:80px;
-}
-
-.total-box{
-    background:#faf4ee;
-    border-radius:15px;
-    padding:15px;
-    margin-top:15px;
-}
-
-.total-box div{
-    display:flex;
-    justify-content:space-between;
-    margin:5px 0;
-    font-size:13px;
-}
-
-.total-box .final{
-    color:var(--wine);
-    font-weight:800;
-    font-size:17px;
-    border-top:1px solid var(--border);
-    padding-top:10px;
-    margin-top:10px;
-}
-
-.send-order{
-    width:100%;
-    border:0;
-    background:#198754;
-    color:white;
-    padding:15px;
-    border-radius:15px;
-    margin-top:18px;
-    font-weight:800;
-}
-
-/* ================= FOOTER ================= */
-
-footer{
-    background:#32141f;
-    color:white;
-    padding:45px 20px 25px;
-}
-
-.footer-inner{
-    max-width:1250px;
-    margin:auto;
-    text-align:center;
-}
-
-.footer-logo{
-    font-family:'Playfair Display',serif;
-    font-size:28px;
-    letter-spacing:3px;
-}
-
-.footer-sub{
-    color:#d2b980;
-    font-size:9px;
-    letter-spacing:4px;
-    margin-top:5px;
-}
-
-.footer-links{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    margin:25px 0;
-}
-
-.footer-links a{
-    color:#eadde0;
-    font-size:12px;
-}
-
-.made-by{
-    margin-top:20px;
-    color:#c7adb4;
-    font-size:11px;
-    letter-spacing:.5px;
-}
-
-.made-by strong{
-    color:#d9b878;
-    font-weight:700;
-}
-
-.copyright{
-    margin-top:12px;
-    color:#9d858c;
-    font-size:10px;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:1000px){
-
-    .products{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-    .social-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media(max-width:700px){
-
-    .hero-slider{
-        padding:15px 14px 5px;
-    }
-
-    .slider{
-        border-radius:25px;
-    }
-
-    .slide{
-        height:430px;
-    }
-
-    .slide-overlay{
-        padding:25px 15px 35px;
-    }
-
-    .slide-content h2{
-        font-size:32px;
-    }
-
-    .slide-content button{
-        padding:11px 25px;
-    }
-
-    .slider-arrow{
-        width:38px;
-        height:38px;
-        font-size:21px;
-    }
-
-    .slider-arrow.prev{
-        left:10px;
-    }
-
-    .slider-arrow.next{
-        right:10px;
-    }
-
-    .nav{
-        padding:12px 14px;
-    }
-
-    .logo-main{
-        font-size:21px;
-    }
-
-    .logo-sub{
-        font-size:7px;
-    }
-
-    .nav-actions{
-        gap:5px;
-    }
-
-    .lang-btn,
-    .whatsapp-btn{
-        padding:8px 10px;
-        font-size:10px;
-    }
-
-    .hero{
-        padding:30px 14px 20px;
-    }
-
-    .hero-box{
-        padding:40px 22px;
-        border-radius:25px;
-    }
-
-    .hero h1{
-        font-size:43px;
-    }
-
-    .products-section,
-    .search-wrap,
-    .categories,
-    .social-section{
-        padding-left:14px;
-        padding-right:14px;
-    }
-
-    .products{
-        grid-template-columns:repeat(2,1fr);
-        gap:10px;
-    }
-
-    .product{
-        border-radius:17px;
-    }
-
-    .product-info{
-        padding:11px;
-    }
-
-    .product-name{
-        font-size:12px;
-    }
-
-    .product-price{
-        font-size:14px;
-    }
-
-    .product-meta{
-        font-size:9px;
-    }
-
-    .product-detail{
-        grid-template-columns:1fr;
-    }
-
-    .modal-content{
-        padding:15px;
-        border-radius:22px;
-    }
-
-    .detail-image img{
-        min-height:0;
-        max-height:560px;
-    }
-
-    .detail-info h2{
-        font-size:25px;
-    }
-
-    .social-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media(max-width:420px){
-
-    .hero-stats{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-    }
-
-    .stat{
-        min-width:0;
-        padding:11px;
-    }
-
-    .social-card{
-        padding:16px 5px;
-    }
-
-}
-</style>
-</head>
-
-<body>
-
-<!-- ================= HEADER ================= -->
-
-<header>
-
-<div class="nav">
-
-    <a href="#" class="logo">
-
-        <div class="logo-main">
-            ESPOZA
-        </div>
-
-        <div class="logo-sub">
-            FASHION
-        </div>
-
-    </a>
-
-    <div class="nav-actions">
-
-        <button class="lang-btn" onclick="toggleLanguage()">
-            EN
-        </button>
-
-        <a class="whatsapp-btn"
-           href="https://wa.me/972595461861"
-           target="_blank">
-            واتساب
-        </a>
-
-    </div>
-
-</div>
-
-</header>
-
-<!-- ================= HERO SLIDER ================= -->
-
-<section class="hero-slider">
-
-<div class="slider" id="heroSlider">
-
-    <div class="slides" id="heroSlides">
-
-        <div class="slide">
-
-            <img
-                src="IMG_3490.jpeg"
-                alt="NEW COLLECTION"
-            >
-
-            <div class="slide-overlay">
-
-                <div class="slide-content">
-
-                    <h2>NEW COLLECTION</h2>
-
-                    <button onclick="goToCategory('all')">
-                        استكشفي
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="slide">
-
-            <img
-                src="IMG_3492.jpeg"
-                alt="الأطقم"
-            >
-
-            <div class="slide-overlay">
-
-                <div class="slide-content">
-
-                    <h2>الأطقم</h2>
-
-                    <button onclick="goToCategory('sets')">
-                        استكشفي
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="slide">
-
-            <img
-                src="IMG_3493.jpeg"
-                alt="الفساتين"
-            >
-
-            <div class="slide-overlay">
-
-                <div class="slide-content">
-
-                    <h2>الفساتين</h2>
-
-                    <button onclick="goToCategory('dresses')">
-                        استكشفي
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <button
-        class="slider-arrow prev"
-        onclick="changeHeroSlide(-1)"
-        aria-label="السابق">
-        ‹
-    </button>
-
-    <button
-        class="slider-arrow next"
-        onclick="changeHeroSlide(1)"
-        aria-label="التالي">
-        ›
-    </button>
-
-    <div class="slider-dots">
-
-        <button
-            class="slider-dot active"
-            onclick="goHeroSlide(0)">
-        </button>
-
-        <button
-            class="slider-dot"
-            onclick="goHeroSlide(1)">
-        </button>
-
-        <button
-            class="slider-dot"
-            onclick="goHeroSlide(2)">
-        </button>
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- ================= HERO ================= -->
-
-<section class="hero">
-
-<div class="hero-box">
-
-    <h1>
-        أناقتك تبدأ هنا
-    </h1>
-
-    <p>
-        اكتشفي تشكيلتنا المختارة من الفساتين والأطقم
-        بتصاميم أنيقة تناسب ذوقك وتكمل إطلالتك.
-    </p>
-
-    <div class="hero-stats">
-
-        <div class="stat">
-
-            <strong id="heroFollowers">
-                24,125+
-            </strong>
-
-            <span>
-                متابع عبر منصاتنا
-            </span>
-
-        </div>
-
-        <div class="stat">
-
-            <strong>
-                2019
-            </strong>
-
-            <span>
-                منذ انطلاقتنا
-            </span>
-
-        </div>
-
-        <div class="stat">
-
-            <strong>
-                24/7
-            </strong>
-
-            <span>
-                للتواصل والطلبات
-            </span>
-
-        </div>
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- ================= SEARCH ================= -->
-
-<div class="search-wrap">
-
-    <div class="search">
-
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="ماذا تبحثين؟"
-            oninput="renderProducts()"
-        >
-
-    </div>
-
-</div>
-
-<!-- ================= CATEGORIES ================= -->
-
-<div class="categories">
-
-    <button
-        class="active"
-        onclick="setCategory('all',this)">
-        الكل
-    </button>
-
-    <button
-        onclick="setCategory('dresses',this)">
-        الفساتين
-    </button>
-
-    <button
-        onclick="setCategory('sets',this)">
-        الأطقم
-    </button>
-
-    <button
-        onclick="setCategory('offers',this)">
-        العروضات
-    </button>
-
-</div>
-
-<!-- ================= PRODUCTS ================= -->
-
-<section class="products-section">
-
-<div class="section-title">
-
-    <h2>
-        تشكيلتنا
-    </h2>
-
-    <span id="productCount"></span>
-
-</div>
-
-<div
-    class="products"
-    id="products">
-</div>
-
-</section>
-
-<!-- ================= SOCIAL ================= -->
-
-<section class="social-section">
-
-<div class="social-box">
-
-    <h2>
-        تابعينا على منصاتنا
-    </h2>
-
-    <p>
-        كوني أول من يشوف أحدث القطع والعروض والتشكيلات الجديدة ❤️
-    </p>
-
-    <div class="total-followers">
-
-        <strong id="totalFollowers">
-            24,125+
-        </strong>
-
-        <span>
-            مجموع متابعينا على جميع المنصات
-        </span>
-
-    </div>
-
-    <div class="social-grid">
-
-        <a class="social-card"
-           href="https://www.facebook.com/share/19DhHV6Aty/?mibextid=wwXIfr"
-           target="_blank">
-
-            <div class="social-icon">
-                f
-            </div>
-
-            <div class="social-name">
-                Facebook
-            </div>
-
-            <div class="social-followers">
-                22,025 متابع
-            </div>
-
-        </a>
-
-        <a class="social-card"
-           href="https://www.instagram.com/espoza_fashion?igsi=MWx0OGhveWlqcnIybg=="
-           target="_blank">
-
-            <div class="social-icon">
-                ◎
-            </div>
-
-            <div class="social-name">
-                Instagram
-            </div>
-
-            <div class="social-followers">
-                900 متابع
-            </div>
-
-        </a>
-
-        <a class="social-card"
-           href="https://www.tiktok.com/@espoza.fashion?_r=1&_t=ZS-99PDIMnCoHx"
-           target="_blank">
-
-            <div class="social-icon">
-                ♪
-            </div>
-
-            <div class="social-name">
-                TikTok
-            </div>
-
-            <div class="social-followers">
-                700 متابع
-            </div>
-
-        </a>
-
-        <a class="social-card"
-           href="https://snapchat.com/t/qn0wx9ou"
-           target="_blank">
-
-            <div class="social-icon">
-                👻
-            </div>
-
-            <div class="social-name">
-                Snapchat
-            </div>
-
-            <div class="social-followers">
-                500 متابع
-            </div>
-
-        </a>
-
-    </div>
-
-</div>
-
-</section>
-
-<!-- ================= PRODUCT MODAL ================= -->
-
-<div
-    class="modal"
-    id="productModal">
-
-<div class="modal-content">
-
-<button
-    class="close"
-    onclick="closeModal('productModal')">
-    ×
-</button>
-
-<div class="product-detail">
-
-    <div class="detail-gallery">
-
-        <div
-            class="detail-image"
-            id="detailImageBox">
-
-            <img
-                id="detailImage"
-                src=""
-                alt=""
-            >
-
-            <button
-                class="detail-arrow prev"
-                id="detailPrev"
-                onclick="changeProductImage(-1)"
-                aria-label="الصورة السابقة">
-                ‹
-            </button>
-
-            <button
-                class="detail-arrow next"
-                id="detailNext"
-                onclick="changeProductImage(1)"
-                aria-label="الصورة التالية">
-                ›
-            </button>
-
-        </div>
-
-        <div
-            class="detail-dots"
-            id="detailDots">
-        </div>
-
-        <div
-            class="thumbnails"
-            id="thumbnails">
-        </div>
-
-    </div>
-
-    <div class="detail-info">
-
-        <h2 id="detailName"></h2>
-
-        <div
-            class="detail-price"
-            id="detailPrice">
-        </div>
-
-        <div
-            class="detail-text"
-            id="detailDescription">
-        </div>
-
-        <div
-            class="sizes"
-            id="detailSizes">
-        </div>
-
-        <button
-            class="order-btn"
-            onclick="openOrder()">
-            اطلبِي الآن عبر واتساب
-        </button>
-
-    </div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- ================= ORDER MODAL ================= -->
-
-<div
-    class="modal"
-    id="orderModal">
-
-<div class="modal-content">
-
-<button
-    class="close"
-    onclick="closeModal('orderModal')">
-    ×
-</button>
-
-<div class="order-form">
-
-<h2>
-    إتمام الطلب
-</h2>
-
-<div class="form-group">
-
-<label>
-    القطعة
-</label>
-
-<input
-    id="orderProduct"
-    readonly
->
-
-</div>
-
-<div class="form-group">
-
-<label>
-    اللون
-</label>
-
-<select id="orderColor"></select>
-
-</div>
-
-<div class="form-group">
-
-<label>
-    المقاس
-</label>
-
-<select id="orderSize"></select>
-
-</div>
-
-<div class="form-group">
-
-<label>
-    الاسم الكامل
-</label>
-
-<input
-    id="customerName"
-    type="text"
-    placeholder="اكتبي اسمك"
->
-
-</div>
-
-<div class="form-group">
-
-<label>
-    رقم الهاتف
-</label>
-
-<input
-    id="customerPhone"
-    type="tel"
-    placeholder="05xxxxxxxx"
->
-
-</div>
-
-<div class="form-group">
-
-<label>
-    منطقة التوصيل
-</label>
-
-<select
-    id="deliveryRegion"
-    onchange="updateTotal()">
-
-<option value="westbank">
-    الضفة الغربية — ₪20
-</option>
-
-<option value="jerusalem">
-    القدس — ₪30
-</option>
-
-<option value="inside">
-    الداخل — ₪70
-</option>
-
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label>
-    المدينة / المنطقة / البلدة / الحي
-</label>
-
-<input
-    id="customerArea"
-    list="areas"
-    placeholder="اكتبي مدينتك أو منطقتك"
->
-
-<datalist id="areas">
-
-<option value="الخليل">
-<option value="بيت لحم">
-<option value="رام الله">
-<option value="البيرة">
-<option value="نابلس">
-<option value="طولكرم">
-<option value="قلقيلية">
-<option value="جنين">
-<option value="سلفيت">
-<option value="أريحا">
-<option value="القدس">
-<option value="بيت جالا">
-<option value="بيت ساحور">
-<option value="دورا">
-<option value="يطا">
-<option value="الظاهرية">
-<option value="حلحول">
-<option value="ترقوميا">
-<option value="السموع">
-<option value="بني نعيم">
-<option value="الرصيفة">
-<option value="مخيم الفوار">
-<option value="مخيم العروب">
-<option value="مخيم الدهيشة">
-<option value="مخيم عايدة">
-
-</datalist>
-
-</div>
-
-<div class="form-group">
-
-<label>
-    العنوان بالتفصيل
-</label>
-
-<textarea
-    id="customerAddress"
-    placeholder="اسم الشارع، الحي، رقم المنزل..."
-></textarea>
-
-</div>
-
-<div class="total-box">
-
-<div>
-
-<span>
-    سعر القطعة
-</span>
-
-<strong id="itemPrice">
-    ₪0
-</strong>
-
-</div>
-
-<div>
-
-<span>
-    التوصيل
-</span>
-
-<strong id="deliveryPrice">
-    ₪20
-</strong>
-
-</div>
-
-<div class="final">
-
-<span>
-    المجموع
-</span>
-
-<strong id="finalPrice">
-    ₪0
-</strong>
-
-</div>
-
-</div>
-
-<button
-    class="send-order"
-    onclick="sendOrder()">
-    إرسال الطلب عبر واتساب
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-<div class="footer-inner">
-
-    <div class="footer-logo">
-        ESPOZA
-    </div>
-
-    <div class="footer-sub">
-        FASHION • SINCE 2019
-    </div>
-
-    <div class="footer-links">
-
-        <a
-            href="https://www.instagram.com/espoza_fashion?igsi=MWx0OGhveWlqcnIybg=="
-            target="_blank">
-            Instagram
-        </a>
-
-        <a
-            href="https://www.facebook.com/share/19DhHV6Aty/?mibextid=wwXIfr"
-            target="_blank">
-            Facebook
-        </a>
-
-        <a
-            href="https://www.tiktok.com/@espoza.fashion?_r=1&_t=ZS-99PDIMnCoHx"
-            target="_blank">
-            TikTok
-        </a>
-
-        <a
-            href="https://snapchat.com/t/qn0wx9ou"
-            target="_blank">
-            Snapchat
-        </a>
-
-        <a
-            href="https://wa.me/972595461861"
-            target="_blank">
-            WhatsApp
-        </a>
-
-    </div>
-
-    <div class="made-by">
-        Designed &amp; Made by <strong>Yousef Ajra</strong>
-    </div>
-
-    <div class="copyright">
-        © 2026 Espoza Fashion — جميع الحقوق محفوظة
-    </div>
-
-</div>
-
-</footer>
-
-<script>
-
 /* =========================================================
-   ESPOZA SETTINGS
+   LANGUAGE SYSTEM — ARABIC / ENGLISH
 ========================================================= */
 
-const STORE = {
+let currentLanguage =
+    localStorage.getItem("espozaLanguage") || "ar";
 
-    whatsapp:"972595461861",
+const englishProductNames = {
 
-    followers:{
-        facebook:22025,
-        instagram:900,
-        tiktok:700,
-        snapchat:500
+    1:"Celeste Dress",
+    2:"Silvana Dress",
+    3:"Astria Dress",
+    4:"Florence Dress",
+    5:"Scarlett Dress",
+    6:"Rebecca Dress",
+    7:"Rosalia Dress",
+    8:"Dalia Dress",
+    9:"Camelia Dress",
+    10:"Iris Dress",
+    11:"Lorena Dress",
+    12:"Rolana Dress",
+    13:"Elora Dress",
+    14:"Amara Dress",
+    15:"Ariana Dress",
+    16:"Niralia Dress",
+    17:"Serafina Dress",
+    18:"Aurelia Dress",
+    19:"Elara Dress",
+    20:"Aliora Dress",
+    21:"Melora Dress",
+    22:"Lavira Dress",
+    23:"Elena Dress",
+
+    24:"Aviora Set",
+    25:"Nadira Set",
+    26:"Losara Set",
+    27:"Timara Set",
+
+    28:"Roseva Dress",
+    29:"Zelora Dress",
+    30:"Tiralia Dress",
+    31:"Nalisa Dress",
+    32:"Liora Dress",
+
+    33:"Soliera Set",
+    34:"Valora Set",
+
+    35:"Nisara Dress",
+    36:"Kalina Dress",
+
+    37:"Rivana Set",
+    38:"Delara Set",
+
+    39:"Marilda Dress",
+    40:"Vinora Dress",
+    41:"Alinda Dress",
+
+    42:"Fayora Set"
+
+};
+
+const translations = {
+
+    ar:{
+
+        languageButton:"EN",
+
+        whatsapp:"واتساب",
+
+        heroTitle:"أناقتك تبدأ هنا",
+
+        heroDescription:
+        "اكتشفي تشكيلتنا المختارة من الفساتين والأطقم بتصاميم أنيقة تناسب ذوقك وتكمل إطلالتك.",
+
+        followers:"متابع عبر منصاتنا",
+
+        since:"منذ انطلاقتنا",
+
+        contact:"للتواصل والطلبات",
+
+        search:"ماذا تبحثين؟",
+
+        all:"الكل",
+
+        dresses:"الفساتين",
+
+        sets:"الأطقم",
+
+        offers:"العروضات",
+
+        collection:"تشكيلتنا",
+
+        piece:"قطعة",
+
+        explore:"استكشفي",
+
+        specialOffer:"عرض خاص",
+
+        sizes:"المقاسات:",
+
+        socialTitle:"تابعينا على منصاتنا",
+
+        socialDescription:
+        "كوني أول من يستكشف أحدث الموديلات والعروضات والتشكيلات الجديدة المميزة.",
+
+        totalFollowers:
+        "مجموع متابعينا على جميع المنصات",
+
+        followersWord:"متابع",
+
+        orderWhatsapp:"اطلبِي الآن عبر واتساب",
+
+        orderTitle:"إتمام الطلب",
+
+        product:"القطعة",
+
+        color:"اللون",
+
+        size:"المقاس",
+
+        fullName:"الاسم الكامل",
+
+        writeName:"اكتبي اسمك",
+
+        phone:"رقم الهاتف",
+
+        delivery:"منطقة التوصيل",
+
+        area:"المدينة / المنطقة / البلدة / الحي",
+
+        writeArea:"اكتبي مدينتك أو منطقتك",
+
+        address:"العنوان بالتفصيل",
+
+        writeAddress:"اسم الشارع، الحي، رقم المنزل...",
+
+        westbank:"الضفة الغربية — ₪20",
+
+        jerusalem:"القدس — ₪30",
+
+        inside:"الداخل — ₪70",
+
+        itemPrice:"سعر القطعة",
+
+        deliveryPrice:"التوصيل",
+
+        total:"المجموع",
+
+        sendOrder:"إرسال الطلب عبر واتساب",
+
+        unavailable:"غير محدد",
+
+        description:
+        "قطعة مميزة من Espoza Fashion. متوفرة بالمقاسات المذكورة، ويمكنك اختيار اللون والمقاس عند إتمام الطلب.",
+
+        fillForm:"يرجى تعبئة جميع معلومات الطلب ❤️",
+
+        previous:"الصورة السابقة",
+
+        next:"الصورة التالية",
+
+        allRights:
+        "© 2026 Espoza Fashion — جميع الحقوق محفوظة"
+
+    },
+
+    en:{
+
+        languageButton:"AR",
+
+        whatsapp:"WhatsApp",
+
+        heroTitle:"Your Elegance Starts Here",
+
+        heroDescription:
+        "Discover our carefully selected collection of dresses and sets, designed to complement your style and complete your look.",
+
+        followers:"Followers across our platforms",
+
+        since:"Since our launch",
+
+        contact:"For orders & inquiries",
+
+        search:"What are you looking for?",
+
+        all:"All",
+
+        dresses:"Dresses",
+
+        sets:"Sets",
+
+        offers:"Offers",
+
+        collection:"Our Collection",
+
+        piece:"pieces",
+
+        explore:"Explore",
+
+        specialOffer:"Special Offer",
+
+        sizes:"Sizes:",
+
+        socialTitle:"Follow Us",
+
+        socialDescription:
+        "Be the first to discover the latest models, offers and exclusive new collections.",
+
+        totalFollowers:
+        "Total followers across all platforms",
+
+        followersWord:"followers",
+
+        orderWhatsapp:"Order Now via WhatsApp",
+
+        orderTitle:"Complete Your Order",
+
+        product:"Product",
+
+        color:"Color",
+
+        size:"Size",
+
+        fullName:"Full Name",
+
+        writeName:"Enter your name",
+
+        phone:"Phone Number",
+
+        delivery:"Delivery Area",
+
+        area:"City / Area / Town / Neighborhood",
+
+        writeArea:"Enter your city or area",
+
+        address:"Detailed Address",
+
+        writeAddress:"Street name, neighborhood, house number...",
+
+        westbank:"West Bank — ₪20",
+
+        jerusalem:"Jerusalem — ₪30",
+
+        inside:"Inside — ₪70",
+
+        itemPrice:"Item Price",
+
+        deliveryPrice:"Delivery",
+
+        total:"Total",
+
+        sendOrder:"Send Order via WhatsApp",
+
+        unavailable:"Not specified",
+
+        description:
+        "A special piece from Espoza Fashion. Available in the listed sizes, with color and size selection available when completing your order.",
+
+        fillForm:"Please fill in all order information ❤️",
+
+        previous:"Previous image",
+
+        next:"Next image",
+
+        allRights:
+        "© 2026 Espoza Fashion — All Rights Reserved"
+
     }
 
 };
 
 /* =========================================================
-   AUTOMATIC TOTAL FOLLOWERS
+   LANGUAGE HELPERS
 ========================================================= */
 
-const totalFollowers =
-    STORE.followers.facebook +
-    STORE.followers.instagram +
-    STORE.followers.tiktok +
-    STORE.followers.snapchat;
+function t(key){
 
-document.getElementById("totalFollowers").textContent =
-    totalFollowers.toLocaleString("en-US") + "+";
+    return translations[currentLanguage][key] ||
+           translations.ar[key] ||
+           key;
 
-document.getElementById("heroFollowers").textContent =
-    totalFollowers.toLocaleString("en-US") + "+";
-
-/* =========================================================
-   PRODUCTS
-========================================================= */
-
-const products = [
-
-{
-id:1,
-name:"فستان سيليست",
-price:400,
-sizes:["38","40","42","44","46"],
-images:["B08EE5A6-A22B-4060-866C-30CA4B0D5A5B.jpeg"],
-type:"dresses"
-},
-
-{
-id:2,
-name:"فستان سيلفانا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["1d2e71eb-887f-4c5c-acfe-5844cacd3d80.jpeg"],
-type:"dresses"
-},
-
-{
-id:3,
-name:"فستان أستريا",
-price:280,
-sizes:["44","46","48","50","52","54","56"],
-images:["IMG_3062.jpeg"],
-type:"dresses"
-},
-
-{
-id:4,
-name:"فستان فلورانس",
-price:300,
-sizes:["42","44","46","48","50","52","54","56"],
-images:["bba65b45-65ac-4bcf-9951-ccd0aee6b7e3.jpeg"],
-type:"dresses"
-},
-
-{
-id:5,
-name:"فستان سكارليت",
-price:300,
-sizes:["42","44","46","48","50","52","54"],
-images:["a5824a77-f846-495a-8b9b-f017e5db60b1.jpeg"],
-type:"dresses"
-},
-
-{
-id:6,
-name:"فستان ريبيكا",
-price:350,
-oldPrice:650,
-sizes:["38","40","42","44"],
-images:["d5b1682e-b1af-43bd-a07c-4b10ec765d54.jpeg"],
-type:"dresses",
-offer:true
-},
-
-{
-id:7,
-name:"فستان روزاليا",
-price:280,
-sizes:["40","42","44","46"],
-images:["96d63dcc-5bb1-41f5-afc0-12cc18a95987.jpeg"],
-type:"dresses"
-},
-
-{
-id:8,
-name:"فستان داليا",
-price:260,
-sizes:["42","44","46","48","50","52","54"],
-images:["f1cdadad-8329-4409-9e0f-6cafaac54118.jpeg"],
-type:"dresses"
-},
-
-{
-id:9,
-name:"فستان كاميليا",
-price:320,
-sizes:["38","40","42","44","46"],
-images:["7035804c-9be8-46cb-be3e-b7368f5021c4.jpeg"],
-type:"dresses"
-},
-
-{
-id:10,
-name:"فستان آيرس",
-price:280,
-sizes:["42","44","46","48","50","52","54","56"],
-images:["76a94ecc-4a8a-4559-9f73-fdfb29b56a76.jpeg"],
-type:"dresses"
-},
-
-{
-id:11,
-name:"فستان لورينا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["4eeb7b16-4dd3-40f1-b4fc-b47d2d1f8c2f.jpeg"],
-type:"dresses"
-},
-
-{
-id:12,
-name:"فستان رولانا",
-price:400,
-sizes:["50","52","54"],
-images:["e8aea098-0346-4cb0-994d-fec2e8ba380c.jpeg"],
-type:"dresses"
-},
-
-{
-id:13,
-name:"فستان إلورا",
-price:300,
-sizes:["38","40","42","44","46"],
-images:["IMG_3331.jpeg"],
-type:"dresses"
-},
-
-{
-id:14,
-name:"فستان أمارا",
-price:280,
-sizes:["42","44","46","48","50","52","54"],
-images:["4abd7c1d-5c7c-4ea3-91a8-a5f367d42117.jpeg"],
-type:"dresses"
-},
-
-{
-id:15,
-name:"فستان أريانا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["21de8edf-b602-4102-98af-3daa451d782a.jpeg"],
-type:"dresses"
-},
-
-{
-id:16,
-name:"فستان نيراليا",
-price:260,
-sizes:["42","44","46"],
-images:["d595d10e-d3e1-40b0-b32e-dae06ebc38d4.jpeg"],
-type:"dresses"
-},
-
-{
-id:17,
-name:"فستان سيرافينا",
-price:300,
-sizes:["44","46","48","50","52","54","56"],
-images:["0d60249c-784a-4aeb-9c1a-f0e00786b96d.jpeg"],
-type:"dresses"
-},
-
-{
-id:18,
-name:"فستان أوريليا",
-price:320,
-sizes:["44","46","48","50","52"],
-images:["3802415a-fcc0-458d-a9b8-8a776d8b4468.jpeg"],
-type:"dresses"
-},
-
-{
-id:19,
-name:"فستان إيلارا",
-price:300,
-sizes:["44","46","48","50","52","54","56","58"],
-images:["52b190e5-e6e2-43c4-bc0b-29bd4fff703d.jpeg"],
-type:"dresses"
-},
-
-{
-id:20,
-name:"فستان أليورا",
-price:250,
-sizes:["48","50","52","54","56","58","60"],
-images:[
-"IMG_3413.jpeg",
-"IMG_3414.jpeg"
-],
-colors:["زيتي","بني"],
-type:"dresses"
-},
-
-{
-id:21,
-name:"فستان ميلورا",
-price:280,
-sizes:["44","46","48","50","52"],
-images:["3294543a-5a41-4e3c-aa52-ae9a56166169.jpeg"],
-type:"dresses"
-},
-
-{
-id:22,
-name:"فستان لافيرا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["1721952f-b2fb-47d4-812e-59d7d1f552d3.jpeg"],
-type:"dresses"
-},
-
-{
-id:23,
-name:"فستان إيلينا",
-price:280,
-sizes:["40","42","44","46","48","50","52","54"],
-images:[
-"efb60c11-651a-49cc-bca2-5c4673416142.jpeg",
-"fcd71140-fe8b-4e20-82c2-15fa10856e17.jpeg"
-],
-colors:["كحلي","خمري"],
-type:"dresses"
-},
-
-{
-id:24,
-name:"طقم أفيورا",
-price:250,
-sizes:["38","40","42","44"],
-images:["CDDB9175-C192-466A-A5F2-BAE98767E909.png"],
-type:"sets"
-},
-
-{
-id:25,
-name:"طقم ناديرا",
-price:270,
-sizes:["44","46","48","50","52","54"],
-images:["f7b6f62a-31b3-4f3f-ae99-c198da51af0b.jpeg"],
-type:"sets"
-},
-
-{
-id:26,
-name:"طقم لوسارا",
-price:220,
-sizes:["44","46","48","50","52","54","56"],
-images:["43c0471b-d34b-4709-bcb6-2060f442bd51.jpeg"],
-type:"sets"
-},
-
-{
-id:27,
-name:"طقم تيمارا",
-price:220,
-sizes:["40","42","44","46","48","50","52"],
-images:["a3611702-a408-42f4-b14b-8762c10ddde1.jpeg"],
-type:"sets"
-},
-
-{
-id:28,
-name:"فستان روزيفا",
-price:300,
-sizes:["42","44","46","48","50"],
-images:["452d0ae1-964c-4bf9-8893-56ad370240de.jpeg"],
-type:"dresses"
-},
-
-{
-id:29,
-name:"فستان زيلورا",
-price:100,
-oldPrice:270,
-sizes:["46","48"],
-images:["62BBCC70-847F-407A-A8EB-3D6BC3B00561.png"],
-type:"dresses",
-offer:true
-},
-
-{
-id:30,
-name:"فستان تيراليا",
-price:100,
-oldPrice:270,
-sizes:["42","44"],
-images:["6420BB84-199C-4479-9A19-20D44772C5D3.png"],
-type:"dresses",
-offer:true
-},
-
-{
-id:31,
-name:"فستان ناليسا",
-price:100,
-oldPrice:350,
-sizes:["42","44","46","48","50","52"],
-images:["CE736C47-5B25-4310-BDD1-41470F7ACF88.png"],
-type:"dresses",
-offer:true
-},
-
-{
-id:32,
-name:"فستان ليورا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["60843747-a8a2-4f91-8a91-92e1e07d1755.jpeg"],
-type:"dresses"
-},
-
-{
-id:33,
-name:"طقم سوليرا",
-price:350,
-sizes:["42","44","46","48","50","52","54"],
-images:[
-"25a8684d-e240-4645-8ad2-13115240e748.jpeg",
-"adefc759-64ce-485c-8e13-2fcefa0cf343.jpeg",
-"5f64d5a2-8c50-41ee-8e14-079ce0a59a64.jpeg"
-],
-colors:[
-"أسود",
-"أخضر",
-"خمري"
-],
-type:"sets"
-},
-
-{
-id:34,
-name:"طقم فالورا",
-price:290,
-sizes:["42","44","46","48","50","52","54"],
-images:["d25eb23c-800b-432b-95ea-d008c721c04c.jpeg"],
-type:"sets"
-},
-
-{
-id:35,
-name:"فستان نيسارا",
-price:260,
-sizes:["42","44","46","48","50","52"],
-images:[
-"IMG_3065.jpeg",
-"eZy Watermark_08-08-2026_08-27-51-6200PM.jpeg"
-],
-colors:[
-"كحلي",
-"أخضر"
-],
-type:"dresses"
-},
-
-{
-id:36,
-name:"فستان كالينا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["03431a2b-ed8b-45db-8533-2765b0896f1f.jpeg"],
-type:"dresses"
-},
-
-{
-id:37,
-name:"طقم ريفانا",
-price:220,
-sizes:["40","42","44","46","48","50","52"],
-images:["6fe7c5d2-e21d-4ccc-a5e5-4e81b850d394.jpeg"],
-type:"sets"
-},
-
-{
-id:38,
-name:"طقم ديلارا",
-price:220,
-sizes:["38","40","42","44","46","48"],
-images:["29ac75c5-42f9-41d6-9b7e-f067d1a90bd7.jpeg"],
-type:"sets"
-},
-
-{
-id:39,
-name:"فستان ماريلدا",
-price:400,
-sizes:["38","40","42","44","46"],
-images:["IMG_3268.jpeg"],
-type:"dresses"
-},
-
-{
-id:40,
-name:"فستان فينورا",
-price:450,
-sizes:["46","48"],
-images:["10968618-b416-4abe-bf4d-65e80d4f2dc7.jpeg"],
-type:"dresses"
-},
-
-{
-id:41,
-name:"فستان أليندا",
-price:270,
-sizes:["44","46","48","50","52","54"],
-images:["171db8cd-1a12-4055-a350-bf323ac8748e.jpeg"],
-type:"dresses"
-},
-
-{
-id:42,
-name:"طقم فايورا",
-price:250,
-sizes:["44","46","48","50","52","54","56"],
-images:["8791d719-9671-4744-8989-209a348e3e4f.jpeg"],
-type:"sets"
 }
 
-];
+function getProductName(product){
 
-/* =========================================================
-   PRODUCT DISPLAY
-========================================================= */
+    if(currentLanguage === "en")
+        return englishProductNames[product.id] || product.name;
 
-let currentCategory = "all";
-let currentProduct = null;
-let currentImageIndex = 0;
+    return product.name;
 
-/* =========================================================
-   CATEGORY
-========================================================= */
-
-function setCategory(category,button){
-
-    currentCategory = category;
-
-    document
-    .querySelectorAll(".categories button")
-    .forEach(btn =>
-        btn.classList.remove("active")
-    );
-
-    if(button){
-        button.classList.add("active");
-    }
-
-    renderProducts();
 }
 
-function goToCategory(category){
+/* =========================================================
+   APPLY LANGUAGE
+========================================================= */
 
-    currentCategory = category;
+function applyLanguage(){
 
-    document
-    .querySelectorAll(".categories button")
-    .forEach(btn =>
-        btn.classList.remove("active")
-    );
+    const isEnglish =
+        currentLanguage === "en";
 
-    const buttons =
+    document.documentElement.lang =
+        isEnglish ? "en" : "ar";
+
+    document.documentElement.dir =
+        isEnglish ? "ltr" : "rtl";
+
+    document.body.dir =
+        isEnglish ? "ltr" : "rtl";
+
+    document.getElementById("languageButton").textContent =
+        t("languageButton");
+
+    document.querySelector(".whatsapp-btn").textContent =
+        t("whatsapp");
+
+    document.querySelector(".hero h1").textContent =
+        t("heroTitle");
+
+    document.querySelector(".hero p").textContent =
+        t("heroDescription");
+
+    document.querySelectorAll(".stat")[0]
+        .querySelector("span").textContent =
+        t("followers");
+
+    document.querySelectorAll(".stat")[1]
+        .querySelector("span").textContent =
+        t("since");
+
+    document.querySelectorAll(".stat")[2]
+        .querySelector("span").textContent =
+        t("contact");
+
+    document.getElementById("searchInput").placeholder =
+        t("search");
+
+    const categoryButtons =
         document.querySelectorAll(".categories button");
 
-    if(category === "all")
-        buttons[0].classList.add("active");
+    categoryButtons[0].textContent = t("all");
+    categoryButtons[1].textContent = t("dresses");
+    categoryButtons[2].textContent = t("sets");
+    categoryButtons[3].textContent = t("offers");
 
-    if(category === "dresses")
-        buttons[1].classList.add("active");
+    document.querySelector(".section-title h2").textContent =
+        t("collection");
 
-    if(category === "sets")
-        buttons[2].classList.add("active");
+    document.querySelector(".social-box h2").textContent =
+        t("socialTitle");
 
-    if(category === "offers")
-        buttons[3].classList.add("active");
+    document.getElementById("socialDescription").textContent =
+        t("socialDescription");
+
+    document.querySelector(".total-followers span").textContent =
+        t("totalFollowers");
+
+    document.querySelectorAll(".social-followers")
+    .forEach((element,index)=>{
+
+        const numbers = [
+            "22,025",
+            "900",
+            "700",
+            "500"
+        ];
+
+        element.textContent =
+            numbers[index] + " " + t("followersWord");
+
+    });
+
+    document.querySelector(".order-btn").textContent =
+        t("orderWhatsapp");
+
+    document.querySelector(".order-form h2").textContent =
+        t("orderTitle");
+
+    const labels =
+        document.querySelectorAll(".form-group label");
+
+    labels[0].textContent = t("product");
+    labels[1].textContent = t("color");
+    labels[2].textContent = t("size");
+    labels[3].textContent = t("fullName");
+    labels[4].textContent = t("phone");
+    labels[5].textContent = t("delivery");
+    labels[6].textContent = t("area");
+    labels[7].textContent = t("address");
+
+    document.getElementById("customerName").placeholder =
+        t("writeName");
+
+    document.getElementById("customerPhone").placeholder =
+        isEnglish ? "05xxxxxxxx" : "05xxxxxxxx";
+
+    document.getElementById("customerArea").placeholder =
+        t("writeArea");
+
+    document.getElementById("customerAddress").placeholder =
+        t("writeAddress");
+
+    const deliveryOptions =
+        document
+        .getElementById("deliveryRegion")
+        .options;
+
+    deliveryOptions[0].textContent = t("westbank");
+    deliveryOptions[1].textContent = t("jerusalem");
+    deliveryOptions[2].textContent = t("inside");
+
+    const totalLabels =
+        document.querySelectorAll(".total-box span");
+
+    totalLabels[0].textContent = t("itemPrice");
+    totalLabels[1].textContent = t("deliveryPrice");
+    totalLabels[2].textContent = t("total");
+
+    document.querySelector(".send-order").textContent =
+        t("sendOrder");
+
+    document.querySelector(".copyright").textContent =
+        t("allRights");
+
+    document.querySelector(".slide:nth-child(1) h2")
+        .textContent = "NEW COLLECTION";
+
+    document.querySelector(".slide:nth-child(1) button")
+        .textContent = t("explore");
+
+    document.querySelector(".slide:nth-child(2) h2")
+        .textContent = t("sets");
+
+    document.querySelector(".slide:nth-child(2) button")
+        .textContent = t("explore");
+
+    document.querySelector(".slide:nth-child(3) h2")
+        .textContent = t("dresses");
+
+    document.querySelector(".slide:nth-child(3) button")
+        .textContent = t("explore");
+
+    document
+        .querySelector(".slider-arrow.prev")
+        .setAttribute("aria-label",t("previous"));
+
+    document
+        .querySelector(".slider-arrow.next")
+        .setAttribute("aria-label",t("next"));
+
+    document
+        .getElementById("detailPrev")
+        .setAttribute("aria-label",t("previous"));
+
+    document
+        .getElementById("detailNext")
+        .setAttribute("aria-label",t("next"));
 
     renderProducts();
 
-    document
-    .querySelector(".products-section")
-    .scrollIntoView({
-        behavior:"smooth",
-        block:"start"
-    });
+    if(currentProduct){
+
+        document.getElementById("detailName").textContent =
+            getProductName(currentProduct);
+
+        document.getElementById("detailDescription").textContent =
+            t("description");
+
+        openOrderLanguageUpdate();
+
+    }
+
+    updateTotal();
+
+    localStorage.setItem(
+        "espozaLanguage",
+        currentLanguage
+    );
+
 }
 
 /* =========================================================
-   FILTER
+   TOGGLE LANGUAGE
 ========================================================= */
 
-function filterProducts(){
+function toggleLanguage(){
 
-    const search =
-        document
-        .getElementById("searchInput")
-        .value
-        .trim()
-        .toLowerCase();
+    currentLanguage =
+        currentLanguage === "ar"
+        ? "en"
+        : "ar";
 
-    return products.filter(product => {
-
-        const matchesSearch =
-            product.name.toLowerCase().includes(search);
-
-        if(!matchesSearch)
-            return false;
-
-        if(currentCategory === "all")
-            return true;
-
-        if(currentCategory === "dresses")
-            return product.type === "dresses";
-
-        if(currentCategory === "sets")
-            return product.type === "sets";
-
-        if(currentCategory === "offers")
-            return product.offer === true;
-
-        return true;
-
-    });
+    applyLanguage();
 
 }
 
 /* =========================================================
-   RENDER PRODUCTS
+   UPDATE PRODUCT CARDS FOR LANGUAGE
 ========================================================= */
 
 function renderProducts(){
@@ -2365,7 +507,7 @@ function renderProducts(){
         filterProducts();
 
     document.getElementById("productCount").textContent =
-        filtered.length + " قطعة";
+        filtered.length + " " + t("piece");
 
     container.innerHTML = "";
 
@@ -2384,13 +526,15 @@ function renderProducts(){
 
                 <img
                     src="${product.images[0]}"
-                    alt="${product.name}"
+                    alt="${getProductName(product)}"
                     loading="lazy"
                 >
 
                 ${
                     product.offer
-                    ? `<div class="offer-badge">عرض خاص</div>`
+                    ? `<div class="offer-badge">
+                         ${t("specialOffer")}
+                       </div>`
                     : ""
                 }
 
@@ -2399,7 +543,7 @@ function renderProducts(){
             <div class="product-info">
 
                 <div class="product-name">
-                    ${product.name}
+                    ${getProductName(product)}
                 </div>
 
                 <div class="product-price">
@@ -2417,7 +561,7 @@ function renderProducts(){
                 </div>
 
                 <div class="product-meta">
-                    المقاسات:
+                    ${t("sizes")}
                     ${product.sizes.join(" • ")}
                 </div>
 
@@ -2431,434 +575,197 @@ function renderProducts(){
 }
 
 /* =========================================================
-   PRODUCT DETAILS
+   PRODUCT DETAILS LANGUAGE UPDATE
 ========================================================= */
 
-function openProduct(id){
-
-    currentProduct =
-        products.find(product => product.id === id);
+function openOrderLanguageUpdate(){
 
     if(!currentProduct)
         return;
-
-    currentImageIndex = 0;
-
-    document.getElementById("detailName").textContent =
-        currentProduct.name;
-
-    document.getElementById("detailPrice").innerHTML =
-        `₪${currentProduct.price}
-        ${
-            currentProduct.oldPrice
-            ? `<span class="old-price">₪${currentProduct.oldPrice}</span>`
-            : ""
-        }`;
-
-    document.getElementById("detailDescription").textContent =
-        `قطعة مميزة من Espoza Fashion. متوفرة بالمقاسات المذكورة، ويمكنك اختيار اللون والمقاس عند إتمام الطلب.`;
-
-    renderProductImages();
-
-    const sizes =
-        document.getElementById("detailSizes");
-
-    sizes.innerHTML = "";
-
-    currentProduct.sizes.forEach(size => {
-
-        const div =
-            document.createElement("div");
-
-        div.className = "size";
-        div.textContent = size;
-
-        sizes.appendChild(div);
-
-    });
-
-    document
-    .getElementById("productModal")
-    .classList.add("show");
-
-}
-
-/* =========================================================
-   PRODUCT IMAGE RENDER
-========================================================= */
-
-function renderProductImages(){
-
-    if(!currentProduct)
-        return;
-
-    const images =
-        currentProduct.images;
-
-    if(!images.length)
-        return;
-
-    const detailImage =
-        document.getElementById("detailImage");
-
-    detailImage.src =
-        images[currentImageIndex];
-
-    detailImage.alt =
-        currentProduct.name;
-
-    const prev =
-        document.getElementById("detailPrev");
-
-    const next =
-        document.getElementById("detailNext");
-
-    if(images.length <= 1){
-
-        prev.style.display = "none";
-        next.style.display = "none";
-
-    }else{
-
-        prev.style.display = "flex";
-        next.style.display = "flex";
-
-    }
-
-    /* ================= DOTS ================= */
-
-    const dots =
-        document.getElementById("detailDots");
-
-    dots.innerHTML = "";
-
-    images.forEach((image,index) => {
-
-        const dot =
-            document.createElement("button");
-
-        dot.className =
-            "detail-dot" +
-            (index === currentImageIndex
-                ? " active"
-                : "");
-
-        dot.onclick = () => {
-
-            currentImageIndex = index;
-
-            renderProductImages();
-
-        };
-
-        dots.appendChild(dot);
-
-    });
-
-    /* ================= THUMBNAILS ================= */
-
-    const thumbnails =
-        document.getElementById("thumbnails");
-
-    thumbnails.innerHTML = "";
-
-    if(images.length <= 1){
-
-        thumbnails.style.display = "none";
-
-    }else{
-
-        thumbnails.style.display = "flex";
-
-        images.forEach((image,index) => {
-
-            const img =
-                document.createElement("img");
-
-            img.src = image;
-
-            img.alt =
-                currentProduct.colors &&
-                currentProduct.colors[index]
-                ? currentProduct.colors[index]
-                : currentProduct.name;
-
-            if(index === currentImageIndex)
-                img.classList.add("active");
-
-            img.onclick = () => {
-
-                currentImageIndex = index;
-
-                renderProductImages();
-
-            };
-
-            thumbnails.appendChild(img);
-
-        });
-
-    }
-
-}
-
-/* =========================================================
-   CHANGE PRODUCT IMAGE
-========================================================= */
-
-function changeProductImage(direction){
-
-    if(!currentProduct)
-        return;
-
-    const images =
-        currentProduct.images;
-
-    if(images.length <= 1)
-        return;
-
-    currentImageIndex += direction;
-
-    if(currentImageIndex < 0)
-        currentImageIndex =
-            images.length - 1;
-
-    if(currentImageIndex >= images.length)
-        currentImageIndex = 0;
-
-    renderProductImages();
-
-}
-
-/* =========================================================
-   TOUCH SWIPE FOR PRODUCT IMAGES
-========================================================= */
-
-let touchStartX = 0;
-let touchEndX = 0;
-
-const detailImageBox =
-    document.getElementById("detailImageBox");
-
-detailImageBox.addEventListener(
-    "touchstart",
-    function(event){
-
-        touchStartX =
-            event.changedTouches[0].screenX;
-
-    },
-    {passive:true}
-);
-
-detailImageBox.addEventListener(
-    "touchend",
-    function(event){
-
-        touchEndX =
-            event.changedTouches[0].screenX;
-
-        handleProductSwipe();
-
-    },
-    {passive:true}
-);
-
-function handleProductSwipe(){
-
-    const difference =
-        touchStartX - touchEndX;
-
-    if(Math.abs(difference) < 45)
-        return;
-
-    if(difference > 0){
-
-        changeProductImage(1);
-
-    }else{
-
-        changeProductImage(-1);
-
-    }
-
-}
-
-/* =========================================================
-   CLOSE MODAL
-========================================================= */
-
-function closeModal(id){
-
-    document
-    .getElementById(id)
-    .classList.remove("show");
-
-}
-
-/* =========================================================
-   ORDER
-========================================================= */
-
-function openOrder(){
-
-    if(!currentProduct)
-        return;
-
-    closeModal("productModal");
 
     document.getElementById("orderProduct").value =
-        currentProduct.name;
+        getProductName(currentProduct);
 
-    const colorSelect =
-        document.getElementById("orderColor");
+}
 
-    colorSelect.innerHTML = "";
+/* =========================================================
+   UPDATED PRODUCT OPEN
+========================================================= */
 
-    if(currentProduct.colors){
+const originalOpenProduct =
+    openProduct;
 
-        currentProduct.colors.forEach(
-            (color,index) => {
+openProduct = function(id){
 
-                const option =
-                    document.createElement("option");
+    originalOpenProduct(id);
 
-                option.value = color;
-                option.textContent = color;
+    if(!currentProduct)
+        return;
 
-                colorSelect.appendChild(option);
+    document.getElementById("detailName").textContent =
+        getProductName(currentProduct);
 
-            }
-        );
+    document.getElementById("detailDescription").textContent =
+        t("description");
 
-    }else{
+};
 
-        const option =
-            document.createElement("option");
+/* =========================================================
+   UPDATED ORDER OPEN
+========================================================= */
 
-        option.value = "غير محدد";
-        option.textContent = "غير محدد";
+const originalOpenOrder =
+    openOrder;
 
-        colorSelect.appendChild(option);
+openOrder = function(){
 
-    }
+    originalOpenOrder();
 
-    const sizeSelect =
-        document.getElementById("orderSize");
+    if(!currentProduct)
+        return;
 
-    sizeSelect.innerHTML = "";
+    document.getElementById("orderProduct").value =
+        getProductName(currentProduct);
 
-    currentProduct.sizes.forEach(size => {
+    document.querySelector(".order-form h2").textContent =
+        t("orderTitle");
 
-        const option =
-            document.createElement("option");
+    const labels =
+        document.querySelectorAll(".form-group label");
 
-        option.value = size;
-        option.textContent = size;
+    labels[0].textContent = t("product");
+    labels[1].textContent = t("color");
+    labels[2].textContent = t("size");
+    labels[3].textContent = t("fullName");
+    labels[4].textContent = t("phone");
+    labels[5].textContent = t("delivery");
+    labels[6].textContent = t("area");
+    labels[7].textContent = t("address");
 
-        sizeSelect.appendChild(option);
+    document.getElementById("customerName").placeholder =
+        t("writeName");
+
+    document.getElementById("customerArea").placeholder =
+        t("writeArea");
+
+    document.getElementById("customerAddress").placeholder =
+        t("writeAddress");
+
+    const deliveryOptions =
+        document
+        .getElementById("deliveryRegion")
+        .options;
+
+    deliveryOptions[0].textContent = t("westbank");
+    deliveryOptions[1].textContent = t("jerusalem");
+    deliveryOptions[2].textContent = t("inside");
+
+    document.querySelector(".send-order").textContent =
+        t("sendOrder");
+
+};
+
+/* =========================================================
+   COLORS LANGUAGE
+========================================================= */
+
+const englishColors = {
+
+    "أسود":"Black",
+    "أخضر":"Green",
+    "خمري":"Burgundy",
+    "كحلي":"Navy",
+    "زيتي":"Olive",
+    "بني":"Brown",
+    "غير محدد":"Not specified"
+
+};
+
+const originalRenderProductImages =
+    renderProductImages;
+
+renderProductImages = function(){
+
+    originalRenderProductImages();
+
+    if(!currentProduct)
+        return;
+
+    const thumbnails =
+        document.querySelectorAll("#thumbnails img");
+
+    thumbnails.forEach((img,index)=>{
+
+        if(currentProduct.colors &&
+           currentProduct.colors[index]){
+
+            const color =
+                currentProduct.colors[index];
+
+            img.alt =
+                currentLanguage === "en"
+                ? englishColors[color] || color
+                : color;
+
+        }
 
     });
 
-    updateTotal();
-
-    document
-    .getElementById("orderModal")
-    .classList.add("show");
-
-}
+};
 
 /* =========================================================
-   TOTAL
+   ORDER COLORS
 ========================================================= */
 
-function updateTotal(){
+const originalSendOrder =
+    sendOrder;
+
+sendOrder = function(){
 
     if(!currentProduct)
         return;
 
-    let delivery = 20;
+    const originalLanguage =
+        currentLanguage;
 
-    const region =
-        document
-        .getElementById("deliveryRegion")
-        .value;
-
-    if(region === "jerusalem")
-        delivery = 30;
-
-    if(region === "inside")
-        delivery = 70;
-
-    document.getElementById("itemPrice").textContent =
-        "₪" + currentProduct.price;
-
-    document.getElementById("deliveryPrice").textContent =
-        "₪" + delivery;
-
-    document.getElementById("finalPrice").textContent =
-        "₪" +
-        (currentProduct.price + delivery);
-
-}
-
-/* =========================================================
-   SEND WHATSAPP ORDER
-========================================================= */
-
-function sendOrder(){
-
-    if(!currentProduct)
-        return;
+    /*
+       إرسال الطلب بنفس نظام الموقع،
+       مع لغة الرسالة حسب لغة العميل.
+    */
 
     const name =
-        document
-        .getElementById("customerName")
-        .value
-        .trim();
+        document.getElementById("customerName")
+        .value.trim();
 
     const phone =
-        document
-        .getElementById("customerPhone")
-        .value
-        .trim();
+        document.getElementById("customerPhone")
+        .value.trim();
 
     const area =
-        document
-        .getElementById("customerArea")
-        .value
-        .trim();
+        document.getElementById("customerArea")
+        .value.trim();
 
     const address =
-        document
-        .getElementById("customerAddress")
-        .value
-        .trim();
+        document.getElementById("customerAddress")
+        .value.trim();
 
-    const color =
-        document
-        .getElementById("orderColor")
-        .value;
+    const colorArabic =
+        document.getElementById("orderColor").value;
 
     const size =
-        document
-        .getElementById("orderSize")
-        .value;
+        document.getElementById("orderSize").value;
 
     const region =
-        document
-        .getElementById("deliveryRegion");
+        document.getElementById("deliveryRegion");
 
-    const regionText =
+    const regionTextArabic =
         region.options[
             region.selectedIndex
         ].text;
 
     if(!name || !phone || !area || !address){
 
-        alert(
-            "يرجى تعبئة جميع معلومات الطلب ❤️"
-        );
+        alert(t("fillForm"));
 
         return;
 
@@ -2875,13 +782,69 @@ function sendOrder(){
     const total =
         currentProduct.price + delivery;
 
-    const message =
+    const productName =
+        getProductName(currentProduct);
+
+    const color =
+        currentLanguage === "en"
+        ? englishColors[colorArabic] || colorArabic
+        : colorArabic;
+
+    const regionText =
+        currentLanguage === "en"
+        ? (
+            region.value === "westbank"
+            ? "West Bank — ₪20"
+            : region.value === "jerusalem"
+            ? "Jerusalem — ₪30"
+            : "Inside — ₪70"
+        )
+        : regionTextArabic;
+
+    let message;
+
+    if(currentLanguage === "en"){
+
+        message =
+
+`Hello Espoza Fashion ❤️
+
+I would like to order:
+
+👗 Product: ${productName}
+
+🎨 Color: ${color}
+
+📏 Size: ${size}
+
+👤 Name: ${name}
+
+📱 Phone: ${phone}
+
+📍 Delivery Area: ${regionText}
+
+🏘️ City / Area: ${area}
+
+📌 Detailed Address:
+${address}
+
+💰 Item Price: ₪${currentProduct.price}
+
+🚚 Delivery: ₪${delivery}
+
+💵 Total: ₪${total}
+
+Thank you ❤️`;
+
+    }else{
+
+        message =
 
 `مرحبًا Espoza Fashion ❤️
 
 أرغب بطلب قطعة:
 
-👗 القطعة: ${currentProduct.name}
+👗 القطعة: ${productName}
 
 🎨 اللون: ${color}
 
@@ -2906,6 +869,8 @@ ${address}
 
 شكرًا لكم ❤️`;
 
+    }
+
     const whatsappURL =
         `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(message)}`;
 
@@ -2914,152 +879,10 @@ ${address}
         "_blank"
     );
 
-}
+};
 
 /* =========================================================
-   LANGUAGE
+   START LANGUAGE
 ========================================================= */
 
-function toggleLanguage(){
-
-    alert(
-        "English version coming soon ❤️"
-    );
-
-}
-
-/* =========================================================
-   HERO SLIDER
-========================================================= */
-
-let heroIndex = 0;
-
-function updateHeroSlider(){
-
-    const slides =
-        document.getElementById("heroSlides");
-
-    slides.style.transform =
-        `translateX(-${heroIndex * 100}%)`;
-
-    document
-    .querySelectorAll(".slider-dot")
-    .forEach((dot,index) => {
-
-        dot.classList.toggle(
-            "active",
-            index === heroIndex
-        );
-
-    });
-
-}
-
-function goHeroSlide(index){
-
-    heroIndex = index;
-
-    updateHeroSlider();
-
-}
-
-function changeHeroSlide(direction){
-
-    heroIndex += direction;
-
-    if(heroIndex < 0)
-        heroIndex = 2;
-
-    if(heroIndex > 2)
-        heroIndex = 0;
-
-    updateHeroSlider();
-
-}
-
-/* ================= AUTO HERO SLIDER ================= */
-
-setInterval(() => {
-
-    changeHeroSlide(1);
-
-},5000);
-
-/* ================= HERO TOUCH SWIPE ================= */
-
-const heroSlider =
-    document.getElementById("heroSlider");
-
-let heroTouchStartX = 0;
-let heroTouchEndX = 0;
-
-heroSlider.addEventListener(
-    "touchstart",
-    function(event){
-
-        heroTouchStartX =
-            event.changedTouches[0].screenX;
-
-    },
-    {passive:true}
-);
-
-heroSlider.addEventListener(
-    "touchend",
-    function(event){
-
-        heroTouchEndX =
-            event.changedTouches[0].screenX;
-
-        const difference =
-            heroTouchStartX -
-            heroTouchEndX;
-
-        if(Math.abs(difference) < 45)
-            return;
-
-        if(difference > 0)
-            changeHeroSlide(1);
-        else
-            changeHeroSlide(-1);
-
-    },
-    {passive:true}
-);
-
-/* =========================================================
-   CLOSE MODAL OUTSIDE
-========================================================= */
-
-document
-.querySelectorAll(".modal")
-.forEach(modal => {
-
-    modal.addEventListener(
-        "click",
-        function(event){
-
-            if(event.target === modal){
-
-                modal.classList.remove("show");
-
-            }
-
-        }
-    );
-
-});
-
-/* =========================================================
-   START
-========================================================= */
-
-renderProducts();
-updateHeroSlider();
-
-</script>
-
-</body>
-</html>
-
-
+applyLanguage();
