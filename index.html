@@ -146,16 +146,30 @@ header{
 
 .slide{
     min-width:100%;
-    height:500px;
+
+    /* تم تصغير السلايدر */
+    height:420px;
+
     position:relative;
     overflow:hidden;
+
+    /* خلفية بسيطة للمساحة المتبقية عند استخدام contain */
+    background:#f1e9e6;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
+
+/* التعديل الأساسي:
+   الصورة تظهر كاملة بدون قص */
 
 .slide img{
     width:100%;
     height:100%;
-    object-fit:cover;
+    object-fit:contain;
     display:block;
+    background:#f1e9e6;
 }
 
 .slide-overlay{
@@ -904,7 +918,8 @@ footer{
     }
 
     .slide{
-        height:430px;
+        /* تصغير السلايدر على الموبايل */
+        height:350px;
     }
 
     .slide-overlay{
