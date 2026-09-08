@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
@@ -1105,78 +1106,7 @@ footer{
 
 <div class="slider" id="heroSlider">
 
-    <div class="slides" id="heroSlides">
-
-        <div class="slide">
-
-            <img
-                src="IMG_3490.jpeg"
-                alt="NEW COLLECTION"
-            >
-
-            <div class="slide-overlay">
-
-                <div class="slide-content">
-
-                    <h2 id="slideTitle0">NEW COLLECTION</h2>
-
-                    <button onclick="goToCategory('all')" id="slideButton0">
-                        استكشفي
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="slide">
-
-            <img
-                src="IMG_3492.jpeg"
-                alt="الأطقم"
-            >
-
-            <div class="slide-overlay">
-
-                <div class="slide-content">
-
-                    <h2 id="slideTitle1">الأطقم</h2>
-
-                    <button onclick="goToCategory('sets')" id="slideButton1">
-                        استكشفي
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="slide">
-
-            <img
-                src="IMG_3493.jpeg"
-                alt="الفساتين"
-            >
-
-            <div class="slide-overlay">
-
-                <div class="slide-content">
-
-                    <h2 id="slideTitle2">الفساتين</h2>
-
-                    <button onclick="goToCategory('dresses')" id="slideButton2">
-                        استكشفي
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
+    <div class="slides" id="heroSlides"></div>
 
     <button
         class="slider-arrow prev"
@@ -1194,13 +1124,7 @@ footer{
         ›
     </button>
 
-    <div class="slider-dots">
-
-        <button class="slider-dot active" onclick="goHeroSlide(0)"></button>
-        <button class="slider-dot" onclick="goHeroSlide(1)"></button>
-        <button class="slider-dot" onclick="goHeroSlide(2)"></button>
-
-    </div>
+    <div class="slider-dots" id="heroDots"></div>
 
 </div>
 
@@ -1792,7 +1716,8 @@ footer{
 
         <a
             href="https://wa.me/972595461861"
-            target="_blank">
+            target="_blank"
+            id="whatsappFooter">
             WhatsApp
         </a>
 
@@ -1818,9 +1743,15 @@ footer{
    ESPOZA SETTINGS
 ========================================================= */
 
-const STORE = {
+let STORE = {
 
     whatsapp:"972595461861",
+
+    delivery:{
+        westbank:20,
+        jerusalem:30,
+        inside:70
+    },
 
     followers:{
         facebook:22025,
@@ -1828,7 +1759,6 @@ const STORE = {
         tiktok:700,
         snapchat:500
     }
-
 };
 
 /* =========================================================
@@ -2144,11 +2074,12 @@ function getProductName(product){
    AUTOMATIC TOTAL FOLLOWERS
 ========================================================= */
 
-const totalFollowers =
-    STORE.followers.facebook +
-    STORE.followers.instagram +
-    STORE.followers.tiktok +
-    STORE.followers.snapchat;
+function getTotalFollowers(){
+    return Number(STORE.followers.facebook || 0) +
+           Number(STORE.followers.instagram || 0) +
+           Number(STORE.followers.tiktok || 0) +
+           Number(STORE.followers.snapchat || 0);
+}
 
 /* =========================================================
    LANGUAGE APPLY
@@ -2248,23 +2179,7 @@ function applyLanguage(){
     document.getElementById("copyright").textContent =
         lang.copyright;
 
-    document.getElementById("slideTitle0").textContent =
-        lang.newCollection;
-
-    document.getElementById("slideTitle1").textContent =
-        lang.sets;
-
-    document.getElementById("slideTitle2").textContent =
-        lang.dresses;
-
-    document.getElementById("slideButton0").textContent =
-        lang.explore;
-
-    document.getElementById("slideButton1").textContent =
-        lang.explore;
-
-    document.getElementById("slideButton2").textContent =
-        lang.explore;
+    renderHeroSlides();
 
     document.getElementById("heroPrev").setAttribute(
         "aria-label",
@@ -2287,13 +2202,13 @@ function applyLanguage(){
     );
 
     document.getElementById("westbankOption").textContent =
-        `${lang.westbank} — ₪20`;
+        `${lang.westbank} — ₪${Number(STORE.delivery.westbank || 0)}`;
 
     document.getElementById("jerusalemOption").textContent =
-        `${lang.jerusalem} — ₪30`;
+        `${lang.jerusalem} — ₪${Number(STORE.delivery.jerusalem || 0)}`;
 
     document.getElementById("insideOption").textContent =
-        `${lang.inside} — ₪70`;
+        `${lang.inside} — ₪${Number(STORE.delivery.inside || 0)}`;
 
     document.getElementById("facebookFollowers").textContent =
         formatNumber(STORE.followers.facebook) +
@@ -2316,7 +2231,7 @@ function applyLanguage(){
         lang.followerWord;
 
     const formattedTotal =
-        formatNumber(totalFollowers) + "+";
+        formatNumber(getTotalFollowers()) + "+";
 
     document.getElementById("totalFollowers").textContent =
         formattedTotal;
@@ -3535,7 +3450,7 @@ function updateTotal(){
     if(!currentProduct)
         return;
 
-    let delivery = 20;
+    let delivery = Number(STORE.delivery.westbank || 0);
 
     const region =
         document
@@ -3543,10 +3458,10 @@ function updateTotal(){
         .value;
 
     if(region === "jerusalem")
-        delivery = 30;
+        delivery = Number(STORE.delivery.jerusalem || 0);
 
     if(region === "inside")
-        delivery = 70;
+        delivery = Number(STORE.delivery.inside || 0);
 
     document.getElementById("itemPrice").textContent =
         "₪" + currentProduct.price;
@@ -3555,8 +3470,7 @@ function updateTotal(){
         "₪" + delivery;
 
     document.getElementById("finalPrice").textContent =
-        "₪" +
-        (currentProduct.price + delivery);
+        "₪" + (Number(currentProduct.price) + delivery);
 
 }
 
@@ -3620,13 +3534,13 @@ function sendOrder(){
 
     }
 
-    let delivery = 20;
+    let delivery = Number(STORE.delivery.westbank || 0);
 
     if(region.value === "jerusalem")
-        delivery = 30;
+        delivery = Number(STORE.delivery.jerusalem || 0);
 
     if(region.value === "inside")
-        delivery = 70;
+        delivery = Number(STORE.delivery.inside || 0);
 
     const total =
         currentProduct.price + delivery;
@@ -3701,8 +3615,14 @@ Thank you ❤️`;
 
     }
 
+    const whatsappNumber = String(STORE.whatsapp || "").replace(/[^0-9]/g, "");
+    if(!whatsappNumber){
+        alert("WhatsApp number is not configured.");
+        return;
+    }
+
     const whatsappURL =
-        `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(message)}`;
+        `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
     window.open(
         whatsappURL,
@@ -3716,99 +3636,248 @@ Thank you ❤️`;
 ========================================================= */
 
 let heroIndex = 0;
+let heroSlidesData = [];
 
-function updateHeroSlider(){
+function renderHeroSlides(){
+    const slides = document.getElementById("heroSlides");
+    const dots = document.getElementById("heroDots");
+    if(!slides || !dots) return;
 
-    const slides =
-        document.getElementById("heroSlides");
+    slides.innerHTML = "";
+    dots.innerHTML = "";
 
-    slides.style.transform =
-        `translateX(-${heroIndex * 100}%)`;
+    heroSlidesData.forEach((slide, index) => {
+        const title = currentLanguage === "ar"
+            ? (slide.title_ar || "")
+            : (slide.title_en || slide.title_ar || "");
+        const button = currentLanguage === "ar"
+            ? (slide.button_ar || t().explore)
+            : (slide.button_en || t().explore);
 
-    document
-    .querySelectorAll(".slider-dot")
-    .forEach((dot,index) => {
+        const el = document.createElement("div");
+        el.className = "slide";
+        el.innerHTML = `
+            <img src="${escapeHtml(slide.image_url || "")}" alt="${escapeHtml(title)}">
+            <div class="slide-overlay">
+                <div class="slide-content">
+                    <h2>${escapeHtml(title)}</h2>
+                    <button onclick="goToCategory('${escapeJs(slide.category || "all")}')">${escapeHtml(button)}</button>
+                </div>
+            </div>`;
+        slides.appendChild(el);
 
-        dot.classList.toggle(
-            "active",
-            index === heroIndex
-        );
-
+        const dot = document.createElement("button");
+        dot.className = "slider-dot" + (index === heroIndex ? " active" : "");
+        dot.onclick = () => goHeroSlide(index);
+        dot.setAttribute("aria-label", `${index + 1}`);
+        dots.appendChild(dot);
     });
 
+    if(heroIndex >= heroSlidesData.length) heroIndex = 0;
+    updateHeroSlider();
+}
+
+function escapeHtml(value){
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function escapeJs(value){
+    return String(value || "all").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+}
+
+function updateHeroSlider(){
+    const slides = document.getElementById("heroSlides");
+    if(!slides) return;
+    slides.style.transform = `translateX(-${heroIndex * 100}%)`;
+    document.querySelectorAll(".slider-dot").forEach((dot,index) => {
+        dot.classList.toggle("active", index === heroIndex);
+    });
 }
 
 function goHeroSlide(index){
-
-    heroIndex = index;
-
+    if(!heroSlidesData.length) return;
+    heroIndex = Math.max(0, Math.min(index, heroSlidesData.length - 1));
     updateHeroSlider();
-
 }
 
 function changeHeroSlide(direction){
-
+    if(!heroSlidesData.length) return;
     heroIndex += direction;
-
-    if(heroIndex < 0)
-        heroIndex = 2;
-
-    if(heroIndex > 2)
-        heroIndex = 0;
-
+    if(heroIndex < 0) heroIndex = heroSlidesData.length - 1;
+    if(heroIndex >= heroSlidesData.length) heroIndex = 0;
     updateHeroSlider();
-
 }
 
-/* ================= AUTO HERO SLIDER ================= */
-
 setInterval(() => {
-
     changeHeroSlide(1);
-
 },5000);
 
-/* ================= HERO TOUCH SWIPE ================= */
-
-const heroSlider =
-    document.getElementById("heroSlider");
-
+const heroSlider = document.getElementById("heroSlider");
 let heroTouchStartX = 0;
 let heroTouchEndX = 0;
 
-heroSlider.addEventListener(
-    "touchstart",
-    function(event){
+if(heroSlider){
+    heroSlider.addEventListener("touchstart", function(event){
+        heroTouchStartX = event.changedTouches[0].screenX;
+    }, {passive:true});
 
-        heroTouchStartX =
-            event.changedTouches[0].screenX;
+    heroSlider.addEventListener("touchend", function(event){
+        heroTouchEndX = event.changedTouches[0].screenX;
+        const difference = heroTouchStartX - heroTouchEndX;
+        if(Math.abs(difference) < 45) return;
+        if(difference > 0) changeHeroSlide(1);
+        else changeHeroSlide(-1);
+    }, {passive:true});
+}
 
-    },
-    {passive:true}
-);
+/* =========================================================
+   SUPABASE DATA LAYER
+========================================================= */
 
-heroSlider.addEventListener(
-    "touchend",
-    function(event){
+const SUPABASE_URL = "https://ptwceqbxusgyutrroayz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Hto6uDekI9TvxTLFs7kYWg_ApV51joA";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        heroTouchEndX =
-            event.changedTouches[0].screenX;
+async function loadStoreSettings(){
+    const { data, error } = await supabaseClient
+        .from("store_settings")
+        .select("*")
+        .eq("id", 1)
+        .maybeSingle();
 
-        const difference =
-            heroTouchStartX -
-            heroTouchEndX;
+    if(error){
+        console.warn("Espoza settings:", error.message);
+        return;
+    }
 
-        if(Math.abs(difference) < 45)
-            return;
+    if(data){
+        STORE.whatsapp = data.whatsapp || STORE.whatsapp;
+        STORE.delivery = {
+            westbank: Number(data.delivery_westbank ?? STORE.delivery.westbank),
+            jerusalem: Number(data.delivery_jerusalem ?? STORE.delivery.jerusalem),
+            inside: Number(data.delivery_inside ?? STORE.delivery.inside)
+        };
+        STORE.followers = {
+            facebook: Number(data.followers_facebook ?? STORE.followers.facebook),
+            instagram: Number(data.followers_instagram ?? STORE.followers.instagram),
+            tiktok: Number(data.followers_tiktok ?? STORE.followers.tiktok),
+            snapchat: Number(data.followers_snapchat ?? STORE.followers.snapchat)
+        };
+    }
+}
 
-        if(difference > 0)
-            changeHeroSlide(1);
-        else
-            changeHeroSlide(-1);
+async function loadHeroSlides(){
+    const { data, error } = await supabaseClient
+        .from("hero_slides")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order", {ascending:true});
 
-    },
-    {passive:true}
-);
+    if(error){
+        console.warn("Espoza slides:", error.message);
+        return;
+    }
+
+    if(Array.isArray(data) && data.length){
+        heroSlidesData = data;
+        heroIndex = 0;
+        renderHeroSlides();
+    }
+}
+
+async function loadProductsFromSupabase(){
+    const [productsResult, imagesResult, sizesResult, colorsResult] = await Promise.all([
+        supabaseClient.from("products").select("*").eq("is_available", true).order("created_at", {ascending:false}),
+        supabaseClient.from("product_images").select("*").order("sort_order", {ascending:true}),
+        supabaseClient.from("product_sizes").select("*").order("sort_order", {ascending:true}),
+        supabaseClient.from("product_colors").select("*").order("sort_order", {ascending:true})
+    ]);
+
+    if(productsResult.error){
+        console.warn("Espoza products:", productsResult.error.message);
+        return;
+    }
+
+    const imageRows = imagesResult.error ? [] : (imagesResult.data || []);
+    const sizeRows = sizesResult.error ? [] : (sizesResult.data || []);
+    const colorRows = colorsResult.error ? [] : (colorsResult.data || []);
+
+    const imagesByProduct = {};
+    imageRows.forEach(row => {
+        const key = String(row.product_id);
+        (imagesByProduct[key] ||= []).push(row);
+    });
+
+    const sizesByProduct = {};
+    sizeRows.forEach(row => {
+        const key = String(row.product_id);
+        (sizesByProduct[key] ||= []).push(String(row.size));
+    });
+
+    const colorsByProduct = {};
+    colorRows.forEach(row => {
+        const key = String(row.product_id);
+        (colorsByProduct[key] ||= []).push(row);
+    });
+
+    const loaded = (productsResult.data || []).map(p => {
+        const key = String(p.id);
+        const imageRowsForProduct = imagesByProduct[key] || [];
+        const images = imageRowsForProduct.map(x => x.image_url).filter(Boolean);
+        if(!images.length && p.image_url) images.push(p.image_url);
+
+        const colorRowsForProduct = colorsByProduct[key] || [];
+        const colorByImage = {};
+        colorRowsForProduct.forEach(c => {
+            if(c.image_id != null) colorByImage[String(c.image_id)] = c.color_name;
+        });
+
+        return {
+            id: p.id,
+            name: p.name || "Espoza Fashion",
+            description: p.description || "",
+            price: Number(p.price || 0),
+            oldPrice: p.old_price != null ? Number(p.old_price) : null,
+            offer: p.is_offer === true,
+            type: p.category || "dresses",
+            sizes: sizesByProduct[key] || [],
+            images,
+            colors: colorRowsForProduct.map(c => c.color_name).filter(Boolean),
+            colorByImage
+        };
+    });
+
+    if(loaded.length) products.splice(0, products.length, ...loaded);
+}
+
+async function initializeEspoza(){
+    try{
+        await Promise.all([
+            loadStoreSettings(),
+            loadHeroSlides(),
+            loadProductsFromSupabase()
+        ]);
+    }catch(error){
+        console.warn("Espoza initialization:", error);
+    }
+
+    const wa = String(STORE.whatsapp || "").replace(/[^0-9]/g, "");
+    if(wa){
+        const header = document.getElementById("whatsappHeader");
+        const footer = document.getElementById("whatsappFooter");
+        if(header) header.href = `https://wa.me/${wa}`;
+        if(footer) footer.href = `https://wa.me/${wa}`;
+    }
+
+    applyLanguage();
+    renderProducts();
+    updateTotal();
+}
 
 /* =========================================================
    CLOSE MODAL OUTSIDE
@@ -3864,12 +3933,10 @@ document
 ========================================================= */
 
 applyLanguage();
-
 updateHeroSlider();
-
 renderProducts();
-
 updateSearchPlaceholder();
+initializeEspoza();
 
 </script>
 
