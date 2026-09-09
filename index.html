@@ -147,24 +147,16 @@ header{
 
 .slide{
     min-width:100%;
-
-    /* تم تصغير السلايدر */
     height:420px;
-
     position:relative;
     overflow:hidden;
-
-    /* خلفية بسيطة للمساحة المتبقية عند استخدام contain */
     background:#f1e9e6;
-
     display:flex;
     align-items:center;
     justify-content:center;
 }
 
-/* التعديل الأساسي:
-   الصورة تظهر كاملة بدون قص */
-
+/* الصورة تظهر كاملة بدون قص */
 .slide img{
     width:100%;
     height:100%;
@@ -919,7 +911,6 @@ footer{
     }
 
     .slide{
-        /* تصغير السلايدر على الموبايل */
         height:350px;
     }
 
@@ -2046,9 +2037,7 @@ const englishNames = {
 ========================================================= */
 
 function t(){
-
     return translations[currentLanguage];
-
 }
 
 /* =========================================================
@@ -2075,10 +2064,12 @@ function getProductName(product){
 ========================================================= */
 
 function getTotalFollowers(){
+
     return Number(STORE.followers.facebook || 0) +
            Number(STORE.followers.instagram || 0) +
            Number(STORE.followers.tiktok || 0) +
            Number(STORE.followers.snapchat || 0);
+
 }
 
 /* =========================================================
@@ -2267,11 +2258,7 @@ function applyLanguage(){
 
 function formatNumber(number){
 
-    return number.toLocaleString(
-        currentLanguage === "ar"
-            ? "en-US"
-            : "en-US"
-    );
+    return Number(number || 0).toLocaleString("en-US");
 
 }
 
@@ -2987,6 +2974,9 @@ function renderProducts(){
     const container =
         document.getElementById("products");
 
+    if(!container)
+        return;
+
     const filtered =
         filterProducts();
 
@@ -3018,16 +3008,23 @@ function renderProducts(){
                 ? `<div class="offer-badge">${lang.specialOffer}</div>`
                 : "";
 
+        const firstImage =
+            product.images &&
+            product.images.length
+                ? product.images[0]
+                : "";
+
         card.innerHTML = `
 
             <div
                 class="product-img"
-                onclick="openProduct(${product.id})">
+                onclick="openProductById('${escapeJs(String(product.id))}')">
 
                 <img
-                    src="${product.images[0]}"
-                    alt="${productName}"
+                    src="${escapeHtml(firstImage)}"
+                    alt="${escapeHtml(productName)}"
                     loading="lazy"
+                    onerror="this.style.display='none'"
                 >
 
                 ${offerBadge}
@@ -3037,17 +3034,17 @@ function renderProducts(){
             <div class="product-info">
 
                 <div class="product-name">
-                    ${productName}
+                    ${escapeHtml(productName)}
                 </div>
 
                 <div class="product-price">
 
-                    ₪${product.price}
+                    ₪${Number(product.price || 0)}
 
                     ${
                         product.oldPrice
                         ? `<span class="old-price">
-                             ₪${product.oldPrice}
+                             ₪${Number(product.oldPrice)}
                            </span>`
                         : ""
                     }
@@ -3056,7 +3053,7 @@ function renderProducts(){
 
                 <div class="product-meta">
                     ${lang.sizes}
-                    ${product.sizes.join(" • ")}
+                    ${(product.sizes || []).join(" • ")}
                 </div>
 
             </div>
@@ -3075,7 +3072,9 @@ function renderProducts(){
 function openProduct(id){
 
     currentProduct =
-        products.find(product => product.id === id);
+        products.find(product =>
+            String(product.id) === String(id)
+        );
 
     if(!currentProduct)
         return;
@@ -3090,6 +3089,10 @@ function openProduct(id){
 
 }
 
+function openProductById(id){
+    openProduct(id);
+}
+
 function refreshProductModal(){
 
     if(!currentProduct)
@@ -3101,14 +3104,15 @@ function refreshProductModal(){
         getProductName(currentProduct);
 
     document.getElementById("detailPrice").innerHTML =
-        `₪${currentProduct.price}
+        `₪${Number(currentProduct.price || 0)}
         ${
             currentProduct.oldPrice
-            ? `<span class="old-price">₪${currentProduct.oldPrice}</span>`
+            ? `<span class="old-price">₪${Number(currentProduct.oldPrice)}</span>`
             : ""
         }`;
 
     document.getElementById("detailDescription").textContent =
+        currentProduct.description ||
         lang.description;
 
     const sizes =
@@ -3116,7 +3120,7 @@ function refreshProductModal(){
 
     sizes.innerHTML = "";
 
-    currentProduct.sizes.forEach(size => {
+    (currentProduct.sizes || []).forEach(size => {
 
         const div =
             document.createElement("div");
@@ -3142,25 +3146,49 @@ function renderProductImages(){
         return;
 
     const images =
-        currentProduct.images;
-
-    if(!images.length)
-        return;
+        Array.isArray(currentProduct.images)
+            ? currentProduct.images.filter(Boolean)
+            : [];
 
     const detailImage =
         document.getElementById("detailImage");
-
-    detailImage.src =
-        images[currentImageIndex];
-
-    detailImage.alt =
-        getProductName(currentProduct);
 
     const prev =
         document.getElementById("detailPrev");
 
     const next =
         document.getElementById("detailNext");
+
+    const dots =
+        document.getElementById("detailDots");
+
+    const thumbnails =
+        document.getElementById("thumbnails");
+
+    if(!images.length){
+
+        detailImage.removeAttribute("src");
+        detailImage.alt =
+            getProductName(currentProduct);
+
+        prev.style.display = "none";
+        next.style.display = "none";
+
+        dots.innerHTML = "";
+        thumbnails.innerHTML = "";
+        thumbnails.style.display = "none";
+
+        return;
+    }
+
+    if(currentImageIndex >= images.length)
+        currentImageIndex = 0;
+
+    detailImage.src =
+        images[currentImageIndex];
+
+    detailImage.alt =
+        getProductName(currentProduct);
 
     if(images.length <= 1){
 
@@ -3173,9 +3201,6 @@ function renderProductImages(){
         next.style.display = "flex";
 
     }
-
-    const dots =
-        document.getElementById("detailDots");
 
     dots.innerHTML = "";
 
@@ -3201,9 +3226,6 @@ function renderProductImages(){
         dots.appendChild(dot);
 
     });
-
-    const thumbnails =
-        document.getElementById("thumbnails");
 
     thumbnails.innerHTML = "";
 
@@ -3257,7 +3279,9 @@ function changeProductImage(direction){
         return;
 
     const images =
-        currentProduct.images;
+        Array.isArray(currentProduct.images)
+            ? currentProduct.images.filter(Boolean)
+            : [];
 
     if(images.length <= 1)
         return;
@@ -3285,29 +3309,33 @@ let touchEndX = 0;
 const detailImageBox =
     document.getElementById("detailImageBox");
 
-detailImageBox.addEventListener(
-    "touchstart",
-    function(event){
+if(detailImageBox){
 
-        touchStartX =
-            event.changedTouches[0].screenX;
+    detailImageBox.addEventListener(
+        "touchstart",
+        function(event){
 
-    },
-    {passive:true}
-);
+            touchStartX =
+                event.changedTouches[0].screenX;
 
-detailImageBox.addEventListener(
-    "touchend",
-    function(event){
+        },
+        {passive:true}
+    );
 
-        touchEndX =
-            event.changedTouches[0].screenX;
+    detailImageBox.addEventListener(
+        "touchend",
+        function(event){
 
-        handleProductSwipe();
+            touchEndX =
+                event.changedTouches[0].screenX;
 
-    },
-    {passive:true}
-);
+            handleProductSwipe();
+
+        },
+        {passive:true}
+    );
+
+}
 
 function handleProductSwipe(){
 
@@ -3335,9 +3363,11 @@ function handleProductSwipe(){
 
 function closeModal(id){
 
-    document
-    .getElementById(id)
-    .classList.remove("show");
+    const modal =
+        document.getElementById(id);
+
+    if(modal)
+        modal.classList.remove("show");
 
 }
 
@@ -3360,10 +3390,11 @@ function openOrder(){
 
     colorSelect.innerHTML = "";
 
-    if(currentProduct.colors){
+    if(currentProduct.colors &&
+       currentProduct.colors.length){
 
         currentProduct.colors.forEach(
-            (color,index) => {
+            color => {
 
                 const option =
                     document.createElement("option");
@@ -3400,7 +3431,7 @@ function openOrder(){
 
     sizeSelect.innerHTML = "";
 
-    currentProduct.sizes.forEach(size => {
+    (currentProduct.sizes || []).forEach(size => {
 
         const option =
             document.createElement("option");
@@ -3450,7 +3481,8 @@ function updateTotal(){
     if(!currentProduct)
         return;
 
-    let delivery = Number(STORE.delivery.westbank || 0);
+    let delivery =
+        Number(STORE.delivery.westbank || 0);
 
     const region =
         document
@@ -3458,19 +3490,25 @@ function updateTotal(){
         .value;
 
     if(region === "jerusalem")
-        delivery = Number(STORE.delivery.jerusalem || 0);
+        delivery =
+            Number(STORE.delivery.jerusalem || 0);
 
     if(region === "inside")
-        delivery = Number(STORE.delivery.inside || 0);
+        delivery =
+            Number(STORE.delivery.inside || 0);
 
     document.getElementById("itemPrice").textContent =
-        "₪" + currentProduct.price;
+        "₪" + Number(currentProduct.price || 0);
 
     document.getElementById("deliveryPrice").textContent =
         "₪" + delivery;
 
     document.getElementById("finalPrice").textContent =
-        "₪" + (Number(currentProduct.price) + delivery);
+        "₪" +
+        (
+            Number(currentProduct.price || 0) +
+            delivery
+        );
 
 }
 
@@ -3534,16 +3572,20 @@ function sendOrder(){
 
     }
 
-    let delivery = Number(STORE.delivery.westbank || 0);
+    let delivery =
+        Number(STORE.delivery.westbank || 0);
 
     if(region.value === "jerusalem")
-        delivery = Number(STORE.delivery.jerusalem || 0);
+        delivery =
+            Number(STORE.delivery.jerusalem || 0);
 
     if(region.value === "inside")
-        delivery = Number(STORE.delivery.inside || 0);
+        delivery =
+            Number(STORE.delivery.inside || 0);
 
     const total =
-        currentProduct.price + delivery;
+        Number(currentProduct.price || 0) +
+        delivery;
 
     let message;
 
@@ -3572,7 +3614,7 @@ function sendOrder(){
 📌 العنوان بالتفصيل:
 ${address}
 
-💰 سعر القطعة: ₪${currentProduct.price}
+💰 سعر القطعة: ₪${Number(currentProduct.price || 0)}
 
 🚚 التوصيل: ₪${delivery}
 
@@ -3605,7 +3647,7 @@ I would like to order:
 📌 Detailed address:
 ${address}
 
-💰 Item price: ₪${currentProduct.price}
+💰 Item price: ₪${Number(currentProduct.price || 0)}
 
 🚚 Delivery: ₪${delivery}
 
@@ -3615,10 +3657,16 @@ Thank you ❤️`;
 
     }
 
-    const whatsappNumber = String(STORE.whatsapp || "").replace(/[^0-9]/g, "");
+    const whatsappNumber =
+        String(STORE.whatsapp || "")
+        .replace(/[^0-9]/g,"");
+
     if(!whatsappNumber){
+
         alert("WhatsApp number is not configured.");
+
         return;
+
     }
 
     const whatsappURL =
@@ -3638,245 +3686,936 @@ Thank you ❤️`;
 let heroIndex = 0;
 let heroSlidesData = [];
 
+/* السلايدر الافتراضي إذا لم توجد بيانات في Supabase */
+const defaultHeroSlides = [
+
+    {
+        image_url:"",
+        title_ar:"NEW COLLECTION",
+        title_en:"NEW COLLECTION",
+        button_ar:"استكشفي",
+        button_en:"Explore",
+        category:"all"
+    }
+
+];
+
 function renderHeroSlides(){
-    const slides = document.getElementById("heroSlides");
-    const dots = document.getElementById("heroDots");
-    if(!slides || !dots) return;
+
+    const slides =
+        document.getElementById("heroSlides");
+
+    const dots =
+        document.getElementById("heroDots");
+
+    if(!slides || !dots)
+        return;
 
     slides.innerHTML = "";
     dots.innerHTML = "";
 
-    heroSlidesData.forEach((slide, index) => {
-        const title = currentLanguage === "ar"
-            ? (slide.title_ar || "")
-            : (slide.title_en || slide.title_ar || "");
-        const button = currentLanguage === "ar"
-            ? (slide.button_ar || t().explore)
-            : (slide.button_en || t().explore);
+    if(!heroSlidesData.length){
 
-        const el = document.createElement("div");
-        el.className = "slide";
-        el.innerHTML = `
-            <img src="${escapeHtml(slide.image_url || "")}" alt="${escapeHtml(title)}">
-            <div class="slide-overlay">
-                <div class="slide-content">
-                    <h2>${escapeHtml(title)}</h2>
-                    <button onclick="goToCategory('${escapeJs(slide.category || "all")}')">${escapeHtml(button)}</button>
+        slides.innerHTML = `
+            <div class="slide">
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        <h2>${escapeHtml(t().newCollection)}</h2>
+                        <button onclick="goToCategory('all')">
+                            ${escapeHtml(t().explore)}
+                        </button>
+                    </div>
                 </div>
-            </div>`;
+            </div>
+        `;
+
+        return;
+    }
+
+    if(heroIndex >= heroSlidesData.length)
+        heroIndex = 0;
+
+    heroSlidesData.forEach((slide,index) => {
+
+        const title =
+            currentLanguage === "ar"
+                ? (slide.title_ar || "")
+                : (slide.title_en || slide.title_ar || "");
+
+        const button =
+            currentLanguage === "ar"
+                ? (slide.button_ar || t().explore)
+                : (slide.button_en || t().explore);
+
+        const el =
+            document.createElement("div");
+
+        el.className = "slide";
+
+        const imageUrl =
+            slide.image_url || "";
+
+        el.innerHTML = `
+
+            ${
+                imageUrl
+                ? `
+                <img
+                    src="${escapeHtml(imageUrl)}"
+                    alt="${escapeHtml(title)}"
+                    loading="${index === 0 ? "eager" : "lazy"}"
+                >
+                `
+                : ""
+            }
+
+            <div class="slide-overlay">
+
+                <div class="slide-content">
+
+                    ${
+                        title
+                        ? `<h2>${escapeHtml(title)}</h2>`
+                        : ""
+                    }
+
+                    <button
+                        onclick="goToCategory('${escapeJs(slide.category || "all")}')">
+                        ${escapeHtml(button)}
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
         slides.appendChild(el);
 
-        const dot = document.createElement("button");
-        dot.className = "slider-dot" + (index === heroIndex ? " active" : "");
-        dot.onclick = () => goHeroSlide(index);
-        dot.setAttribute("aria-label", `${index + 1}`);
+        const dot =
+            document.createElement("button");
+
+        dot.className =
+            "slider-dot" +
+            (index === heroIndex
+                ? " active"
+                : "");
+
+        dot.onclick = () =>
+            goHeroSlide(index);
+
+        dot.setAttribute(
+            "aria-label",
+            `${index + 1}`
+        );
+
         dots.appendChild(dot);
+
     });
 
-    if(heroIndex >= heroSlidesData.length) heroIndex = 0;
     updateHeroSlider();
+
 }
 
 function escapeHtml(value){
+
     return String(value || "")
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+
 }
 
 function escapeJs(value){
-    return String(value || "all").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+
+    return String(value || "all")
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'");
+
 }
 
 function updateHeroSlider(){
-    const slides = document.getElementById("heroSlides");
-    if(!slides) return;
-    slides.style.transform = `translateX(-${heroIndex * 100}%)`;
-    document.querySelectorAll(".slider-dot").forEach((dot,index) => {
-        dot.classList.toggle("active", index === heroIndex);
+
+    const slides =
+        document.getElementById("heroSlides");
+
+    if(!slides)
+        return;
+
+    slides.style.transform =
+        `translateX(-${heroIndex * 100}%)`;
+
+    document
+    .querySelectorAll(".slider-dot")
+    .forEach((dot,index) => {
+
+        dot.classList.toggle(
+            "active",
+            index === heroIndex
+        );
+
     });
+
 }
 
 function goHeroSlide(index){
-    if(!heroSlidesData.length) return;
-    heroIndex = Math.max(0, Math.min(index, heroSlidesData.length - 1));
+
+    if(!heroSlidesData.length)
+        return;
+
+    heroIndex =
+        Math.max(
+            0,
+            Math.min(
+                index,
+                heroSlidesData.length - 1
+            )
+        );
+
     updateHeroSlider();
+
 }
 
 function changeHeroSlide(direction){
-    if(!heroSlidesData.length) return;
+
+    if(!heroSlidesData.length)
+        return;
+
     heroIndex += direction;
-    if(heroIndex < 0) heroIndex = heroSlidesData.length - 1;
-    if(heroIndex >= heroSlidesData.length) heroIndex = 0;
+
+    if(heroIndex < 0)
+        heroIndex =
+            heroSlidesData.length - 1;
+
+    if(heroIndex >= heroSlidesData.length)
+        heroIndex = 0;
+
     updateHeroSlider();
+
 }
 
 setInterval(() => {
+
     changeHeroSlide(1);
+
 },5000);
 
-const heroSlider = document.getElementById("heroSlider");
+const heroSlider =
+    document.getElementById("heroSlider");
+
 let heroTouchStartX = 0;
 let heroTouchEndX = 0;
 
 if(heroSlider){
-    heroSlider.addEventListener("touchstart", function(event){
-        heroTouchStartX = event.changedTouches[0].screenX;
-    }, {passive:true});
 
-    heroSlider.addEventListener("touchend", function(event){
-        heroTouchEndX = event.changedTouches[0].screenX;
-        const difference = heroTouchStartX - heroTouchEndX;
-        if(Math.abs(difference) < 45) return;
-        if(difference > 0) changeHeroSlide(1);
-        else changeHeroSlide(-1);
-    }, {passive:true});
+    heroSlider.addEventListener(
+        "touchstart",
+        function(event){
+
+            heroTouchStartX =
+                event.changedTouches[0].screenX;
+
+        },
+        {passive:true}
+    );
+
+    heroSlider.addEventListener(
+        "touchend",
+        function(event){
+
+            heroTouchEndX =
+                event.changedTouches[0].screenX;
+
+            const difference =
+                heroTouchStartX -
+                heroTouchEndX;
+
+            if(Math.abs(difference) < 45)
+                return;
+
+            if(difference > 0)
+                changeHeroSlide(1);
+            else
+                changeHeroSlide(-1);
+
+        },
+        {passive:true}
+    );
+
 }
 
 /* =========================================================
    SUPABASE DATA LAYER
 ========================================================= */
 
-const SUPABASE_URL = "https://ptwceqbxusgyutrroayz.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Hto6uDekI9TvxTLFs7kYWg_ApV51joA";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL =
+    "https://ptwceqbxusgyutrroayz.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_Hto6uDekI9TvxTLFs7kYWg_ApV51joA";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+/* =========================================================
+   IMAGE URL HELPER
+========================================================= */
+
+function normalizeImageUrl(value){
+
+    if(!value)
+        return "";
+
+    const url =
+        String(value).trim();
+
+    if(!url)
+        return "";
+
+    /*
+       إذا كانت الصورة بالفعل رابطًا كاملًا
+       نستخدمه كما هو.
+    */
+
+    if(
+        url.startsWith("http://") ||
+        url.startsWith("https://") ||
+        url.startsWith("data:")
+    ){
+        return url;
+    }
+
+    /*
+       إذا كانت Supabase رجعت مسارًا وليس رابطًا،
+       نحاول تحويله إلى رابط عام باستخدام bucket
+       الموجود في المسار إذا كان مكتوبًا بهذا الشكل:
+       bucket/path/to/file
+    */
+
+    const parts =
+        url.split("/");
+
+    if(parts.length >= 2){
+
+        const bucket =
+            parts.shift();
+
+        const path =
+            parts.join("/");
+
+        try{
+
+            const result =
+                supabaseClient.storage
+                .from(bucket)
+                .getPublicUrl(path);
+
+            if(
+                result &&
+                result.data &&
+                result.data.publicUrl
+            ){
+
+                return result.data.publicUrl;
+
+            }
+
+        }catch(error){
+
+            console.warn(
+                "Espoza image URL:",
+                error
+            );
+
+        }
+
+    }
+
+    return url;
+
+}
+
+/* =========================================================
+   STORE SETTINGS
+========================================================= */
 
 async function loadStoreSettings(){
-    const { data, error } = await supabaseClient
+
+    const { data,error } =
+        await supabaseClient
         .from("store_settings")
         .select("*")
-        .eq("id", 1)
+        .eq("id",1)
         .maybeSingle();
 
     if(error){
-        console.warn("Espoza settings:", error.message);
+
+        console.warn(
+            "Espoza settings:",
+            error.message
+        );
+
         return;
+
     }
 
     if(data){
-        STORE.whatsapp = data.whatsapp || STORE.whatsapp;
+
+        STORE.whatsapp =
+            data.whatsapp ||
+            STORE.whatsapp;
+
         STORE.delivery = {
-            westbank: Number(data.delivery_westbank ?? STORE.delivery.westbank),
-            jerusalem: Number(data.delivery_jerusalem ?? STORE.delivery.jerusalem),
-            inside: Number(data.delivery_inside ?? STORE.delivery.inside)
+
+            westbank:
+                Number(
+                    data.delivery_westbank ??
+                    STORE.delivery.westbank
+                ),
+
+            jerusalem:
+                Number(
+                    data.delivery_jerusalem ??
+                    STORE.delivery.jerusalem
+                ),
+
+            inside:
+                Number(
+                    data.delivery_inside ??
+                    STORE.delivery.inside
+                )
+
         };
+
         STORE.followers = {
-            facebook: Number(data.followers_facebook ?? STORE.followers.facebook),
-            instagram: Number(data.followers_instagram ?? STORE.followers.instagram),
-            tiktok: Number(data.followers_tiktok ?? STORE.followers.tiktok),
-            snapchat: Number(data.followers_snapchat ?? STORE.followers.snapchat)
+
+            facebook:
+                Number(
+                    data.followers_facebook ??
+                    STORE.followers.facebook
+                ),
+
+            instagram:
+                Number(
+                    data.followers_instagram ??
+                    STORE.followers.instagram
+                ),
+
+            tiktok:
+                Number(
+                    data.followers_tiktok ??
+                    STORE.followers.tiktok
+                ),
+
+            snapchat:
+                Number(
+                    data.followers_snapchat ??
+                    STORE.followers.snapchat
+                )
+
         };
+
     }
+
 }
+
+/* =========================================================
+   HERO SLIDES FROM ADMIN
+========================================================= */
 
 async function loadHeroSlides(){
-    const { data, error } = await supabaseClient
+
+    const { data,error } =
+        await supabaseClient
         .from("hero_slides")
         .select("*")
-        .eq("is_active", true)
-        .order("sort_order", {ascending:true});
+        .eq("is_active",true)
+        .order("sort_order",{ascending:true});
 
     if(error){
-        console.warn("Espoza slides:", error.message);
+
+        console.warn(
+            "Espoza slides:",
+            error.message
+        );
+
+        /*
+           لا نمسح السلايدر في حال وجود خطأ.
+        */
+
         return;
+
     }
 
-    if(Array.isArray(data) && data.length){
-        heroSlidesData = data;
+    if(Array.isArray(data)){
+
+        heroSlidesData =
+            data
+            .filter(slide =>
+                slide &&
+                (
+                    slide.image_url ||
+                    slide.title_ar ||
+                    slide.title_en
+                )
+            )
+            .map(slide => ({
+
+                ...slide,
+
+                image_url:
+                    normalizeImageUrl(
+                        slide.image_url
+                    )
+
+            }));
+
         heroIndex = 0;
+
         renderHeroSlides();
+
     }
+
 }
 
+/* =========================================================
+   LOAD PRODUCTS FROM SUPABASE
+========================================================= */
+
 async function loadProductsFromSupabase(){
-    const [productsResult, imagesResult, sizesResult, colorsResult] = await Promise.all([
-        supabaseClient.from("products").select("*").eq("is_available", true).order("created_at", {ascending:false}),
-        supabaseClient.from("product_images").select("*").order("sort_order", {ascending:true}),
-        supabaseClient.from("product_sizes").select("*").order("sort_order", {ascending:true}),
-        supabaseClient.from("product_colors").select("*").order("sort_order", {ascending:true})
+
+    const [
+        productsResult,
+        imagesResult,
+        sizesResult,
+        colorsResult
+    ] = await Promise.all([
+
+        supabaseClient
+        .from("products")
+        .select("*")
+        .eq("is_available",true)
+        .order("created_at",{ascending:false}),
+
+        supabaseClient
+        .from("product_images")
+        .select("*")
+        .order("sort_order",{ascending:true}),
+
+        supabaseClient
+        .from("product_sizes")
+        .select("*")
+        .order("sort_order",{ascending:true}),
+
+        supabaseClient
+        .from("product_colors")
+        .select("*")
+        .order("sort_order",{ascending:true})
+
     ]);
 
     if(productsResult.error){
-        console.warn("Espoza products:", productsResult.error.message);
+
+        console.warn(
+            "Espoza products:",
+            productsResult.error.message
+        );
+
         return;
+
     }
 
-    const imageRows = imagesResult.error ? [] : (imagesResult.data || []);
-    const sizeRows = sizesResult.error ? [] : (sizesResult.data || []);
-    const colorRows = colorsResult.error ? [] : (colorsResult.data || []);
+    const imageRows =
+        imagesResult.error
+            ? []
+            : (imagesResult.data || []);
+
+    const sizeRows =
+        sizesResult.error
+            ? []
+            : (sizesResult.data || []);
+
+    const colorRows =
+        colorsResult.error
+            ? []
+            : (colorsResult.data || []);
+
+    /* ================= IMAGE MAP ================= */
 
     const imagesByProduct = {};
+
     imageRows.forEach(row => {
-        const key = String(row.product_id);
-        (imagesByProduct[key] ||= []).push(row);
+
+        const key =
+            String(row.product_id);
+
+        if(!imagesByProduct[key])
+            imagesByProduct[key] = [];
+
+        imagesByProduct[key].push(row);
+
     });
+
+    /* ================= SIZE MAP ================= */
 
     const sizesByProduct = {};
+
     sizeRows.forEach(row => {
-        const key = String(row.product_id);
-        (sizesByProduct[key] ||= []).push(String(row.size));
+
+        const key =
+            String(row.product_id);
+
+        if(!sizesByProduct[key])
+            sizesByProduct[key] = [];
+
+        sizesByProduct[key].push(
+            String(row.size)
+        );
+
     });
+
+    /* ================= COLOR MAP ================= */
 
     const colorsByProduct = {};
+
     colorRows.forEach(row => {
-        const key = String(row.product_id);
-        (colorsByProduct[key] ||= []).push(row);
+
+        const key =
+            String(row.product_id);
+
+        if(!colorsByProduct[key])
+            colorsByProduct[key] = [];
+
+        colorsByProduct[key].push(row);
+
     });
 
-    const loaded = (productsResult.data || []).map(p => {
-        const key = String(p.id);
-        const imageRowsForProduct = imagesByProduct[key] || [];
-        const images = imageRowsForProduct.map(x => x.image_url).filter(Boolean);
-        if(!images.length && p.image_url) images.push(p.image_url);
+    /* ================= CREATE PRODUCTS ================= */
 
-        const colorRowsForProduct = colorsByProduct[key] || [];
-        const colorByImage = {};
-        colorRowsForProduct.forEach(c => {
-            if(c.image_id != null) colorByImage[String(c.image_id)] = c.color_name;
+    const loaded =
+        (productsResult.data || [])
+        .map(p => {
+
+            const key =
+                String(p.id);
+
+            const imageRowsForProduct =
+                imagesByProduct[key] || [];
+
+            let images =
+                imageRowsForProduct
+                .map(x =>
+                    normalizeImageUrl(
+                        x.image_url
+                    )
+                )
+                .filter(Boolean);
+
+            /*
+               إذا لم توجد صور في product_images
+               نستخدم image_url من products.
+            */
+
+            if(!images.length && p.image_url){
+
+                images.push(
+                    normalizeImageUrl(
+                        p.image_url
+                    )
+                );
+
+            }
+
+            const colorRowsForProduct =
+                colorsByProduct[key] || [];
+
+            const colorByImage = {};
+
+            colorRowsForProduct.forEach(c => {
+
+                if(c.image_id != null){
+
+                    colorByImage[
+                        String(c.image_id)
+                    ] =
+                        c.color_name;
+
+                }
+
+            });
+
+            return {
+
+                id:p.id,
+
+                name:
+                    p.name ||
+                    "Espoza Fashion",
+
+                description:
+                    p.description || "",
+
+                price:
+                    Number(p.price || 0),
+
+                oldPrice:
+                    p.old_price != null
+                        ? Number(p.old_price)
+                        : null,
+
+                offer:
+                    p.is_offer === true,
+
+                type:
+                    p.category ||
+                    "dresses",
+
+                sizes:
+                    sizesByProduct[key] ||
+                    [],
+
+                images:
+
+                    images,
+
+                colors:
+                    colorRowsForProduct
+                    .map(c => c.color_name)
+                    .filter(Boolean),
+
+                colorByImage
+
+            };
+
         });
 
-        return {
-            id: p.id,
-            name: p.name || "Espoza Fashion",
-            description: p.description || "",
-            price: Number(p.price || 0),
-            oldPrice: p.old_price != null ? Number(p.old_price) : null,
-            offer: p.is_offer === true,
-            type: p.category || "dresses",
-            sizes: sizesByProduct[key] || [],
-            images,
-            colors: colorRowsForProduct.map(c => c.color_name).filter(Boolean),
-            colorByImage
-        };
+    /* =====================================================
+       IMPORTANT:
+       لا نحذف المنتجات الـ42 القديمة.
+       ندمج منتجات Supabase معها.
+    ===================================================== */
+
+    loaded.forEach(newProduct => {
+
+        const existingIndex =
+            products.findIndex(oldProduct => {
+
+                /*
+                   أولًا المطابقة بالـID.
+                */
+
+                if(
+                    String(oldProduct.id) ===
+                    String(newProduct.id)
+                ){
+                    return true;
+                }
+
+                /*
+                   إذا كان المنتج من Admin له نفس الاسم
+                   الموجود في المنتجات القديمة، نعتبره
+                   نفس المنتج حتى لا يظهر مرتين.
+                */
+
+                const oldName =
+                    normalizeText(
+                        oldProduct.name
+                    );
+
+                const newName =
+                    normalizeText(
+                        newProduct.name
+                    );
+
+                return (
+                    oldName &&
+                    newName &&
+                    oldName === newName
+                );
+
+            });
+
+        if(existingIndex !== -1){
+
+            /*
+               إذا المنتج موجود أصلًا:
+               نحدّث بياناته بدل إضافة نسخة ثانية.
+            */
+
+            const oldProduct =
+                products[existingIndex];
+
+            products[existingIndex] = {
+
+                ...oldProduct,
+
+                ...newProduct,
+
+                /*
+                   إذا Supabase لا تحتوي صورة،
+                   نحافظ على الصورة القديمة.
+                */
+
+                images:
+                    newProduct.images &&
+                    newProduct.images.length
+                        ? newProduct.images
+                        : oldProduct.images,
+
+                /*
+                   إذا Supabase لا تحتوي مقاسات،
+                   نحافظ على المقاسات القديمة.
+                */
+
+                sizes:
+                    newProduct.sizes &&
+                    newProduct.sizes.length
+                        ? newProduct.sizes
+                        : oldProduct.sizes,
+
+                /*
+                   إذا Supabase لا تحتوي ألوان،
+                   نحافظ على الألوان القديمة.
+                */
+
+                colors:
+                    newProduct.colors &&
+                    newProduct.colors.length
+                        ? newProduct.colors
+                        : oldProduct.colors
+
+            };
+
+        }else{
+
+            /*
+               منتج جديد من Admin:
+               نضيفه للمنتجات الموجودة.
+            */
+
+            products.push(newProduct);
+
+        }
+
     });
 
-    if(loaded.length) products.splice(0, products.length, ...loaded);
+    /* =====================================================
+       FINAL DUPLICATE CLEANUP
+       يمنع ظهور نفس المنتج مرتين.
+    ===================================================== */
+
+    const uniqueProducts = [];
+    const seenIds = new Set();
+    const seenNames = new Set();
+
+    products.forEach(product => {
+
+        const id =
+            String(product.id);
+
+        const name =
+            normalizeText(product.name);
+
+        /*
+           الـID هو المفتاح الأساسي.
+        */
+
+        if(seenIds.has(id))
+            return;
+
+        /*
+           الاسم أيضًا يمنع تكرار دارين
+           إذا كان عنده UUID مختلف.
+        */
+
+        if(name && seenNames.has(name))
+            return;
+
+        seenIds.add(id);
+
+        if(name)
+            seenNames.add(name);
+
+        uniqueProducts.push(product);
+
+    });
+
+    products.splice(
+        0,
+        products.length,
+        ...uniqueProducts
+    );
+
+    console.log(
+        "Espoza products loaded:",
+        products.length
+    );
+
 }
 
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
 async function initializeEspoza(){
+
     try{
+
         await Promise.all([
+
             loadStoreSettings(),
+
             loadHeroSlides(),
+
             loadProductsFromSupabase()
+
         ]);
+
     }catch(error){
-        console.warn("Espoza initialization:", error);
+
+        console.warn(
+            "Espoza initialization:",
+            error
+        );
+
     }
 
-    const wa = String(STORE.whatsapp || "").replace(/[^0-9]/g, "");
+    const wa =
+        String(STORE.whatsapp || "")
+        .replace(/[^0-9]/g,"");
+
     if(wa){
-        const header = document.getElementById("whatsappHeader");
-        const footer = document.getElementById("whatsappFooter");
-        if(header) header.href = `https://wa.me/${wa}`;
-        if(footer) footer.href = `https://wa.me/${wa}`;
+
+        const header =
+            document.getElementById(
+                "whatsappHeader"
+            );
+
+        const footer =
+            document.getElementById(
+                "whatsappFooter"
+            );
+
+        if(header)
+            header.href =
+                `https://wa.me/${wa}`;
+
+        if(footer)
+            footer.href =
+                `https://wa.me/${wa}`;
+
     }
 
     applyLanguage();
+
     renderProducts();
+
     updateTotal();
+
 }
 
 /* =========================================================
@@ -3906,36 +4645,45 @@ document
    SEARCH FOCUS
 ========================================================= */
 
-document
-.getElementById("searchInput")
-.addEventListener(
-    "focus",
-    function(){
+const searchInput =
+    document.getElementById("searchInput");
 
-        clearTimeout(searchTypingTimer);
+if(searchInput){
 
-    }
-);
+    searchInput.addEventListener(
+        "focus",
+        function(){
 
-document
-.getElementById("searchInput")
-.addEventListener(
-    "blur",
-    function(){
+            clearTimeout(
+                searchTypingTimer
+            );
 
-        updateSearchPlaceholder();
+        }
+    );
 
-    }
-);
+    searchInput.addEventListener(
+        "blur",
+        function(){
+
+            updateSearchPlaceholder();
+
+        }
+    );
+
+}
 
 /* =========================================================
    START
 ========================================================= */
 
 applyLanguage();
+
 updateHeroSlider();
+
 renderProducts();
+
 updateSearchPlaceholder();
+
 initializeEspoza();
 
 </script>
