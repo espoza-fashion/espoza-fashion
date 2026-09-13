@@ -12,7 +12,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
@@ -1342,7 +1341,6 @@ style="margin-top:4px">
 class="copyright"
 id="footerCredit"
 style="margin-top:8px;opacity:.75">
-Designed &amp; Developed by Yousef Ajra
 </div>
 
 </footer>
@@ -1653,453 +1651,128 @@ id="toast">
 
 <script>
 
-const SUPABASE_URL=
-"https://ptwceqbxusgyutrroayz.supabase.co";
-
-const SUPABASE_KEY=
-"sb_publishable_Hto6uDekI9TvxTLFs7kYWg_ApV51joa";
-
-const sb=
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
-
-const STORAGE_BUCKET=
-"product-images";
-
 const PLACEHOLDER=
 "https://placehold.co/700x875?text=Espoza+Fashion";
 
 
 /* ==========================================
-   المنتجات الأصلية الموجودة داخل الموقع
+   المنتجات — كل منتج سطر واحد فقط
+
+   الصيغة:
+   P("الاسم","الفئة",السعر,"المقاسات مفصولة بفاصلة","صورة" أو ["صورة1","صورة2"])
+
+   الفئة: "dresses" فساتين / "sets" أطقم
+
+   لإضافة خيارات إضافية (اختياري) ضيفي كائن رابع:
+   {oldPrice:650,offer:true}                — عرض خاص بسعر قديم
+   {colors:"كحلي,خمري"}                       — لون لكل صورة بنفس ترتيب الصور
+   {available:false}                          — غير متوفر مؤقتًا
+   {sku:"ESP-099"}                            — رمز خاص للمنتج
+   {description:"..."}                        — وصف مخصص
+
+   مثال إضافة منتج جديد:
+   P("فستان جديد","dresses",300,"42,44,46","photo.jpeg"),
+
+   مثال منتج بأكثر من لون (صورة لكل لون بنفس ترتيب الألوان):
+   P("فستان جديد","dresses",300,"42,44,46",["photo1.jpeg","photo2.jpeg"],{colors:"كحلي,خمري"}),
    ========================================== */
+
+let _productSeq=0;
+
+function P(name,category,price,sizesStr,imagesArg,extra){
+
+_productSeq++;
+
+const obj=
+Object.assign({
+
+id:
+"static-"+String(_productSeq).padStart(3,"0"),
+
+name,
+
+category,
+
+price,
+
+sizes:
+sizesStr
+?
+sizesStr.split(",")
+:
+[],
+
+images:
+Array.isArray(imagesArg)
+?
+imagesArg
+:
+[imagesArg]
+
+},extra||{});
+
+
+if(
+typeof obj.colors==="string"
+)
+obj.colors=
+obj.colors.split(",");
+
+
+return obj;
+
+}
+
 
 const STATIC_PRODUCTS=[
 
-{
-id:"static-001",
-name:"فستان سيليست",
-price:400,
-sizes:["38","40","42","44","46"],
-images:["B08EE5A6-A22B-4060-866C-30CA4B0D5A5B.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-002",
-name:"فستان سيلفانا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["1d2e71eb-887f-4c5c-acfe-5844cacd3d80.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-003",
-name:"فستان أستريا",
-price:280,
-sizes:["44","46","48","50","52","54","56"],
-images:["IMG_3062.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-004",
-name:"فستان فلورانس",
-price:300,
-sizes:["42","44","46","48","50","52","54","56"],
-images:["bba65b45-65ac-4bcf-9951-ccd0aee6b7e3.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-005",
-name:"فستان سكارليت",
-price:300,
-sizes:["42","44","46","48","50","52","54"],
-images:["a5824a77-f846-495a-8b9b-f017e5db60b1.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-006",
-name:"فستان ريبيكا",
-price:350,
-oldPrice:650,
-sizes:["38","40","42","44"],
-images:["d5b1682e-b1af-43bd-a07c-4b10ec765d54.jpeg"],
-category:"dresses",
-offer:true
-},
-
-{
-id:"static-007",
-name:"فستان روزاليا",
-price:280,
-sizes:["40","42","44","46"],
-images:["96d63dcc-5bb1-41f5-afc0-12cc18a95987.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-008",
-name:"فستان داليا",
-price:260,
-sizes:["42","44","46","48","50","52","54"],
-images:["f1cdadad-8329-4409-9e0f-6cafaac54118.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-009",
-name:"فستان كاميليا",
-price:320,
-sizes:["38","40","42","44","46"],
-images:["7035804c-9be8-46cb-be3e-b7368f5021c4.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-010",
-name:"فستان آيرس",
-price:280,
-sizes:["42","44","46","48","50","52","54","56"],
-images:["76a94ecc-4a8a-4559-9f73-fdfb29b56a76.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-011",
-name:"فستان لورينا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["4eeb7b16-4dd3-40f1-b4fc-b47d2d1f8c2f.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-012",
-name:"فستان رولانا",
-price:400,
-sizes:["50","52","54"],
-images:["e8aea098-0346-4cb0-994d-fec2e8ba380c.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-013",
-name:"فستان إلورا",
-price:300,
-sizes:["38","40","42","44","46"],
-images:["IMG_3331.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-014",
-name:"فستان أمارا",
-price:280,
-sizes:["42","44","46","48","50","52","54"],
-images:["4abd7c1d-5c7c-4ea3-91a8-a5f367d42117.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-015",
-name:"فستان أريانا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["21de8edf-b602-4102-98af-3daa451d782a.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-016",
-name:"فستان نيراليا",
-price:260,
-sizes:["42","44","46"],
-images:["d595d10e-d3e1-40b0-b32e-dae06ebc38d4.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-017",
-name:"فستان سيرافينا",
-price:300,
-sizes:["44","46","48","50","52","54","56"],
-images:["0d60249c-784a-4aeb-9c1a-f0e00786b96d.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-018",
-name:"فستان أوريليا",
-price:320,
-sizes:["44","46","48","50","52"],
-images:["3802415a-fcc0-458d-a9b8-8a776d8b4468.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-019",
-name:"فستان إيلارا",
-price:300,
-sizes:["44","46","48","50","52","54","56","58"],
-images:["52b190e5-e6e2-43c4-bc0b-29bd4fff703d.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-020",
-name:"فستان أليورا",
-price:250,
-sizes:["48","50","52","54","56","58","60"],
-images:[
-"IMG_3413.jpeg",
-"IMG_3414.jpeg"
-],
-colors:[
-"زيتي",
-"بني"
-],
-category:"dresses"
-},
-
-{
-id:"static-021",
-name:"فستان ميلورا",
-price:280,
-sizes:["44","46","48","50","52"],
-images:["3294543a-5a41-4e3c-aa52-ae9a56166169.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-022",
-name:"فستان لافيرا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["1721952f-b2fb-47d4-812e-59d7d1f552d3.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-023",
-name:"فستان إيلينا",
-price:280,
-sizes:["40","42","44","46","48","50","52","54"],
-images:[
-"efb60c11-651a-49cc-bca2-5c4673416142.jpeg",
-"fcd71140-fe8b-4e20-82c2-15fa10856e17.jpeg"
-],
-colors:[
-"كحلي",
-"خمري"
-],
-category:"dresses"
-},
-
-{
-id:"static-024",
-name:"طقم أفيورا",
-price:250,
-sizes:["38","40","42","44"],
-images:["CDDB9175-C192-466A-A5F2-BAE98767E909.png"],
-category:"sets"
-},
-
-{
-id:"static-025",
-name:"طقم ناديرا",
-price:270,
-sizes:["44","46","48","50","52","54"],
-images:["f7b6f62a-31b3-4f3f-ae99-c198da51af0b.jpeg"],
-category:"sets"
-},
-
-{
-id:"static-026",
-name:"طقم لوسارا",
-price:220,
-sizes:["44","46","48","50","52","54","56"],
-images:["43c0471b-d34b-4709-bcb6-2060f442bd51.jpeg"],
-category:"sets"
-},
-
-{
-id:"static-027",
-name:"طقم تيمارا",
-price:220,
-sizes:["40","42","44","46","48","50","52"],
-images:["a3611702-a408-42f4-b14b-8762c10ddde1.jpeg"],
-category:"sets"
-},
-
-{
-id:"static-028",
-name:"فستان روزيفا",
-price:300,
-sizes:["42","44","46","48","50"],
-images:["452d0ae1-964c-4bf9-8893-56ad370240de.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-029",
-name:"فستان زيلورا",
-price:100,
-oldPrice:270,
-sizes:["46","48"],
-images:["62BBCC70-847F-407A-A8EB-3D6BC3B00561.png"],
-category:"dresses",
-offer:true
-},
-
-{
-id:"static-030",
-name:"فستان تيراليا",
-price:100,
-oldPrice:270,
-sizes:["42","44"],
-images:["6420BB84-199C-4479-9A19-20D44772C5D3.png"],
-category:"dresses",
-offer:true
-},
-
-{
-id:"static-031",
-name:"فستان ناليسا",
-price:100,
-oldPrice:350,
-sizes:["42","44","46","48","50","52"],
-images:["CE736C47-5B25-4310-BDD1-41470F7ACF88.png"],
-category:"dresses",
-offer:true
-},
-
-{
-id:"static-032",
-name:"فستان ليورا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["60843747-a8a2-4f91-8a91-92e1e07d1755.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-033",
-name:"طقم سوليرا",
-price:350,
-sizes:["42","44","46","48","50","52","54"],
-images:[
-"25a8684d-e240-4645-8ad2-13115240e748.jpeg",
-"adefc759-64ce-485c-8e13-2fcefa0cf343.jpeg",
-"5f64d5a2-8c50-41ee-8e14-079ce0a59a64.jpeg"
-],
-colors:[
-"أسود",
-"أخضر",
-"خمري"
-],
-category:"sets"
-},
-
-{
-id:"static-034",
-name:"طقم فالورا",
-price:290,
-sizes:["42","44","46","48","50","52","54"],
-images:["d25eb23c-800b-432b-95ea-d008c721c04c.jpeg"],
-category:"sets"
-},
-
-{
-id:"static-035",
-name:"فستان نيسارا",
-price:260,
-sizes:["42","44","46","48","50","52"],
-images:[
-"IMG_3065.jpeg",
-"eZy Watermark_08-08-2026_08-27-51-6200PM.jpeg"
-],
-colors:[
-"كحلي",
-"أخضر"
-],
-category:"dresses"
-},
-
-{
-id:"static-036",
-name:"فستان كالينا",
-price:250,
-sizes:["42","44","46","48","50","52","54"],
-images:["03431a2b-ed8b-45db-8533-2765b0896f1f.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-037",
-name:"طقم ريفانا",
-price:220,
-sizes:["40","42","44","46","48","50","52"],
-images:["6fe7c5d2-e21d-4ccc-a5e5-4e81b850d394.jpeg"],
-category:"sets"
-},
-
-{
-id:"static-038",
-name:"طقم ديلارا",
-price:220,
-sizes:["38","40","42","44","46","48"],
-images:["29ac75c5-42f9-41d6-9b7e-f067d1a90bd7.jpeg"],
-category:"sets"
-},
-
-{
-id:"static-039",
-name:"فستان ماريلدا",
-price:400,
-sizes:["38","40","42","44","46"],
-images:["IMG_3268.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-040",
-name:"فستان فينورا",
-price:450,
-sizes:["46","48"],
-images:["10968618-b416-4abe-bf4d-65e80d4f2dc7.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-041",
-name:"فستان أليندا",
-price:270,
-sizes:["44","46","48","50","52","54"],
-images:["171db8cd-1a12-4055-a350-bf323ac8748e.jpeg"],
-category:"dresses"
-},
-
-{
-id:"static-042",
-name:"طقم فايورا",
-price:250,
-sizes:["44","46","48","50","52","54","56"],
-images:["8791d719-9671-4744-8989-209a348e3e4f.jpeg"],
-category:"sets"
-}
-
+P("فستان سيليست","dresses",400,"38,40,42,44,46","B08EE5A6-A22B-4060-866C-30CA4B0D5A5B.jpeg"),
+P("فستان سيلفانا","dresses",250,"42,44,46,48,50,52,54","1d2e71eb-887f-4c5c-acfe-5844cacd3d80.jpeg"),
+P("فستان أستريا","dresses",280,"44,46,48,50,52,54,56","IMG_3062.jpeg"),
+P("فستان فلورانس","dresses",300,"42,44,46,48,50,52,54,56","bba65b45-65ac-4bcf-9951-ccd0aee6b7e3.jpeg"),
+P("فستان سكارليت","dresses",300,"42,44,46,48,50,52,54","a5824a77-f846-495a-8b9b-f017e5db60b1.jpeg"),
+P("فستان ريبيكا","dresses",350,"38,40,42,44","d5b1682e-b1af-43bd-a07c-4b10ec765d54.jpeg",{oldPrice:650,offer:true}),
+P("فستان روزاليا","dresses",280,"40,42,44,46","96d63dcc-5bb1-41f5-afc0-12cc18a95987.jpeg"),
+P("فستان داليا","dresses",260,"42,44,46,48,50,52,54","f1cdadad-8329-4409-9e0f-6cafaac54118.jpeg"),
+P("فستان كاميليا","dresses",320,"38,40,42,44,46","7035804c-9be8-46cb-be3e-b7368f5021c4.jpeg"),
+P("فستان آيرس","dresses",280,"42,44,46,48,50,52,54,56","76a94ecc-4a8a-4559-9f73-fdfb29b56a76.jpeg"),
+P("فستان لورينا","dresses",250,"42,44,46,48,50,52,54","4eeb7b16-4dd3-40f1-b4fc-b47d2d1f8c2f.jpeg"),
+P("فستان رولانا","dresses",400,"50,52,54","e8aea098-0346-4cb0-994d-fec2e8ba380c.jpeg"),
+P("فستان إلورا","dresses",300,"38,40,42,44,46","IMG_3331.jpeg"),
+P("فستان أمارا","dresses",280,"42,44,46,48,50,52,54","4abd7c1d-5c7c-4ea3-91a8-a5f367d42117.jpeg"),
+P("فستان أريانا","dresses",250,"42,44,46,48,50,52,54","21de8edf-b602-4102-98af-3daa451d782a.jpeg"),
+P("فستان نيراليا","dresses",260,"42,44,46","d595d10e-d3e1-40b0-b32e-dae06ebc38d4.jpeg"),
+P("فستان سيرافينا","dresses",300,"44,46,48,50,52,54,56","0d60249c-784a-4aeb-9c1a-f0e00786b96d.jpeg"),
+P("فستان أوريليا","dresses",320,"44,46,48,50,52","3802415a-fcc0-458d-a9b8-8a776d8b4468.jpeg"),
+P("فستان إيلارا","dresses",300,"44,46,48,50,52,54,56,58","52b190e5-e6e2-43c4-bc0b-29bd4fff703d.jpeg"),
+P("فستان أليورا","dresses",250,"48,50,52,54,56,58,60",["IMG_3413.jpeg","IMG_3414.jpeg"],{colors:"زيتي,بني"}),
+P("فستان ميلورا","dresses",280,"44,46,48,50,52","3294543a-5a41-4e3c-aa52-ae9a56166169.jpeg"),
+P("فستان لافيرا","dresses",250,"42,44,46,48,50,52,54","1721952f-b2fb-47d4-812e-59d7d1f552d3.jpeg"),
+P("فستان إيلينا","dresses",280,"40,42,44,46,48,50,52,54",["efb60c11-651a-49cc-bca2-5c4673416142.jpeg","fcd71140-fe8b-4e20-82c2-15fa10856e17.jpeg"],{colors:"كحلي,خمري"}),
+P("طقم أفيورا","sets",250,"38,40,42,44","CDDB9175-C192-466A-A5F2-BAE98767E909.png"),
+P("طقم ناديرا","sets",270,"44,46,48,50,52,54","f7b6f62a-31b3-4f3f-ae99-c198da51af0b.jpeg"),
+P("طقم لوسارا","sets",220,"44,46,48,50,52,54,56","43c0471b-d34b-4709-bcb6-2060f442bd51.jpeg"),
+P("طقم تيمارا","sets",220,"40,42,44,46,48,50,52","a3611702-a408-42f4-b14b-8762c10ddde1.jpeg"),
+P("فستان روزيفا","dresses",300,"42,44,46,48,50","452d0ae1-964c-4bf9-8893-56ad370240de.jpeg"),
+P("فستان زيلورا","dresses",100,"46,48","62BBCC70-847F-407A-A8EB-3D6BC3B00561.png",{oldPrice:270,offer:true}),
+P("فستان تيراليا","dresses",100,"42,44","6420BB84-199C-4479-9A19-20D44772C5D3.png",{oldPrice:270,offer:true}),
+P("فستان ناليسا","dresses",100,"42,44,46,48,50,52","CE736C47-5B25-4310-BDD1-41470F7ACF88.png",{oldPrice:350,offer:true}),
+P("فستان ليورا","dresses",250,"42,44,46,48,50,52,54","60843747-a8a2-4f91-8a91-92e1e07d1755.jpeg"),
+P("طقم سوليرا","sets",350,"42,44,46,48,50,52,54",["25a8684d-e240-4645-8ad2-13115240e748.jpeg","adefc759-64ce-485c-8e13-2fcefa0cf343.jpeg","5f64d5a2-8c50-41ee-8e14-079ce0a59a64.jpeg"],{colors:"أسود,أخضر,خمري"}),
+P("طقم فالورا","sets",290,"42,44,46,48,50,52,54","d25eb23c-800b-432b-95ea-d008c721c04c.jpeg"),
+P("فستان نيسارا","dresses",260,"42,44,46,48,50,52",["IMG_3065.jpeg","eZy Watermark_08-08-2026_08-27-51-6200PM.jpeg"],{colors:"كحلي,أخضر"}),
+P("فستان كالينا","dresses",250,"42,44,46,48,50,52,54","03431a2b-ed8b-45db-8533-2765b0896f1f.jpeg"),
+P("طقم ريفانا","sets",220,"40,42,44,46,48,50,52","6fe7c5d2-e21d-4ccc-a5e5-4e81b850d394.jpeg"),
+P("طقم ديلارا","sets",220,"38,40,42,44,46,48","29ac75c5-42f9-41d6-9b7e-f067d1a90bd7.jpeg"),
+P("فستان ماريلدا","dresses",400,"38,40,42,44,46","IMG_3268.jpeg"),
+P("فستان فينورا","dresses",450,"46,48","10968618-b416-4abe-bf4d-65e80d4f2dc7.jpeg"),
+P("فستان أليندا","dresses",270,"44,46,48,50,52,54","171db8cd-1a12-4055-a350-bf323ac8748e.jpeg"),
+P("طقم فايورا","sets",250,"44,46,48,50,52,54,56","8791d719-9671-4744-8989-209a348e3e4f.jpeg"),
 ];
 
 
 /* ==========================================
-   إعدادات احتياطية
-   الأدمن يستطيع تغييرها من Supabase
+   إعدادات المتجر الثابتة
    ========================================== */
 
 const STORE_DEFAULTS={
@@ -2149,13 +1822,7 @@ structuredClone(
 STORE_DEFAULTS
 );
 
-let dbProducts=[];
-
 let products=[];
-
-let deliveryAreas=[];
-
-let sliderRows=[];
 
 let currentCategory=
 "all";
@@ -2178,8 +1845,6 @@ localStorage.getItem("espoza_lang")==="en"
 "en"
 :
 "ar";
-
-let realtimeTimer=null;
 
 let typewriterTimer=null;
 
@@ -2452,7 +2117,10 @@ feat4Text:
 "+7,750 زبونة وزبون",
 
 footerSince:
-"إسبوزا فاشن — منذ 2019"
+"إسبوزا فاشن — منذ 2019",
+
+footerCredit:
+"تصميم وتطوير الموقع: Yousef Ajra"
 
 },
 
@@ -2644,7 +2312,10 @@ feat4Text:
 "7,750+ happy customers",
 
 footerSince:
-"ESPOZA FASHION — Since 2019"
+"ESPOZA FASHION — Since 2019",
+
+footerCredit:
+"Designed & Developed by Yousef Ajra"
 
 }
 
@@ -2962,113 +2633,7 @@ const s=
 String(value||"")
 .trim();
 
-if(!s)
-return "";
-
-if(
-/^https?:\/\//i.test(s)
-||
-s.startsWith("blob:")
-||
-s.startsWith("data:")
-)
 return s;
-
-
-if(
-s.startsWith(
-"product-images/"
-)
-){
-
-return sb
-.storage
-.from(
-STORAGE_BUCKET
-)
-.getPublicUrl(
-s.slice(
-"product-images/".length
-)
-)
-.data
-.publicUrl;
-
-}
-
-
-if(
-s.startsWith("products/")
-||
-s.startsWith("hero/")
-){
-
-return sb
-.storage
-.from(
-STORAGE_BUCKET
-)
-.getPublicUrl(s)
-.data
-.publicUrl;
-
-}
-
-
-return s;
-
-}
-
-
-/* ==========================================
-   روابط السوشال
-   ========================================== */
-
-function socialUrl(
-platform,
-value
-){
-
-const s=
-String(value||"")
-.trim();
-
-if(!s)
-return "";
-
-if(
-/^https?:\/\//i.test(s)
-)
-return s;
-
-
-const handle=
-s.replace(
-/^@/,
-""
-);
-
-
-const base={
-
-facebook:
-"https://www.facebook.com/",
-
-instagram:
-"https://www.instagram.com/",
-
-tiktok:
-"https://www.tiktok.com/@",
-
-snapchat:
-"https://www.snapchat.com/add/"
-
-};
-
-
-return base[platform]
-+
-encodeURIComponent(handle);
 
 }
 
@@ -3191,254 +2756,21 @@ staticProductToView
 
 
 /* ==========================================
-   دمج المنتجات القديمة + منتجات الأدمن
+   تجهيز المنتجات (بيانات ثابتة فقط)
    ========================================== */
 
-function rebuildProducts(){
+function setupProducts(){
 
-const dbNames=
-new Set(
-dbProducts
-.map(
-p=>
-normalizeName(
-p.name
-)
-)
-);
-
-
-const dbSkus=
-new Set(
-dbProducts
-.map(
-p=>
-String(
-p.sku||""
-)
-.trim()
-.toLowerCase()
-)
-.filter(Boolean)
-);
-
-
-const staticNotDuplicated=
-staticViewProducts
-.filter(
-p=>{
-
-const nameHit=
-dbNames.has(
-normalizeName(
-p.name
-)
-);
-
-
-const sku=
-String(
-p.sku||""
-)
-.trim()
-.toLowerCase();
-
-
-const skuHit=
-sku
-&&
-dbSkus.has(sku);
-
-
-return(
-!nameHit
-&&
-!skuHit
-);
-
-}
-);
-
-
-products=[
-...dbProducts,
-...staticNotDuplicated
-];
-
+products=
+staticViewProducts;
 
 renderProducts();
-
 
 $("productTotal")
 .textContent=
 `${products.length}+`;
 
 }
-
-
-/* ==========================================
-   إعدادات المتجر من Supabase
-   ========================================== */
-
-async function loadStoreSettings(){
-
-try{
-
-const{
-data,
-error
-}=
-await sb
-.from("store_settings")
-.select("*")
-.limit(1)
-.maybeSingle();
-
-
-if(error)
-throw error;
-
-
-if(!data){
-
-applyStore();
-
-return;
-
-}
-
-
-store={
-
-name:
-data.store_name
-||
-STORE_DEFAULTS.name,
-
-
-whatsapp:
-String(
-data.whatsapp||""
-)
-.trim()
-||
-STORE_DEFAULTS.whatsapp,
-
-
-social:{
-
-facebook:
-socialUrl(
-"facebook",
-data.facebook
-)
-||
-STORE_DEFAULTS.social.facebook,
-
-instagram:
-socialUrl(
-"instagram",
-data.instagram
-)
-||
-STORE_DEFAULTS.social.instagram,
-
-tiktok:
-socialUrl(
-"tiktok",
-data.tiktok
-)
-||
-STORE_DEFAULTS.social.tiktok,
-
-snapchat:
-socialUrl(
-"snapchat",
-data.snapchat
-)
-||
-STORE_DEFAULTS.social.snapchat
-
-},
-
-
-followers:{
-
-facebook:
-Number(
-data.facebook_followers
-??
-STORE_DEFAULTS.followers.facebook
-),
-
-instagram:
-Number(
-data.instagram_followers
-??
-STORE_DEFAULTS.followers.instagram
-),
-
-tiktok:
-Number(
-data.tiktok_followers
-??
-STORE_DEFAULTS.followers.tiktok
-),
-
-snapchat:
-Number(
-data.snapchat_followers
-??
-STORE_DEFAULTS.followers.snapchat
-)
-
-},
-
-
-delivery:{
-
-westbank:
-Number(
-data.west_bank_delivery
-??
-STORE_DEFAULTS.delivery.westbank
-),
-
-jerusalem:
-Number(
-data.jerusalem_delivery
-??
-STORE_DEFAULTS.delivery.jerusalem
-),
-
-inside:
-Number(
-data.inside_delivery
-??
-STORE_DEFAULTS.delivery.inside
-)
-
-}
-
-};
-
-
-applyStore();
-
-
-}catch(error){
-
-console.error(
-"store_settings:",
-error
-);
-
-applyStore();
-
-}
-
-}
-
 
 function applyStore(){
 
@@ -3553,412 +2885,10 @@ $("footerSince")
 .textContent=
 t().footerSince;
 
-}
 
-
-/* ==========================================
-   تحميل المنتجات الجديدة من Supabase
-   ========================================== */
-
-async function loadDbProducts(){
-
-try{
-
-const{
-data:rows,
-error:productsError
-}=
-await sb
-.from("products")
-.select("*")
-.order(
-"created_at",
-{
-ascending:false
-}
-);
-
-
-if(productsError)
-throw productsError;
-
-
-const activeRows=
-(rows||[])
-.filter(
-p=>
-flag(
-p.is_active,
-true
-)
-);
-
-
-if(
-!activeRows.length
-){
-
-dbProducts=[];
-
-rebuildProducts();
-
-return;
-
-}
-
-
-const ids=
-activeRows
-.map(
-p=>
-p.id
-);
-
-
-const[
-imagesRes,
-sizesRes,
-colorsRes
-]=
-await Promise.all([
-
-sb
-.from("product_images")
-.select("*")
-.in(
-"product_id",
-ids
-)
-.order(
-"sort_order",
-{
-ascending:true
-}
-),
-
-sb
-.from("product_sizes")
-.select("*")
-.in(
-"product_id",
-ids
-)
-.order(
-"sort_order",
-{
-ascending:true
-}
-),
-
-sb
-.from("product_colors")
-.select("*")
-.in(
-"product_id",
-ids
-)
-.order(
-"sort_order",
-{
-ascending:true
-}
-)
-
-]);
-
-
-if(imagesRes.error)
-throw imagesRes.error;
-
-
-if(sizesRes.error)
-throw sizesRes.error;
-
-
-if(colorsRes.error)
-throw colorsRes.error;
-
-
-const allImages=
-imagesRes.data
-||
-[];
-
-
-const allSizes=
-sizesRes.data
-||
-[];
-
-
-const allColors=
-colorsRes.data
-||
-[];
-
-
-dbProducts=
-activeRows
-.map(
-p=>{
-
-
-const pImages=
-allImages
-.filter(
-x=>
-String(x.product_id)
-===
-String(p.id)
-);
-
-
-const pColors=
-allColors
-.filter(
-x=>
-String(x.product_id)
-===
-String(p.id)
-);
-
-
-const pSizes=
-allSizes
-.filter(
-x=>
-String(x.product_id)
-===
-String(p.id)
-);
-
-
-const colorByImage=
-new Map(
-pColors
-.filter(
-c=>
-c.image_id!=null
-)
-.map(
-c=>[
-String(c.image_id),
-c.color_name||""
-]
-)
-);
-
-
-const images=[];
-
-const seen=
-new Set();
-
-
-const addImage=
-(
-id,
-url,
-color=""
-)=>{
-
-const normalized=
-normalizeImage(url);
-
-
-if(
-!normalized
-||
-seen.has(normalized)
-)
-return;
-
-
-seen.add(
-normalized
-);
-
-
-images.push({
-
-id:
-String(id),
-
-url:
-normalized,
-
-color:
-color||""
-
-});
-
-};
-
-
-pImages
-.forEach(
-img=>
-addImage(
-img.id,
-img.image_url,
-colorByImage.get(
-String(img.id)
-)
-||
-""
-)
-);
-
-
-if(
-p.image_url
-){
-
-addImage(
-`main-${p.id}`,
-p.image_url,
-""
-);
-
-}
-
-
-if(
-!images.length
-){
-
-images.push({
-
-id:
-`placeholder-${p.id}`,
-
-url:
-PLACEHOLDER,
-
-color:""
-
-});
-
-}
-
-
-return{
-
-id:
-String(p.id),
-
-dbId:
-String(p.id),
-
-source:
-"db",
-
-name:
-p.name
-||
-"Espoza Fashion",
-
-sku:
-p.sku
-||
-"",
-
-description:
-p.description
-||
-"",
-
-category:
-p.category
-||
-"dresses",
-
-price:
-Number(
-p.price||0
-),
-
-oldPrice:
-p.old_price==null
-?
-null
-:
-Number(
-p.old_price
-),
-
-offer:
-flag(
-p.is_offer,
-false
-),
-
-available:
-flag(
-p.is_available,
-true
-),
-
-active:
-flag(
-p.is_active,
-true
-),
-
-images,
-
-sizes:
-pSizes
-.map(
-x=>
-String(x.size)
-)
-.filter(Boolean),
-
-colors:
-[
-...new Set(
-pColors
-.map(
-x=>
-x.color_name
-)
-.filter(Boolean)
-)
-]
-
-};
-
-}
-);
-
-
-rebuildProducts();
-
-
-}catch(error){
-
-console.error(
-"products:",
-error
-);
-
-
-dbProducts=[];
-
-
-rebuildProducts();
-
-
-toast(
-lang==="ar"
-?
-"تم عرض المنتجات الأصلية، وتعذر تحديث المنتجات الجديدة مؤقتًا."
-:
-"Original products are shown; new products could not be refreshed."
-);
-
-}
+$("footerCredit")
+.textContent=
+t().footerCredit;
 
 }
 
@@ -3967,82 +2897,7 @@ lang==="ar"
    التوصيل
    ========================================== */
 
-async function loadDeliveryAreas(){
-
-try{
-
-const{
-data,
-error
-}=
-await sb
-.from("delivery_areas")
-.select("*")
-.order(
-"id",
-{
-ascending:true
-}
-);
-
-
-if(error)
-throw error;
-
-
-deliveryAreas=
-(data||[])
-.filter(
-x=>
-flag(
-x.is_active,
-true
-)
-)
-.map(
-x=>({
-
-key:
-String(x.id),
-
-name:
-String(
-x.area_name||""
-),
-
-price:
-Number(
-x.price||0
-)
-
-})
-);
-
-
-}catch(error){
-
-console.error(
-"delivery_areas:",
-error
-);
-
-deliveryAreas=[];
-
-}
-
-
-renderDeliveryOptions();
-
-}
-
-
 function deliveryList(){
-
-if(
-deliveryAreas.length
-)
-return deliveryAreas;
-
 
 return[
 
@@ -4151,71 +3006,6 @@ updateOrderTotal();
    السلايدر
    ========================================== */
 
-async function loadSlider(){
-
-try{
-
-const{
-data,
-error
-}=
-await sb
-.from("slider")
-.select("*")
-.order(
-"sort_order",
-{
-ascending:true
-}
-);
-
-
-if(error)
-throw error;
-
-
-sliderRows=
-(data||[])
-.filter(
-x=>
-flag(
-x.is_active,
-true
-)
-)
-.map(
-x=>({
-
-...x,
-
-image_url:
-normalizeImage(
-x.image_url
-)
-
-})
-);
-
-
-}catch(error){
-
-console.error(
-"slider:",
-error
-);
-
-sliderRows=[];
-
-}
-
-
-renderSlider();
-
-startSlider();
-
-}
-
-
 function fallbackSlides(){
 
 return[
@@ -4299,11 +3089,7 @@ button_link:
 
 function activeSlides(){
 
-return sliderRows.length
-?
-sliderRows
-:
-fallbackSlides();
+return fallbackSlides();
 
 }
 
@@ -5193,7 +3979,7 @@ delivery.price
    إرسال الطلب
    ========================================== */
 
-async function sendOrder(){
+function sendOrder(){
 
 if(
 !currentProduct
@@ -5287,107 +4073,6 @@ currentProduct.price
 delivery.price;
 
 
-const button=
-$("sendOrderBtn");
-
-
-button.disabled=
-true;
-
-
-let saved=
-true;
-
-
-try{
-
-const payload={
-
-id:
-crypto.randomUUID(),
-
-customer_name:
-name,
-
-phone,
-
-region:
-delivery.name,
-
-address,
-
-product_id:
-currentProduct.source==="db"
-?
-currentProduct.dbId
-:
-null,
-
-product_name:
-currentProduct.name,
-
-selected_color:
-color,
-
-selected_size:
-size,
-
-quantity:1,
-
-product_price:
-currentProduct.price,
-
-delivery_price:
-delivery.price,
-
-total_price:
-total,
-
-status:
-"new",
-
-notes:
-currentProduct.source==="static"
-?
-[
-notes,
-`Static product: ${currentProduct.id}`
-]
-.filter(Boolean)
-.join(" | ")
-:
-notes
-
-};
-
-
-const{
-error
-}=
-await sb
-.from("orders")
-.insert(
-payload
-);
-
-
-if(error)
-throw error;
-
-
-}catch(error){
-
-saved=
-false;
-
-console.error(
-"order save:",
-error
-);
-
-}
-
-
 /* رسالة واتساب */
 
 const message=
@@ -5406,7 +4091,8 @@ lang==="ar"
 👤 الاسم: ${name}
 📱 الهاتف: ${phone}
 📍 منطقة التوصيل: ${delivery.name}
-🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}
+🏠 العنوان: ${address}${notes?`
+📝 ملاحظات: ${notes}`:""}
 
 💰 سعر القطعة: ₪${money(currentProduct.price)}
 🚚 التوصيل: ₪${money(delivery.price)}
@@ -5424,7 +4110,8 @@ I would like to order:
 👤 Name: ${name}
 📱 Phone: ${phone}
 📍 Delivery: ${delivery.name}
-🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}
+🏠 Address: ${address}${notes?`
+📝 Notes: ${notes}`:""}
 
 💰 Item: ₪${money(currentProduct.price)}
 🚚 Delivery: ₪${money(delivery.price)}
@@ -5432,10 +4119,6 @@ I would like to order:
 
 
 toast(
-saved
-?
-t().saved
-:
 t().waOnly
 );
 
@@ -5454,10 +4137,6 @@ window.open(
 closeModal(
 "orderModal"
 );
-
-
-button.disabled=
-false;
 
 }
 
@@ -5835,182 +4514,20 @@ setupProductSwipe();
 
 
 /* ==========================================
-   تحديث تلقائي من Supabase
-   ========================================== */
-
-function setupRealtime(){
-
-try{
-
-const refreshProducts=
-()=>{
-
-clearTimeout(
-realtimeTimer
-);
-
-
-realtimeTimer=
-setTimeout(
-loadDbProducts,
-450
-);
-
-};
-
-
-sb
-.channel(
-"espoza-public-live"
-)
-
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"products"
-},
-refreshProducts
-)
-
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"product_images"
-},
-refreshProducts
-)
-
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"product_sizes"
-},
-refreshProducts
-)
-
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"product_colors"
-},
-refreshProducts
-)
-
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"slider"
-},
-loadSlider
-)
-
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"store_settings"
-},
-loadStoreSettings
-)
-
-.on(
-"postgres_changes",
-{
-event:"*",
-schema:"public",
-table:"delivery_areas"
-},
-loadDeliveryAreas
-)
-
-.subscribe();
-
-
-}catch(error){
-
-console.warn(
-"Realtime unavailable:",
-error
-);
-
-}
-
-}
-
-
-/* ==========================================
-   تحديث البيانات
-   ========================================== */
-
-async function refreshDynamicData(){
-
-await Promise.allSettled([
-
-loadStoreSettings(),
-
-loadDbProducts(),
-
-loadDeliveryAreas(),
-
-loadSlider()
-
-]);
-
-}
-
-
-/* ==========================================
    تشغيل الموقع
    ========================================== */
 
-async function init(){
+function init(){
 
 setupEvents();
 
-
-/* المنتجات القديمة تظهر فورًا */
-
-rebuildProducts();
-
+setupProducts();
 
 applyLanguage();
 
-
-/* بعدها يتم جلب إضافات الأدمن */
-
-await refreshDynamicData();
-
-
-setupRealtime();
+startSlider();
 
 }
-
-
-/* عند الرجوع للموقع يحدث البيانات */
-
-window
-.addEventListener(
-"focus",
-()=>{
-
-if(
-!document.hidden
-)
-refreshDynamicData();
-
-}
-);
 
 
 init();
@@ -6019,3 +4536,4 @@ init();
 
 </body>
 </html>
+
