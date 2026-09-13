@@ -216,54 +216,6 @@ border-radius:30px;
 font-weight:800
 }
 
-.slider-arrow{
-position:absolute;
-top:50%;
-transform:translateY(-50%);
-z-index:3;
-border:0;
-width:42px;
-height:42px;
-border-radius:50%;
-background:rgba(255,255,255,.92);
-color:var(--wine);
-font-size:25px;
-line-height:1
-}
-
-.slider-arrow.prev{
-left:13px
-}
-
-.slider-arrow.next{
-right:13px
-}
-
-.dots{
-position:absolute;
-bottom:12px;
-left:50%;
-transform:translateX(-50%);
-display:flex;
-gap:6px;
-z-index:4
-}
-
-.dot{
-border:0;
-padding:0;
-width:8px;
-height:8px;
-border-radius:10px;
-background:rgba(255,255,255,.58)
-}
-
-.dot.active{
-width:22px;
-background:#fff
-}
-
-
 /* INTRO */
 
 .intro{
@@ -568,6 +520,47 @@ color:#e5cca0
 }
 
 
+/* FEATURES */
+
+.features{
+max-width:1240px;
+margin:auto;
+padding:0 18px 55px
+}
+
+.features-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px
+}
+
+.feature-card{
+background:#fff;
+border:1px solid var(--line);
+border-radius:18px;
+padding:22px 16px;
+text-align:center
+}
+
+.feature-icon{
+font-size:22px;
+margin-bottom:10px
+}
+
+.feature-title{
+font-weight:800;
+color:var(--wine);
+margin-bottom:5px;
+font-size:14px
+}
+
+.feature-text{
+font-size:12px;
+color:var(--muted);
+line-height:1.7
+}
+
+
 /* FOOTER */
 
 footer{
@@ -663,28 +656,18 @@ background:#f1e9e7
 .detail-main img{
 width:100%;
 height:100%;
-object-fit:contain
+object-fit:contain;
+user-select:none;
+-webkit-user-drag:none
 }
 
-.detail-arrow{
-position:absolute;
-top:50%;
-transform:translateY(-50%);
-border:0;
-width:38px;
-height:38px;
-border-radius:50%;
-background:rgba(255,255,255,.92);
-color:var(--wine);
-font-size:22px
+.detail-main{
+cursor:grab;
+touch-action:pan-y
 }
 
-.detail-arrow.prev{
-left:9px
-}
-
-.detail-arrow.next{
-right:9px
+.detail-main.dragging{
+cursor:grabbing
 }
 
 .thumbs{
@@ -879,6 +862,10 @@ grid-template-columns:repeat(3,1fr)
 height:390px
 }
 
+.features-grid{
+grid-template-columns:repeat(2,1fr)
+}
+
 }
 
 @media(max-width:760px){
@@ -937,6 +924,10 @@ grid-template-columns:1fr
 grid-template-columns:repeat(2,1fr)
 }
 
+.features-grid{
+grid-template-columns:repeat(2,1fr)
+}
+
 .form-grid{
 grid-template-columns:1fr
 }
@@ -955,11 +946,6 @@ padding:27px 18px
 
 .hero-slide{
 height:300px
-}
-
-.slider-arrow{
-width:35px;
-height:35px
 }
 
 .product-name{
@@ -1046,25 +1032,6 @@ class="slides-track"
 id="slidesTrack">
 </div>
 
-<button
-class="slider-arrow prev"
-type="button"
-onclick="moveSlide(-1)">
-‹
-</button>
-
-<button
-class="slider-arrow next"
-type="button"
-onclick="moveSlide(1)">
-›
-</button>
-
-<div
-class="dots"
-id="sliderDots">
-</div>
-
 </div>
 
 </section>
@@ -1085,18 +1052,6 @@ id="sliderDots">
 </p>
 
 <div class="social-stats">
-
-<div class="mini-stat">
-
-<b id="followersTotal">
-0+
-</b>
-
-<span id="followersLabel">
-متابع عبر منصاتنا
-</span>
-
-</div>
 
 <div class="mini-stat">
 
@@ -1141,7 +1096,7 @@ id="shop">
 class="search"
 id="searchInput"
 type="search"
-placeholder="ابحثي عن موديل...">
+placeholder="">
 
 </div>
 
@@ -1233,7 +1188,6 @@ target="_blank"
 rel="noopener">
 
 <b>Facebook</b>
-<span id="facebookCount">0 متابع</span>
 
 </a>
 
@@ -1245,7 +1199,6 @@ target="_blank"
 rel="noopener">
 
 <b>Instagram</b>
-<span id="instagramCount">0 متابع</span>
 
 </a>
 
@@ -1257,7 +1210,6 @@ target="_blank"
 rel="noopener">
 
 <b>TikTok</b>
-<span id="tiktokCount">0 متابع</span>
 
 </a>
 
@@ -1269,9 +1221,59 @@ target="_blank"
 rel="noopener">
 
 <b>Snapchat</b>
-<span id="snapchatCount">0 متابع</span>
 
 </a>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TRUST / FEATURES -->
+
+<section class="features">
+
+<div class="features-grid">
+
+<div class="feature-card">
+
+<div class="feature-icon">🚚</div>
+
+<div class="feature-title" id="feat1Title"></div>
+
+<div class="feature-text" id="feat1Text"></div>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">🛡️</div>
+
+<div class="feature-title" id="feat2Title"></div>
+
+<div class="feature-text" id="feat2Text"></div>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">✨</div>
+
+<div class="feature-title" id="feat3Title"></div>
+
+<div class="feature-text" id="feat3Text"></div>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">❤️</div>
+
+<div class="feature-title" id="feat4Title"></div>
+
+<div class="feature-text" id="feat4Text"></div>
 
 </div>
 
@@ -1330,6 +1332,19 @@ class="copyright"
 id="copyright">
 </div>
 
+<div
+class="copyright"
+id="footerSince"
+style="margin-top:4px">
+</div>
+
+<div
+class="copyright"
+id="footerCredit"
+style="margin-top:8px;opacity:.75">
+Designed &amp; Developed by Yousef Ajra
+</div>
+
 </footer>
 
 
@@ -1352,26 +1367,12 @@ onclick="closeModal('productModal')">
 
 <div>
 
-<div class="detail-main">
+<div class="detail-main" id="detailMain">
 
 <img
 id="detailImage"
 src=""
 alt="">
-
-<button
-class="detail-arrow prev"
-type="button"
-onclick="changeProductImage(-1)">
-‹
-</button>
-
-<button
-class="detail-arrow next"
-type="button"
-onclick="changeProductImage(1)">
-›
-</button>
 
 </div>
 
@@ -2180,6 +2181,13 @@ localStorage.getItem("espoza_lang")==="en"
 
 let realtimeTimer=null;
 
+let typewriterTimer=null;
+
+let swipeState={
+active:false,
+startX:0
+};
+
 
 const $=
 id=>
@@ -2286,6 +2294,9 @@ orders:
 
 search:
 "ابحثي عن موديل...",
+
+searchPhrase:
+"ماذا تبحثين؟",
 
 cats:{
 
@@ -2414,7 +2425,34 @@ newCollection:
 "NEW COLLECTION",
 
 explore:
-"استكشفي"
+"استكشفي",
+
+feat1Title:
+"توصيل سريع",
+
+feat1Text:
+"نوصل طلبك بسرعة وفي أقرب وقت ممكن",
+
+feat2Title:
+"أمان وثقة",
+
+feat2Text:
+"تسوقي بثقة تامة وأمان كامل لبياناتك",
+
+feat3Title:
+"جودة مضمونة",
+
+feat3Text:
+"نختار لكِ أجود الأقمشة وأدق التفاصيل",
+
+feat4Title:
+"انطلقنا منذ 2019",
+
+feat4Text:
+"+7,750 زبونة وزبون",
+
+footerSince:
+"إسبوزا فاشن — منذ 2019"
 
 },
 
@@ -2448,6 +2486,9 @@ orders:
 
 search:
 "Search styles...",
+
+searchPhrase:
+"What are you looking for?",
 
 cats:{
 
@@ -2576,7 +2617,34 @@ newCollection:
 "NEW COLLECTION",
 
 explore:
-"Explore"
+"Explore",
+
+feat1Title:
+"Fast Delivery",
+
+feat1Text:
+"Your order arrives quickly, right when you need it",
+
+feat2Title:
+"Trust & Security",
+
+feat2Text:
+"Shop with full confidence and complete data safety",
+
+feat3Title:
+"Guaranteed Quality",
+
+feat3Text:
+"We handpick the finest fabrics and finest details",
+
+feat4Title:
+"Since 2019",
+
+feat4Text:
+"7,750+ happy customers",
+
+footerSince:
+"ESPOZA FASHION — Since 2019"
 
 }
 
@@ -2616,6 +2684,269 @@ el.classList.remove(
 );
 },
 3000
+);
+
+}
+
+
+/* ==========================================
+   نص البحث المتحرك (Typewriter)
+   ========================================== */
+
+function stopTypewriter(){
+
+clearTimeout(
+typewriterTimer
+);
+
+typewriterTimer=
+null;
+
+}
+
+
+function startTypewriter(){
+
+stopTypewriter();
+
+
+const input=
+$("searchInput");
+
+
+if(!input)
+return;
+
+
+let index=0;
+
+let deleting=false;
+
+
+function tick(){
+
+const phrase=
+t().searchPhrase;
+
+
+if(
+input.value
+){
+
+typewriterTimer=
+setTimeout(
+tick,
+500
+);
+
+return;
+
+}
+
+
+if(
+!deleting
+){
+
+index++;
+
+
+input.placeholder=
+phrase.slice(
+0,
+index
+);
+
+
+if(
+index>=phrase.length
+){
+
+deleting=
+true;
+
+
+typewriterTimer=
+setTimeout(
+tick,
+1500
+);
+
+return;
+
+}
+
+
+}else{
+
+index--;
+
+
+input.placeholder=
+phrase.slice(
+0,
+index
+);
+
+
+if(
+index<=0
+){
+
+deleting=
+false;
+
+
+typewriterTimer=
+setTimeout(
+tick,
+500
+);
+
+return;
+
+}
+
+}
+
+
+typewriterTimer=
+setTimeout(
+tick,
+deleting
+?
+55
+:
+110
+);
+
+}
+
+
+tick();
+
+}
+
+
+/* ==========================================
+   السحب لتغيير صورة/لون المنتج (Swipe)
+   ========================================== */
+
+function setupProductSwipe(){
+
+const el=
+$("detailMain");
+
+
+if(!el)
+return;
+
+
+const threshold=
+40;
+
+
+function onStart(x){
+
+swipeState.active=
+true;
+
+swipeState.startX=
+x;
+
+el.classList.add(
+"dragging"
+);
+
+}
+
+
+function onEnd(x){
+
+if(
+!swipeState.active
+)
+return;
+
+
+swipeState.active=
+false;
+
+el.classList.remove(
+"dragging"
+);
+
+
+const diff=
+x
+-
+swipeState.startX;
+
+
+if(
+Math.abs(diff)
+>
+threshold
+){
+
+if(diff<0)
+changeProductImage(1);
+else
+changeProductImage(-1);
+
+}
+
+}
+
+
+el.addEventListener(
+"touchstart",
+e=>{
+
+onStart(
+e.touches[0].clientX
+);
+
+},
+{passive:true}
+);
+
+
+el.addEventListener(
+"touchend",
+e=>{
+
+onEnd(
+e.changedTouches[0].clientX
+);
+
+}
+);
+
+
+el.addEventListener(
+"mousedown",
+e=>{
+
+e.preventDefault();
+
+onStart(
+e.clientX
+);
+
+}
+);
+
+
+document.addEventListener(
+"mouseup",
+e=>{
+
+onEnd(
+e.clientX
+);
+
+}
 );
 
 }
@@ -3143,23 +3474,6 @@ document.title=
 name;
 
 
-const total=
-Object
-.values(
-store.followers
-)
-.reduce(
-(sum,n)=>
-sum+Number(n||0),
-0
-);
-
-
-$("followersTotal")
-.textContent=
-`${total.toLocaleString("en-US")}+`;
-
-
 for(
 const platform
 of[
@@ -3199,17 +3513,6 @@ store.social[platform]
 ||
 "#";
 
-
-const count=
-$(platform+"Count");
-
-
-if(count)
-count.textContent=
-`${Number(
-store.followers[platform]||0
-).toLocaleString("en-US")} ${t().follower}`;
-
 }
 
 
@@ -3244,6 +3547,11 @@ waUrl;
 $("copyright")
 .textContent=
 `©️ ${new Date().getFullYear()} ${name} — ${t().rights}`;
+
+
+$("footerSince")
+.textContent=
+t().footerSince;
 
 }
 
@@ -3910,50 +4218,81 @@ startSlider();
 
 function fallbackSlides(){
 
-const source=
-staticViewProducts
-.slice(
-0,
-3
-);
+return[
 
-
-return source
-.map(
-(p,i)=>({
+{
 
 id:
-`fallback-${i}`,
+"fallback-new",
 
 image_url:
-p.images[0].url,
+normalizeImage(
+"79C51F28-701D-4767-B2A2-03ED51F5663B.png"
+),
 
 title:
 t().newCollection,
 
 subtitle:
-i===0
-?
-"Espoza Fashion"
-:
+"Espoza Fashion",
+
+button_text:
+t().explore,
+
+button_link:
+"all"
+
+},
+
+{
+
+id:
+"fallback-sets",
+
+image_url:
+normalizeImage(
+"48305C0F-CD76-4B77-9D96-C6111E85F75E.png"
+),
+
+title:
+t().cats.sets,
+
+subtitle:
 "",
 
 button_text:
 t().explore,
 
 button_link:
-i===1
-?
-"dresses"
-:
-i===2
-?
 "sets"
-:
-"all"
 
-})
-);
+},
+
+{
+
+id:
+"fallback-dresses",
+
+image_url:
+normalizeImage(
+"A85B3134-5035-43F8-9F98-266188B138E1.png"
+),
+
+title:
+t().cats.dresses,
+
+subtitle:
+"",
+
+button_text:
+t().explore,
+
+button_link:
+"dresses"
+
+}
+
+];
 
 }
 
@@ -3987,7 +4326,14 @@ list
 .map(
 s=>
 `
-<div class="hero-slide">
+<div
+class="hero-slide"
+style="cursor:pointer"
+onclick="goCategory('${esc(
+s.button_link
+||
+"all"
+)}')">
 
 ${
 s.image_url
@@ -4028,7 +4374,7 @@ ${esc(s.subtitle)}
 
 <button
 type="button"
-onclick="goCategory('${esc(
+onclick="event.stopPropagation();goCategory('${esc(
 s.button_link
 ||
 "all"
@@ -4052,28 +4398,6 @@ t().explore
 .join("");
 
 
-$("sliderDots")
-.innerHTML=
-list
-.map(
-(_,i)=>
-`
-<button
-class="dot ${
-i===sliderIndex
-?
-"active"
-:
-""
-}"
-type="button"
-onclick="setSlide(${i})">
-</button>
-`
-)
-.join("");
-
-
 updateSliderTransform();
 
 }
@@ -4084,17 +4408,6 @@ function updateSliderTransform(){
 $("slidesTrack")
 .style.transform=
 `translateX(-${sliderIndex*100}%)`;
-
-
-document
-.querySelectorAll(".dot")
-.forEach(
-(dot,i)=>
-dot.classList.toggle(
-"active",
-i===sliderIndex
-)
-);
 
 }
 
@@ -4118,18 +4431,6 @@ length
 %
 length;
 
-
-updateSliderTransform();
-
-restartSlider();
-
-}
-
-
-function setSlide(index){
-
-sliderIndex=
-index;
 
 updateSliderTransform();
 
@@ -5228,11 +5529,6 @@ $("introText")
 x.introText;
 
 
-$("followersLabel")
-.textContent=
-x.followers;
-
-
 $("productsLabel")
 .textContent=
 x.models;
@@ -5243,9 +5539,7 @@ $("ordersLabel")
 x.orders;
 
 
-$("searchInput")
-.placeholder=
-x.search;
+startTypewriter();
 
 
 document
@@ -5355,6 +5649,39 @@ x.total;
 $("sendOrderBtn")
 .textContent=
 x.send;
+
+
+$("feat1Title")
+.textContent=
+x.feat1Title;
+
+$("feat1Text")
+.textContent=
+x.feat1Text;
+
+$("feat2Title")
+.textContent=
+x.feat2Title;
+
+$("feat2Text")
+.textContent=
+x.feat2Text;
+
+$("feat3Title")
+.textContent=
+x.feat3Title;
+
+$("feat3Text")
+.textContent=
+x.feat3Text;
+
+$("feat4Title")
+.textContent=
+x.feat4Title;
+
+$("feat4Text")
+.textContent=
+x.feat4Text;
 
 
 if(
@@ -5500,6 +5827,9 @@ modal.id
 
 }
 );
+
+
+setupProductSwipe();
 
 }
 
