@@ -32,14 +32,18 @@ box-sizing:border-box
 }
 
 html{
-scroll-behavior:smooth
+scroll-behavior:smooth;
+overflow-x:hidden;
+max-width:100%
 }
 
 body{
 margin:0;
 font-family:"Cairo",Arial,sans-serif;
 background:var(--cream);
-color:#29181e
+color:#29181e;
+overflow-x:hidden;
+max-width:100%
 }
 
 button,input,select,textarea{
@@ -135,6 +139,31 @@ font-size:12px
 background:var(--wine);
 border-color:var(--wine);
 color:#fff
+}
+
+.cart-btn{
+position:relative;
+font-size:15px;
+line-height:1;
+padding:8px 12px
+}
+
+.cart-badge{
+position:absolute;
+top:-6px;
+right:-6px;
+background:var(--wine);
+color:#fff;
+font-size:10px;
+font-weight:800;
+min-width:17px;
+height:17px;
+border-radius:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:0 3px;
+line-height:1
 }
 
 
@@ -388,11 +417,12 @@ cursor:pointer
 .product-img img{
 width:100%;
 height:100%;
-object-fit:cover;
+object-fit:contain;
 transition:.3s
 }
 
-.product-card:hover .product-img img{
+.product-card:hover .product-img img,
+.product-card:active .product-img img{
 transform:scale(1.02)
 }
 
@@ -468,6 +498,79 @@ padding:20px
 }
 
 
+/* SCROLL REVEAL */
+
+.reveal-item{
+opacity:0;
+transform:translateY(22px);
+transition:opacity .5s ease,transform .5s ease
+}
+
+.reveal-item.revealed{
+opacity:1;
+transform:none
+}
+
+@media(prefers-reduced-motion:reduce){
+
+.reveal-item{
+opacity:1;
+transform:none;
+transition:none
+}
+
+}
+
+
+/* MARQUEE DIVIDER */
+
+.marquee-divider{
+overflow:hidden;
+background:linear-gradient(135deg,var(--wine),var(--dark));
+border-radius:14px;
+padding:13px 0;
+margin:4px 0 8px
+}
+
+.marquee-track{
+display:flex;
+width:max-content;
+direction:ltr;
+animation:marqueeScroll 26s linear infinite
+}
+
+.marquee-track span{
+display:inline-block;
+color:#fff;
+font-weight:800;
+font-size:12px;
+letter-spacing:1.5px;
+white-space:nowrap;
+opacity:.92;
+padding-inline-end:0
+}
+
+@keyframes marqueeScroll{
+
+from{
+transform:translateX(0)
+}
+
+to{
+transform:translateX(-50%)
+}
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+.marquee-track{
+animation:none
+}
+
+}
+
+
 /* SOCIAL */
 
 .social{
@@ -527,23 +630,28 @@ margin:auto;
 padding:0 18px 55px
 }
 
-.features-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px
+.features-slider{
+position:relative;
+overflow:hidden;
+border-radius:18px;
+background:#fff;
+border:1px solid var(--line)
 }
 
-.feature-card{
-background:#fff;
-border:1px solid var(--line);
-border-radius:18px;
-padding:22px 16px;
-text-align:center
+.features-track{
+display:flex;
+transition:transform .6s ease
+}
+
+.feature-slide{
+min-width:100%;
+text-align:center;
+padding:26px 18px
 }
 
 .feature-icon{
-font-size:22px;
-margin-bottom:10px
+font-size:23px;
+margin-bottom:9px
 }
 
 .feature-title{
@@ -657,15 +765,19 @@ width:100%;
 height:100%;
 object-fit:contain;
 user-select:none;
--webkit-user-drag:none
+-webkit-user-drag:none;
+transform-origin:center center;
+transition:transform .15s ease;
+will-change:transform
 }
 
 .detail-main{
 cursor:grab;
-touch-action:pan-y
+touch-action:none
 }
 
-.detail-main.dragging{
+.detail-main.dragging,
+.detail-main.zoomed{
 cursor:grabbing
 }
 
@@ -742,6 +854,32 @@ border-color:var(--wine);
 color:#fff
 }
 
+.qty-stepper{
+display:flex;
+align-items:center;
+gap:14px;
+margin:8px 0 4px
+}
+
+.qty-stepper button{
+width:34px;
+height:34px;
+border-radius:50%;
+border:1px solid var(--line);
+background:#fff;
+color:var(--wine);
+font-size:18px;
+font-weight:800;
+line-height:1
+}
+
+.qty-stepper span{
+min-width:22px;
+text-align:center;
+font-weight:800;
+color:var(--dark)
+}
+
 .order-btn{
 width:100%;
 border:0;
@@ -760,6 +898,96 @@ cursor:not-allowed
 
 .order-box{
 width:min(690px,100%)
+}
+
+.cart-line{
+display:flex;
+gap:11px;
+align-items:center;
+padding:11px 0;
+border-bottom:1px solid var(--line)
+}
+
+.cart-line img{
+width:56px;
+height:70px;
+object-fit:contain;
+border-radius:8px;
+background:#f1e9e7;
+flex-shrink:0
+}
+
+.cart-line-info{
+flex:1;
+min-width:0
+}
+
+.cart-line-name{
+font-weight:800;
+color:var(--dark);
+font-size:13px
+}
+
+.cart-line-meta{
+font-size:11px;
+color:var(--muted);
+margin:2px 0 6px
+}
+
+.cart-line-controls{
+display:flex;
+align-items:center;
+gap:8px
+}
+
+.cart-line-controls button{
+width:26px;
+height:26px;
+border-radius:50%;
+border:1px solid var(--line);
+background:#fff;
+color:var(--wine);
+font-weight:800;
+line-height:1
+}
+
+.cart-line-controls .cart-remove{
+color:#b42318;
+border-color:#f3d7d2;
+margin-inline-start:6px
+}
+
+.cart-line-price{
+font-weight:800;
+color:var(--wine);
+white-space:nowrap;
+font-size:13px
+}
+
+.order-cart-summary{
+background:#fbf5f4;
+border:1px solid var(--line);
+border-radius:12px;
+padding:10px 13px;
+margin-bottom:14px;
+max-height:170px;
+overflow:auto
+}
+
+.order-summary-line{
+display:flex;
+justify-content:space-between;
+gap:10px;
+font-size:12px;
+padding:4px 0
+}
+
+.cod-note{
+text-align:center;
+font-size:12px;
+color:var(--wine);
+font-weight:800;
+margin-top:10px
 }
 
 .form-grid{
@@ -861,10 +1089,6 @@ grid-template-columns:repeat(3,1fr)
 height:390px
 }
 
-.features-grid{
-grid-template-columns:repeat(2,1fr)
-}
-
 }
 
 @media(max-width:760px){
@@ -920,10 +1144,6 @@ grid-template-columns:1fr
 }
 
 .social-grid{
-grid-template-columns:repeat(2,1fr)
-}
-
-.features-grid{
 grid-template-columns:repeat(2,1fr)
 }
 
@@ -998,6 +1218,17 @@ FASHION
 </a>
 
 <div class="nav-side end">
+
+<button
+class="icon-btn cart-btn"
+id="cartBtn"
+type="button"
+onclick="openCartModal()">
+🛍️
+<span
+class="cart-badge"
+id="cartCount">0</span>
+</button>
 
 <a
 class="pill wa"
@@ -1234,46 +1465,13 @@ rel="noopener">
 
 <section class="features">
 
-<div class="features-grid">
+<div
+class="features-slider"
+id="featuresSlider">
 
-<div class="feature-card">
-
-<div class="feature-icon">🚚</div>
-
-<div class="feature-title" id="feat1Title"></div>
-
-<div class="feature-text" id="feat1Text"></div>
-
-</div>
-
-<div class="feature-card">
-
-<div class="feature-icon">🛡️</div>
-
-<div class="feature-title" id="feat2Title"></div>
-
-<div class="feature-text" id="feat2Text"></div>
-
-</div>
-
-<div class="feature-card">
-
-<div class="feature-icon">✨</div>
-
-<div class="feature-title" id="feat3Title"></div>
-
-<div class="feature-text" id="feat3Text"></div>
-
-</div>
-
-<div class="feature-card">
-
-<div class="feature-icon">❤️</div>
-
-<div class="feature-title" id="feat4Title"></div>
-
-<div class="feature-text" id="feat4Text"></div>
-
+<div
+class="features-track"
+id="featuresTrack">
 </div>
 
 </div>
@@ -1429,17 +1627,99 @@ id="detailSizes">
 </div>
 
 
+<div id="qtySection">
+
+<div
+class="option-title"
+id="qtyTitle">
+الكمية
+</div>
+
+<div class="qty-stepper">
+
 <button
-class="order-btn"
-id="openOrderBtn"
 type="button"
-onclick="openOrderModal()">
-اطلبي الآن
+onclick="changeQty(-1)">
+−
+</button>
+
+<span id="qtyValue">1</span>
+
+<button
+type="button"
+onclick="changeQty(1)">
++
 </button>
 
 </div>
 
 </div>
+
+
+<button
+class="order-btn"
+id="openOrderBtn"
+type="button"
+onclick="addCurrentToCart()">
+أضيفي للسلة
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CART -->
+
+<div
+class="modal"
+id="cartModal">
+
+<div class="modal-box order-box">
+
+<button
+class="close-btn"
+type="button"
+onclick="closeModal('cartModal')">
+×
+</button>
+
+<h2
+id="cartHeading"
+style="color:var(--wine);margin:4px 0 18px">
+السلة
+</h2>
+
+<div id="cartItems">
+</div>
+
+<div class="total-box">
+
+<div class="total-line grand">
+
+<span id="cartTotalLabel">
+المجموع
+</span>
+
+<b id="cartTotal">
+₪0
+</b>
+
+</div>
+
+</div>
+
+<button
+class="send-btn"
+id="checkoutBtn"
+type="button"
+onclick="proceedToCheckout()">
+إتمام الطلب
+</button>
 
 </div>
 
@@ -1468,49 +1748,13 @@ style="color:var(--wine);margin:4px 0 18px">
 </h2>
 
 
+<div
+class="order-cart-summary"
+id="orderCartSummary">
+</div>
+
+
 <div class="form-grid">
-
-
-<div class="fg full">
-
-<label id="productLabel">
-القطعة
-</label>
-
-<input
-class="field"
-id="orderProduct"
-readonly>
-
-</div>
-
-
-<div class="fg">
-
-<label id="colorLabel">
-اللون
-</label>
-
-<select
-class="field"
-id="orderColor">
-</select>
-
-</div>
-
-
-<div class="fg">
-
-<label id="sizeLabel">
-المقاس
-</label>
-
-<select
-class="field"
-id="orderSize">
-</select>
-
-</div>
 
 
 <div class="fg">
@@ -1593,7 +1837,7 @@ placeholder="اختياري">
 <div class="total-line">
 
 <span id="itemPriceLabel">
-سعر القطعة
+مجموع المنتجات
 </span>
 
 <b id="itemPrice">
@@ -1628,6 +1872,13 @@ placeholder="اختياري">
 
 </div>
 
+</div>
+
+
+<div
+class="cod-note"
+id="codNote">
+الدفع عند الاستلام
 </div>
 
 
@@ -1835,9 +2086,19 @@ let currentImageIndex=
 
 let currentColor="";
 
+let currentSize="";
+
+let currentQty=1;
+
+let cart=[];
+
 let sliderIndex=0;
 
 let sliderTimer=null;
+
+let featuresIndex=0;
+
+let featuresTimer=null;
 
 let lang=
 localStorage.getItem("espoza_lang")==="en"
@@ -1851,6 +2112,12 @@ let typewriterTimer=null;
 let swipeState={
 active:false,
 startX:0
+};
+
+let zoomState={
+scale:1,
+x:0,
+y:0
 };
 
 
@@ -2045,7 +2312,7 @@ optional:
 "اختياري",
 
 itemPrice:
-"سعر القطعة",
+"مجموع المنتجات",
 
 deliveryPrice:
 "التوصيل",
@@ -2092,35 +2359,80 @@ newCollection:
 explore:
 "استكشفي",
 
+marqueeText:
+"ESPOZA FASHION • أناقتك تبدأ من هنا • ELEGANCE • NEW COLLECTION • أزياء نسائية •",
+
+feat1Icon:
+"🚚",
+
 feat1Title:
 "توصيل سريع",
 
 feat1Text:
 "نوصل طلبك بسرعة وفي أقرب وقت ممكن",
 
+feat2Icon:
+"🔍",
+
 feat2Title:
-"أمان وثقة",
+"معاينة عند الاستلام",
 
 feat2Text:
-"تسوقي بثقة تامة وأمان كامل لبياناتك",
+"عايني القطعة قبل ما تستلميها وتأكدي إنها عاجبتك",
+
+feat3Icon:
+"🛡️",
 
 feat3Title:
-"جودة مضمونة",
+"أمان وثقة",
 
 feat3Text:
-"نختار لكِ أجود الأقمشة وأدق التفاصيل",
+"تسوقي بثقة تامة وأمان كامل لبياناتك",
+
+feat4Icon:
+"✨",
 
 feat4Title:
-"انطلقنا منذ 2019",
+"جودة مضمونة",
 
 feat4Text:
+"نختار لكِ أجود الأقمشة وأدق التفاصيل",
+
+feat5Icon:
+"❤️",
+
+feat5Title:
+"انطلقنا منذ 2019",
+
+feat5Text:
 "+7,750 زبونة وزبون",
+
+qty:
+"الكمية",
+
+addToCart:
+"أضيفي للسلة",
+
+addedToCart:
+"تمت إضافة القطعة إلى السلة",
+
+cart:
+"السلة",
+
+cartEmpty:
+"سلتك فارغة حاليًا",
+
+checkoutBtn:
+"إتمام الطلب",
+
+cod:
+"الدفع عند الاستلام",
 
 footerSince:
 "إسبوزا فاشن — منذ 2019",
 
 footerCredit:
-"تصميم وتطوير الموقع: Yousef Ajra"
+"Designed & Created by Yousef Ajra"
 
 },
 
@@ -2240,7 +2552,7 @@ optional:
 "Optional",
 
 itemPrice:
-"Item price",
+"Items total",
 
 deliveryPrice:
 "Delivery",
@@ -2287,35 +2599,80 @@ newCollection:
 explore:
 "Explore",
 
+marqueeText:
+"ESPOZA FASHION • Elegance Starts Here • ELEGANCE • NEW COLLECTION • WOMEN'S FASHION •",
+
+feat1Icon:
+"🚚",
+
 feat1Title:
 "Fast Delivery",
 
 feat1Text:
 "Your order arrives quickly, right when you need it",
 
+feat2Icon:
+"🔍",
+
 feat2Title:
-"Trust & Security",
+"Inspect on Delivery",
 
 feat2Text:
-"Shop with full confidence and complete data safety",
+"Check your item before you accept it, just to be sure",
+
+feat3Icon:
+"🛡️",
 
 feat3Title:
-"Guaranteed Quality",
+"Trust & Security",
 
 feat3Text:
-"We handpick the finest fabrics and finest details",
+"Shop with full confidence and complete data safety",
+
+feat4Icon:
+"✨",
 
 feat4Title:
-"Since 2019",
+"Guaranteed Quality",
 
 feat4Text:
+"We handpick the finest fabrics and finest details",
+
+feat5Icon:
+"❤️",
+
+feat5Title:
+"Since 2019",
+
+feat5Text:
 "7,750+ happy customers",
+
+qty:
+"Quantity",
+
+addToCart:
+"Add to Cart",
+
+addedToCart:
+"Item added to your cart",
+
+cart:
+"Cart",
+
+cartEmpty:
+"Your cart is empty",
+
+checkoutBtn:
+"Checkout",
+
+cod:
+"Cash on Delivery",
 
 footerSince:
 "ESPOZA FASHION — Since 2019",
 
 footerCredit:
-"Designed & Developed by Yousef Ajra"
+"Designed & Created by Yousef Ajra"
 
 }
 
@@ -2503,6 +2860,105 @@ tick();
    السحب لتغيير صورة/لون المنتج (Swipe)
    ========================================== */
 
+function applyZoomTransform(){
+
+const img=
+$("detailImage");
+
+
+if(!img)
+return;
+
+
+img.style.transform=
+`translate(${zoomState.x}px,${zoomState.y}px) scale(${zoomState.scale})`;
+
+}
+
+
+function clampZoom(){
+
+zoomState.scale=
+Math.min(
+3,
+Math.max(
+1,
+zoomState.scale
+)
+);
+
+
+if(
+zoomState.scale<=1.02
+){
+
+zoomState.scale=1;
+
+zoomState.x=0;
+
+zoomState.y=0;
+
+}
+
+}
+
+
+function resetZoom(){
+
+zoomState.scale=1;
+
+zoomState.x=0;
+
+zoomState.y=0;
+
+applyZoomTransform();
+
+
+const el=
+$("detailMain");
+
+
+if(el)
+el.classList.remove(
+"zoomed"
+);
+
+}
+
+
+function toggleZoom(){
+
+const el=
+$("detailMain");
+
+
+if(
+zoomState.scale>1
+){
+
+resetZoom();
+
+}else{
+
+zoomState.scale=2.2;
+
+zoomState.x=0;
+
+zoomState.y=0;
+
+applyZoomTransform();
+
+
+if(el)
+el.classList.add(
+"zoomed"
+);
+
+}
+
+}
+
+
 function setupProductSwipe(){
 
 const el=
@@ -2517,47 +2973,216 @@ const threshold=
 40;
 
 
-function onStart(x){
+let lastTapTime=
+0;
 
-swipeState.active=
-true;
+let gestureMode=
+null;
 
-swipeState.startX=
-x;
+let startX=
+0;
 
-el.classList.add(
-"dragging"
+let panStartX=
+0;
+
+let panStartY=
+0;
+
+let pinchStartDist=
+0;
+
+let pinchStartScale=
+1;
+
+
+function touchDistance(t1,t2){
+
+const dx=
+t1.clientX-t2.clientX;
+
+const dy=
+t1.clientY-t2.clientY;
+
+return Math.sqrt(
+dx*dx+dy*dy
 );
 
 }
 
 
-function onEnd(x){
+try{
+
+el.addEventListener(
+"touchstart",
+e=>{
+
+try{
 
 if(
-!swipeState.active
-)
+e.touches.length===2
+){
+
+gestureMode=
+"pinch";
+
+pinchStartDist=
+touchDistance(
+e.touches[0],
+e.touches[1]
+);
+
+pinchStartScale=
+zoomState.scale;
+
+}else if(
+e.touches.length===1
+){
+
+const now=
+Date.now();
+
+
+const isDoubleTap=
+(now-lastTapTime)<320;
+
+
+lastTapTime=
+now;
+
+
+if(isDoubleTap){
+
+toggleZoom();
+
+gestureMode=
+null;
+
 return;
 
+}
 
-swipeState.active=
-false;
 
-el.classList.remove(
-"dragging"
+if(
+zoomState.scale>1.02
+){
+
+gestureMode=
+"pan";
+
+panStartX=
+e.touches[0].clientX-zoomState.x;
+
+panStartY=
+e.touches[0].clientY-zoomState.y;
+
+}else{
+
+gestureMode=
+"swipe";
+
+startX=
+e.touches[0].clientX;
+
+}
+
+}
+
+}catch(err){}
+
+},
+{passive:true}
 );
 
 
+el.addEventListener(
+"touchmove",
+e=>{
+
+try{
+
+if(
+gestureMode==="pinch"
+&&
+e.touches.length===2
+){
+
+e.preventDefault();
+
+
+const dist=
+touchDistance(
+e.touches[0],
+e.touches[1]
+);
+
+
+if(pinchStartDist>0){
+
+zoomState.scale=
+pinchStartScale*(dist/pinchStartDist);
+
+clampZoom();
+
+applyZoomTransform();
+
+el.classList.toggle(
+"zoomed",
+zoomState.scale>1.02
+);
+
+}
+
+}else if(
+gestureMode==="pan"
+&&
+e.touches.length===1
+){
+
+e.preventDefault();
+
+zoomState.x=
+e.touches[0].clientX-panStartX;
+
+zoomState.y=
+e.touches[0].clientY-panStartY;
+
+applyZoomTransform();
+
+}
+
+}catch(err){}
+
+},
+{passive:false}
+);
+
+
+el.addEventListener(
+"touchend",
+e=>{
+
+try{
+
+if(gestureMode==="swipe"){
+
+const endTouch=
+e.changedTouches[0];
+
+
+const endX=
+endTouch
+?
+endTouch.clientX
+:
+startX;
+
+
 const diff=
-x
--
-swipeState.startX;
+endX-startX;
 
 
 if(
-Math.abs(diff)
->
-threshold
+Math.abs(diff)>threshold
 ){
 
 if(diff<0)
@@ -2570,26 +3195,66 @@ changeProductImage(-1);
 }
 
 
+if(
+zoomState.scale<=1.02
+)
+resetZoom();
+
+}catch(err){}
+
+
+gestureMode=
+null;
+
+}
+);
+
+
 el.addEventListener(
-"touchstart",
+"wheel",
 e=>{
 
-onStart(
-e.touches[0].clientX
+try{
+
+e.preventDefault();
+
+
+const delta=
+e.deltaY<0
+?
+0.15
+:
+-0.15;
+
+
+zoomState.scale+=
+delta;
+
+clampZoom();
+
+applyZoomTransform();
+
+el.classList.toggle(
+"zoomed",
+zoomState.scale>1.02
 );
+
+}catch(err){}
 
 },
-{passive:true}
+{passive:false}
 );
 
 
 el.addEventListener(
-"touchend",
-e=>{
+"dblclick",
+()=>{
 
-onEnd(
-e.changedTouches[0].clientX
-);
+try{
+
+toggleZoom();
+
+}catch(err){}
 
 }
 );
@@ -2599,11 +3264,59 @@ el.addEventListener(
 "mousedown",
 e=>{
 
+try{
+
 e.preventDefault();
 
-onStart(
-e.clientX
+
+if(
+zoomState.scale>1.02
+){
+
+gestureMode=
+"pan";
+
+panStartX=
+e.clientX-zoomState.x;
+
+panStartY=
+e.clientY-zoomState.y;
+
+}else{
+
+gestureMode=
+"swipe";
+
+startX=
+e.clientX;
+
+}
+
+}catch(err){}
+
+}
 );
+
+
+document.addEventListener(
+"mousemove",
+e=>{
+
+try{
+
+if(gestureMode==="pan"){
+
+zoomState.x=
+e.clientX-panStartX;
+
+zoomState.y=
+e.clientY-panStartY;
+
+applyZoomTransform();
+
+}
+
+}catch(err){}
 
 }
 );
@@ -2613,12 +3326,44 @@ document.addEventListener(
 "mouseup",
 e=>{
 
-onEnd(
-e.clientX
-);
+try{
+
+if(gestureMode==="swipe"){
+
+const diff=
+e.clientX-startX;
+
+
+if(
+Math.abs(diff)>threshold
+){
+
+if(diff<0)
+changeProductImage(1);
+else
+changeProductImage(-1);
+
+}
+
+}
+
+}catch(err){}
+
+
+gestureMode=
+null;
 
 }
 );
+
+}catch(err){
+
+console.warn(
+"gesture setup failed:",
+err
+);
+
+}
 
 }
 
@@ -3250,6 +3995,122 @@ startSlider();
 }
 
 
+/* ==========================================
+   سلايدر المميزات (Fast Delivery, Trust, etc)
+   ========================================== */
+
+function renderFeatures(){
+
+const track=
+$("featuresTrack");
+
+
+if(!track)
+return;
+
+
+const x=
+t();
+
+
+const items=[
+[x.feat1Icon,x.feat1Title,x.feat1Text],
+[x.feat2Icon,x.feat2Title,x.feat2Text],
+[x.feat3Icon,x.feat3Title,x.feat3Text],
+[x.feat4Icon,x.feat4Title,x.feat4Text],
+[x.feat5Icon,x.feat5Title,x.feat5Text]
+];
+
+
+if(
+featuresIndex>=items.length
+)
+featuresIndex=0;
+
+
+track.innerHTML=
+items
+.map(
+([icon,title,text])=>
+`
+<div class="feature-slide">
+
+<div class="feature-icon">${esc(icon)}</div>
+
+<div class="feature-title">${esc(title)}</div>
+
+<div class="feature-text">${esc(text)}</div>
+
+</div>
+`
+)
+.join("");
+
+
+updateFeaturesTransform();
+
+}
+
+
+function updateFeaturesTransform(){
+
+const track=
+$("featuresTrack");
+
+
+if(!track)
+return;
+
+
+track.style.transform=
+`translateX(-${featuresIndex*100}%)`;
+
+}
+
+
+function moveFeature(){
+
+const track=
+$("featuresTrack");
+
+
+const count=
+track
+?
+track.children.length
+:
+0;
+
+
+if(!count)
+return;
+
+
+featuresIndex=
+(featuresIndex+1)%count;
+
+
+updateFeaturesTransform();
+
+}
+
+
+function startFeaturesSlider(){
+
+clearInterval(
+featuresTimer
+);
+
+
+featuresTimer=
+setInterval(
+moveFeature,
+3200
+);
+
+}
+
+
 function goCategory(category){
 
 const allowed=[
@@ -3302,12 +4163,48 @@ $("searchInput").value
 );
 
 
+const OFFER_KEYWORDS=[
+"عرض",
+"عروض",
+"عروضات",
+"offer",
+"offers"
+];
+
+
+const isOfferSearch=
+!!needle
+
+&&
+
+OFFER_KEYWORDS.some(
+k=>
+needle.includes(
+normalizeName(k)
+)
+);
+
+
 return products
 .filter(
 p=>{
 
 
 const categoryOk=
+
+isOfferSearch
+
+?
+
+(
+p.offer
+||
+p.category==="offers"
+)
+
+:
+
+(
 currentCategory==="all"
 
 ||
@@ -3322,11 +4219,16 @@ p.category==="offers"
 )
 :
 p.category===currentCategory
+)
 );
 
 
 const searchOk=
 !needle
+
+||
+
+isOfferSearch
 
 ||
 
@@ -3374,6 +4276,10 @@ $("productCount")
 `${list.length} ${t().piece}`;
 
 
+const GROUP_SIZE=
+8;
+
+
 $("productsGrid")
 .innerHTML=
 
@@ -3383,9 +4289,21 @@ list.length
 
 list
 .map(
-p=>
+(p,i)=>
 `
-<article class="product-card">
+${
+(
+i>0
+&&
+i%GROUP_SIZE===0
+)
+?
+marqueeDividerHTML()
+:
+""
+}
+
+<article class="product-card reveal-item">
 
 <div
 class="product-img"
@@ -3473,6 +4391,149 @@ ${t().noProducts}
 </div>
 `;
 
+
+try{
+
+setupScrollReveal();
+
+}catch(error){
+
+console.warn(
+"scroll reveal failed:",
+error
+);
+
+}
+
+}
+
+
+/* ==========================================
+   الفاصل المتحرك بين مجموعات المنتجات
+   (Infinite Marquee)
+   ========================================== */
+
+function marqueeDividerHTML(){
+
+try{
+
+const phrase=
+Array(
+6
+)
+.fill(
+t().marqueeText
+||
+"ESPOZA FASHION"
+)
+.join(
+"   "
+);
+
+
+return`
+<div
+class="marquee-divider"
+style="grid-column:1/-1">
+
+<div class="marquee-track">
+
+<span>${esc(phrase)}</span>
+
+<span>${esc(phrase)}</span>
+
+</div>
+
+</div>
+`;
+
+}catch(error){
+
+return"";
+
+}
+
+}
+
+
+/* ==========================================
+   ظهور المنتجات أثناء النزول (Scroll Reveal)
+   ========================================== */
+
+const revealObserver=
+
+(
+"IntersectionObserver"
+in
+window
+)
+
+?
+
+new IntersectionObserver(
+entries=>{
+
+entries.forEach(
+entry=>{
+
+if(
+entry.isIntersecting
+){
+
+entry.target.classList.add(
+"revealed"
+);
+
+revealObserver.unobserve(
+entry.target
+);
+
+}
+
+}
+);
+
+},
+{
+threshold:0.1,
+rootMargin:"0px 0px -30px 0px"
+}
+)
+
+:
+
+null;
+
+
+function setupScrollReveal(){
+
+const items=
+document.querySelectorAll(
+".reveal-item:not(.revealed)"
+);
+
+
+if(
+!revealObserver
+){
+
+items.forEach(
+el=>
+el.classList.add(
+"revealed"
+)
+);
+
+return;
+
+}
+
+
+items.forEach(
+el=>
+revealObserver.observe(el)
+);
+
 }
 
 
@@ -3515,6 +4576,18 @@ currentProduct.colors[0]
 "";
 
 
+currentSize=
+currentProduct.sizes[0]
+
+||
+
+"";
+
+
+currentQty=
+1;
+
+
 refreshProductModal();
 
 
@@ -3536,6 +4609,9 @@ if(
 !currentProduct
 )
 return;
+
+
+resetZoom();
 
 
 const image=
@@ -3667,12 +4743,30 @@ currentProduct.sizes
 .map(
 size=>
 `
-<span class="chip">
+<button
+class="chip clickable ${
+size===currentSize
+?
+"active"
+:
+""
+}"
+type="button"
+onclick="selectSize('${esc(size)}')">
 ${esc(size)}
-</span>
+</button>
 `
 )
 .join("");
+
+
+$("qtyValue")
+.textContent=
+String(
+currentQty
+||
+1
+);
 
 
 $("openOrderBtn")
@@ -3684,7 +4778,7 @@ $("openOrderBtn")
 .textContent=
 currentProduct.available
 ?
-t().order
+t().addToCart
 :
 t().unavailable;
 
@@ -3792,11 +4886,128 @@ refreshProductModal();
 }
 
 
+function selectSize(size){
+
+currentSize=
+size;
+
+refreshProductModal();
+
+}
+
+
+function changeQty(delta){
+
+currentQty=
+Math.max(
+1,
+(currentQty||1)+delta
+);
+
+
+const el=
+$("qtyValue");
+
+
+if(el)
+el.textContent=
+String(currentQty);
+
+}
+
+
 /* ==========================================
-   فتح نموذج الطلب
+   السلة (Cart)
    ========================================== */
 
-function openOrderModal(){
+function saveCart(){
+
+try{
+
+localStorage.setItem(
+"espoza_cart",
+JSON.stringify(cart)
+);
+
+}catch(error){
+
+console.warn(
+"cart save:",
+error
+);
+
+}
+
+}
+
+
+function loadCartFromStorage(){
+
+try{
+
+const raw=
+localStorage.getItem(
+"espoza_cart"
+);
+
+cart=
+raw
+?
+JSON.parse(raw)
+:
+[];
+
+
+if(
+!Array.isArray(cart)
+)
+cart=[];
+
+}catch(error){
+
+cart=[];
+
+}
+
+}
+
+
+function updateCartBadge(){
+
+const el=
+$("cartCount");
+
+
+if(!el)
+return;
+
+
+const count=
+cart.reduce(
+(sum,item)=>
+sum+Number(item.qty||0),
+0
+);
+
+
+el.textContent=
+String(count);
+
+}
+
+
+function cartSubtotal(){
+
+return cart.reduce(
+(sum,item)=>
+sum+Number(item.price||0)*Number(item.qty||0),
+0
+);
+
+}
+
+
+function addCurrentToCart(){
 
 if(
 !currentProduct
@@ -3806,76 +5017,331 @@ if(
 return;
 
 
-$("orderProduct")
-.value=
-currentProduct.name;
+const size=
+currentSize
 
+||
 
-const colors=
-currentProduct.colors.length
-?
-currentProduct.colors
-:
-[
-t().accordingImage
-];
-
-
-const sizes=
+(
 currentProduct.sizes.length
 ?
-currentProduct.sizes
+currentProduct.sizes[0]
 :
-[
 t().accordingAvailable
-];
+);
 
 
-$("orderColor")
-.innerHTML=
-colors
-.map(
-c=>
-`
-<option
-value="${esc(c)}"
-${
-c===currentColor
+const color=
+currentColor
+
+||
+
+(
+currentProduct.colors.length
 ?
-"selected"
+currentProduct.colors[0]
 :
 ""
-}>
-${esc(c)}
-</option>
-`
-)
-.join("");
+);
 
 
-$("orderSize")
-.innerHTML=
-sizes
+const qty=
+currentQty
+||
+1;
+
+
+const existing=
+cart.find(
+item=>
+item.productId===currentProduct.id
+&&
+item.size===size
+&&
+item.color===color
+);
+
+
+if(existing){
+
+existing.qty+=
+qty;
+
+}else{
+
+cart.push({
+
+productId:
+currentProduct.id,
+
+name:
+currentProduct.name,
+
+price:
+currentProduct.price,
+
+image:
+currentProduct.images[0]?.url
+
+||
+
+PLACEHOLDER,
+
+size,
+
+color,
+
+qty
+
+});
+
+}
+
+
+saveCart();
+
+updateCartBadge();
+
+toast(
+t().addedToCart
+);
+
+
+currentQty=
+1;
+
+
+const qtyEl=
+$("qtyValue");
+
+if(qtyEl)
+qtyEl.textContent=
+"1";
+
+}
+
+
+function renderCartModal(){
+
+const box=
+$("cartItems");
+
+
+if(!box)
+return;
+
+
+box.innerHTML=
+
+cart.length
+
+?
+
+cart
 .map(
-s=>
+(item,idx)=>
 `
-<option value="${esc(s)}">
-${esc(s)}
-</option>
+<div class="cart-line">
+
+<img
+src="${esc(item.image)}"
+alt="${esc(item.name)}"
+onerror="this.src='${PLACEHOLDER}'">
+
+<div class="cart-line-info">
+
+<div class="cart-line-name">
+${esc(item.name)}
+</div>
+
+<div class="cart-line-meta">
+${
+item.color
+?
+esc(item.color)+" • "
+:
+""
+}${esc(item.size)}
+</div>
+
+<div class="cart-line-controls">
+
+<button
+type="button"
+onclick="changeCartQty(${idx},-1)">
+−
+</button>
+
+<span>${item.qty}</span>
+
+<button
+type="button"
+onclick="changeCartQty(${idx},1)">
++
+</button>
+
+<button
+type="button"
+class="cart-remove"
+onclick="removeCartItem(${idx})">
+×
+</button>
+
+</div>
+
+</div>
+
+<div class="cart-line-price">
+₪${money(item.price*item.qty)}
+</div>
+
+</div>
+`
+)
+.join("")
+
+:
+
+`
+<div class="empty">
+${t().cartEmpty}
+</div>
+`;
+
+
+$("cartTotal")
+.textContent=
+`₪${money(cartSubtotal())}`;
+
+
+$("checkoutBtn")
+.disabled=
+!cart.length;
+
+}
+
+
+function changeCartQty(idx,delta){
+
+const item=
+cart[idx];
+
+
+if(!item)
+return;
+
+
+item.qty=
+Math.max(
+1,
+item.qty+delta
+);
+
+
+saveCart();
+
+updateCartBadge();
+
+renderCartModal();
+
+}
+
+
+function removeCartItem(idx){
+
+cart.splice(idx,1);
+
+
+saveCart();
+
+updateCartBadge();
+
+renderCartModal();
+
+}
+
+
+function openCartModal(){
+
+renderCartModal();
+
+
+$("cartModal")
+.classList.add(
+"open"
+);
+
+
+document.body.style.overflow=
+"hidden";
+
+}
+
+
+function renderOrderCartSummary(){
+
+const box=
+$("orderCartSummary");
+
+
+if(!box)
+return;
+
+
+box.innerHTML=
+cart
+.map(
+item=>
+`
+<div class="order-summary-line">
+
+<span>
+${esc(item.name)}
+${
+item.color
+||
+item.size
+?
+`(${esc(
+[
+item.color,
+item.size
+]
+.filter(Boolean)
+.join(" / ")
+)})`
+:
+""
+} × ${item.qty}
+</span>
+
+<b>₪${money(item.price*item.qty)}</b>
+
+</div>
 `
 )
 .join("");
 
+}
+
+
+function proceedToCheckout(){
+
+if(!cart.length)
+return;
+
+
+closeModal(
+"cartModal",
+false
+);
+
+
+renderOrderCartSummary();
 
 renderDeliveryOptions();
 
 updateOrderTotal();
-
-
-closeModal(
-"productModal",
-false
-);
 
 
 $("orderModal")
@@ -3941,7 +5407,7 @@ option.dataset.price||0
 function updateOrderTotal(){
 
 if(
-!currentProduct
+!cart.length
 )
 return;
 
@@ -3950,10 +5416,14 @@ const delivery=
 selectedDelivery();
 
 
+const subtotal=
+cartSubtotal();
+
+
 $("itemPrice")
 .textContent=
 `₪${money(
-currentProduct.price
+subtotal
 )}`;
 
 
@@ -3967,7 +5437,7 @@ delivery.price
 $("totalPrice")
 .textContent=
 `₪${money(
-currentProduct.price
+subtotal
 +
 delivery.price
 )}`;
@@ -3982,9 +5452,7 @@ delivery.price
 function sendOrder(){
 
 if(
-!currentProduct
-||
-!currentProduct.available
+!cart.length
 )
 return;
 
@@ -4053,24 +5521,44 @@ return;
 }
 
 
-const color=
-$("orderColor")
-.value;
-
-
-const size=
-$("orderSize")
-.value;
-
-
 const delivery=
 selectedDelivery();
 
 
-const total=
-currentProduct.price
+const itemsTotal=
+cartSubtotal();
+
+
+const grandTotal=
+itemsTotal
 +
 delivery.price;
+
+
+const linesAr=
+cart
+.map(
+item=>
+`👗 ${item.name}
+   المقاس: ${item.size}${item.color?`
+   اللون: ${item.color}`:""}
+   الكمية: ${item.qty}
+   السعر: ₪${money(item.price*item.qty)}`
+)
+.join("\n\n");
+
+
+const linesEn=
+cart
+.map(
+item=>
+`👗 ${item.name}
+   Size: ${item.size}${item.color?`
+   Color: ${item.color}`:""}
+   Qty: ${item.qty}
+   Price: ₪${money(item.price*item.qty)}`
+)
+.join("\n\n");
 
 
 /* رسالة واتساب */
@@ -4085,18 +5573,18 @@ lang==="ar"
 
 أرغب بطلب:
 
-👗 القطعة: ${currentProduct.name}
-🎨 اللون: ${color}
-📏 المقاس: ${size}
+${linesAr}
+
 👤 الاسم: ${name}
 📱 الهاتف: ${phone}
 📍 منطقة التوصيل: ${delivery.name}
 🏠 العنوان: ${address}${notes?`
 📝 ملاحظات: ${notes}`:""}
 
-💰 سعر القطعة: ₪${money(currentProduct.price)}
+💰 مجموع المنتجات: ₪${money(itemsTotal)}
 🚚 التوصيل: ₪${money(delivery.price)}
-💵 المجموع: ₪${money(total)}`
+💵 الإجمالي النهائي: ₪${money(grandTotal)}
+💳 الدفع عند الاستلام`
 
 :
 
@@ -4104,18 +5592,18 @@ lang==="ar"
 
 I would like to order:
 
-👗 Product: ${currentProduct.name}
-🎨 Color: ${color}
-📏 Size: ${size}
+${linesEn}
+
 👤 Name: ${name}
 📱 Phone: ${phone}
-📍 Delivery: ${delivery.name}
+📍 Delivery area: ${delivery.name}
 🏠 Address: ${address}${notes?`
 📝 Notes: ${notes}`:""}
 
-💰 Item: ₪${money(currentProduct.price)}
+💰 Items total: ₪${money(itemsTotal)}
 🚚 Delivery: ₪${money(delivery.price)}
-💵 Total: ₪${money(total)}`;
+💵 Grand total: ₪${money(grandTotal)}
+💳 Cash on Delivery`;
 
 
 toast(
@@ -4132,6 +5620,13 @@ window.open(
 "noopener"
 
 );
+
+
+cart=[];
+
+saveCart();
+
+updateCartBadge();
 
 
 closeModal(
@@ -4265,19 +5760,29 @@ $("orderHeading")
 x.orderHeading;
 
 
-$("productLabel")
+$("cartHeading")
 .textContent=
-x.product;
+x.cart;
 
 
-$("colorLabel")
+$("cartTotalLabel")
 .textContent=
-x.color;
+x.total;
 
 
-$("sizeLabel")
+$("checkoutBtn")
 .textContent=
-x.size;
+x.checkoutBtn;
+
+
+$("qtyTitle")
+.textContent=
+x.qty;
+
+
+$("codNote")
+.textContent=
+x.cod;
 
 
 $("nameLabel")
@@ -4330,37 +5835,11 @@ $("sendOrderBtn")
 x.send;
 
 
-$("feat1Title")
-.textContent=
-x.feat1Title;
+renderFeatures();
 
-$("feat1Text")
-.textContent=
-x.feat1Text;
+renderCartModal();
 
-$("feat2Title")
-.textContent=
-x.feat2Title;
-
-$("feat2Text")
-.textContent=
-x.feat2Text;
-
-$("feat3Title")
-.textContent=
-x.feat3Title;
-
-$("feat3Text")
-.textContent=
-x.feat3Text;
-
-$("feat4Title")
-.textContent=
-x.feat4Title;
-
-$("feat4Text")
-.textContent=
-x.feat4Text;
+updateCartBadge();
 
 
 if(
@@ -4519,13 +5998,95 @@ setupProductSwipe();
 
 function init(){
 
+try{
+
+loadCartFromStorage();
+
+}catch(error){
+
+console.warn(
+"cart load failed:",
+error
+);
+
+}
+
+
+try{
+
 setupEvents();
+
+}catch(error){
+
+console.warn(
+"setupEvents failed:",
+error
+);
+
+}
+
+
+try{
 
 setupProducts();
 
+}catch(error){
+
+console.warn(
+"setupProducts failed:",
+error
+);
+
+}
+
+
+try{
+
 applyLanguage();
 
+}catch(error){
+
+console.warn(
+"applyLanguage failed:",
+error
+);
+
+}
+
+
+try{
+
+updateCartBadge();
+
+}catch(error){}
+
+
+try{
+
 startSlider();
+
+}catch(error){
+
+console.warn(
+"hero slider failed:",
+error
+);
+
+}
+
+
+try{
+
+startFeaturesSlider();
+
+}catch(error){
+
+console.warn(
+"features slider failed:",
+error
+);
+
+}
 
 }
 
@@ -4536,4 +6097,5 @@ init();
 
 </body>
 </html>
+
 
