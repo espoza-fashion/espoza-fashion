@@ -302,6 +302,200 @@ color:var(--muted)
 }
 
 
+/* CUSTOMER FEEDBACK */
+
+.feedback{
+max-width:1240px;
+margin:auto;
+padding:8px 18px 8px
+}
+
+.feedback-head{
+text-align:center;
+margin-bottom:18px
+}
+
+.feedback-head h2{
+font-family:"Playfair Display","Cairo",serif;
+color:var(--wine);
+font-size:clamp(26px,4vw,40px);
+margin:0 0 10px
+}
+
+.feedback-counter{
+display:inline-flex;
+align-items:center;
+gap:9px;
+background:#fff;
+border:1px solid var(--line);
+border-radius:30px;
+padding:9px 20px
+}
+
+.feedback-counter b{
+color:var(--wine);
+font-size:22px;
+font-weight:800;
+min-width:2ch;
+text-align:center
+}
+
+.feedback-counter span{
+font-size:12px;
+color:var(--muted)
+}
+
+.feedback-showcase{
+overflow:hidden;
+margin-top:22px;
+-webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent)
+}
+
+.feedback-showcase-track{
+display:flex;
+gap:16px;
+width:max-content;
+direction:ltr;
+animation:feedbackShowcaseScroll 42s linear infinite
+}
+
+@keyframes feedbackShowcaseScroll{
+
+from{
+transform:translateX(0)
+}
+
+to{
+transform:translateX(-50%)
+}
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+.feedback-showcase-track{
+animation:none
+}
+
+}
+
+.iphone-frame{
+position:relative;
+flex-shrink:0;
+width:172px;
+aspect-ratio:9/19.3;
+background:#1b1b1d;
+border-radius:30px;
+padding:7px;
+box-shadow:var(--shadow);
+cursor:pointer
+}
+
+.iphone-frame::before{
+content:"";
+position:absolute;
+top:7px;
+left:50%;
+transform:translateX(-50%);
+width:44%;
+height:15px;
+background:#1b1b1d;
+border-radius:0 0 11px 11px;
+z-index:2
+}
+
+.iphone-screen{
+width:100%;
+height:100%;
+border-radius:23px;
+overflow:hidden;
+background:#fff
+}
+
+.iphone-screen img{
+width:100%;
+height:100%;
+object-fit:cover;
+object-position:top center
+}
+
+.feedback-grid .iphone-frame{
+width:100%;
+max-width:210px;
+margin:0 auto
+}
+
+.feedback-arrow-wrap{
+display:flex;
+justify-content:center;
+padding:22px 0 6px
+}
+
+.feedback-arrow{
+width:42px;
+height:42px;
+border-radius:50%;
+background:#fff;
+border:1px solid var(--line);
+display:flex;
+align-items:center;
+justify-content:center;
+color:var(--wine);
+animation:feedbackArrowBounce 1.8s ease-in-out infinite;
+box-shadow:var(--shadow)
+}
+
+.feedback-arrow svg{
+width:18px;
+height:18px
+}
+
+@keyframes feedbackArrowBounce{
+
+0%,100%{
+transform:translateY(0)
+}
+
+50%{
+transform:translateY(7px)
+}
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+.feedback-arrow{
+animation:none
+}
+
+}
+
+.feedback-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:16px;
+margin-top:6px
+}
+
+@media(max-width:1000px){
+
+.feedback-grid{
+grid-template-columns:repeat(3,1fr)
+}
+
+}
+
+@media(max-width:600px){
+
+.feedback-grid{
+grid-template-columns:repeat(2,1fr);
+gap:10px
+}
+
+}
+
+
 /* SEARCH */
 
 .toolbar{
@@ -1314,6 +1508,64 @@ WhatsApp
 </section>
 
 
+<!-- CUSTOMER FEEDBACK -->
+
+<section
+class="feedback"
+id="feedback">
+
+<div class="feedback-head">
+
+<h2 id="feedbackTitle">
+آراء زبوناتنا
+</h2>
+
+<div class="feedback-counter" id="feedbackCounterBox">
+
+<b id="feedbackCounter">0</b>
+
+<span id="feedbackCounterLabel">
+تقييم حقيقي من زبوناتنا
+</span>
+
+</div>
+
+</div>
+
+<div class="feedback-showcase" id="feedbackShowcase">
+
+<div
+class="feedback-showcase-track"
+id="feedbackShowcaseTrack">
+</div>
+
+</div>
+
+<div class="feedback-arrow-wrap">
+
+<button
+class="feedback-arrow"
+id="feedbackArrow"
+type="button"
+aria-label="عرض المزيد من التقييمات"
+onclick="document.getElementById('feedbackGrid').scrollIntoView({behavior:'smooth',block:'center'})">
+
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+</button>
+
+</div>
+
+<div
+class="feedback-grid"
+id="feedbackGrid">
+</div>
+
+</section>
+
+
 <!-- SEARCH -->
 
 <section
@@ -1663,6 +1915,39 @@ type="button"
 onclick="addCurrentToCart()">
 أضيفي للسلة
 </button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- FEEDBACK IMAGE VIEW -->
+
+<div
+class="modal"
+id="feedbackImageModal">
+
+<div class="modal-box" style="width:min(420px,100%);padding:14px">
+
+<button
+class="close-btn"
+type="button"
+onclick="closeModal('feedbackImageModal')">
+×
+</button>
+
+<div class="iphone-frame" style="width:100%;max-width:340px;margin:10px auto;aspect-ratio:9/19.3">
+
+<div class="iphone-screen">
+
+<img
+id="feedbackImageModalImg"
+src=""
+alt="">
 
 </div>
 
@@ -2023,6 +2308,36 @@ P("طقم فايورا","sets",250,"44,46,48,50,52,54,56","8791d719-9671-4744-89
 
 
 /* ==========================================
+   آراء الزبونات (لقطات شاشة حقيقية)
+
+   أضيفي أو احذفي اسم صورة من هذه القائمة فقط
+   ========================================== */
+
+const FEEDBACK_IMAGES=[
+"IMG_3356.jpeg",
+"IMG_3358.jpeg",
+"IMG_3359.jpeg",
+"IMG_3361.jpeg",
+"0dc20e39-4885-4ad0-8cdf-ebffa2e4a3b9.jpeg",
+"IMG_1841.jpeg",
+"IMG_1850.jpeg",
+"IMG_1851.jpeg",
+"IMG_1863.jpeg",
+"IMG_2062.jpeg",
+"IMG_1965.jpeg",
+"IMG_1959.jpeg",
+"IMG_2075.jpeg",
+"IMG_2237.jpeg",
+"b64cf974-a296-4755-8537-bb43170a19a9.jpeg",
+"737c236a-2bd8-418c-95be-2f4178bc4e30.jpeg",
+"IMG_2277.jpeg",
+"IMG_2238.jpeg",
+"IMG_2490.jpeg",
+"IMG_2284.jpeg"
+];
+
+
+/* ==========================================
    إعدادات المتجر الثابتة
    ========================================== */
 
@@ -2119,6 +2434,9 @@ scale:1,
 x:0,
 y:0
 };
+
+let feedbackCounterDone=
+false;
 
 
 const $=
@@ -2432,7 +2750,13 @@ footerSince:
 "إسبوزا فاشن — منذ 2019",
 
 footerCredit:
-"Designed & Created by Yousef Ajra"
+"Designed & Created by Yousef Ajra",
+
+feedbackTitle:
+"آراء زبوناتنا",
+
+feedbackCounterLabel:
+"تقييم حقيقي من زبوناتنا"
 
 },
 
@@ -2672,7 +2996,13 @@ footerSince:
 "ESPOZA FASHION — Since 2019",
 
 footerCredit:
-"Designed & Created by Yousef Ajra"
+"Designed & Created by Yousef Ajra",
+
+feedbackTitle:
+"What our customers say",
+
+feedbackCounterLabel:
+"real reviews from our customers"
 
 }
 
@@ -4107,6 +4437,234 @@ setInterval(
 moveFeature,
 3200
 );
+
+}
+
+
+/* ==========================================
+   قسم آراء الزبونات (Customer Feedback)
+   ========================================== */
+
+function feedbackFrameHTML(url,index){
+
+return`
+<div
+class="iphone-frame reveal-item"
+onclick="openFeedbackImage('${esc(url)}')">
+
+<div class="iphone-screen">
+
+<img
+src="${esc(url)}"
+alt="Espoza Fashion — رأي زبونة"
+loading="lazy"
+onerror="this.src='${PLACEHOLDER}'">
+
+</div>
+
+</div>
+`;
+
+}
+
+
+function renderFeedback(){
+
+const track=
+$("feedbackShowcaseTrack");
+
+const grid=
+$("feedbackGrid");
+
+
+if(
+!track
+||
+!grid
+||
+!FEEDBACK_IMAGES.length
+)
+return;
+
+
+const doubled=[
+...FEEDBACK_IMAGES,
+...FEEDBACK_IMAGES
+];
+
+
+track.innerHTML=
+doubled
+.map(
+(url,i)=>
+feedbackFrameHTML(url,i)
+)
+.join("");
+
+
+grid.innerHTML=
+FEEDBACK_IMAGES
+.map(
+(url,i)=>
+feedbackFrameHTML(url,i)
+)
+.join("");
+
+
+try{
+
+setupScrollReveal();
+
+}catch(error){}
+
+
+setupFeedbackCounter();
+
+}
+
+
+function openFeedbackImage(url){
+
+$("feedbackImageModalImg")
+.src=
+url;
+
+
+$("feedbackImageModal")
+.classList.add(
+"open"
+);
+
+
+document.body.style.overflow=
+"hidden";
+
+}
+
+
+function animateFeedbackCounter(){
+
+const el=
+$("feedbackCounter");
+
+
+if(!el)
+return;
+
+
+const target=
+FEEDBACK_IMAGES.length;
+
+
+const duration=
+1400;
+
+
+const start=
+performance.now();
+
+
+function tick(now){
+
+const progress=
+Math.min(
+1,
+(now-start)/duration
+);
+
+
+const eased=
+1-Math.pow(
+1-progress,
+3
+);
+
+
+el.textContent=
+`+${Math.round(eased*target)}`;
+
+
+if(progress<1)
+requestAnimationFrame(tick);
+else
+el.textContent=
+`+${target}`;
+
+}
+
+
+requestAnimationFrame(tick);
+
+}
+
+
+function setupFeedbackCounter(){
+
+const box=
+$("feedbackCounterBox");
+
+
+if(
+!box
+||
+feedbackCounterDone
+)
+return;
+
+
+if(
+!(
+"IntersectionObserver"
+in
+window
+)
+){
+
+feedbackCounterDone=
+true;
+
+animateFeedbackCounter();
+
+return;
+
+}
+
+
+const observer=
+new IntersectionObserver(
+entries=>{
+
+entries.forEach(
+entry=>{
+
+if(
+entry.isIntersecting
+&&
+!feedbackCounterDone
+){
+
+feedbackCounterDone=
+true;
+
+animateFeedbackCounter();
+
+observer.unobserve(
+entry.target
+);
+
+}
+
+}
+);
+
+},
+{
+threshold:0.4
+}
+);
+
+
+observer.observe(box);
 
 }
 
@@ -5835,6 +6393,16 @@ $("sendOrderBtn")
 x.send;
 
 
+$("feedbackTitle")
+.textContent=
+x.feedbackTitle;
+
+
+$("feedbackCounterLabel")
+.textContent=
+x.feedbackCounterLabel;
+
+
 renderFeatures();
 
 renderCartModal();
@@ -6042,6 +6610,20 @@ error
 
 try{
 
+renderFeedback();
+
+}catch(error){
+
+console.warn(
+"feedback render failed:",
+error
+);
+
+}
+
+
+try{
+
 applyLanguage();
 
 }catch(error){
@@ -6097,5 +6679,6 @@ init();
 
 </body>
 </html>
+
 
 
