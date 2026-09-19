@@ -6737,7 +6737,7 @@ init();
               items:cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty,size:x.size||"",color:x.color||"",image:x.image||""})),
               subtotal:subtotal,delivery_fee:d.price,total:total,status:"new",notes:notes||null});
           }catch(e){console.warn("Espoza order sync failed:",e)}
-        },{passive:true});
+        },{capture:true});
       }
     }catch(error){console.warn("Espoza Admin DB bridge failed; keeping static site data.",error)}
   }
