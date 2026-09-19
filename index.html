@@ -998,7 +998,6 @@ border-color:var(--wine)
 .detail-info{
 padding:16px 2px
 }
-
 .detail-info h2{
 font-size:27px;
 color:var(--wine);
@@ -1370,8 +1369,605 @@ font-size:13px
 }
 
 }
+
+/* ==========================================
+   ESPoza PREMIUM MOTION LAYER
+   ========================================== */
+
+body{
+  animation:pageSoftIn .75s ease both;
+}
+
+@keyframes pageSoftIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+.top-note{
+  position:relative;
+  overflow:hidden;
+}
+.top-note::after{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 -35%;
+  width:30%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+  transform:skewX(-20deg);
+  animation:topShine 5s ease-in-out infinite;
+}
+@keyframes topShine{
+  0%,65%{left:-35%}
+  100%{left:135%}
+}
+
+.brand-main{
+  transition:transform .35s ease,letter-spacing .35s ease;
+}
+.brand:hover .brand-main{
+  transform:translateY(-2px);
+  letter-spacing:4px;
+}
+
+.icon-btn,.pill,.cat,.social-link,.order-btn,.send-btn,.feedback-counter,.mini-stat{
+  transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease,background .28s ease;
+}
+.icon-btn:hover,.pill:hover,.cat:hover,.social-link:hover,.mini-stat:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 24px rgba(67,19,33,.12);
+}
+.order-btn:hover,.send-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 25px rgba(67,19,33,.22);
+}
+.order-btn:active,.send-btn:active,.icon-btn:active,.pill:active,.cat:active{
+  transform:scale(.97);
+}
+
+.cart-badge{
+  animation:cartBadgePulse 2.8s ease-in-out infinite;
+}
+@keyframes cartBadgePulse{
+  0%,82%,100%{transform:scale(1)}
+  88%{transform:scale(1.22)}
+  94%{transform:scale(.94)}
+}
+
+.hero{
+  animation:heroLift 1s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes heroLift{
+  from{opacity:0;transform:translateY(18px) scale(.985)}
+  to{opacity:1;transform:none}
+}
+.hero-slide img{
+  transition:transform 1.1s cubic-bezier(.2,.7,.2,1),opacity .8s ease;
+}
+.hero-slide:hover img{
+  transform:scale(1.025);
+}
+.hero-copy h1{
+  animation:heroTextIn .9s .15s both cubic-bezier(.2,.8,.2,1);
+}
+.hero-copy p,.hero-copy button{
+  animation:heroTextIn .8s .28s both cubic-bezier(.2,.8,.2,1);
+}
+@keyframes heroTextIn{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:none}
+}
+
+.intro-card{
+  position:relative;
+  overflow:hidden;
+}
+.intro-card::before{
+  content:"";
+  position:absolute;
+  width:180px;height:180px;
+  border-radius:50%;
+  background:rgba(185,152,90,.09);
+  top:-90px;left:-70px;
+  animation:softOrb 7s ease-in-out infinite;
+}
+@keyframes softOrb{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(45px,25px)}
+}
+
+.feedback{
+  position:relative;
+}
+.feedback-head h2{
+  animation:sectionTitleIn .9s ease both;
+}
+@keyframes sectionTitleIn{
+  from{opacity:0;transform:translateY(14px);letter-spacing:-.5px}
+  to{opacity:1;transform:none;letter-spacing:normal}
+}
+
+.feedback-showcase{
+  position:relative;
+  padding:12px 0 18px;
+  touch-action:pan-y;
+  cursor:grab;
+}
+.feedback-showcase.is-dragging{
+  cursor:grabbing;
+}
+.feedback-showcase-track{
+  gap:clamp(12px,1.7vw,24px);
+  animation:feedbackShowcaseScroll 52s linear infinite;
+  will-change:transform;
+}
+.feedback-showcase:hover .feedback-showcase-track{
+  animation-play-state:paused;
+}
+.iphone-frame{
+  width:clamp(142px,14vw,210px);
+  border-radius:clamp(25px,2.2vw,38px);
+  padding:clamp(5px,.55vw,8px);
+  box-shadow:0 20px 42px rgba(35,10,18,.20),0 0 0 1px rgba(255,255,255,.10) inset;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease;
+}
+.iphone-frame:hover{
+  transform:translateY(-10px) rotate(-1deg);
+  box-shadow:0 30px 55px rgba(35,10,18,.25),0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.iphone-screen{
+  border-radius:clamp(19px,1.8vw,30px);
+}
+.iphone-frame:nth-child(3n){
+  transform:translateY(8px);
+}
+.iphone-frame:nth-child(3n):hover{
+  transform:translateY(-4px) rotate(1deg);
+}
+
+.feedback-story{
+  margin:8px auto 0;
+  max-width:720px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+.feedback-daily{
+  font-family:"Playfair Display","Cairo",serif;
+  color:var(--wine);
+  font-size:clamp(22px,3vw,34px);
+  font-weight:700;
+  letter-spacing:.2px;
+}
+.feedback-platforms{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.feedback-platform{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:6px 10px;
+  font-size:10px;
+  color:var(--muted);
+  box-shadow:0 6px 18px rgba(67,19,33,.06);
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.feedback-platform:hover{
+  transform:translateY(-2px);
+  box-shadow:0 9px 22px rgba(67,19,33,.10);
+}
+.feedback-platform b{
+  color:var(--wine);
+}
+.feedback-swipe-hint{
+  margin-top:5px;
+  font-size:10px;
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  opacity:.9;
+}
+.feedback-swipe-line{
+  width:62px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.feedback-drawn-arrow{
+  width:min(210px,44vw);
+  height:62px;
+  overflow:visible;
+  margin-top:-2px;
+}
+.feedback-drawn-arrow path{
+  fill:none;
+  stroke:var(--gold);
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:280;
+  stroke-dashoffset:280;
+  animation:drawFeedbackArrow 2.1s .4s ease forwards,arrowFloat 3.2s 2.5s ease-in-out infinite;
+}
+.feedback-drawn-arrow marker{
+  overflow:visible;
+}
+@keyframes drawFeedbackArrow{
+  to{stroke-dashoffset:0}
+}
+@keyframes arrowFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(5px)}
+}
+
+.feedback-arrow-wrap{
+  padding:12px 0 7px;
+}
+.feedback-arrow{
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  width:48px;height:48px;
+}
+.feedback-arrow::before{
+  content:"";
+  position:absolute;
+  width:34px;height:34px;
+  border:1px solid rgba(185,152,90,.35);
+  border-radius:50%;
+  animation:ringPulse 2.2s ease-in-out infinite;
+}
+.feedback-arrow svg{
+  width:21px;height:21px;
+  position:relative;
+}
+@keyframes ringPulse{
+  0%,100%{transform:scale(.9);opacity:.45}
+  50%{transform:scale(1.15);opacity:1}
+}
+
+.feedback-grid{
+  display:grid;
+}
+.feedback-grid .iphone-frame{
+  width:clamp(145px,100%,210px);
+  opacity:0;
+  transform:translateY(24px) scale(.96);
+}
+.feedback-grid .iphone-frame.revealed{
+  opacity:1;
+  transform:none;
+}
+.feedback-grid .iphone-frame:nth-child(2n){transition-delay:.06s}
+.feedback-grid .iphone-frame:nth-child(3n){transition-delay:.12s}
+
+.marquee-divider{
+  position:relative;
+  isolation:isolate;
+  box-shadow:0 9px 24px rgba(67,19,33,.10);
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+.marquee-divider:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 30px rgba(67,19,33,.14);
+}
+.marquee-track{
+  animation:marqueeScroll 19s linear infinite;
+  will-change:transform;
+}
+.marquee-divider::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.08),transparent 25%,transparent 75%,rgba(255,255,255,.08));
+}
+
+.product-card{
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease,border-color .35s ease;
+}
+.product-card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(185,152,90,.35);
+  box-shadow:0 18px 38px rgba(67,19,33,.14);
+}
+.product-img img{
+  transition:transform .65s cubic-bezier(.2,.8,.2,1),filter .5s ease;
+}
+.product-card:hover .product-img img{
+  transform:scale(1.045);
+}
+.product-card .offer-badge{
+  animation:badgeFloat 3s ease-in-out infinite;
+}
+@keyframes badgeFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-3px)}
+}
+
+.features{
+  position:relative;
+}
+.features-slider{
+  box-shadow:0 16px 40px rgba(67,19,33,.09);
+  overflow:hidden;
+}
+.features-track{
+  will-change:transform;
+}
+.features-tagline{
+  text-align:center;
+  margin:16px auto 0;
+  font-weight:800;
+  font-size:clamp(15px,2.4vw,20px);
+  color:var(--wine);
+  letter-spacing:.2px;
+}
+.feature-slide{
+  position:relative;
+  min-height:150px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+.feature-slide::after{
+  content:"";
+  position:absolute;
+  width:120px;height:120px;
+  border-radius:50%;
+  border:1px solid rgba(185,152,90,.12);
+  animation:featureRing 6s linear infinite;
+}
+@keyframes featureRing{
+  from{transform:rotate(0deg) scale(.88)}
+  50%{transform:rotate(180deg) scale(1)}
+  to{transform:rotate(360deg) scale(.88)}
+}
+.feature-icon{
+  position:relative;
+  z-index:1;
+  animation:featureIconFloat 2.8s ease-in-out infinite;
+}
+.feature-title,.feature-text{
+  position:relative;
+  z-index:1;
+}
+@keyframes featureIconFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+.trust-number{
+  font-family:"Playfair Display","Cairo",serif;
+  font-size:clamp(34px,6vw,62px);
+  line-height:1;
+  color:var(--wine);
+  font-weight:700;
+  margin:2px 0 9px;
+  position:relative;
+  z-index:2;
+}
+.trust-caption{
+  font-size:clamp(13px,2vw,17px);
+  color:var(--dark);
+  font-weight:800;
+  position:relative;
+  z-index:2;
+}
+.trust-subcaption{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:4px;
+  position:relative;
+  z-index:2;
+}
+
+.footer-premium{
+  max-width:1180px;
+  margin:0 auto 24px;
+  display:grid;
+  grid-template-columns:1.2fr .8fr .8fr;
+  gap:28px;
+  text-align:start;
+}
+.footer-column{
+  min-width:0;
+}
+.footer-column h3{
+  margin:0 0 10px;
+  color:#fff;
+  font-size:15px;
+}
+.footer-story{
+  color:#cdbfc4;
+  font-size:11px;
+  line-height:2;
+  margin:0;
+}
+.footer-contact,
+.footer-links{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.footer-contact a,
+.footer-links button,
+.footer-links a{
+  color:#d9cdd1;
+  font-size:11px;
+  background:none;
+  border:0;
+  padding:0;
+  text-align:inherit;
+}
+.footer-contact a:hover,
+.footer-links button:hover,
+.footer-links a:hover{
+  color:#fff;
+  transform:translateX(-3px);
+}
+.footer-section-title{
+  color:var(--gold);
+  font-size:10px;
+  letter-spacing:1.8px;
+  margin-bottom:7px;
+  display:block;
+}
+.footer-social-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.footer-social-row a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:34px;
+  height:34px;
+  padding:0 9px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:11px;
+  color:#eee;
+  font-size:10px;
+  background:rgba(255,255,255,.05);
+  transition:transform .25s ease,background .25s ease,border-color .25s ease;
+}
+.footer-social-row a:hover{
+  transform:translateY(-3px);
+  background:rgba(255,255,255,.10);
+  border-color:rgba(185,152,90,.45);
+}
+.footer-divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(185,152,90,.35),transparent);
+  margin:20px 0 15px;
+}
+.footer-credit{
+  color:#e7d8dd!important;
+  opacity:1!important;
+  font-size:10px!important;
+  letter-spacing:.2px;
+}
+.footer-credit strong{
+  color:var(--gold);
+  font-weight:800;
+}
+
+.policy-box{
+  width:min(760px,100%);
+}
+.policy-content{
+  color:#5e5156;
+  line-height:1.95;
+  font-size:12px;
+}
+.policy-section{
+  background:#fbf5f4;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:13px 14px;
+  margin:9px 0;
+}
+.policy-section h3{
+  color:var(--wine);
+  margin:0 0 5px;
+  font-size:14px;
+}
+.policy-section p{
+  margin:0;
+}
+
+.modal.open .modal-box{
+  animation:modalIn .42s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes modalIn{
+  from{opacity:0;transform:translateY(16px) scale(.965)}
+  to{opacity:1;transform:none}
+}
+
+@media(max-width:760px){
+  .feedback-showcase{
+    margin-left:-11px;
+    margin-right:-11px;
+    padding-left:4vw;
+    padding-right:4vw;
+  }
+  .feedback-showcase-track{
+    gap:12px;
+    animation-duration:46s;
+  }
+  .feedback-story{
+    padding:0 7px;
+  }
+  .feedback-platform{
+    font-size:9px;
+    padding:5px 8px;
+  }
+  .feedback-drawn-arrow{
+    height:54px;
+  }
+  .footer-premium{
+    grid-template-columns:1fr;
+    gap:23px;
+    text-align:center;
+  }
+  .footer-contact,.footer-links{
+    align-items:center;
+  }
+  .footer-social-row{
+    justify-content:center;
+  }
+  .footer-contact a:hover,.footer-links button:hover,.footer-links a:hover{
+    transform:translateY(-2px);
+  }
+}
+@media(max-width:430px){
+  .iphone-frame{
+    width:clamp(138px,42vw,166px);
+  }
+  .feedback-showcase-track{
+    gap:10px;
+  }
+  .trust-number{
+    font-size:42px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body,.hero{animation:none}
+  *,
+  *::before,
+  *::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.001ms!important;
+  }
+}
+
+
+@keyframes feedbackShowcaseScrollRTL{
+  from{transform:translateX(-50%)}
+  to{transform:translateX(0)}
+}
+
+
+/* --- final overrides --- */
+.feedback-showcase{direction:ltr}
+.iphone-screen img{object-fit:contain;object-position:center;background:#fff}
+.feedback-showcase:hover .feedback-showcase-track{animation-play-state:running}
+.policy-ico{margin-inline-end:4px}
+.policy-wa{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:800;text-decoration:none}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+</head>
 
 <body>
 
@@ -1400,8 +1996,7 @@ href="#"
 aria-label="Espoza Fashion">
 
 <div
-class="brand-main"
-id="brandMain">
+class="brand-main"id="brandMain">
 ESPOZA
 </div>
 
@@ -1517,8 +2112,35 @@ id="feedback">
 <div class="feedback-head">
 
 <h2 id="feedbackTitle">
-آراء زبوناتنا
+آراء زبائننا
 </h2>
+
+<div class="feedback-story">
+
+<div class="feedback-daily" id="feedbackDaily">
+مئات الرسائل يوميًا
+</div>
+
+<svg class="feedback-drawn-arrow" viewBox="0 0 210 62" aria-hidden="true">
+<path d="M22 10 C55 4, 103 7, 141 25 C163 35, 178 43, 188 49"/>
+<path d="M177 39 L188 49 L175 51"/>
+</svg>
+
+<div class="feedback-platforms" aria-label="Customer messages platforms">
+<span class="feedback-platform">💬 <b>WhatsApp</b></span>
+<span class="feedback-platform">💬 <b>Messenger</b></span>
+<span class="feedback-platform">◎ <b>Instagram</b></span>
+<span class="feedback-platform">👻 <b>Snapchat</b></span>
+<span class="feedback-platform">♪ <b>TikTok</b></span>
+</div>
+
+<div class="feedback-swipe-hint">
+<span class="feedback-swipe-line"></span>
+<span id="feedbackSwipeHint">اسحبي لمشاهدة المزيد</span>
+<span class="feedback-swipe-line"></span>
+</div>
+
+</div>
 
 <div class="feedback-counter" id="feedbackCounterBox">
 
@@ -1541,27 +2163,7 @@ id="feedbackShowcaseTrack">
 
 </div>
 
-<div class="feedback-arrow-wrap">
 
-<button
-class="feedback-arrow"
-id="feedbackArrow"
-type="button"
-aria-label="عرض المزيد من التقييمات"
-onclick="document.getElementById('feedbackGrid').scrollIntoView({behavior:'smooth',block:'center'})">
-
-<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-
-</button>
-
-</div>
-
-<div
-class="feedback-grid"
-id="feedbackGrid">
-</div>
 
 </section>
 
@@ -1715,18 +2317,25 @@ rel="noopener">
 
 <!-- TRUST / FEATURES -->
 
-<section class="features">
+<section class="features" id="trust">
 
-<div
-class="features-slider"
-id="featuresSlider">
+<div class="features-slider trust-hero" id="customerTrustHero">
+<div class="feature-slide">
+<div class="feature-icon">✦</div>
+<div class="trust-number" id="customerCounter">0</div>
+<div class="trust-caption" id="customerCounterCaption">10,000 زبونة اختارت Espoza Fashion للتألق</div>
+<div class="trust-subcaption" id="customerCounterSubcaption">ثقة تتجدد مع كل طلب</div>
+</div>
+</div>
 
+<div class="features-slider" id="featuresSlider" style="margin-top:14px">
 <div
 class="features-track"
 id="featuresTrack">
 </div>
-
 </div>
+
+<div class="features-tagline" id="featuresTagline"></div>
 
 </section>
 
@@ -1734,6 +2343,10 @@ id="featuresTrack">
 
 
 <footer>
+
+<div class="footer-premium">
+
+<div class="footer-column">
 
 <div
 class="foot-brand"
@@ -1745,7 +2358,35 @@ ESPOZA
 FASHION
 </div>
 
-<div class="footer-nav">
+<span class="footer-section-title" id="footerStoryTitle">من أين بدأت قصة Espoza؟</span>
+
+<p class="footer-story" id="footerStoryText">
+بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. واليوم نواصل تقديم الملابس والأطقم والفساتين الأنيقة والرسمية وفساتين السهرة بعناية واهتمام بالتفاصيل.
+</p>
+
+</div>
+
+<div class="footer-column">
+
+<h3 id="footerContactTitle">Contact Us</h3>
+
+<div class="footer-contact">
+
+<a id="footerContactWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+<a id="footerContactInstagram" href="#" target="_blank" rel="noopener">Instagram</a>
+<a id="footerContactSnapchat" href="#" target="_blank" rel="noopener">Snapchat</a>
+<a id="footerContactTiktok" href="#" target="_blank" rel="noopener">TikTok</a>
+<a id="footerContactFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
+
+</div>
+
+</div>
+
+<div class="footer-column">
+
+<h3 id="footerLinksTitle">روابط سريعة</h3>
+
+<div class="footer-links">
 
 <a
 href="#shop"
@@ -1753,32 +2394,35 @@ id="footerShop">
 التشكيلة
 </a>
 
-<a
-id="footerInstagram"
-href="#"
-target="_blank">
-Instagram
-</a>
+<button
+type="button"
+id="policiesBtn"
+onclick="openModal('policiesModal')">
+سياستنا
+</button>
 
-<a
-id="footerFacebook"
-href="#"
-target="_blank">
-Facebook
-</a>
+</div>
 
-<a
-id="footerWhatsapp"
-href="#"
-target="_blank">
-WhatsApp
-</a>
+</div>
+
+</div>
+
+<div class="footer-divider"></div>
+
+<div class="footer-social-row">
+
+<a id="footerInstagram" href="#" target="_blank" rel="noopener">Instagram</a>
+<a id="footerFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
+<a id="footerWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+<a id="footerSnapchat" href="#" target="_blank" rel="noopener">Snapchat</a>
+<a id="footerTiktok" href="#" target="_blank" rel="noopener">TikTok</a>
 
 </div>
 
 <div
 class="copyright"
-id="copyright">
+id="copyright"
+style="margin-top:17px">
 </div>
 
 <div
@@ -1788,9 +2432,9 @@ style="margin-top:4px">
 </div>
 
 <div
-class="copyright"
+class="copyright footer-credit"
 id="footerCredit"
-style="margin-top:8px;opacity:.75">
+style="margin-top:8px">
 </div>
 
 </footer>
@@ -2179,6 +2823,31 @@ type="button">
 </div>
 
 
+<!-- POLICIES -->
+
+<div
+class="modal"
+id="policiesModal">
+
+<div class="modal-box policy-box">
+
+<button
+class="close-btn"
+type="button"
+onclick="closeModal('policiesModal')">
+×
+</button>
+
+<h2 id="policiesHeading" style="color:var(--wine);margin:4px 0 18px">
+سياستنا
+</h2>
+
+<div class="policy-content" id="policyContent"></div>
+
+</div>
+
+</div>
+
 <div
 class="toast"
 id="toast">
@@ -2326,14 +2995,16 @@ const FEEDBACK_IMAGES=[
 "IMG_2062.jpeg",
 "IMG_1965.jpeg",
 "IMG_1959.jpeg",
-"IMG_2075.jpeg",
-"IMG_2237.jpeg",
+"IMG_2075.jpeg","IMG_2237.jpeg",
 "b64cf974-a296-4755-8537-bb43170a19a9.jpeg",
 "737c236a-2bd8-418c-95be-2f4178bc4e30.jpeg",
 "IMG_2277.jpeg",
 "IMG_2238.jpeg",
 "IMG_2490.jpeg",
-"IMG_2284.jpeg"
+"IMG_2284.jpeg",
+"IMG_3363.jpeg",
+"IMG_3364.jpeg",
+"IMG_3365.jpeg"
 ];
 
 
@@ -2687,7 +3358,7 @@ feat1Title:
 "توصيل سريع",
 
 feat1Text:
-"نوصل طلبك بسرعة وفي أقرب وقت ممكن",
+"توصيل سريع خلال يومين إلى ثلاثة أيام",
 
 feat2Icon:
 "🔍",
@@ -2725,6 +3396,36 @@ feat5Title:
 feat5Text:
 "+7,750 زبونة وزبون",
 
+feat6Icon:
+"💗",
+
+feat6Title:
+"نساعدك على اختيار الأفضل لك",
+
+feat6Text:
+"تواصلي معنا ونساعدك في اختيار الموديل والمقاس المناسب",
+
+feat7Icon:
+"👗",
+
+feat7Title:
+"تصاميم عصرية وأنيقة",
+
+feat7Text:
+"موديلات مختارة بعناية تجمع الأناقة والحداثة",
+
+feat8Icon:
+"🎧",
+
+feat8Title:
+"دعم مستمر",
+
+feat8Text:
+"فريقنا معك قبل الطلب وبعده، نرد على كل استفساراتك",
+
+featuresTagline:
+"🛍️ تسوقي بثقة مع Espoza Fashion 💖",
+
 qty:
 "الكمية",
 
@@ -2756,7 +3457,70 @@ feedbackTitle:
 "آراء زبوناتنا",
 
 feedbackCounterLabel:
-"تقييم حقيقي من زبوناتنا"
+"تقييم حقيقي من زبوناتنا",
+
+feedbackDaily:
+"مئات الرسائل يوميًا",
+
+feedbackSwipeHint:
+"اسحبي لمشاهدة المزيد",
+
+footerStoryTitle:
+"من أين بدأت قصة Espoza؟",
+
+footerStoryText:
+"بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. واليوم نواصل تقديم الملابس والأطقم والفساتين الأنيقة والرسمية وفساتين السهرة بعناية واهتمام بالتفاصيل.",
+
+footerContactTitle:
+"Contact Us",
+
+footerLinksTitle:
+"روابط سريعة",
+
+policies:
+"سياستنا",
+
+policyItems:[
+["🔄","الاستبدال والإرجاع","يمكنك الاستبدال أو الإرجاع خلال 24 ساعة من استلام الطلب، بشرط أن تكون القطعة بحالتها الأصلية وعليها التاجات (الأتيكيت)."],
+["🔍","المعاينة عند الاستلام","يرجى معاينة القطعة عند الاستلام والتأكد من أنها مناسبة لكِ قبل تسليم المبلغ."],
+["🚚","أسعار التوصيل","سعر التوصيل ثابت: الضفة الغربية 20 شيكل، القدس 30 شيكل، الداخل (48) 70 شيكل."],
+["⏱️","مدة التوصيل","يصلكِ الطلب خلال 2–3 أيام عمل."],
+["❌","إلغاء الطلب","يمكنك إلغاء الطلب مجانًا قبل خروج الشحنة من عندنا."],
+["🔒","الخصوصية","بياناتك (الاسم ورقم الهاتف والعنوان) تُستخدم فقط لتوصيل طلبك ولا نشاركها مع أي جهة أخرى."],
+["💵","طريقة الدفع","الدفع عند الاستلام فقط (Cash on Delivery)."],
+["💬","التواصل معنا","لأي استفسار أو طلب استبدال أو إلغاء تواصلي معنا مباشرة عبر واتساب."]
+],
+policyWhatsApp:"تواصلي عبر واتساب",
+
+returnPolicyTitle:
+"سياسة الإرجاع",
+
+returnPolicyText:
+"لا يُسمح بإرجاع المنتجات، إلا في حال وجود عيب مصنعي واضح في القطعة.",
+
+exchangePolicyTitle:
+"سياسة التبديل",
+
+exchangePolicyText:
+"يسمح بالتبديل بعد مرور 24 ساعة من استلام الطلب، على أن تكون القطعة بحالتها الأصلية كما تم استلامها، وغير مستخدمة أو متضررة.",
+
+notReceivedPolicyTitle:
+"عدم استلام الطلب",
+
+notReceivedPolicyText:
+"في حال عدم استلام الطلب وعودته إلينا، نحتفظ بحقنا في عدم قبول الطلبات المستقبلية من العميل في حال تكرار عدم الاستلام.",
+
+paymentPolicyTitle:
+"الدفع",
+
+paymentPolicyText:
+"الدفع عند الاستلام — Cash on Delivery (COD).",
+
+customerCountCaption:
+"10,000 زبونة اختارت Espoza Fashion للتألق",
+
+customerCountSubcaption:
+"ثقة تتجدد مع كل طلب"
 
 },
 
@@ -2933,7 +3697,7 @@ feat1Title:
 "Fast Delivery",
 
 feat1Text:
-"Your order arrives quickly, right when you need it",
+"Fast delivery within 2–3 days",
 
 feat2Icon:
 "🔍",
@@ -2970,6 +3734,52 @@ feat5Title:
 
 feat5Text:
 "7,750+ happy customers",
+
+feat6Icon:
+"💗",
+
+feat6Title:
+"We Help You Choose",
+
+feat6Text:
+"Message us and we'll help you pick the right style and size",
+
+feat7Icon:
+"👗",
+
+feat7Title:
+"Modern, Elegant Designs",
+
+feat7Text:
+"Carefully selected styles that blend elegance with modern taste",
+
+feat8Icon:
+"🎧",
+
+feat8Title:
+"Continuous Support",
+
+feat8Text:
+"Our team is with you before and after your order",
+
+featuresTagline:
+"🛍️ Shop with confidence at Espoza Fashion 💖",
+
+policies:
+"Our Policy",
+
+policyItems:[
+["🔄","Exchange & Returns","You can exchange or return an item within 24 hours of receiving it, as long as it is in its original condition with the tags still on."],
+["🔍","Inspect on Delivery","Please check your item when it arrives and make sure it suits you before paying."],
+["🚚","Shipping Fees","Fixed delivery fees: West Bank 20 ILS, Jerusalem 30 ILS, Inside 48 70 ILS."],
+["⏱️","Delivery Time","Your order arrives within 2–3 working days."],
+["❌","Order Cancellation","You can cancel your order for free before the parcel leaves us."],
+["🔒","Privacy","Your details (name, phone number and address) are used only to deliver your order and are never shared with anyone else."],
+["💵","Payment","Cash on delivery only."],
+["💬","Contact Us","For any question, exchange or cancellation, message us directly on WhatsApp."]
+],
+policyWhatsApp:"Chat on WhatsApp",
+
 
 qty:
 "Quantity",
@@ -3184,7 +3994,6 @@ deleting
 tick();
 
 }
-
 
 /* ==========================================
    السحب لتغيير صورة/لون المنتج (Swipe)
@@ -3831,13 +4640,47 @@ staticProductToView
 
 
 /* ==========================================
-   تجهيز المنتجات — Supabase مع نسخة احتياطية ثابتة
+   ربط موقع الزبائن بلوحة الإدارة — Supabase
+   الموقع العام يقرأ البيانات فقط ولا يعدّلها.
    ========================================== */
-
 const CUSTOMER_SUPABASE_URL="https://opqbcfxqtmyebxsafeea.supabase.co";
 const CUSTOMER_SUPABASE_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
 let customerSupabase=null;
-
+let adminDeliveryAreas=null;
+let adminSliders=null;
+function getCustomerSupabase(){
+if(!window.supabase||typeof window.supabase.createClient!=="function")throw new Error("Supabase غير متاح");
+if(!customerSupabase)customerSupabase=window.supabase.createClient(CUSTOMER_SUPABASE_URL,CUSTOMER_SUPABASE_KEY);
+return customerSupabase;
+}
+function normalizeAdminSettingValue(value,fallback=""){
+if(value==null)return fallback;
+if(typeof value==="string")return value;
+try{return JSON.stringify(value)}catch(_){return fallback}
+}
+async function loadAdminStoreData(){
+const db=getCustomerSupabase();
+const [settingsResult,deliveryResult,sliderResult]=await Promise.all([
+db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy"]),
+db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
+db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false})
+]);
+if(settingsResult.error)throw settingsResult.error;
+if(deliveryResult.error)throw deliveryResult.error;
+if(sliderResult.error)throw sliderResult.error;
+const settings={};
+(settingsResult.data||[]).forEach(row=>settings[row.key]=normalizeAdminSettingValue(row.value,""));
+if(settings.store_name)store.name=settings.store_name;
+if(settings.whatsapp)store.whatsapp=settings.whatsapp;
+if(settings.welcome)store.welcome=settings.welcome;
+if(settings.delivery_time)store.deliveryTime=settings.delivery_time;
+if(settings.exchange_policy)store.exchangePolicy=settings.exchange_policy;
+adminDeliveryAreas=deliveryResult.data||[];
+adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));
+applyStore();
+renderDeliveryOptions();
+renderSlider();
+}
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
 const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>x.name).filter(Boolean);
@@ -3845,15 +4688,12 @@ const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
 return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,sku:"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
 }
-
 async function loadSupabaseProducts(){
-if(!window.supabase||typeof window.supabase.createClient!=="function")throw new Error("Supabase غير متاح");
-if(!customerSupabase)customerSupabase=window.supabase.createClient(CUSTOMER_SUPABASE_URL,CUSTOMER_SUPABASE_KEY);
-const result=await customerSupabase.from("products").select("id,name,category,price,old_price,description,active,featured,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+const db=getCustomerSupabase();
+const result=await db.from("products").select("id,name,category,price,old_price,description,active,featured,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
 if(result.error)throw result.error;
 return(result.data||[]).map(dynamicProductToView);
 }
-
 async function setupProducts(){
 products=staticViewProducts;
 renderProducts();
@@ -3863,6 +4703,12 @@ const remoteProducts=await loadSupabaseProducts();
 if(remoteProducts.length){products=remoteProducts;renderProducts();$("productTotal").textContent=String(products.length)+"+";}
 }catch(error){console.warn("Supabase products failed; using static products:",error);}
 }
+async function setupAdminConnections(){
+try{await loadAdminStoreData();}
+catch(error){console.warn("Supabase admin data failed; keeping built-in site defaults:",error);}
+}
+
+
 
 function applyStore(){
 
@@ -3967,10 +4813,50 @@ $("footerWhatsapp")
 .href=
 waUrl;
 
+$("footerContactWhatsapp")
+.href=
+waUrl;
+
+$("footerContactInstagram")
+.href=
+store.social.instagram||"#";
+
+$("footerContactSnapchat")
+.href=
+store.social.snapchat||"#";
+
+$("footerContactTiktok")
+.href=
+store.social.tiktok||"#";
+
+$("footerContactFacebook")
+.href=
+store.social.facebook||"#";
+
+$("footerContactWhatsapp")
+.textContent=
+"WhatsApp • "+(wa ? "+"+wa : "WhatsApp");
+
+$("footerContactInstagram")
+.textContent=
+"Instagram • @espoza_fashion";
+
+$("footerContactSnapchat")
+.textContent=
+"Snapchat • Espoza Fashion";
+
+$("footerContactTiktok")
+.textContent=
+"TikTok • @espoza.fashion";
+
+$("footerContactFacebook")
+.textContent=
+"Facebook • Espoza Fashion";
+
 
 $("copyright")
 .textContent=
-`©️ ${new Date().getFullYear()} ${name} — ${t().rights}`;
+`©️ 2019–${new Date().getFullYear()} ${name} — ${t().rights}`;
 
 
 $("footerSince")
@@ -3990,58 +4876,15 @@ t().footerCredit;
    ========================================== */
 
 function deliveryList(){
-
+if(Array.isArray(adminDeliveryAreas) && adminDeliveryAreas.length){
+return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:row.area_name||"",price:Number(row.price||0)}));
+}
 return[
-
-{
-
-key:
-"westbank",
-
-name:
-t().westbank,
-
-price:
-Number(
-store.delivery.westbank||0
-)
-
-},
-
-{
-
-key:
-"jerusalem",
-
-name:
-t().jerusalem,
-
-price:
-Number(
-store.delivery.jerusalem||0
-)
-
-},
-
-{
-
-key:
-"inside",
-
-name:
-t().inside,
-
-price:
-Number(
-store.delivery.inside||0
-)
-
-}
-
+{key:"westbank",name:t().westbank,price:Number(store.delivery.westbank||0)},
+{key:"jerusalem",name:t().jerusalem,price:Number(store.delivery.jerusalem||0)},
+{key:"inside",name:t().inside,price:Number(store.delivery.inside||0)}
 ];
-
 }
-
 
 function renderDeliveryOptions(){
 
@@ -4162,7 +5005,6 @@ normalizeImage(
 
 title:
 t().cats.dresses,
-
 subtitle:
 "",
 
@@ -4181,7 +5023,9 @@ button_link:
 
 function activeSlides(){
 
-return fallbackSlides();
+return Array.isArray(adminSliders) && adminSliders.length
+? adminSliders
+: fallbackSlides();
 
 }
 
@@ -4346,6 +5190,19 @@ startSlider();
    سلايدر المميزات (Fast Delivery, Trust, etc)
    ========================================== */
 
+function renderPolicies(){
+const box=$("policyContent");
+if(!box)return;
+const x=t();
+const wa=STORE_DEFAULTS&&STORE_DEFAULTS.whatsapp?STORE_DEFAULTS.whatsapp:"";
+box.innerHTML=(x.policyItems||[]).map(([icon,title,text],i,arr)=>`
+<div class="policy-section">
+<h3><span class="policy-ico">${esc(icon)}</span> ${esc(title)}</h3>
+<p>${esc(text)}</p>
+${i===arr.length-1&&wa?`<a class="policy-wa" href="https://wa.me/${esc(wa)}" target="_blank" rel="noopener">💬 ${esc(x.policyWhatsApp||"")}</a>`:""}
+</div>`).join("");
+}
+
 function renderFeatures(){
 
 const track=
@@ -4365,8 +5222,15 @@ const items=[
 [x.feat2Icon,x.feat2Title,x.feat2Text],
 [x.feat3Icon,x.feat3Title,x.feat3Text],
 [x.feat4Icon,x.feat4Title,x.feat4Text],
-[x.feat5Icon,x.feat5Title,x.feat5Text]
+[x.feat5Icon,x.feat5Title,x.feat5Text],
+[x.feat6Icon,x.feat6Title,x.feat6Text],
+[x.feat7Icon,x.feat7Title,x.feat7Text],
+[x.feat8Icon,x.feat8Title,x.feat8Text]
 ];
+
+const tag=$("featuresTagline");
+if(tag)
+tag.textContent=x.featuresTagline||"";
 
 
 if(
@@ -4410,7 +5274,7 @@ return;
 
 
 track.style.transform=
-`translateX(-${featuresIndex*100}%)`;
+`translateX(${(document.documentElement.dir==="rtl"?1:-1)*featuresIndex*100}%)`;
 
 }
 
@@ -4466,14 +5330,17 @@ function feedbackFrameHTML(url,index){
 
 return`
 <div
-class="iphone-frame reveal-item"
-onclick="openFeedbackImage('${esc(url)}')">
+class="iphone-frame"
+onclick="openFeedbackImage('${esc(url)}')"
+role="button"
+tabindex="0"
+aria-label="Espoza Fashion customer feedback">
 
 <div class="iphone-screen">
 
 <img
 src="${esc(url)}"
-alt="Espoza Fashion — رأي زبونة"
+alt="Espoza Fashion — Customer Feedback"
 loading="lazy"
 onerror="this.src='${PLACEHOLDER}'">
 
@@ -4490,16 +5357,11 @@ function renderFeedback(){
 const track=
 $("feedbackShowcaseTrack");
 
-const grid=
-$("feedbackGrid");
+
 
 
 if(
-!track
-||
-!grid
-||
-!FEEDBACK_IMAGES.length
+!track||!FEEDBACK_IMAGES.length
 )
 return;
 
@@ -4519,14 +5381,11 @@ feedbackFrameHTML(url,i)
 .join("");
 
 
-grid.innerHTML=
-FEEDBACK_IMAGES
-.map(
-(url,i)=>
-feedbackFrameHTML(url,i)
-)
-.join("");
 
+
+
+$("feedbackDaily").textContent=t().feedbackDaily;
+$("feedbackSwipeHint").textContent=t().feedbackSwipeHint;
 
 try{
 
@@ -4536,6 +5395,104 @@ setupScrollReveal();
 
 
 setupFeedbackCounter();
+setupFeedbackDrag();
+
+}
+
+
+function setupFeedbackDrag(){
+
+const showcase=
+$("feedbackShowcase");
+
+if(!showcase || showcase._dragReady)
+return;
+
+showcase._dragReady=true;
+
+let startX=0;
+let startTime=0;
+let dragging=false;
+let moved=false;
+
+function stopDrag(){
+
+if(!dragging)
+return;
+
+dragging=false;
+showcase.classList.remove("is-dragging");
+
+const track=$("feedbackShowcaseTrack");
+if(track)
+track.style.animationPlayState="";
+
+}
+
+showcase.addEventListener("pointerdown",e=>{
+
+if(e.pointerType==="mouse" && e.button!==0)
+return;
+
+dragging=true;
+moved=false;
+startX=e.clientX;
+startTime=performance.now();
+
+showcase.classList.add("is-dragging");
+
+const track=$("feedbackShowcaseTrack");
+if(track)
+track.style.animationPlayState="paused";
+
+try{
+showcase.setPointerCapture(e.pointerId);
+}catch(_){}
+
+});
+
+showcase.addEventListener("pointermove",e=>{
+
+if(!dragging)
+return;
+
+const dx=e.clientX-startX;
+
+if(Math.abs(dx)>5)
+moved=true;
+
+if(Math.abs(dx)>2){
+const track=$("feedbackShowcaseTrack");
+if(track){
+const current=getComputedStyle(track).transform;
+let x=0;
+
+if(current && current!=="none"){
+const match=current.match(/matrix.*\(([^)]+)\)/);
+if(match){
+const parts=match[1].split(",");
+x=parseFloat(parts[4])||0;
+}
+}
+
+track.style.transform=`translateX(${x+dx*0.18}px)`;
+startX=e.clientX;
+}
+}
+
+});
+
+showcase.addEventListener("pointerup",e=>{
+
+stopDrag();
+
+if(moved){
+e.preventDefault();
+}
+});
+
+showcase.addEventListener("pointercancel",stopDrag);
+showcase.addEventListener("pointerleave",()=>{});
 
 }
 
@@ -5048,8 +6005,7 @@ window
 new IntersectionObserver(
 entries=>{
 
-entries.forEach(
-entry=>{
+entries.forEach(entry=>{
 
 if(
 entry.isIntersecting
@@ -6049,7 +7005,6 @@ $("customerAddress")
 .value
 .trim();
 
-
 const notes=
 $("customerNotes")
 .value
@@ -6215,6 +7170,21 @@ closeModal(
    إغلاق النوافذ
    ========================================== */
 
+/* فتح النوافذ (سياستنا) */
+function openModal(id){
+const el=$(id);
+if(!el)return;
+if(!el._backdropReady){
+el._backdropReady=true;
+el.addEventListener("click",function(e){
+if(e.target===el)closeModal(id);
+});
+}
+if(id==="policiesModal")renderPolicies();
+el.classList.add("open");
+document.body.style.overflow="hidden";
+}
+
 function closeModal(
 id,
 restoreScroll=true
@@ -6252,6 +7222,17 @@ lang;
 document.documentElement.dir=
 x.dir;
 
+const feedbackTrack=
+$("feedbackShowcaseTrack");
+
+if(feedbackTrack){
+feedbackTrack.style.animationName=
+lang==="ar"
+?
+"feedbackShowcaseScrollRTL"
+:
+"feedbackShowcaseScroll";
+}
 
 $("langBtn")
 .textContent=
@@ -6419,6 +7400,64 @@ $("feedbackCounterLabel")
 .textContent=
 x.feedbackCounterLabel;
 
+$("feedbackDaily")
+.textContent=
+x.feedbackDaily;
+
+$("feedbackSwipeHint")
+.textContent=
+x.feedbackSwipeHint;
+
+$("footerStoryTitle")
+.textContent=
+x.footerStoryTitle;
+
+$("footerStoryText")
+.textContent=
+x.footerStoryText;
+
+$("footerContactTitle")
+.textContent=
+x.footerContactTitle;
+
+$("footerLinksTitle")
+.textContent=
+x.footerLinksTitle;
+
+$("policiesBtn")
+.textContent=
+x.policies;
+
+$("policiesHeading")
+.textContent=
+x.policies;
+
+renderPolicies();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$("customerCounterCaption")
+.textContent=
+x.customerCountCaption;
+
+$("customerCounterSubcaption")
+.textContent=
+x.customerCountSubcaption;
+
 
 renderFeatures();
 
@@ -6443,6 +7482,108 @@ renderSlider();
 
 }
 
+
+/* ==========================================
+   عداد 10,000 زبونة
+   ========================================== */
+
+let customerCounterDone=false;
+
+function animateCustomerCounter(){
+
+const el=
+$("customerCounter");
+
+if(!el)
+return;
+
+const target=10000;
+const duration=2300;
+const startValue=1900;
+const start=performance.now();
+
+function tick(now){
+
+const progress=
+Math.min(
+1,
+(now-start)/duration
+);
+
+const eased=
+1-Math.pow(
+1-progress,
+4
+);
+
+const value=
+Math.round(
+startValue+(target-startValue)*eased
+);
+
+el.textContent=
+value.toLocaleString(
+"en-US"
+);
+
+if(progress<1){
+requestAnimationFrame(tick);
+}else{
+el.textContent=
+target.toLocaleString(
+"en-US"
+);
+}
+
+}
+
+requestAnimationFrame(tick);
+
+}
+
+function setupCustomerCounter(){
+
+const box=
+$("customerTrustHero");
+
+if(
+!box
+||
+customerCounterDone
+)
+return;
+
+if(
+!("IntersectionObserver" in window)
+){
+customerCounterDone=true;
+animateCustomerCounter();
+return;
+}
+
+const observer=
+new IntersectionObserver(
+entries=>{
+entries.forEach(
+entry=>{
+if(
+entry.isIntersecting
+&&
+!customerCounterDone
+){
+customerCounterDone=true;
+animateCustomerCounter();
+observer.unobserve(entry.target);
+}
+}
+);
+},
+{threshold:.35}
+);
+
+observer.observe(box);
+
+}
 
 /* ==========================================
    الأحداث
@@ -6627,7 +7768,20 @@ error
 
 try{
 
+setupAdminConnections();
+
+}catch(error){
+
+console.warn("admin connection setup failed:",error);
+
+}
+
+
+try{
+
 renderFeedback();
+
+setupCustomerCounter();
 
 }catch(error){
 
@@ -6696,6 +7850,3 @@ init();
 
 </body>
 </html>
-
-
-
