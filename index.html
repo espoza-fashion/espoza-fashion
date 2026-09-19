@@ -6734,7 +6734,7 @@ init();
             if(!name||!phone||!address)return;
             const d=selectedDelivery(),subtotal=cartSubtotal(),total=subtotal+d.price;
             await client.from("orders").insert({customer_name:name,phone:phone,region:d.name,address:address,
-              items:cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty,size:x.size||"",color:x.color||"",image:x.image||""})),
+              items:cart.map(x=>({id:x.productId||x.id||"",name:x.name,price:Number(x.price||0),qty:Number(x.qty||0),size:x.size||"",color:x.color||"",image:x.image||""})),
               subtotal:subtotal,delivery_fee:d.price,total:total,status:"new",notes:notes||null});
           }catch(e){console.warn("Espoza order sync failed:",e)}
         },{capture:true});
