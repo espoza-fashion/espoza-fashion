@@ -7846,6 +7846,96 @@ error
 
 init();
 
+
+/* ==========================================
+   FEEDBACK IMAGE SPEED OPTIMIZATION
+   يحسن تحميل صور الفيدباك فقط — بدون تغيير التصميم
+   ========================================== */
+
+function optimizeFeedbackImages(){
+
+const images=document.querySelectorAll(
+  "#feedbackShowcaseTrack img"
+);
+
+if(!images.length) return;
+
+images.forEach((img,index)=>{
+
+  img.loading="eager";
+  img.decoding="async";
+  img.fetchPriority=index<8 ? "high" : "auto";
+
+  /* منع تأخير الصورة بسبب أبعاد غير معروفة */
+  if(!img.getAttribute("width")){
+    img.setAttribute("width","172");
+  }
+
+  if(!img.getAttribute("height")){
+    img.setAttribute("height","368");
+  }
+
+});
+
+}
+
+/* تحميل أول مجموعة فورًا، ثم إعطاء المتصفح فرصة لتحميل البقية */
+function preloadFeedbackImages(){
+
+const images=[
+  ...document.querySelectorAll("#feedbackShowcaseTrack img")
+];
+
+images.slice(0,8).forEach(img=>{
+
+const src=img.currentSrc || img.src;
+
+if(!src || src.includes("placehold.co")) return;
+
+const link=document.createElement("link");
+link.rel="preload";
+link.as="image";
+link.href=src;
+link.fetchPriority="high";
+
+document.head.appendChild(link);
+
+});
+
+}
+
+function setupFeedbackImageSpeed(){
+
+optimizeFeedbackImages();
+preloadFeedbackImages();
+
+/* إذا أعاد الموقع رسم الفيدباك، نطبق التحسين تلقائيًا */
+const track=document.getElementById("feedbackShowcaseTrack");
+
+if(track){
+
+const observer=new MutationObserver(()=>{
+
+optimizeFeedbackImages();
+
+});
+
+observer.observe(track,{
+childList:true,
+subtree:true
+});
+
+}
+
+}
+
+/* تشغيل التحسين بعد رسم الفيدباك */
+try{
+setupFeedbackImageSpeed();
+}catch(error){
+console.warn("feedback image optimization failed:",error);
+}
+
 </script>
 
 </body>
