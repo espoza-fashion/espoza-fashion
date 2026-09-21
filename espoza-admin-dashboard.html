@@ -245,11 +245,15 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
   .content{padding:18px}
 }
 .menu-btn{display:none}
+
+/* ===== Security gate ===== */
+#authGate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#431321,#641f34)}
+#authGate.hidden{display:none}.auth-card{width:min(430px,100%);background:#fff;border-radius:20px;padding:30px;box-shadow:0 25px 80px rgba(0,0,0,.35)}.auth-card h1{margin:0;color:var(--wine);font-family:"Playfair Display",serif}.auth-card p{color:var(--muted);font-size:13px;line-height:1.8;margin:8px 0 20px}.auth-card label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px}.auth-card input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;outline:none}.auth-card input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(185,152,90,.12)}.auth-card button{width:100%;margin-top:14px}.auth-error{min-height:22px;color:var(--red);font-size:12px;margin-top:10px;font-weight:700}.auth-lock{font-size:11px;color:var(--muted);margin-top:8px}
 </style>
 </head>
 <body>
 
-<div class="shell">
+<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" autocomplete="username" required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form></div></div><div class="shell">
 
   <aside class="sidebar" id="sidebar">
     <div class="brand">
@@ -280,7 +284,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
         </div>
       </div>
       <div class="topbar-actions">
-        <button class="btn" id="refreshBtn">↻ تحديث</button>
+        <button class="btn" id="refreshBtn">↻ تحديث</button><button class="btn" id="logoutBtn" type="button">تسجيل الخروج</button>
       </div>
     </div>
 
@@ -407,6 +411,9 @@ const SUPABASE_URL = "https://ptwceqbxusgyutrroayz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Hto6uDekI9TvxTLFs7kYWg_ApV51joa";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const STORAGE_BUCKET = "product-images";
+let adminAuthSession = null;
+let loginAttempts = 0;
+let loginLockedUntil = 0;
 const PLACEHOLDER = "https://placehold.co/400x500?text=Espoza";
 
 /* ===================== State ===================== */
@@ -1069,8 +1076,38 @@ $("saveSettingsBtn").addEventListener("click", async ()=>{
   btn.disabled=false;
 });
 
+/* ===================== Authentication / Security Gate ===================== */
+async function verifyAdminSession(){
+  const {data,error}=await sb.auth.getSession(); if(error) throw error;
+  const session=data?.session||null; if(!session) return false;
+  const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",session.user.id).maybeSingle();
+  if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();return false;}
+  adminAuthSession=session; return true;
+}
+function showAuthGate(message=""){ $("authGate").classList.remove("hidden"); $("adminLoginError").textContent=message; }
+function hideAuthGate(){ $("authGate").classList.add("hidden"); $("adminLoginError").textContent=""; }
+function setLoginLocked(seconds){
+  loginLockedUntil=Date.now()+seconds*1000;
+  const tick=()=>{const left=Math.max(0,Math.ceil((loginLockedUntil-Date.now())/1000)); $("adminLoginLock").textContent=left ? "محاولات الدخول متوقفة مؤقتًا: "+left+" ثانية" : ""; $("adminLoginBtn").disabled=left>0; if(left) setTimeout(tick,250);}; tick();
+}
+$("adminLoginForm").addEventListener("submit",async e=>{
+  e.preventDefault(); if(Date.now()<loginLockedUntil)return;
+  const email=$("adminEmail").value.trim(), password=$("adminPassword").value, btn=$("adminLoginBtn"); btn.disabled=true; $("adminLoginError").textContent="";
+  try{
+    const {data,error}=await sb.auth.signInWithPassword({email,password}); if(error) throw error;
+    const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",data.user.id).maybeSingle();
+    if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();throw new Error("not_admin");}
+    adminAuthSession=data.session; loginAttempts=0; hideAuthGate(); await loadAll();
+  }catch(error){ loginAttempts++; $("adminLoginError").textContent="بيانات الدخول غير صحيحة أو الحساب غير مصرح له."; if(loginAttempts>=5){loginAttempts=0;setLoginLocked(30);}else{btn.disabled=false;} }
+});
+$("logoutBtn").addEventListener("click",async()=>{await sb.auth.signOut();adminAuthSession=null;showAuthGate("تم تسجيل الخروج.");$("adminPassword").value="";});
+async function initAdminAuth(){
+  try{const ok=await verifyAdminSession(); if(ok){hideAuthGate();await loadAll();}else showAuthGate("");}
+  catch(error){console.error(error);showAuthGate("تعذر التحقق من جلسة المدير. حاول مرة أخرى.");}
+}
+sb.auth.onAuthStateChange(async(_event,session)=>{if(!session){adminAuthSession=null;showAuthGate("");}});
 /* ===================== Init ===================== */
-loadAll();
+initAdminAuth();
 </script>
 </body>
 </html>
