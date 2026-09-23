@@ -2142,7 +2142,116 @@ body{
   #espozaOpening .opening-mark{animation:none}
   #espozaOpening .opening-flash{animation:none}
 }
-\n</style>
+\n
+/* ==========================================
+   ESPOZA CINEMATIC FASHION EXPERIENCE v2
+   ========================================== */
+:root{
+  --espoza-ease:cubic-bezier(.16,1,.3,1);
+  --espoza-slow:cubic-bezier(.22,.61,.36,1);
+}
+body{background:
+  radial-gradient(circle at 15% 5%,rgba(185,152,90,.055),transparent 28%),
+  var(--cream);
+}
+header{transition:transform .45s var(--espoza-ease),box-shadow .45s ease,background .45s ease}
+header.espoza-scrolled{box-shadow:0 10px 30px rgba(67,19,33,.10);background:rgba(250,247,242,.9)}
+.hero{isolation:isolate;box-shadow:0 20px 55px rgba(67,19,33,.15)}
+.hero-slide{overflow:hidden}
+.hero-slide img{
+  transform:scale(1.045);
+  transition:transform 6s var(--espoza-slow),filter 1s ease;
+  filter:saturate(.94);
+}
+.hero-slide.active img{transform:scale(1);filter:saturate(1.04)}
+.hero-overlay{background:
+  linear-gradient(90deg,rgba(67,19,33,.10),transparent 40%,rgba(36,11,20,.05)),
+  linear-gradient(to top,rgba(36,11,20,.66),rgba(36,11,20,.02) 62%,transparent)}
+.hero-copy{transform:translateY(18px);opacity:.01;transition:transform .9s var(--espoza-ease),opacity .9s ease}
+.hero-slide.active .hero-copy{transform:none;opacity:1}
+.hero-copy h1{letter-spacing:.01em}
+.hero-copy p{opacity:.9}
+.hero-copy button{transition:transform .35s var(--espoza-ease),box-shadow .35s ease}
+.hero-copy button:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.16)}
+
+.intro-card,.social-card,.features-slider{position:relative;overflow:hidden}
+.intro-card::before,.social-card::before,.features-slider::before{
+  content:"ESPOZA";
+  position:absolute;left:-3%;bottom:-25px;
+  font:700 clamp(80px,16vw,190px)/.8 "Playfair Display",serif;
+  letter-spacing:.08em;opacity:.035;pointer-events:none;
+}
+.intro-card > *,.social-card > *,.features-slider > *{position:relative;z-index:1}
+
+.section-head{padding-inline:2px}
+.section-head h2{letter-spacing:.01em}
+.products-grid{perspective:1200px}
+.product-card{
+  transform:translateY(0) scale(1);
+  transition:transform .7s var(--espoza-ease),box-shadow .7s ease,border-color .4s ease;
+}
+.product-card.reveal-item{transform:translateY(34px) scale(.985)}
+.product-card.reveal-item.revealed{transform:translateY(0) scale(1)}
+.product-card:hover{transform:translateY(-7px) scale(1.008);z-index:2}
+.product-img::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.28) 48%,transparent 67%);
+  transform:translateX(-130%);
+  transition:transform .9s var(--espoza-ease);
+  pointer-events:none;
+}
+.product-card:hover .product-img::after{transform:translateX(130%)}
+.product-img img{transition:transform 1s var(--espoza-ease),filter 1s ease}
+.product-card:hover .product-img img{transform:scale(1.055);filter:saturate(1.05)}
+.product-name{transition:letter-spacing .45s ease,color .45s ease}
+.product-card:hover .product-name{letter-spacing:.15px;color:var(--wine)}
+
+.marquee-divider{
+  position:relative;
+  border-radius:0;
+  margin:18px -18px;
+  padding:15px 0;
+  box-shadow:0 8px 24px rgba(67,19,33,.10);
+}
+.marquee-divider::before,.marquee-divider::after{
+  content:"✦";position:absolute;top:50%;transform:translateY(-50%);
+  color:#e5cca0;font-size:13px;z-index:2;
+}
+.marquee-divider::before{left:14px}.marquee-divider::after{right:14px}
+.marquee-track{animation-duration:22s}
+.marquee-track span{font-size:12px;text-transform:uppercase}
+
+.feedback-showcase{padding:7px 0 12px}
+.iphone-frame{transition:transform .65s var(--espoza-ease),box-shadow .65s ease}
+.iphone-frame:hover{transform:translateY(-8px) rotate(0deg) scale(1.02);box-shadow:0 22px 45px rgba(67,19,33,.18)}
+.social-card{
+  background:linear-gradient(135deg,var(--wine),#431321 70%,#2d141d);
+  box-shadow:0 18px 45px rgba(67,19,33,.16);
+}
+.social-link{transition:transform .4s var(--espoza-ease),background .4s ease,border-color .4s ease}
+.social-link:hover{transform:translateY(-5px);background:rgba(255,255,255,.15);border-color:rgba(229,204,160,.4)}
+.feature-slide{position:relative}
+footer{position:relative;overflow:hidden}
+footer::before{
+ content:"FASHION";position:absolute;left:50%;bottom:-42px;transform:translateX(-50%);
+ font:700 clamp(90px,18vw,210px)/1 "Playfair Display",serif;letter-spacing:.08em;
+ color:rgba(255,255,255,.025);white-space:nowrap;pointer-events:none;
+}
+@media(max-width:760px){
+  .hero-slide img{transform:scale(1.025)}
+  .hero-slide.active img{transform:scale(1)}
+  .product-card:hover{transform:translateY(-3px)}
+  .product-card:hover .product-img img{transform:scale(1.025)}
+  .marquee-divider{margin-inline:-11px}
+}
+@media(prefers-reduced-motion:reduce){
+  header,.hero-slide img,.hero-copy,.product-card,.product-img img,.product-img::after,.iphone-frame,.social-link{transition:none!important}
+  .hero-slide img,.hero-slide.active img{transform:none!important}
+  .hero-copy{opacity:1!important;transform:none!important}
+}
+
+</style>
 <style id="espoza-luxury-products">
 .products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
 .product-card{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
@@ -8270,6 +8379,86 @@ setupFeedbackImageSpeed();
 }catch(error){
 console.warn("feedback image optimization failed:",error);
 }
+
+
+/* ==========================================
+   ESPOZA CINEMATIC INTERACTIONS v2
+   ========================================== */
+(function(){
+  const reduceMotion=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function syncHeroActive(){
+    document.querySelectorAll(".hero-slide").forEach((slide,i)=>{
+      slide.classList.toggle("active", i===window.sliderIndex);
+    });
+  }
+
+  /* Keep the active hero slide visually cinematic without touching slider logic. */
+  const heroTrack=document.getElementById("slidesTrack");
+  if(heroTrack && !reduceMotion){
+    const heroObserver=new MutationObserver(syncHeroActive);
+    heroObserver.observe(heroTrack,{attributes:true,subtree:true,attributeFilter:["style"]});
+    setInterval(syncHeroActive,600);
+    syncHeroActive();
+  }else{
+    syncHeroActive();
+  }
+
+  /* Header depth while scrolling. */
+  let ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(()=>{
+      const h=document.querySelector("header");
+      if(h)h.classList.toggle("espoza-scrolled",window.scrollY>18);
+      ticking=false;
+    });
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+  onScroll();
+
+  /* Gentle product-image parallax while cards are in view. */
+  if(!reduceMotion){
+    const cards=[...document.querySelectorAll(".product-card")];
+    let raf=0;
+    function parallax(){
+      raf=0;
+      const vh=window.innerHeight;
+      cards.forEach(card=>{
+        const img=card.querySelector(".product-img img");
+        if(!img || !card.classList.contains("revealed"))return;
+        const r=card.getBoundingClientRect();
+        if(r.bottom<0 || r.top>vh)return;
+        const center=r.top+r.height/2;
+        const delta=(center-vh/2)/(vh/2);
+        const amount=Math.max(-3,Math.min(3,-delta*3));
+        if(!card.matches(":hover")) img.style.transform="translateY("+amount+"px) scale(1.018)";
+      });
+    }
+    window.addEventListener("scroll",()=>{if(!raf)raf=requestAnimationFrame(parallax)},{passive:true});
+    window.addEventListener("resize",()=>{if(!raf)raf=requestAnimationFrame(parallax)},{passive:true});
+    setTimeout(parallax,500);
+  }
+
+  /* Press feedback for interactive luxury controls. */
+  document.addEventListener("pointerdown",e=>{
+    const el=e.target.closest("button,.cat,.social-link,.product-card");
+    if(el && !reduceMotion) el.classList.add("espoza-pressed");
+  },{passive:true});
+  document.addEventListener("pointerup",()=>{
+    document.querySelectorAll(".espoza-pressed").forEach(el=>el.classList.remove("espoza-pressed"));
+  },{passive:true});
+
+  /* Ensure dynamically rendered products receive the cinematic reveal observer. */
+  const grid=document.querySelector(".products-grid");
+  if(grid && "MutationObserver" in window){
+    const observer=new MutationObserver(()=>{
+      if(typeof setupScrollReveal==="function") setupScrollReveal();
+    });
+    observer.observe(grid,{childList:true});
+  }
+})();
 
 </script>
 
