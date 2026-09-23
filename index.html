@@ -4692,7 +4692,7 @@ try{return JSON.stringify(value)}catch(_){return fallback}
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
 const [settingsResult,deliveryResult,sliderResult]=await Promise.all([
-db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy"]),
+db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
 db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false})
 ]);
@@ -4706,6 +4706,13 @@ if(settings.whatsapp)store.whatsapp=settings.whatsapp;
 if(settings.welcome)store.welcome=settings.welcome;
 if(settings.delivery_time)store.deliveryTime=settings.delivery_time;
 if(settings.exchange_policy)store.exchangePolicy=settings.exchange_policy;
+if(settings.site_credit)store.siteCredit=settings.site_credit;
+for(const platform of ["facebook","instagram","tiktok","snapchat"]){
+if(settings[platform])store.social[platform]=settings[platform];
+}
+for(const platform of ["facebook","instagram","tiktok","snapchat"]){
+if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settings[platform+"_followers"])||0;
+}
 adminDeliveryAreas=deliveryResult.data||[];
 adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));
 applyStore();
@@ -4888,6 +4895,9 @@ $("footerContactFacebook")
 $("copyright")
 .textContent=
 `©️ 2019–${new Date().getFullYear()} ${name} — ${t().rights}`;
+
+const credit=$("siteCredit");
+if(credit)credit.textContent=store.siteCredit||"Designed & Created by Yousef Ajra";
 
 
 $("footerSince")
