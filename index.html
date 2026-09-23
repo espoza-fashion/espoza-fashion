@@ -2102,6 +2102,17 @@ body{
 }
 
 </style>
+<style id="espoza-final-polish">
+.product-img{overflow:hidden!important;position:relative!important}
+.product-img img{transform:scale(1)!important;transform-origin:center center!important;will-change:transform}
+.product-card:hover .product-img img{transform:scale(1.045)!important}
+.product-card:active .product-img img,.product-card:hover:active .product-img img{transform:scale(1.025)!important}
+.marquee-divider{overflow:hidden!important;width:100%!important;min-width:0!important}
+.marquee-track{display:flex!important;width:max-content!important;min-width:max-content!important;flex-wrap:nowrap!important;gap:0!important;animation:marqueeScroll 22s linear infinite!important;transform:translate3d(0,0,0);will-change:transform}
+.marquee-track span{flex:0 0 auto!important;display:block!important;white-space:nowrap!important;padding-inline:22px!important}
+@media(max-width:760px){.marquee-track{animation-duration:18s!important}.marquee-track span{font-size:10.5px!important;padding-inline:16px!important}}
+@media(prefers-reduced-motion:reduce){.marquee-track{animation:none!important}}
+</style>
 </head>
 
 <body>
@@ -6130,7 +6141,8 @@ style="grid-column:1/-1">
 <div class="marquee-track">
 
 <span>${esc(phrase)}</span>
-
+<span>${esc(phrase)}</span>
+<span>${esc(phrase)}</span>
 <span>${esc(phrase)}</span>
 
 </div>
