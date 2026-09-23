@@ -2160,7 +2160,98 @@ body{
 .marquee-track span{font-size:11px!important;font-weight:600!important;letter-spacing:.8px!important;padding-inline:18px!important}
 @media(max-width:1000px){.products-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:21px 13px!important}}
 @media(max-width:760px){.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px 10px!important}.product-img{aspect-ratio:4/5!important}.product-name{font-size:12.5px!important}.price{font-size:12.5px!important}.marquee-divider{margin:15px 0!important;padding:10px 0!important}.marquee-track span{font-size:10px!important;padding-inline:14px!important}}
-</style></head>
+</style><style id="espoza-editorial-motion">
+/* ESPOZA EDITORIAL / LUXURY COLLECTION */
+.hero-wrap{padding-top:20px;padding-bottom:12px}
+.hero{border-radius:2px;box-shadow:0 22px 60px rgba(67,19,33,.14);background:#eee7e4}
+.hero-slide{height:min(68vh,620px);min-height:420px}
+.hero-slide::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(36,11,20,.12),transparent 42%,rgba(36,11,20,.08))}
+.hero-slide img{object-fit:cover;transform:scale(1.015);filter:saturate(.96) contrast(1.02)}
+.hero-overlay{align-items:flex-end;justify-content:flex-start;padding:clamp(25px,5vw,60px);background:linear-gradient(0deg,rgba(36,11,20,.72),rgba(36,11,20,.12) 58%,transparent 78%)}
+.hero-copy{text-align:right;max-width:620px}
+.hero-copy h1{font-size:clamp(36px,6vw,76px);line-height:1.04;letter-spacing:-1px}
+.hero-copy p{font-size:clamp(13px,1.5vw,17px);max-width:520px}
+.hero-copy button{border-radius:2px;padding:12px 28px;letter-spacing:.3px;transition:transform .35s ease,box-shadow .35s ease}
+.hero-copy button:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.2)}
+
+.intro{padding-top:34px;padding-bottom:20px}
+.intro-card{border-radius:2px;background:#fff;border:0;box-shadow:0 16px 44px rgba(67,19,33,.07);padding:clamp(28px,5vw,54px)}
+.intro h2{font-size:clamp(32px,5vw,52px)}
+.intro p{font-size:13px;max-width:680px}
+
+.toolbar{padding-top:30px}
+.search{border-radius:2px;background:transparent;border:0;border-bottom:1px solid #d8c9ce;padding:14px 4px}
+.cats{gap:18px;padding-top:18px}
+.cat{border:0;border-radius:0;background:transparent;padding:8px 2px;position:relative}
+.cat::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--wine);transform:scaleX(0);transform-origin:center;transition:transform .35s ease}
+.cat.active{background:transparent;color:var(--wine)}
+.cat.active::after,.cat:hover::after{transform:scaleX(1)}
+
+.catalog{padding-bottom:70px}
+.section-head{margin:15px 0 25px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.section-head h2{font-size:clamp(31px,4vw,46px);letter-spacing:-.4px}
+.section-head span{font-size:11px}
+.products-grid{gap:34px 18px!important}
+.product-card{will-change:transform}
+.product-card:nth-of-type(7n+1) .product-img{aspect-ratio:3/4}
+.product-card:nth-of-type(7n+1){grid-column:span 2}
+.product-card:nth-of-type(7n+1) .product-name{font-size:15px}
+.product-card:nth-of-type(7n+1) .price{font-size:14px}
+.product-card .product-img::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 55%,rgba(185,152,90,.08));opacity:0;transition:opacity .5s ease;pointer-events:none}
+.product-card:hover .product-img::after{opacity:1}
+.product-card .product-info{transition:transform .4s ease}
+.product-card:hover .product-info{transform:translateY(-2px)}
+.marquee-divider{grid-column:1/-1!important;margin:4px 0 4px!important;padding:13px 0!important;position:relative}
+.marquee-track span{font-size:11px!important;letter-spacing:1.2px!important;padding-inline:26px!important}
+
+.feedback{padding-top:25px}
+.feedback-head{margin-bottom:24px}
+.feedback-head h2{font-size:clamp(31px,4vw,48px)}
+.feedback-showcase{padding-top:20px;padding-bottom:25px}
+.iphone-frame{background:linear-gradient(145deg,#252527,#101011);box-shadow:0 25px 55px rgba(35,10,18,.22)}
+.feedback-showcase-track{animation-duration:44s}
+.feedback-showcase-track .iphone-frame:nth-child(4n){transform:translateY(12px) rotate(1deg)}
+.feedback-showcase-track .iphone-frame:nth-child(4n+1){transform:translateY(-3px) rotate(-1deg)}
+
+.social{padding-top:5px}
+.social-card{border-radius:2px;padding:48px 25px;background:linear-gradient(135deg,#431321,#641f34)}
+.social-grid{max-width:760px;margin:25px auto 0;gap:10px}
+.social-link{border-radius:2px;background:rgba(255,255,255,.045);padding:16px 10px}
+.social-link:hover{background:rgba(255,255,255,.12)}
+
+.features{padding-bottom:65px}
+.features-slider{border-radius:2px}
+.trust-hero{background:linear-gradient(135deg,#fff,#f6edef);min-height:230px}
+
+@media(max-width:1000px){
+ .products-grid{gap:28px 13px!important}
+ .product-card:nth-of-type(7n+1){grid-column:span 1}
+}
+@media(max-width:760px){
+ .hero-wrap{padding:10px 0 12px}
+ .hero{border-radius:0}
+ .hero-slide{height:72vw;min-height:330px;max-height:470px}
+ .hero-overlay{padding:22px 18px}
+ .hero-copy h1{font-size:clamp(34px,10vw,52px)}
+ .hero-copy p{font-size:12px;margin-bottom:11px}
+ .hero-copy button{padding:10px 21px}
+ .intro{padding-top:12px}
+ .intro-card{border-radius:0;padding:30px 18px}
+ .toolbar{padding-top:20px}
+ .catalog{padding-left:11px;padding-right:11px}
+ .products-grid{gap:24px 9px!important}
+ .product-card:nth-of-type(7n+1){grid-column:span 1}
+ .product-card:nth-of-type(7n+1) .product-img{aspect-ratio:4/5}
+ .product-card:nth-of-type(7n+1) .product-name{font-size:12.5px}
+ .marquee-divider{margin:7px 0!important}
+ .marquee-track span{font-size:9.5px!important;padding-inline:18px!important}
+ .feedback{padding-top:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-slide img,.product-card,.product-card .product-info{transition:none!important}
+}
+</style>
+</head>
 
 <body>\n
 <!-- ESPOZA LUXURY OPENING -->
