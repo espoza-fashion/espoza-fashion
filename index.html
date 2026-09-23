@@ -1997,7 +1997,152 @@ body{
 .feedback-showcase:hover .feedback-showcase-track{animation-play-state:running}
 .policy-ico{margin-inline-end:4px}
 .policy-wa{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:800;text-decoration:none}
-</style>
+
+/* ==========================================
+   ESPOZA LUXURY OPENING — FAST DOOR REVEAL
+   ========================================== */
+#espozaOpening{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:grid;
+  place-items:center;
+  background:#431321;
+  overflow:hidden;
+  isolation:isolate;
+  animation:espozaOpeningFade .18s ease 1.02s forwards;
+}
+#espozaOpening .opening-glow{
+  position:absolute;
+  width:min(62vw,620px);
+  aspect-ratio:1;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,244,210,.32) 0%,rgba(185,152,90,.13) 28%,transparent 68%);
+  filter:blur(12px);
+  animation:espozaGlow .78s ease-out .08s both;
+}
+#espozaOpening .opening-mark{
+  position:relative;
+  z-index:4;
+  text-align:center;
+  color:#fff;
+  transform:translateY(5px);
+  animation:espozaMarkIn .52s cubic-bezier(.2,.8,.2,1) .08s both;
+}
+#espozaOpening .opening-mark .en{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(38px,8vw,86px);
+  line-height:.95;
+  letter-spacing:clamp(5px,1.4vw,15px);
+  text-indent:clamp(5px,1.4vw,15px);
+  font-weight:700;
+  text-shadow:0 5px 35px rgba(0,0,0,.28);
+}
+#espozaOpening .opening-mark .ar{
+  margin-top:15px;
+  font-family:"Cairo",sans-serif;
+  font-size:clamp(16px,2.7vw,27px);
+  letter-spacing:2px;
+  color:#ead8ae;
+  font-weight:700;
+}
+#espozaOpening .opening-mark .since{
+  margin-top:10px;
+  font-size:9px;
+  letter-spacing:5px;
+  color:#b9985a;
+  text-transform:uppercase;
+}
+#espozaOpening .door{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:51%;
+  z-index:5;
+  background:
+    radial-gradient(circle at 50% 48%,rgba(185,152,90,.12),transparent 36%),
+    linear-gradient(135deg,#6d223a 0%,#54182c 48%,#3b101e 100%);
+  box-shadow:0 0 45px rgba(0,0,0,.18);
+  will-change:transform;
+}
+#espozaOpening .door::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:1px;
+  background:linear-gradient(transparent,#b9985a 35%,#f0dfb4 50%,#b9985a 65%,transparent);
+  opacity:.75;
+}
+#espozaOpening .door.left{
+  left:0;
+  transform-origin:left center;
+  animation:espozaDoorLeft .78s cubic-bezier(.76,0,.18,1) .24s forwards;
+}
+#espozaOpening .door.right{
+  right:0;
+  transform-origin:right center;
+  animation:espozaDoorRight .78s cubic-bezier(.76,0,.18,1) .24s forwards;
+}
+#espozaOpening .door.left::after{right:0}
+#espozaOpening .door.right::after{left:0}
+#espozaOpening .opening-flash{
+  position:absolute;
+  inset:-20%;
+  z-index:8;
+  pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,245,.98) 0%,rgba(255,245,211,.82) 18%,rgba(255,255,255,.18) 44%,transparent 68%);
+  opacity:0;
+  mix-blend-mode:screen;
+  animation:espozaFlash .18s ease-out .72s forwards;
+}
+#espozaOpening .opening-line{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:7;
+  width:1px;
+  height:58vh;
+  transform:translate(-50%,-50%) scaleY(0);
+  background:linear-gradient(transparent,#fff,#b9985a,transparent);
+  box-shadow:0 0 18px rgba(255,244,205,.8);
+  animation:espozaLine .35s ease-out .56s forwards;
+}
+@keyframes espozaDoorLeft{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-101%)}
+}
+@keyframes espozaDoorRight{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(101%)}
+}
+@keyframes espozaMarkIn{
+  from{opacity:0;transform:translateY(12px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes espozaGlow{
+  0%{opacity:.15;transform:scale(.65)}
+  100%{opacity:1;transform:scale(1.12)}
+}
+@keyframes espozaFlash{
+  0%{opacity:0}
+  28%{opacity:1}
+  100%{opacity:0}
+}
+@keyframes espozaLine{
+  to{transform:translate(-50%,-50%) scaleY(1);opacity:0}
+}
+@keyframes espozaOpeningFade{
+  to{opacity:0;visibility:hidden;pointer-events:none}
+}
+@media(prefers-reduced-motion:reduce){
+  #espozaOpening{animation:espozaOpeningFade .12s ease .25s forwards}
+  #espozaOpening .door.left{animation:espozaDoorLeft .2s ease .05s forwards}
+  #espozaOpening .door.right{animation:espozaDoorRight .2s ease .05s forwards}
+  #espozaOpening .opening-mark{animation:none}
+  #espozaOpening .opening-flash{animation:none}
+}
+\n</style>
 <style id="espoza-luxury-products">
 .products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
 .product-card{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
@@ -2017,7 +2162,21 @@ body{
 @media(max-width:760px){.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px 10px!important}.product-img{aspect-ratio:4/5!important}.product-name{font-size:12.5px!important}.price{font-size:12.5px!important}.marquee-divider{margin:15px 0!important;padding:10px 0!important}.marquee-track span{font-size:10px!important;padding-inline:14px!important}}
 </style></head>
 
-<body>
+<body>\n
+<!-- ESPOZA LUXURY OPENING -->
+<div id="espozaOpening" aria-label="Espoza Fashion">
+  <div class="opening-glow"></div>
+  <div class="opening-mark">
+    <div class="en">ESPOZA</div>
+    <div class="ar">إسبوزا فاشن</div>
+    <div class="since">FASHION · SINCE 2019</div>
+  </div>
+  <div class="door left" aria-hidden="true"></div>
+  <div class="door right" aria-hidden="true"></div>
+  <div class="opening-line" aria-hidden="true"></div>
+  <div class="opening-flash" aria-hidden="true"></div>
+</div>
+
 
 <div class="top-note" id="topNote">
 أهلاً بكِ في Espoza Fashion
