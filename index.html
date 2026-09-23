@@ -1998,7 +1998,24 @@ body{
 .policy-ico{margin-inline-end:4px}
 .policy-wa{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:800;text-decoration:none}
 </style>
-</head>
+<style id="espoza-luxury-products">
+.products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
+.product-card{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
+.product-card:hover{transform:translateY(-5px)!important}
+.product-img{aspect-ratio:4/5!important;border-radius:0!important;background:#f3eeea!important}
+.product-img img{transition:transform .7s cubic-bezier(.2,.7,.2,1)!important}
+.product-card:hover .product-img img{transform:scale(1.035)!important}
+.product-info{padding:14px 3px 2px!important;text-align:center!important}
+.product-name{font-family:"Cairo",sans-serif!important;font-size:13px!important;font-weight:600!important;line-height:1.7!important;letter-spacing:.1px!important;color:#321a23!important;margin:0 0 3px!important;min-height:0!important}
+.price-row{justify-content:center!important;gap:6px!important}
+.price{font-size:13px!important;font-weight:700!important}
+.offer-badge,.unavailable-badge{border-radius:0!important}
+.marquee-divider{border-radius:0!important;margin:18px 0!important;padding:11px 0!important;background:linear-gradient(90deg,var(--dark),var(--wine),var(--dark))!important;box-shadow:none!important}
+.marquee-track{animation-duration:24s!important;will-change:transform}
+.marquee-track span{font-size:11px!important;font-weight:600!important;letter-spacing:.8px!important;padding-inline:18px!important}
+@media(max-width:1000px){.products-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:21px 13px!important}}
+@media(max-width:760px){.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px 10px!important}.product-img{aspect-ratio:4/5!important}.product-name{font-size:12.5px!important}.price{font-size:12.5px!important}.marquee-divider{margin:15px 0!important;padding:10px 0!important}.marquee-track span{font-size:10px!important;padding-inline:14px!important}}
+</style></head>
 
 <body>
 
@@ -5990,18 +6007,17 @@ function marqueeDividerHTML(){
 
 try{
 
-const phrase=
-Array(
-6
-)
-.fill(
-t().marqueeText
-||
-"ESPOZA FASHION"
-)
-.join(
-"   "
-);
+const phrases=[
+"ESPOZA FASHION ✦ أناقة تليق فيكِ ✦",
+"NEW LOOK ✦ NEW MOOD ✦",
+"تفاصيل تصنع الفرق ✦",
+"MADE TO MAKE YOU SHINE ✦",
+"إطلالتك تبدأ من هنا ✦",
+"TIMELESS ELEGANCE ✦",
+"لأن التفاصيل هي كل شيء ✦",
+"ESPOZA FASHION ✦ SINCE 2019 ✦"
+];
+const phrase=phrases.join("   ");
 
 
 return`
