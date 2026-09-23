@@ -8236,6 +8236,45 @@ error
 init();
 
 
+
+/* ==========================================
+   ESPOZA HERO — MOBILE COUTURE REVEAL
+   ========================================== */
+.hero{isolation:isolate;}
+.hero::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.16) 48%,transparent 61%);transform:translateX(-120%);animation:heroSilkSweep 1.8s cubic-bezier(.2,.7,.2,1) .35s both;}
+.hero::after{content:"ESPOZA";position:absolute;z-index:2;inset:auto 4% 7%;font-family:"Playfair Display",serif;font-size:clamp(70px,15vw,180px);letter-spacing:.08em;color:rgba(255,255,255,.075);pointer-events:none;white-space:nowrap;animation:heroWatermark 1.6s cubic-bezier(.2,.7,.2,1) .2s both;}
+.hero-slide{overflow:hidden;}
+.hero-slide img{transform:scale(1.055);animation:heroImageEntrance 1.7s cubic-bezier(.16,.8,.18,1) both;}
+.hero-slide.active img{animation:heroImageBreath 6s ease-in-out infinite alternate;}
+.hero-overlay{z-index:4;}
+.hero-copy{animation:heroCopyEntrance 1.05s cubic-bezier(.16,.8,.18,1) .38s both;}
+.hero-copy h1{animation:heroTitleReveal 1.1s cubic-bezier(.16,.8,.18,1) .48s both;}
+.hero-copy p{animation:heroCopyLine .9s ease .68s both;}
+.hero-copy button{animation:heroButtonReveal .9s cubic-bezier(.16,.8,.18,1) .82s both;}
+@keyframes heroSilkSweep{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@keyframes heroWatermark{from{opacity:0;transform:translateY(24px);letter-spacing:.22em}to{opacity:1;transform:none;letter-spacing:.08em}}
+@keyframes heroImageEntrance{from{transform:scale(1.14);filter:saturate(.82) brightness(.84)}to{transform:scale(1.055);filter:none}}
+@keyframes heroImageBreath{from{transform:scale(1.055)}to{transform:scale(1.095)}}
+@keyframes heroCopyEntrance{from{opacity:0;transform:translateY(30px);filter:blur(7px)}to{opacity:1;transform:none;filter:none}}
+@keyframes heroTitleReveal{from{opacity:0;transform:translateY(22px);clip-path:inset(100% 0 0)}to{opacity:1;transform:none;clip-path:inset(0)}}
+@keyframes heroCopyLine{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes heroButtonReveal{from{opacity:0;transform:translateY(15px) scale(.94)}to{opacity:1;transform:none}}
+
+@media(max-width:760px){
+ .hero{border-radius:22px;box-shadow:0 20px 55px rgba(67,19,33,.16);}
+ .hero::after{font-size:26vw;bottom:18%;right:-4%;}
+ .hero-slide img{animation:heroImageEntranceMobile 1.5s cubic-bezier(.16,.8,.18,1) both;}
+ .hero-slide.active img{animation:heroImageBreathMobile 5.5s ease-in-out infinite alternate;}
+ .hero-copy{max-width:92%;}
+ .hero-copy h1{text-shadow:0 4px 22px rgba(0,0,0,.28);}
+ .hero-copy button{min-height:44px;padding-inline:25px;}
+}
+@keyframes heroImageEntranceMobile{from{transform:scale(1.13);filter:brightness(.82) saturate(.84)}to{transform:scale(1.035);filter:none}}
+@keyframes heroImageBreathMobile{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.075) translate3d(0,-1%,0)}}
+@media(prefers-reduced-motion:reduce){
+ .hero::before,.hero::after,.hero-slide img,.hero-copy,.hero-copy h1,.hero-copy p,.hero-copy button{animation:none!important;transform:none!important;clip-path:none!important;filter:none!important;}
+}
+
 /* ==========================================
    ESPoza MOBILE-FIRST 4K / ULTRA SMOOTH POLISH
    ========================================== */
