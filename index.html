@@ -2010,7 +2010,7 @@ body{
   background:#431321;
   overflow:hidden;
   isolation:isolate;
-  animation:espozaOpeningFade .18s ease 1.02s forwards;
+  animation:espozaOpeningFade .24s ease 1.68s forwards;
 }
 #espozaOpening .opening-glow{
   position:absolute;
@@ -2019,7 +2019,7 @@ body{
   border-radius:50%;
   background:radial-gradient(circle,rgba(255,244,210,.32) 0%,rgba(185,152,90,.13) 28%,transparent 68%);
   filter:blur(12px);
-  animation:espozaGlow .78s ease-out .08s both;
+  animation:espozaGlow 1.05s ease-out .06s both;
 }
 #espozaOpening .opening-mark{
   position:relative;
@@ -2027,7 +2027,7 @@ body{
   text-align:center;
   color:#fff;
   transform:translateY(5px);
-  animation:espozaMarkIn .52s cubic-bezier(.2,.8,.2,1) .08s both;
+  animation:espozaMarkIn .62s cubic-bezier(.2,.8,.2,1) .12s both;
 }
 #espozaOpening .opening-mark .en{
   font-family:"Playfair Display",serif;
@@ -2077,12 +2077,12 @@ body{
 #espozaOpening .door.left{
   left:0;
   transform-origin:left center;
-  animation:espozaDoorLeft .78s cubic-bezier(.76,0,.18,1) .24s forwards;
+  animation:espozaDoorLeft 1.18s cubic-bezier(.76,0,.18,1) .32s forwards;
 }
 #espozaOpening .door.right{
   right:0;
   transform-origin:right center;
-  animation:espozaDoorRight .78s cubic-bezier(.76,0,.18,1) .24s forwards;
+  animation:espozaDoorRight 1.18s cubic-bezier(.76,0,.18,1) .32s forwards;
 }
 #espozaOpening .door.left::after{right:0}
 #espozaOpening .door.right::after{left:0}
@@ -2094,7 +2094,7 @@ body{
   background:radial-gradient(circle,rgba(255,255,245,.98) 0%,rgba(255,245,211,.82) 18%,rgba(255,255,255,.18) 44%,transparent 68%);
   opacity:0;
   mix-blend-mode:screen;
-  animation:espozaFlash .18s ease-out .72s forwards;
+  animation:espozaFlash .22s ease-out 1.12s forwards;
 }
 #espozaOpening .opening-line{
   position:absolute;
@@ -2106,7 +2106,7 @@ body{
   transform:translate(-50%,-50%) scaleY(0);
   background:linear-gradient(transparent,#fff,#b9985a,transparent);
   box-shadow:0 0 18px rgba(255,244,205,.8);
-  animation:espozaLine .35s ease-out .56s forwards;
+  animation:espozaLine .48s ease-out .88s forwards;
 }
 @keyframes espozaDoorLeft{
   0%{transform:translateX(0)}
