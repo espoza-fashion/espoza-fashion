@@ -4812,6 +4812,8 @@ const CUSTOMER_SUPABASE_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
 let customerSupabase=null;
 let adminDeliveryAreas=null;
 let adminSliders=null;
+let adminRealtimeChannel=null;
+let adminRealtimeTimer=null;
 function getCustomerSupabase(){
 if(!window.supabase||typeof window.supabase.createClient!=="function")throw new Error("Supabase غير متاح");
 if(!customerSupabase)customerSupabase=window.supabase.createClient(CUSTOMER_SUPABASE_URL,CUSTOMER_SUPABASE_KEY);
@@ -4884,6 +4886,8 @@ async function setupAdminConnections(){
 try{await loadAdminStoreData();}
 catch(error){console.warn("Supabase admin data failed; keeping built-in site defaults:",error);}
 }
+function setupAdminRealtime(){try{if(adminRealtimeChannel)return;const db=getCustomerSupabase();adminRealtimeChannel=db.channel("espoza-site-sync").on("postgres_changes",{event:"*",schema:"public",table:"products"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"product_sizes"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"product_colors"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"product_images"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"sliders"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"store_settings"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"delivery_areas"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"feedback"},scheduleAdminRefresh).subscribe((status,error)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("Site realtime sync:",status,error);});}catch(error){console.warn("Realtime sync unavailable:",error)}}
+function scheduleAdminRefresh(){clearTimeout(adminRealtimeTimer);adminRealtimeTimer=setTimeout(async()=>{try{await Promise.all([setupAdminConnections(),setupProducts()]);applyLanguage();renderProducts();renderFeedback();renderFeatures();}catch(error){console.warn("Live site refresh failed:",error)}},350)}
 
 
 
@@ -7955,6 +7959,8 @@ setupAdminConnections();
 console.warn("admin connection setup failed:",error);
 
 }
+
+try{setupAdminRealtime();}catch(error){console.warn("admin realtime setup failed:",error);}
 
 
 try{
