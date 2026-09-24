@@ -5040,7 +5040,7 @@ $("copyright")
 `©️ 2019–${new Date().getFullYear()} ${name} — ${t().rights}`;
 
 const credit=$("footerCredit");
-if(credit)credit.textContent=store.siteCredit||t().footerCredit||"Designed & Created by Yousef Ajra";
+if(credit)credit.textContent=t().footerCredit||store.siteCredit||"Designed & Created by Yousef Ajra";
 
 
 $("footerSince")
@@ -5050,7 +5050,7 @@ t().footerSince;
 
 $("footerCredit")
 .textContent=
-store.siteCredit||t().footerCredit;
+t().footerCredit||store.siteCredit;
 
 }
 
