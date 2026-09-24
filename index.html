@@ -3980,9 +3980,12 @@ feedbackCounterLabel:
 };
 
 
-const t=
-()=>
-TEXT[lang];
+let adminContent={ar:{},en:{}};
+const t=()=>{
+const base=TEXT[lang]||TEXT.ar;
+const over=adminContent[lang]||{};
+return {...base,...over,cats:{...base.cats,...(over.cats||{})},policyItems:Array.isArray(over.policyItems)?over.policyItems:base.policyItems};
+};
 
 
 /* ==========================================
@@ -4823,7 +4826,7 @@ async function loadAdminFeedback(){const db=getCustomerSupabase();const {data,er
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
 const [settingsResult,deliveryResult,sliderResult,feedbackResult]=await Promise.all([
-db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers"]),
+db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
 db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),\ndb.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true})
 ]);
@@ -4838,6 +4841,11 @@ if(settings.welcome)store.welcome=settings.welcome;
 if(settings.delivery_time)store.deliveryTime=settings.delivery_time;
 if(settings.exchange_policy)store.exchangePolicy=settings.exchange_policy;
 if(settings.site_credit)store.siteCredit=settings.site_credit;
+try{
+if(settings.site_content_ar)adminContent.ar=JSON.parse(settings.site_content_ar);
+if(settings.site_content_en)adminContent.en=JSON.parse(settings.site_content_en);
+}catch(_){ }
+try{applyLanguage();renderFeatures();renderPolicies();startTypewriter();}catch(_){}
 for(const platform of ["facebook","instagram","tiktok","snapchat"]){
 if(settings[platform])store.social[platform]=settings[platform];
 }
@@ -4845,7 +4853,7 @@ for(const platform of ["facebook","instagram","tiktok","snapchat"]){
 if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settings[platform+"_followers"])||0;
 }
 adminDeliveryAreas=deliveryResult.data||[];
-adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));\nadminFeedback=feedbackResult.data||[];\nif(adminFeedback.length){FEEDBACK_IMAGES.splice(0,FEEDBACK_IMAGES.length,...adminFeedback.map(x=>x.image_url));}
+adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));\nadminFeedback=feedbackResult.data||[];\nFEEDBACK_IMAGES.splice(0,FEEDBACK_IMAGES.length,...adminFeedback.map(x=>x.image_url));
 applyStore();
 renderDeliveryOptions();
 renderSlider();
@@ -5028,7 +5036,7 @@ $("copyright")
 `©️ 2019–${new Date().getFullYear()} ${name} — ${t().rights}`;
 
 const credit=$("footerCredit");
-if(credit)credit.textContent=store.siteCredit||"Designed & Created by Yousef Ajra";
+if(credit)credit.textContent=store.siteCredit||t().footerCredit||"Designed & Created by Yousef Ajra";
 
 
 $("footerSince")
@@ -5038,7 +5046,7 @@ t().footerSince;
 
 $("footerCredit")
 .textContent=
-t().footerCredit;
+store.siteCredit||t().footerCredit;
 
 }
 
