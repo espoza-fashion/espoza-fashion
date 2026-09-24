@@ -1997,6 +1997,17 @@ body{
 .feedback-showcase:hover .feedback-showcase-track{animation-play-state:running}
 .policy-ico{margin-inline-end:4px}
 .policy-wa{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:800;text-decoration:none}
+/* ESPoza luxury opening */
+#espozaSplash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#7b2944 0%,#641f34 38%,#431321 100%);color:#fff;overflow:hidden;transition:opacity .55s ease,visibility .55s ease}
+#espozaSplash::before{content:"";position:absolute;width:280px;height:280px;border:1px solid rgba(185,152,90,.32);border-radius:50%;box-shadow:0 0 80px rgba(185,152,90,.12);animation:splashRing 1.9s ease-in-out infinite}
+#espozaSplash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-inner{position:relative;text-align:center;opacity:0;transform:translateY(12px);animation:splashIn .8s .12s cubic-bezier(.2,.8,.2,1) forwards}
+.splash-logo{font-family:"Playfair Display",serif;font-size:clamp(38px,9vw,72px);font-weight:700;letter-spacing:6px;margin:0}
+.splash-tag{margin-top:13px;color:#ead6a9;font-size:13px;letter-spacing:2px}
+.splash-since{margin-top:8px;color:rgba(255,255,255,.7);font:11px "Playfair Display",serif;letter-spacing:3px}
+@keyframes splashIn{to{opacity:1;transform:none}}
+@keyframes splashRing{50%{transform:scale(1.06);opacity:.75}}
+@media(prefers-reduced-motion:reduce){#espozaSplash::before{animation:none}.splash-inner{animation:none;opacity:1;transform:none}}
 </style>
 <style id="espoza-luxury-products">
 .products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
@@ -2018,6 +2029,8 @@ body{
 </style></head>
 
 <body>
+<div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-inner"><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
+
 
 <div class="top-note" id="topNote">
 أهلاً بكِ في Espoza Fashion
@@ -4711,7 +4724,7 @@ const db=getCustomerSupabase();
 const [settingsResult,deliveryResult,sliderResult]=await Promise.all([
 db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
-db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false})
+db.from("slider").select("id,image_url,title,subtitle,button_text,button_link,is_active,sort_order,created_at").eq("is_active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false})
 ]);
 if(settingsResult.error)throw settingsResult.error;
 if(deliveryResult.error)throw deliveryResult.error;
@@ -4731,7 +4744,7 @@ for(const platform of ["facebook","instagram","tiktok","snapchat"]){
 if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settings[platform+"_followers"])||0;
 }
 adminDeliveryAreas=deliveryResult.data||[];
-adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));
+adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.button_link||"all",button_text:row.button_text||""}));
 applyStore();
 renderDeliveryOptions();
 renderSlider();
@@ -4741,11 +4754,11 @@ const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Nu
 const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>x.name).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,sku:"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.is_offer,available:p.is_available!==false,active:p.is_active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
-const result=await db.from("products").select("id,name,category,price,old_price,description,active,featured,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+const result=await db.from("products").select("id,name,sku,category,price,old_price,description,is_active,is_offer,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("is_active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
 if(result.error)throw result.error;
 return(result.data||[]).map(dynamicProductToView);
 }
@@ -4755,7 +4768,7 @@ renderProducts();
 $("productTotal").textContent=String(products.length)+"+";
 try{
 const remoteProducts=await loadSupabaseProducts();
-if(remoteProducts.length){products=remoteProducts;renderProducts();$("productTotal").textContent=String(products.length)+"+";}
+if(remoteProducts.length){const remoteByName=new Map(remoteProducts.map(p=>[normalizeName(p.name),p]));const merged=staticViewProducts.map(p=>remoteByName.get(normalizeName(p.name))||p);for(const p of remoteProducts){if(!staticViewProducts.some(s=>normalizeName(s.name)===normalizeName(p.name)))merged.push(p);}products=merged;renderProducts();$("productTotal").textContent=String(products.length)+"+";}
 }catch(error){console.warn("Supabase products failed; using static products:",error);}
 }
 async function setupAdminConnections(){
@@ -7993,6 +8006,8 @@ setupFeedbackImageSpeed();
 console.warn("feedback image optimization failed:",error);
 }
 
+
+const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},1550);
 </script>
 
 </body>
