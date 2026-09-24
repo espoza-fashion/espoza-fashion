@@ -737,30 +737,26 @@ margin:4px 0 8px
 display:flex;
 width:max-content;
 direction:ltr;
-animation:marqueeScroll 26s linear infinite
+animation:marqueeScroll 24s linear infinite;
+will-change:transform;
+backface-visibility:hidden
 }
 
 .marquee-track span{
 display:inline-block;
+flex:0 0 auto;
 color:#fff;
-font-weight:800;
+font-weight:650;
 font-size:12px;
-letter-spacing:1.5px;
+letter-spacing:1.2px;
 white-space:nowrap;
-opacity:.92;
-padding-inline-end:0
+opacity:.94;
+padding-inline:28px
 }
 
 @keyframes marqueeScroll{
-
-from{
-transform:translateX(0)
-}
-
-to{
-transform:translateX(-50%)
-}
-
+from{transform:translate3d(0,0,0)}
+to{transform:translate3d(-50%,0,0)}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -1639,9 +1635,14 @@ body{
   50%{transform:translateY(5px)}
 }
 
-.feedback-arrow-wrap{
-  padding:12px 0 7px;
+.feedback-scroll-arrow-wrap{
+  display:flex;justify-content:center;align-items:center;height:82px;margin:4px 0 8px;overflow:visible;
 }
+.feedback-scroll-arrow{width:58px;height:72px;overflow:visible;filter:drop-shadow(0 7px 14px rgba(67,19,33,.10))}
+.feedback-scroll-arrow path{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:140;stroke-dashoffset:140;animation:drawCustomerArrow 2.4s cubic-bezier(.22,.61,.36,1) .25s forwards,customerArrowFloat 2.8s ease-in-out 2.8s infinite}
+@keyframes drawCustomerArrow{to{stroke-dashoffset:0}}
+@keyframes customerArrowFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+@media(prefers-reduced-motion:reduce){.feedback-scroll-arrow path{animation:none;stroke-dashoffset:0}}
 .feedback-arrow{
   background:transparent;
   border:0;
@@ -2014,10 +2015,127 @@ body{
 .marquee-track{animation-duration:24s!important;will-change:transform}
 .marquee-track span{font-size:11px!important;font-weight:600!important;letter-spacing:.8px!important;padding-inline:18px!important}
 @media(max-width:1000px){.products-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:21px 13px!important}}
-@media(max-width:760px){.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px 10px!important}.product-img{aspect-ratio:4/5!important}.product-name{font-size:12.5px!important}.price{font-size:12.5px!important}.marquee-divider{margin:15px 0!important;padding:10px 0!important}.marquee-track span{font-size:10px!important;padding-inline:14px!important}}
-</style></head>
+@media(max-width:760px){.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px 10px!important}.product-img{aspect-ratio:4/5!important}.product-name{font-size:12.5px!important}.price{font-size:12.5px!important}.marquee-divider{margin:15px 0!important;padding:10px 0!important}.marquee-track span{font-size:10.5px!important;padding-inline:18px!important}}
+</style><style id="espoza-luxury-opening">
+/* ==========================================
+   ESPOZA LUXURY OPENING — EDITORIAL REVEAL
+   ========================================== */
+#espozaOpening{
+  position:fixed;inset:0;z-index:99999;display:grid;place-items:center;
+  background:#431321;overflow:hidden;isolation:isolate;
+  animation:espozaOpeningFade .35s ease 2.05s forwards;
+}
+#espozaOpening .opening-glow{
+  position:absolute;width:min(72vw,760px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,244,210,.34),rgba(185,152,90,.12) 30%,transparent 68%);
+  filter:blur(14px);animation:espozaGlow 1.55s ease-out .05s both;
+}
+#espozaOpening .opening-mark{
+  position:relative;z-index:4;text-align:center;color:#fff;
+  animation:espozaMarkIn .9s cubic-bezier(.16,1,.3,1) .16s both;
+}
+#espozaOpening .opening-mark .en{
+  font-family:"Playfair Display",serif;font-size:clamp(40px,8vw,88px);line-height:.95;
+  letter-spacing:clamp(6px,1.5vw,16px);text-indent:clamp(6px,1.5vw,16px);font-weight:700;
+  text-shadow:0 5px 35px rgba(0,0,0,.28);
+}
+#espozaOpening .opening-mark .ar{
+  margin-top:15px;font-family:"Cairo",sans-serif;font-size:clamp(16px,2.7vw,27px);
+  letter-spacing:2px;color:#ead8ae;font-weight:700;
+}
+#espozaOpening .opening-mark .since{
+  margin-top:10px;font-size:9px;letter-spacing:5px;color:#b9985a;text-transform:uppercase;
+}
+#espozaOpening .opening-mark::before{
+  content:"✦";display:block;color:#d8bd7b;font-size:12px;margin-bottom:12px;
+  animation:openingSpark 1.8s ease-in-out .35s infinite;
+}
+#espozaOpening .opening-mark::after{
+  content:"";display:block;width:90px;height:1px;margin:15px auto 0;
+  background:linear-gradient(90deg,transparent,#d8bd7b,transparent);opacity:.7;
+}
+#espozaOpening .door{
+  position:absolute;top:0;bottom:0;width:50.5%;z-index:5;
+  background:
+    radial-gradient(circle at 50% 48%,rgba(185,152,90,.16),transparent 34%),
+    linear-gradient(135deg,#70243d 0%,#561a2e 48%,#350e1b 100%);
+  box-shadow:0 0 55px rgba(0,0,0,.22);will-change:transform;
+}
+#espozaOpening .door::before{
+  content:"ESPOZA";position:absolute;top:50%;font:700 clamp(52px,10vw,120px)/1 "Playfair Display",serif;
+  letter-spacing:.12em;color:rgba(255,255,255,.035);white-space:nowrap;pointer-events:none;
+}
+#espozaOpening .door.left::before{left:7%;transform:translateY(-50%)}
+#espozaOpening .door.right::before{right:7%;transform:translateY(-50%)}
+#espozaOpening .door::after{
+  content:"";position:absolute;top:0;bottom:0;width:1px;
+  background:linear-gradient(transparent,#b9985a 30%,#f0dfb4 50%,#b9985a 70%,transparent);opacity:.8;
+}
+#espozaOpening .door.left{left:0;transform-origin:left center;animation:espozaDoorLeft 1.55s cubic-bezier(.72,0,.16,1) .38s forwards}
+#espozaOpening .door.right{right:0;transform-origin:right center;animation:espozaDoorRight 1.55s cubic-bezier(.72,0,.16,1) .38s forwards}
+#espozaOpening .door.left::after{right:0}.door.right::after{left:0}
+#espozaOpening .opening-line{
+  position:absolute;left:50%;top:50%;z-index:7;width:1px;height:58vh;
+  transform:translate(-50%,-50%) scaleY(0);background:linear-gradient(transparent,#fff,#b9985a,transparent);
+  box-shadow:0 0 22px rgba(255,244,205,.85);
+  animation:espozaLine .65s ease-out 1.05s forwards;
+}
+#espozaOpening .opening-flash{
+  position:absolute;inset:-20%;z-index:8;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,245,.98),rgba(255,245,211,.75) 18%,rgba(255,255,255,.12) 43%,transparent 68%);
+  opacity:0;mix-blend-mode:screen;animation:espozaFlash .3s ease-out 1.48s forwards;
+}
+#espozaOpening .opening-grain{
+  position:absolute;inset:0;z-index:9;pointer-events:none;opacity:.09;
+  background-image:radial-gradient(rgba(255,255,255,.8) .5px,transparent .7px);
+  background-size:5px 5px;mix-blend-mode:soft-light;
+}
+@keyframes espozaDoorLeft{0%{transform:translateX(0) scaleX(1)}100%{transform:translateX(-101%) scaleX(.985)}}
+@keyframes espozaDoorRight{0%{transform:translateX(0) scaleX(1)}100%{transform:translateX(101%) scaleX(.985)}}
+@keyframes espozaMarkIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes espozaGlow{0%{opacity:.05;transform:scale(.5)}55%{opacity:1;transform:scale(1.06)}100%{opacity:.8;transform:scale(1)}}
+@keyframes espozaFlash{0%{opacity:0}22%{opacity:.9}100%{opacity:0}}
+@keyframes espozaLine{0%{transform:translate(-50%,-50%) scaleY(0);opacity:1}100%{transform:translate(-50%,-50%) scaleY(1);opacity:0}}
+@keyframes openingSpark{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.35);opacity:1}}
+@keyframes espozaOpeningFade{to{opacity:0;visibility:hidden;pointer-events:none}}
+@media(prefers-reduced-motion:reduce){
+ #espozaOpening{animation:espozaOpeningFade .12s ease .3s forwards}
+ #espozaOpening .door.left{animation:espozaDoorLeft .25s ease .05s forwards}
+ #espozaOpening .door.right{animation:espozaDoorRight .25s ease .05s forwards}
+ #espozaOpening .opening-mark,#espozaOpening .opening-glow{animation:none}
+ #espozaOpening .opening-flash{display:none}
+}
+
+</style>
+<style id="espoza-final-polish">
+.product-img{overflow:hidden!important;position:relative!important}
+.product-img img{transform:scale(1)!important;transform-origin:center center!important;will-change:transform}
+.product-card:hover .product-img img{transform:scale(1.045)!important}
+.product-card:active .product-img img,.product-card:hover:active .product-img img{transform:scale(1.025)!important}
+.marquee-divider{overflow:hidden!important;width:100%!important;min-width:0!important}
+.marquee-track{display:flex!important;width:max-content!important;min-width:max-content!important;flex-wrap:nowrap!important;gap:0!important;animation:marqueeScroll 22s linear infinite!important;transform:translate3d(0,0,0);will-change:transform}
+.marquee-track span{flex:0 0 auto!important;display:block!important;white-space:nowrap!important;padding-inline:22px!important}
+@media(max-width:760px){.marquee-track{animation-duration:18s!important}.marquee-track span{font-size:10.5px!important;padding-inline:16px!important}}
+@media(prefers-reduced-motion:reduce){.marquee-track{animation:none!important}}
+</style>
+</head>
 
 <body>
+
+<!-- ESPOZA LUXURY OPENING -->
+<div id="espozaOpening" aria-label="Espoza Fashion">
+  <div class="opening-glow"></div>
+  <div class="opening-mark">
+    <div class="en">ESPOZA</div>
+    <div class="ar">إسبوزا فاشن</div>
+    <div class="since">FASHION · SINCE 2019</div>
+  </div>
+  <div class="door left" aria-hidden="true"></div>
+  <div class="door right" aria-hidden="true"></div>
+  <div class="opening-line" aria-hidden="true"></div>
+  <div class="opening-flash" aria-hidden="true"></div>
+</div>
+
 
 <div class="top-note" id="topNote">
 أهلاً بكِ في Espoza Fashion
@@ -2119,31 +2237,12 @@ id="slidesTrack">
 </p>
 
 <div class="social-stats">
-
-<div class="mini-stat">
-
-<b id="productTotal">
-42+
-</b>
-
-<span id="productsLabel">
-موديل متوفر
-</span>
-
-</div>
-
-<div class="mini-stat">
-
-<b>
-WhatsApp
-</b>
-
-<span id="ordersLabel">
-للتواصل والطلبات
-</span>
-
-</div>
-
+<div class="mini-stat"><b id="productTotal">42+</b><span id="productsLabel">موديل متوفر</span></div>
+<div class="mini-stat"><b id="facebookFollowers">22,025</b><span>Facebook · <span id="facebookFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b id="instagramFollowers">900</b><span>Instagram · <span id="instagramFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b id="tiktokFollowers">700</b><span>TikTok · <span id="tiktokFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b id="snapchatFollowers">500</b><span>Snapchat · <span id="snapchatFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b>WhatsApp</b><span id="ordersLabel">للتواصل والطلبات</span></div>
 </div>
 
 </div>
@@ -2211,7 +2310,12 @@ id="feedbackShowcaseTrack">
 
 </div>
 
-
+<div class="feedback-scroll-arrow-wrap" aria-hidden="true">
+<svg class="feedback-scroll-arrow" viewBox="0 0 90 110">
+<path d="M45 6 C45 30, 44 53, 45 79"></path>
+<path d="M27 63 C33 73, 39 82, 45 94 C51 82, 57 73, 63 63"></path>
+</svg>
+</div>
 
 </section>
 
@@ -3867,9 +3971,12 @@ feedbackCounterLabel:
 };
 
 
-const t=
-()=>
-TEXT[lang];
+let adminContent={ar:{},en:{}};
+const t=()=>{
+const base=TEXT[lang]||TEXT.ar;
+const over=adminContent[lang]||{};
+return {...base,...over,cats:{...base.cats,...(over.cats||{})},policyItems:Array.isArray(over.policyItems)?over.policyItems:base.policyItems};
+};
 
 
 /* ==========================================
@@ -4696,6 +4803,8 @@ const CUSTOMER_SUPABASE_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
 let customerSupabase=null;
 let adminDeliveryAreas=null;
 let adminSliders=null;
+let adminRealtimeChannel=null;
+let adminRealtimeTimer=null;
 function getCustomerSupabase(){
 if(!window.supabase||typeof window.supabase.createClient!=="function")throw new Error("Supabase غير متاح");
 if(!customerSupabase)customerSupabase=window.supabase.createClient(CUSTOMER_SUPABASE_URL,CUSTOMER_SUPABASE_KEY);
@@ -4706,16 +4815,17 @@ if(value==null)return fallback;
 if(typeof value==="string")return value;
 try{return JSON.stringify(value)}catch(_){return fallback}
 }
+async function loadAdminFeedback(){const db=getCustomerSupabase();const {data,error}=await db.from("feedback").select("id,image_url,title,alt_text,active,sort_order").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true});if(error)throw error;return data||[]}
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
-const [settingsResult,deliveryResult,sliderResult]=await Promise.all([
-db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers"]),
+const [settingsResult,deliveryResult,sliderResult,feedbackResult]=await Promise.all([
+db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
-db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false})
+db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),\ndb.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true})
 ]);
 if(settingsResult.error)throw settingsResult.error;
 if(deliveryResult.error)throw deliveryResult.error;
-if(sliderResult.error)throw sliderResult.error;
+if(sliderResult.error)throw sliderResult.error;\nif(feedbackResult.error)throw feedbackResult.error;
 const settings={};
 (settingsResult.data||[]).forEach(row=>settings[row.key]=normalizeAdminSettingValue(row.value,""));
 if(settings.store_name)store.name=settings.store_name;
@@ -4724,6 +4834,11 @@ if(settings.welcome)store.welcome=settings.welcome;
 if(settings.delivery_time)store.deliveryTime=settings.delivery_time;
 if(settings.exchange_policy)store.exchangePolicy=settings.exchange_policy;
 if(settings.site_credit)store.siteCredit=settings.site_credit;
+try{
+if(settings.site_content_ar)adminContent.ar=JSON.parse(settings.site_content_ar);
+if(settings.site_content_en)adminContent.en=JSON.parse(settings.site_content_en);
+}catch(_){ }
+try{applyLanguage();renderFeatures();renderPolicies();startTypewriter();}catch(_){}
 for(const platform of ["facebook","instagram","tiktok","snapchat"]){
 if(settings[platform])store.social[platform]=settings[platform];
 }
@@ -4731,10 +4846,10 @@ for(const platform of ["facebook","instagram","tiktok","snapchat"]){
 if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settings[platform+"_followers"])||0;
 }
 adminDeliveryAreas=deliveryResult.data||[];
-adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));
+adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));\nadminFeedback=feedbackResult.data||[];\nFEEDBACK_IMAGES.splice(0,FEEDBACK_IMAGES.length,...adminFeedback.map(x=>x.image_url));
 applyStore();
 renderDeliveryOptions();
-renderSlider();
+renderSlider();\nrenderFeedback();
 }
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
@@ -4762,6 +4877,8 @@ async function setupAdminConnections(){
 try{await loadAdminStoreData();}
 catch(error){console.warn("Supabase admin data failed; keeping built-in site defaults:",error);}
 }
+function setupAdminRealtime(){try{if(adminRealtimeChannel)return;const db=getCustomerSupabase();adminRealtimeChannel=db.channel("espoza-site-sync").on("postgres_changes",{event:"*",schema:"public",table:"products"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"product_sizes"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"product_colors"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"product_images"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"sliders"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"store_settings"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"delivery_areas"},scheduleAdminRefresh).on("postgres_changes",{event:"*",schema:"public",table:"feedback"},scheduleAdminRefresh).subscribe((status,error)=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")console.warn("Site realtime sync:",status,error);});}catch(error){console.warn("Realtime sync unavailable:",error)}}
+function scheduleAdminRefresh(){clearTimeout(adminRealtimeTimer);adminRealtimeTimer=setTimeout(async()=>{try{await Promise.all([setupAdminConnections(),setupProducts()]);applyLanguage();renderProducts();renderFeedback();renderFeatures();}catch(error){console.warn("Live site refresh failed:",error)}},350)}
 
 
 
@@ -4908,13 +5025,17 @@ $("footerContactFacebook")
 .textContent=
 "Facebook • Espoza Fashion";
 
+for(const platform of ["facebook","instagram","tiktok","snapchat"]){
+const el=$(platform+"Followers");
+if(el)el.textContent=money(store.followers?.[platform]||0);
+}
 
 $("copyright")
 .textContent=
 `©️ 2019–${new Date().getFullYear()} ${name} — ${t().rights}`;
 
 const credit=$("footerCredit");
-if(credit)credit.textContent=store.siteCredit||"Designed & Created by Yousef Ajra";
+if(credit)credit.textContent=t().footerCredit||store.siteCredit||"Designed & Created by Yousef Ajra";
 
 
 $("footerSince")
@@ -4924,7 +5045,7 @@ t().footerSince;
 
 $("footerCredit")
 .textContent=
-t().footerCredit;
+t().footerCredit||store.siteCredit;
 
 }
 
@@ -6008,16 +6129,16 @@ function marqueeDividerHTML(){
 try{
 
 const phrases=[
-"ESPOZA FASHION ✦ أناقة تليق فيكِ ✦",
-"NEW LOOK ✦ NEW MOOD ✦",
-"تفاصيل تصنع الفرق ✦",
-"MADE TO MAKE YOU SHINE ✦",
-"إطلالتك تبدأ من هنا ✦",
-"TIMELESS ELEGANCE ✦",
-"لأن التفاصيل هي كل شيء ✦",
-"ESPOZA FASHION ✦ SINCE 2019 ✦"
+"✦ ESPOZA FASHION · أناقة تليق بكِ ✦",
+"♡ إطلالتكِ تبدأ من هنا · NEW LOOK · NEW MOOD ♡",
+"✦ تفاصيل صغيرة · تصنع إطلالة كبيرة ✦",
+"♡ MADE TO MAKE YOU SHINE · تألقي بطريقتكِ ♡",
+"✦ TIMELESS ELEGANCE · أناقة لا تنتهي ✦",
+"♡ اختاري إطلالتكِ · عيشي لحظتكِ ♡",
+"✦ ESPOZA FASHION · SINCE 2019 ✦",
+"♡ لأن أناقتكِ تستحق التفاصيل ♡"
 ];
-const phrase=phrases.join("   ");
+const phrase=phrases.map(p=>p+"   ").join("");
 
 
 return`
@@ -6028,7 +6149,8 @@ style="grid-column:1/-1">
 <div class="marquee-track">
 
 <span>${esc(phrase)}</span>
-
+<span>${esc(phrase)}</span>
+<span>${esc(phrase)}</span>
 <span>${esc(phrase)}</span>
 
 </div>
@@ -7832,6 +7954,8 @@ setupAdminConnections();
 console.warn("admin connection setup failed:",error);
 
 }
+
+try{setupAdminRealtime();}catch(error){console.warn("admin realtime setup failed:",error);}
 
 
 try{
