@@ -1635,9 +1635,14 @@ body{
   50%{transform:translateY(5px)}
 }
 
-.feedback-arrow-wrap{
-  padding:12px 0 7px;
+.feedback-scroll-arrow-wrap{
+  display:flex;justify-content:center;align-items:center;height:82px;margin:4px 0 8px;overflow:visible;
 }
+.feedback-scroll-arrow{width:58px;height:72px;overflow:visible;filter:drop-shadow(0 7px 14px rgba(67,19,33,.10))}
+.feedback-scroll-arrow path{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:140;stroke-dashoffset:140;animation:drawCustomerArrow 2.4s cubic-bezier(.22,.61,.36,1) .25s forwards,customerArrowFloat 2.8s ease-in-out 2.8s infinite}
+@keyframes drawCustomerArrow{to{stroke-dashoffset:0}}
+@keyframes customerArrowFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+@media(prefers-reduced-motion:reduce){.feedback-scroll-arrow path{animation:none;stroke-dashoffset:0}}
 .feedback-arrow{
   background:transparent;
   border:0;
@@ -2232,31 +2237,12 @@ id="slidesTrack">
 </p>
 
 <div class="social-stats">
-
-<div class="mini-stat">
-
-<b id="productTotal">
-42+
-</b>
-
-<span id="productsLabel">
-موديل متوفر
-</span>
-
-</div>
-
-<div class="mini-stat">
-
-<b>
-WhatsApp
-</b>
-
-<span id="ordersLabel">
-للتواصل والطلبات
-</span>
-
-</div>
-
+<div class="mini-stat"><b id="productTotal">42+</b><span id="productsLabel">موديل متوفر</span></div>
+<div class="mini-stat"><b id="facebookFollowers">22,025</b><span>Facebook · <span id="facebookFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b id="instagramFollowers">900</b><span>Instagram · <span id="instagramFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b id="tiktokFollowers">700</b><span>TikTok · <span id="tiktokFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b id="snapchatFollowers">500</b><span>Snapchat · <span id="snapchatFollowersLabel">متابع</span></span></div>
+<div class="mini-stat"><b>WhatsApp</b><span id="ordersLabel">للتواصل والطلبات</span></div>
 </div>
 
 </div>
@@ -2324,7 +2310,12 @@ id="feedbackShowcaseTrack">
 
 </div>
 
-
+<div class="feedback-scroll-arrow-wrap" aria-hidden="true">
+<svg class="feedback-scroll-arrow" viewBox="0 0 90 110">
+<path d="M45 6 C45 30, 44 53, 45 79"></path>
+<path d="M27 63 C33 73, 39 82, 45 94 C51 82, 57 73, 63 63"></path>
+</svg>
+</div>
 
 </section>
 
@@ -4858,7 +4849,7 @@ adminDeliveryAreas=deliveryResult.data||[];
 adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:""}));\nadminFeedback=feedbackResult.data||[];\nFEEDBACK_IMAGES.splice(0,FEEDBACK_IMAGES.length,...adminFeedback.map(x=>x.image_url));
 applyStore();
 renderDeliveryOptions();
-renderSlider();
+renderSlider();\nrenderFeedback();
 }
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
@@ -5034,6 +5025,10 @@ $("footerContactFacebook")
 .textContent=
 "Facebook • Espoza Fashion";
 
+for(const platform of ["facebook","instagram","tiktok","snapchat"]){
+const el=$(platform+"Followers");
+if(el)el.textContent=money(store.followers?.[platform]||0);
+}
 
 $("copyright")
 .textContent=
