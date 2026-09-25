@@ -2072,7 +2072,301 @@ footer{background:linear-gradient(135deg,#2d111a,#431321)!important;padding:42px
 .modal-box{border-radius:3px!important;box-shadow:0 30px 90px rgba(22,8,13,.25)!important}
 .detail-main{background:#f3ebe7!important}
 @media(max-width:760px){.nav{padding:12px 14px!important}.brand-main{font-size:24px!important}.hero-wrap{padding:12px 10px 8px!important}.hero{border-radius:2px!important}.hero-slide{height:58vh!important;min-height:390px!important}.hero-overlay{padding:25px!important}.intro{padding:45px 12px 18px!important}.feedback{padding:38px 12px 20px!important}}
-</style></head>
+</style>
+<style id="espoza-luxury-overhaul-2026">
+/* ===== ESPOZA LUXURY OVERHAUL ===== */
+:root{
+  --lux-wine:#641f34;
+  --lux-dark:#2d101a;
+  --lux-gold:#b9985a;
+  --lux-cream:#f8f4ef;
+}
+body{
+  background:
+    radial-gradient(circle at 8% 12%,rgba(185,152,90,.055),transparent 25%),
+    linear-gradient(180deg,#fbf8f4 0%,#f8f4ef 100%)!important;
+}
+.top-note{
+  min-height:34px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  letter-spacing:.35px!important;
+}
+header{
+  background:rgba(255,252,248,.78)!important;
+  border-bottom:1px solid rgba(100,31,52,.10)!important;
+  box-shadow:0 8px 30px rgba(45,16,26,.055)!important;
+}
+.nav{
+  max-width:1440px!important;
+  min-height:76px!important;
+  padding:12px clamp(14px,3vw,42px)!important;
+}
+.brand-main{
+  font-size:clamp(25px,3vw,38px)!important;
+  letter-spacing:clamp(4px,.7vw,8px)!important;
+}
+.brand-sub{font-size:9px!important;letter-spacing:clamp(4px,.8vw,7px)!important}
+.icon-btn,.pill{
+  min-height:40px!important;
+  padding:9px 15px!important;
+  border-radius:999px!important;
+}
+.pill.wa{
+  box-shadow:0 10px 25px rgba(100,31,52,.18)!important;
+}
+
+/* Hero: keep the complete slider image visible — no cropping */
+.hero-wrap{
+  max-width:1440px!important;
+  padding:18px clamp(10px,2.4vw,34px) 0!important;
+}
+.hero{
+  border-radius:18px!important;
+  border:1px solid rgba(185,152,90,.20)!important;
+  box-shadow:0 28px 80px rgba(45,16,26,.14)!important;
+}
+.hero-slide{
+  height:clamp(360px,52vw,650px)!important;
+  min-height:0!important;
+  background:#eee7e2!important;
+}
+.hero-slide img{
+  object-fit:contain!important;
+  object-position:center!important;
+  background:#eee7e2!important;
+}
+.hero-overlay{
+  pointer-events:none!important;
+  background:linear-gradient(90deg,rgba(45,16,26,.46),rgba(45,16,26,.08) 58%,transparent)!important;
+  justify-content:flex-start!important;
+  align-items:flex-end!important;
+  padding:clamp(22px,5vw,65px)!important;
+}
+.hero-copy{
+  text-align:left!important;
+  direction:ltr!important;
+  max-width:620px!important;
+}
+.hero-copy h1{
+  font-size:clamp(32px,5.5vw,70px)!important;
+  letter-spacing:.4px!important;
+}
+.hero-copy button{
+  border-radius:999px!important;
+  padding:12px 26px!important;
+  box-shadow:0 12px 28px rgba(20,5,10,.20)!important;
+}
+
+/* Intro becomes an editorial luxury panel */
+.intro{
+  max-width:1440px!important;
+  padding:64px clamp(10px,2.4vw,34px) 30px!important;
+}
+.intro-card{
+  min-height:230px!important;
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  overflow:hidden!important;
+  border-radius:22px!important;
+  border:1px solid rgba(185,152,90,.24)!important;
+  background:
+    linear-gradient(120deg,rgba(100,31,52,.045),transparent 38%),
+    #fffdf9!important;
+  box-shadow:0 24px 65px rgba(45,16,26,.085)!important;
+}
+.intro-card:after{
+  content:"";
+  position:absolute;
+  width:1px;height:110px;
+  background:linear-gradient(transparent,var(--lux-gold),transparent);
+  left:28px;top:50%;transform:translateY(-50%);
+  opacity:.65;
+}
+.intro h2{
+  font-size:clamp(31px,5vw,54px)!important;
+  letter-spacing:-.6px!important;
+}
+.intro p{
+  max-width:760px!important;
+  font-size:clamp(12px,1.4vw,15px)!important;
+}
+.social-stats{
+  gap:12px!important;
+}
+.mini-stat{
+  min-width:145px!important;
+  border-radius:16px!important;
+  background:rgba(255,255,255,.85)!important;
+  border-color:rgba(100,31,52,.10)!important;
+}
+
+/* Feedback gets a real luxury showcase */
+.feedback{
+  max-width:1440px!important;
+  padding:55px clamp(10px,2.4vw,34px) 35px!important;
+}
+.feedback-head{
+  margin-bottom:28px!important;
+}
+.feedback-head h2{
+  font-size:clamp(32px,5vw,55px)!important;
+}
+.feedback-showcase{
+  padding:18px 0 28px!important;
+}
+.iphone-frame{
+  width:clamp(150px,15vw,225px)!important;
+  box-shadow:0 25px 55px rgba(45,16,26,.22)!important;
+}
+.feedback-daily{
+  font-size:clamp(24px,3.4vw,40px)!important;
+}
+.feedback-arrow-wrap{
+  padding:18px 0!important;
+}
+
+/* Section titles */
+.section-head{
+  margin:0 0 24px!important;
+  align-items:center!important;
+}
+.section-head h2{
+  font-size:clamp(28px,4vw,42px)!important;
+}
+.section-head span{
+  font-size:13px!important;
+}
+
+/* Products: clean luxury editorial cards */
+.catalog{
+  max-width:1440px!important;
+  padding:18px clamp(10px,2.4vw,34px) 70px!important;
+}
+.products-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:34px 18px!important;
+}
+.product-card{
+  border-radius:18px!important;
+  background:#fff!important;
+  border:1px solid rgba(100,31,52,.08)!important;
+  overflow:hidden!important;
+  box-shadow:0 9px 30px rgba(45,16,26,.055)!important;
+}
+.product-card:hover{
+  transform:translateY(-9px)!important;
+  box-shadow:0 25px 55px rgba(45,16,26,.13)!important;
+}
+.product-img{
+  aspect-ratio:4/5!important;
+  background:#f2ece7!important;
+}
+.product-img img{
+  transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .5s ease!important;
+}
+.product-card:hover .product-img img{
+  transform:scale(1.055)!important;
+}
+.product-info{
+  padding:16px 14px 18px!important;
+  text-align:center!important;
+}
+.product-name{
+  font-size:14px!important;
+  font-weight:700!important;
+}
+.price-row{justify-content:center!important}
+.price{font-size:14px!important}
+
+/* Marquee separators become premium full-width ribbons */
+.marquee-divider{
+  margin:28px 0!important;
+  border-radius:0!important;
+  min-height:44px!important;
+  display:flex!important;
+  align-items:center!important;
+  background:linear-gradient(90deg,#32101c,#641f34,#32101c)!important;
+  border-block:1px solid rgba(185,152,90,.72)!important;
+  box-shadow:0 12px 30px rgba(45,16,26,.10)!important;
+}
+.marquee-track span{
+  font-size:12px!important;
+  letter-spacing:2px!important;
+  padding-inline:24px!important;
+}
+
+/* Social / features / footer */
+.social{
+  max-width:1440px!important;
+  padding:0 clamp(10px,2.4vw,34px) 70px!important;
+}
+.social-card{
+  border-radius:22px!important;
+  padding:45px 25px!important;
+  background:linear-gradient(135deg,#431321,#641f34 55%,#35101d)!important;
+  box-shadow:0 24px 65px rgba(45,16,26,.15)!important;
+}
+.social-card h2{font-size:clamp(30px,4vw,48px)!important}
+.social-link{
+  border-radius:14px!important;
+  padding:16px 10px!important;
+}
+.features{
+  max-width:1440px!important;
+  padding:0 clamp(10px,2.4vw,34px) 70px!important;
+}
+.features-slider{
+  border-radius:22px!important;
+  box-shadow:0 22px 55px rgba(45,16,26,.10)!important;
+}
+.feature-slide{
+  min-height:180px!important;
+}
+footer{
+  padding:55px 24px 35px!important;
+  background:linear-gradient(135deg,#241019,#431321,#2d101a)!important;
+}
+.footer-premium{max-width:1240px!important}
+.footer-credit{
+  margin-top:8px!important;
+}
+
+/* Mobile keeps the same visual hierarchy */
+@media(max-width:760px){
+  .nav{min-height:64px!important;padding:9px 10px!important}
+  .hero-wrap{padding:10px 8px 0!important}
+  .hero{border-radius:13px!important}
+  .hero-slide{height:clamp(280px,76vw,430px)!important}
+  .hero-overlay{padding:18px!important}
+  .hero-copy{max-width:78%!important}
+  .hero-copy h1{font-size:clamp(26px,8vw,42px)!important}
+  .hero-copy p{font-size:11px!important}
+  .intro{padding:38px 8px 20px!important}
+  .intro-card{min-height:260px!important;padding:28px 20px!important}
+  .intro-card:after{display:none!important}
+  .feedback{padding:35px 8px 25px!important}
+  .catalog{padding:12px 8px 55px!important}
+  .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:22px 9px!important}
+  .product-card{border-radius:14px!important}
+  .product-info{padding:11px 8px 14px!important}
+  .product-name{font-size:12.5px!important}
+  .price{font-size:13px!important}
+  .social{padding:0 8px 55px!important}
+  .features{padding:0 8px 55px!important}
+}
+@media(max-width:430px){
+  .hero-slide{height:300px!important}
+  .hero-copy{max-width:85%!important}
+  .hero-copy p{display:none!important}
+  .products-grid{gap:20px 8px!important}
+}
+</style>
+</head>
 
 <body>
 <div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-inner"><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
