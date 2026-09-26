@@ -753,7 +753,10 @@ margin:4px 0 8px
 display:flex;
 width:max-content;
 direction:ltr;
-animation:marqueeScroll 26s linear infinite
+animation:marqueeScroll 18s linear infinite;
+will-change:transform;
+backface-visibility:hidden;
+transform:translate3d(0,0,0)
 }
 
 .marquee-track span{
@@ -990,7 +993,11 @@ will-change:transform
 
 .detail-main{
 cursor:grab;
-touch-action:none
+touch-action:none;
+overscroll-behavior:contain;
+-webkit-user-select:none;
+user-select:none;
+-webkit-touch-callout:none
 }
 
 .detail-main.dragging,
@@ -4697,16 +4704,22 @@ tick();
 
 function applyZoomTransform(){
 
-const img=
-$("detailImage");
+const img=$("detailImage");
+const box=$("detailMain");
 
-
-if(!img)
+if(!img || !box)
 return;
 
+/* Keep the zoomed model inside its own viewer. */
+if(zoomState.scale>1){
+const maxX=Math.max(0,(box.clientWidth*(zoomState.scale-1))/2);
+const maxY=Math.max(0,(box.clientHeight*(zoomState.scale-1))/2);
+zoomState.x=Math.max(-maxX,Math.min(maxX,zoomState.x));
+zoomState.y=Math.max(-maxY,Math.min(maxY,zoomState.y));
+}
 
 img.style.transform=
-`translate(${zoomState.x}px,${zoomState.y}px) scale(${zoomState.scale})`;
+`translate3d(${zoomState.x}px,${zoomState.y}px,0) scale(${zoomState.scale})`;
 
 }
 
@@ -4975,12 +4988,8 @@ e.touches.length===1
 
 e.preventDefault();
 
-zoomState.x=
-e.touches[0].clientX-panStartX;
-
-zoomState.y=
-e.touches[0].clientY-panStartY;
-
+zoomState.x=e.touches[0].clientX-panStartX;
+zoomState.y=e.touches[0].clientY-panStartY;
 applyZoomTransform();
 
 }
@@ -5141,12 +5150,8 @@ try{
 
 if(gestureMode==="pan"){
 
-zoomState.x=
-e.clientX-panStartX;
-
-zoomState.y=
-e.clientY-panStartY;
-
+zoomState.x=e.clientX-panStartX;
+zoomState.y=e.clientY-panStartY;
 applyZoomTransform();
 
 }
