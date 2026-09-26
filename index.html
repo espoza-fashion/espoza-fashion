@@ -709,12 +709,7 @@ padding:20px
 
 /* SCROLL REVEAL */
 
-.reveal-item{
-opacity:0;
-transform:translateY(34px);
-transition:opacity .72s cubic-bezier(.2,.8,.2,1),transform .72s cubic-bezier(.2,.8,.2,1);
-will-change:opacity,transform
-}
+.reveal-item{\nopacity:0;\ntransform:translateY(46px);\ntransition:opacity .78s cubic-bezier(.22,1,.36,1),transform .78s cubic-bezier(.22,1,.36,1);\ntransition-delay:var(--reveal-delay,0ms);\nwill-change:opacity,transform\n}
 
 .reveal-item.revealed{
 opacity:1;
@@ -6254,7 +6249,7 @@ marqueeDividerHTML()
 ""
 }
 
-<article class="product-card reveal-item">
+<article class="product-card reveal-item" style="--reveal-delay:${Math.min(i%8,7)*70}ms">
 
 <div
 class="product-img"
