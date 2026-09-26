@@ -5416,8 +5416,14 @@ renderProducts();
 $("productTotal").textContent=String(products.length)+"+";
 try{
 const remoteProducts=await loadSupabaseProducts();
-if(remoteProducts.length){const remoteByName=new Map(remoteProducts.map(p=>[normalizeName(p.name),p]));const merged=staticViewProducts.map(p=>remoteByName.get(normalizeName(p.name))||p);for(const p of remoteProducts){if(!staticViewProducts.some(s=>normalizeName(s.name)===normalizeName(p.name)))merged.push(p);}products=merged;renderProducts();$("productTotal").textContent=String(products.length)+"+";}
-}catch(error){console.warn("Supabase products failed; using static products:",error);}
+if(remoteProducts.length){
+  products=remoteProducts;
+  renderProducts();
+  $("productTotal").textContent=String(products.length)+"+";
+}
+}catch(error){
+  console.warn("Supabase products failed; using static products:",error);
+}
 }
 async function setupAdminConnections(){
 try{await loadAdminStoreData();}
