@@ -670,22 +670,28 @@ min-height:22px
 
 .price-row{
 display:flex;
-align-items:baseline;
-gap:7px;
-flex-wrap:wrap
+align-items:center;
+justify-content:flex-start;
+direction:rtl;
+gap:8px;
+flex-wrap:nowrap;
+white-space:nowrap;
+min-height:24px
 }
 
 .price{
 font-weight:800;
 font-size:14px;
 color:var(--wine);
-letter-spacing:.15px
+letter-spacing:.15px;
+white-space:nowrap
 }
 
 .old-price{
 font-size:11px;
 color:#a4989c;
-text-decoration:line-through
+text-decoration:line-through;
+white-space:nowrap
 }
 
 .product-meta{
@@ -1324,7 +1330,18 @@ margin-bottom:5px
 }
 
 .price{
-font-size:13px
+font-size:13px;
+white-space:nowrap
+}
+
+.price-row{
+gap:6px;
+flex-wrap:nowrap;
+overflow:hidden
+}
+
+.old-price{
+font-size:10px
 }
 
 .nav{
@@ -6538,7 +6555,7 @@ i>0
 i%GROUP_SIZE===0
 )
 ?
-marqueeDividerHTML()
+marqueeDividerHTML(Math.floor(i/GROUP_SIZE)-1)
 :
 ""
 }
@@ -6653,45 +6670,70 @@ error
    (Infinite Marquee)
    ========================================== */
 
-function marqueeDividerHTML(){
+function marqueeDividerHTML(index=0){
 
 try{
 
 const phrases=[
-"ESPOZA FASHION ✦ أناقة تليق فيكِ ✦",
-"NEW LOOK ✦ NEW MOOD ✦",
-"تفاصيل تصنع الفرق ✦",
-"MADE TO MAKE YOU SHINE ✦",
-"إطلالتك تبدأ من هنا ✦",
-"TIMELESS ELEGANCE ✦",
-"لأن التفاصيل هي كل شيء ✦",
-"ESPOZA FASHION ✦ SINCE 2019 ✦"
+[
+"بدأنا من 2019 ✦",
+"Espoza Fashion — خيارك للتألق ✦",
+"أجود الأقمشة ✦",
+"تفاصيل تليق بإطلالتك ✦",
+"أناقة تستحقها كل امرأة ✦"
+],
+[
+"Espoza Fashion ✦ اختاري إطلالتك بثقة ✦",
+"قصّات أنيقة بتفاصيل راقية ✦",
+"جودة نختارها لكِ بعناية ✦",
+"تألقي بطريقتك ✦",
+"من 2019 ونحن نكبر معكم ✦"
+],
+[
+"أجود الأقمشة ✦ أسعار تفضيلية ✦",
+"أناقة يومية بلمسة فاخرة ✦",
+"قطعة مختارة لتكمل إطلالتك ✦",
+"لأن كل تفصيل يصنع الفرق ✦",
+"Espoza Fashion — دائمًا أقرب لذوقك ✦"
+],
+[
+"اختيارك يبدأ من التفاصيل ✦",
+"إطلالة تترك أثرًا ✦",
+"موديلات عصرية بلمسة أنثوية ✦",
+"جودة وأناقة في قطعة واحدة ✦",
+"تسوقي بثقة مع Espoza Fashion ✦"
+],
+[
+"منذ 2019 — شغفنا بالأناقة مستمر ✦",
+"كل قطعة لها حكاية ✦",
+"ألوان وقصّات تناسب ذوقك ✦",
+"جودة تلاحظينها من أول لمسة ✦",
+"تألقي في كل مناسبة ✦"
+],
+[
+"Espoza Fashion ✦ لأنك تستحقين الأجمل ✦",
+"تفاصيل ناعمة، حضور مختلف ✦",
+"أقمشة مختارة بعناية ✦",
+"أسعار مرتبة على قدّ ذوقك ✦",
+"إطلالتك تبدأ بخيارك ✦"
+]
 ];
-const phrase=phrases.join("   ");
 
+const selected=phrases[index%phrases.length];
+const phrase=selected.join("   ");
 
 return`
-<div
-class="marquee-divider"
-style="grid-column:1/-1">
-
-<div class="marquee-track">
-
-<span>${esc(phrase)}</span>
-
-<span>${esc(phrase)}</span>
-
-</div>
-
+<div class="marquee-divider" style="grid-column:1/-1">
+  <div class="marquee-track" aria-label="${esc(phrase)}">
+    <span>${esc(phrase)}</span>
+    <span>${esc(phrase)}</span>
+  </div>
 </div>
 `;
 
 }catch(error){
-
 return"";
-
 }
-
 }
 
 
