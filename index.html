@@ -1636,7 +1636,9 @@ body{
   stroke-linejoin:round;
   stroke-dasharray:280;
   stroke-dashoffset:280;
-  animation:drawFeedbackArrow 2.1s .4s ease forwards,arrowFloat 3.2s 2.5s ease-in-out infinite;
+}
+.feedback-drawn-arrow.is-drawing path{
+  animation:drawFeedbackArrow 2.1s .15s ease forwards,arrowFloat 3.2s 2.35s ease-in-out infinite;
 }
 .feedback-drawn-arrow marker{
   overflow:visible;
@@ -2374,6 +2376,311 @@ footer{
   .hero-copy p{display:none!important}
   .products-grid{gap:20px 8px!important}
 }
+
+/* ESPoza — luxury footer, policy and pricing refinements */
+.footer-premium{
+  align-items:start;
+  gap:clamp(22px,4vw,58px);
+}
+.footer-brand-column{
+  padding-inline-end:clamp(0px,3vw,30px);
+}
+.footer-brand-column .foot-brand{
+  font-size:clamp(30px,4vw,40px);
+  letter-spacing:5px;
+  margin-bottom:2px;
+}
+.footer-brand-column .foot-sub{
+  margin-bottom:18px;
+}
+.footer-story{
+  max-width:430px;
+  font-size:12px;
+  line-height:2.05;
+  color:#d6c7cd;
+}
+.footer-contact-note,
+.footer-links-note{
+  color:#bfaeb5;
+  font-size:11px;
+  line-height:1.9;
+  margin:0 0 14px;
+}
+.footer-contact-icons{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.footer-contact-item{
+  display:flex!important;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  padding:9px 8px!important;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:13px;
+  background:rgba(255,255,255,.035);
+  color:#eee!important;
+  font-size:10px!important;
+  transition:transform .25s ease,border-color .25s ease,background .25s ease;
+}
+.footer-contact-item:hover{
+  transform:translateY(-3px)!important;
+  border-color:rgba(185,152,90,.48);
+  background:rgba(255,255,255,.07);
+}
+.footer-icon{
+  width:31px;
+  height:31px;
+  flex:0 0 31px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:#e5cca0;
+  border:1px solid rgba(185,152,90,.24);
+  background:rgba(185,152,90,.08);
+}
+.footer-icon svg,
+.footer-social-icon svg{
+  width:17px;
+  height:17px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.footer-contact-item:nth-child(3) .footer-icon svg,
+.footer-contact-item:nth-child(4) .footer-icon svg,
+.footer-contact-item:nth-child(5) .footer-icon svg,
+.footer-social-icon-link:nth-child(2) .footer-social-icon svg,
+.footer-social-icon-link:nth-child(3) .footer-social-icon svg,
+.footer-social-icon-link:nth-child(4) .footer-social-icon svg,
+.footer-social-icon-link:nth-child(5) .footer-social-icon svg{
+  stroke-width:1.55;
+}
+.footer-links{
+  gap:10px;
+}
+.footer-links a,
+.footer-links button{
+  display:flex!important;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  color:#eee!important;
+  padding:10px 0!important;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:12px!important;
+  transition:color .25s ease,transform .25s ease;
+}
+.footer-links a span,
+.footer-links button span{
+  color:var(--gold);
+  font-family:"Playfair Display",serif;
+  font-size:11px;
+  min-width:22px;
+}
+.footer-social-row{
+  justify-content:center;
+  align-items:flex-start;
+  gap:clamp(13px,3vw,28px);
+  padding-top:2px;
+}
+.footer-social-icon-link{
+  min-width:68px;
+  height:auto!important;
+  padding:0!important;
+  display:flex!important;
+  flex-direction:column;
+  gap:6px;
+  border:0!important;
+  background:transparent!important;
+  color:#d8cbd0!important;
+  font-size:10px!important;
+}
+.footer-social-icon{
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  margin:auto;
+  border-radius:50%;
+  color:#e5cca0;
+  border:1px solid rgba(185,152,90,.25);
+  background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));
+  box-shadow:0 10px 25px rgba(0,0,0,.12);
+  transition:transform .28s ease,border-color .28s ease,background .28s ease;
+}
+.footer-social-icon-link:hover{
+  transform:translateY(-5px)!important;
+  background:rgba(185,152,90,.10)!important;
+}
+.footer-social-icon-link:hover .footer-social-icon{
+  border-color:rgba(185,152,90,.65);
+  transform:scale(1.05);
+}
+.footer-social-icon svg{
+  width:21px;
+  height:21px;
+}
+.footer-divider{
+  margin:25px 0 18px;
+  background:linear-gradient(90deg,transparent,rgba(185,152,90,.42),transparent);
+}
+.footer-credit{
+  font-size:12px!important;
+  letter-spacing:.3px;
+  font-weight:700;
+}
+.policy-box{
+  background:linear-gradient(180deg,#fff,#fcf8f6);
+  border:1px solid rgba(185,152,90,.28);
+  box-shadow:0 30px 80px rgba(45,16,26,.22);
+  padding:clamp(18px,3vw,30px);
+}
+.policy-box h2{
+  font-family:"Playfair Display","Cairo",serif;
+  font-size:clamp(26px,4vw,38px)!important;
+  letter-spacing:.2px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--line);
+}
+.policy-content{
+  font-size:13px;
+  line-height:2;
+  color:#594b51;
+}
+.policy-section{
+  position:relative;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(185,152,90,.20);
+  border-radius:17px;
+  padding:15px 16px 15px 18px;
+  margin:10px 0;
+  box-shadow:0 8px 25px rgba(67,19,33,.045);
+}
+.policy-section::before{
+  content:"";
+  position:absolute;
+  inset-inline-start:0;
+  top:14px;
+  bottom:14px;
+  width:3px;
+  border-radius:4px;
+  background:linear-gradient(var(--gold),rgba(185,152,90,.18));
+}
+.policy-section h3{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:var(--wine);
+  margin:0 0 5px;
+  font-size:14px;
+  font-weight:800;
+}
+.policy-ico{
+  display:inline-grid;
+  place-items:center;
+  min-width:28px;
+  height:28px;
+  border-radius:50%;
+  background:#f6ede9;
+  color:var(--gold);
+  font-family:"Playfair Display",serif;
+  font-size:10px;
+  margin-inline-end:2px;
+}
+.policy-section p{
+  margin:0;
+  color:#75666c;
+}
+.policy-wa{
+  margin-top:12px!important;
+  background:var(--wine)!important;
+  box-shadow:0 8px 20px rgba(100,31,52,.16);
+}
+.price-row{
+  min-height:35px;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:2px;
+}
+.price{
+  display:inline-flex;
+  align-items:center;
+  min-height:31px;
+  padding:4px 10px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#fbf1ee,#fff);
+  border:1px solid rgba(185,152,90,.18);
+  color:var(--wine);
+  font-family:"Playfair Display","Cairo",serif;
+  font-size:16px;
+  font-weight:800;
+  box-shadow:0 5px 14px rgba(67,19,33,.05);
+}
+.old-price{
+  font-size:11px;
+  padding-inline:2px;
+}
+@media(max-width:760px){
+  .footer-premium{
+    gap:28px;
+    text-align:center;
+  }
+  .footer-brand-column{
+    padding-inline-end:0;
+  }
+  .footer-story{
+    max-width:620px;
+    margin-inline:auto;
+  }
+  .footer-contact-icons{
+    grid-template-columns:repeat(2,1fr);
+    max-width:430px;
+    margin:auto;
+  }
+  .footer-contact-item{
+    justify-content:center;
+  }
+  .footer-links{
+    max-width:360px;
+    margin:auto;
+  }
+  .footer-social-row{
+    gap:9px;
+  }
+  .footer-social-icon-link{
+    min-width:56px;
+    font-size:9px!important;
+  }
+  .footer-social-icon{
+    width:46px;
+    height:46px;
+  }
+}
+@media(max-width:430px){
+  .footer-contact-icons{
+    gap:7px;
+  }
+  .footer-contact-item{
+    padding:8px 6px!important;
+    font-size:9px!important;
+  }
+  .footer-social-icon-link{
+    min-width:48px;
+  }
+  .footer-social-icon{
+    width:43px;
+    height:43px;
+  }
+  .footer-social-icon-link span:last-child{
+    font-size:8.5px;
+  }
+}
+
 </style>
 </head>
 
@@ -2658,71 +2965,7 @@ id="productsGrid">
 </section>
 
 
-<!-- SOCIAL -->
 
-<section class="social">
-
-<div class="social-card">
-
-<h2 id="socialTitle">
-تابعينا على منصاتنا
-</h2>
-
-<p id="socialText">
-أحدث الموديلات والتشكيلات والعروض
-</p>
-
-<div class="social-grid">
-
-<a
-class="social-link"
-id="facebookLink"
-href="#"
-target="_blank"
-rel="noopener">
-
-<b>Facebook</b>
-
-</a>
-
-<a
-class="social-link"
-id="instagramLink"
-href="#"
-target="_blank"
-rel="noopener">
-
-<b>Instagram</b>
-
-</a>
-
-<a
-class="social-link"
-id="tiktokLink"
-href="#"
-target="_blank"
-rel="noopener">
-
-<b>TikTok</b>
-
-</a>
-
-<a
-class="social-link"
-id="snapchatLink"
-href="#"
-target="_blank"
-rel="noopener">
-
-<b>Snapchat</b>
-
-</a>
-
-</div>
-
-</div>
-
-</section>
 
 
 <!-- TRUST / FEATURES -->
@@ -2756,11 +2999,9 @@ id="featuresTrack">
 
 <div class="footer-premium">
 
-<div class="footer-column">
+<div class="footer-column footer-brand-column">
 
-<div
-class="foot-brand"
-id="footerBrand">
+<div class="foot-brand" id="footerBrand">
 ESPOZA
 </div>
 
@@ -2776,38 +3017,62 @@ FASHION
 
 </div>
 
-<div class="footer-column">
+<div class="footer-column footer-contact-column">
 
 <h3 id="footerContactTitle">Contact Us</h3>
 
-<div class="footer-contact">
+<p class="footer-contact-note">
+للطلب والاستفسار، تواصلي معنا مباشرة أو اختاري منصتك المفضلة.
+</p>
 
-<a id="footerContactWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
-<a id="footerContactInstagram" href="#" target="_blank" rel="noopener">Instagram</a>
-<a id="footerContactSnapchat" href="#" target="_blank" rel="noopener">Snapchat</a>
-<a id="footerContactTiktok" href="#" target="_blank" rel="noopener">TikTok</a>
-<a id="footerContactFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
+<div class="footer-contact-icons">
+
+<a class="footer-contact-item" id="footerContactWhatsapp" href="#" target="_blank" rel="noopener">
+<span class="footer-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.8 7.3L3.5 20l1.2-4A8.5 8.5 0 1 1 20.5 11.5Z"/><path d="M8.6 8.2c.3-.4.7-.4 1-.2l1.1 1c.3.2.3.6.1.9l-.6.8c.7 1.2 1.7 2.2 3 2.8l.7-.6c.3-.2.6-.2.9 0l1.1.8c.3.2.3.7.1 1-.4.6-1 1-1.7 1-1.6 0-3.7-1.1-5.2-2.7-1.4-1.5-2.3-3.3-2.3-4.8 0-.4.2-.8.8-1.2Z"/></svg></span>
+<span>WhatsApp</span>
+</a>
+
+<a class="footer-contact-item" id="footerContactInstagram" href="#" target="_blank" rel="noopener">
+<span class="footer-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.2" cy="6.9" r="1"/></svg></span>
+<span>Instagram</span>
+</a>
+
+<a class="footer-contact-item" id="footerContactSnapchat" href="#" target="_blank" rel="noopener">
+<span class="footer-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-3 0-4.8 2-4.8 5.1v2.2c0 .7-.4 1.2-1.2 1.7l-1.1.7c-.4.2-.3.8.1.9l2.4.6c.2 1 1 1.6 2.1 1.6.8 1.1 1.7 1.6 2.5 1.6s1.7-.5 2.5-1.6c1.1 0 1.9-.6 2.1-1.6l2.4-.6c.4-.1.5-.7.1-.9l-1.1-.7c-.8-.5-1.2-1-1.2-1.7V9.3c0-3.1-1.8-5.1-4.8-5.1Z"/></svg></span>
+<span>Snapchat</span>
+</a>
+
+<a class="footer-contact-item" id="footerContactTiktok" href="#" target="_blank" rel="noopener">
+<span class="footer-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.1a4 4 0 1 1-3-3.9"/><path d="M14 4c.5 2.4 2 3.9 4.5 4.1"/><path d="M14 7.2c1.1 1.3 2.5 2.1 4.5 2.2"/></svg></span>
+<span>TikTok</span>
+</a>
+
+<a class="footer-contact-item" id="footerContactFacebook" href="#" target="_blank" rel="noopener">
+<span class="footer-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.7 20v-7h2.4l.4-2.8h-2.8V8.4c0-.8.2-1.4 1.4-1.4h1.5V4.5c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7v2.1H8.5V13h2.4v7h2.8Z"/></svg></span>
+<span>Facebook</span>
+</a>
 
 </div>
 
 </div>
 
-<div class="footer-column">
+<div class="footer-column footer-links-column">
 
 <h3 id="footerLinksTitle">روابط سريعة</h3>
 
+<p class="footer-links-note">
+كل ما تحتاجينه في مكان واحد.
+</p>
+
 <div class="footer-links">
 
-<a
-href="#shop"
-id="footerShop">
+<a href="#shop" id="footerShop">
+<span>01</span>
 التشكيلة
 </a>
 
-<button
-type="button"
-id="policiesBtn"
-onclick="openModal('policiesModal')">
+<button type="button" id="policiesBtn" onclick="openModal('policiesModal')">
+<span>02</span>
 سياستنا
 </button>
 
@@ -2821,34 +3086,38 @@ onclick="openModal('policiesModal')">
 
 <div class="footer-social-row">
 
-<a id="footerInstagram" href="#" target="_blank" rel="noopener">Instagram</a>
-<a id="footerFacebook" href="#" target="_blank" rel="noopener">Facebook</a>
-<a id="footerWhatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
-<a id="footerSnapchat" href="#" target="_blank" rel="noopener">Snapchat</a>
-<a id="footerTiktok" href="#" target="_blank" rel="noopener">TikTok</a>
+<a class="footer-social-icon-link" id="footerInstagram" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+<span class="footer-social-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.2" cy="6.9" r="1"/></svg></span>
+<span>Instagram</span>
+</a>
+
+<a class="footer-social-icon-link" id="footerFacebook" href="#" target="_blank" rel="noopener" aria-label="Facebook">
+<span class="footer-social-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.7 20v-7h2.4l.4-2.8h-2.8V8.4c0-.8.2-1.4 1.4-1.4h1.5V4.5c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7v2.1H8.5V13h2.4v7h2.8Z"/></svg></span>
+<span>Facebook</span>
+</a>
+
+<a class="footer-social-icon-link" id="footerWhatsapp" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
+<span class="footer-social-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.8 7.3L3.5 20l1.2-4A8.5 8.5 0 1 1 20.5 11.5Z"/><path d="M8.6 8.2c.3-.4.7-.4 1-.2l1.1 1c.3.2.3.6.1.9l-.6.8c.7 1.2 1.7 2.2 3 2.8l.7-.6c.3-.2.6-.2.9 0l1.1.8c.3.2.3.7.1 1-.4.6-1 1-1.7 1-1.6 0-3.7-1.1-5.2-2.7-1.4-1.5-2.3-3.3-2.3-4.8 0-.4.2-.8.8-1.2Z"/></svg></span>
+<span>WhatsApp</span>
+</a>
+
+<a class="footer-social-icon-link" id="footerSnapchat" href="#" target="_blank" rel="noopener" aria-label="Snapchat">
+<span class="footer-social-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2c-3 0-4.8 2-4.8 5.1v2.2c0 .7-.4 1.2-1.2 1.7l-1.1.7c-.4.2-.3.8.1.9l2.4.6c.2 1 1 1.6 2.1 1.6.8 1.1 1.7 1.6 2.5 1.6s1.7-.5 2.5-1.6c1.1 0 1.9-.6 2.1-1.6l2.4-.6c.4-.1.5-.7.1-.9l-1.1-.7c-.8-.5-1.2-1-1.2-1.7V9.3c0-3.1-1.8-5.1-4.8-5.1Z"/></svg></span>
+<span>Snapchat</span>
+</a>
+
+<a class="footer-social-icon-link" id="footerTiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+<span class="footer-social-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.1a4 4 0 1 1-3-3.9"/><path d="M14 4c.5 2.4 2 3.9 4.5 4.1"/><path d="M14 7.2c1.1 1.3 2.5 2.1 4.5 2.2"/></svg></span>
+<span>TikTok</span>
+</a>
 
 </div>
 
-<div
-class="copyright"
-id="copyright"
-style="margin-top:17px">
-</div>
-
-<div
-class="copyright"
-id="footerSince"
-style="margin-top:4px">
-</div>
-
-<div
-class="copyright footer-credit"
-id="footerCredit"
-style="margin-top:8px">
-</div>
+<div class="copyright" id="copyright" style="margin-top:21px"></div>
+<div class="copyright" id="footerSince" style="margin-top:5px"></div>
+<div class="copyright footer-credit" id="footerCredit" style="margin-top:10px"></div>
 
 </footer>
-
 
 <!-- PRODUCT DETAILS -->
 
@@ -3891,14 +4160,14 @@ policies:
 "سياستنا",
 
 policyItems:[
-["🔄","الاستبدال والإرجاع","يمكنك الاستبدال أو الإرجاع خلال 24 ساعة من استلام الطلب، بشرط أن تكون القطعة بحالتها الأصلية وعليها التاجات (الأتيكيت)."],
-["🔍","المعاينة عند الاستلام","يرجى معاينة القطعة عند الاستلام والتأكد من أنها مناسبة لكِ قبل تسليم المبلغ."],
-["🚚","أسعار التوصيل","سعر التوصيل ثابت: الضفة الغربية 20 شيكل، القدس 30 شيكل، الداخل (48) 70 شيكل."],
-["⏱️","مدة التوصيل","يصلكِ الطلب خلال 2–3 أيام عمل."],
-["❌","إلغاء الطلب","يمكنك إلغاء الطلب مجانًا قبل خروج الشحنة من عندنا."],
-["🔒","الخصوصية","بياناتك (الاسم ورقم الهاتف والعنوان) تُستخدم فقط لتوصيل طلبك ولا نشاركها مع أي جهة أخرى."],
-["💵","طريقة الدفع","الدفع عند الاستلام فقط (Cash on Delivery)."],
-["💬","التواصل معنا","لأي استفسار أو طلب استبدال أو إلغاء تواصلي معنا مباشرة عبر واتساب."]
+["01","الاستبدال","يمكن طلب استبدال القطعة خلال 24 ساعة من استلام الطلب، على أن تبقى القطعة بحالتها الأصلية، غير مستخدمة، ومع التاجات المرفقة بها."],
+["02","المعاينة عند الاستلام","نمنحكِ وقتًا لمعاينة القطعة عند الاستلام والتأكد من المقاس والتفاصيل قبل إتمام الدفع."],
+["03","التوصيل","الضفة الغربية 20 شيكل، القدس 30 شيكل، والداخل (48) 70 شيكل."],
+["04","مدة الوصول","يصل الطلب عادةً خلال 2–3 أيام عمل، بحسب منطقة التوصيل."],
+["05","الإلغاء","يمكن إلغاء الطلب مجانًا قبل خروج الشحنة من طرفنا."],
+["06","الإرجاع","لا يتوفر إرجاع للمنتجات، ويُستثنى من ذلك وجود عيب مصنعي واضح في القطعة."],
+["07","الخصوصية","نستخدم الاسم ورقم الهاتف والعنوان فقط لمعالجة الطلب وتوصيله، ونحافظ على خصوصية بياناتك."],
+["08","الدفع والتواصل","الدفع عند الاستلام فقط. ولأي استفسار أو استبدال أو إلغاء، يسعدنا التواصل معكِ مباشرة عبر واتساب."]
 ],
 policyWhatsApp:"تواصلي عبر واتساب",
 
@@ -4179,14 +4448,14 @@ policies:
 "Our Policy",
 
 policyItems:[
-["🔄","Exchange & Returns","You can exchange or return an item within 24 hours of receiving it, as long as it is in its original condition with the tags still on."],
-["🔍","Inspect on Delivery","Please check your item when it arrives and make sure it suits you before paying."],
-["🚚","Shipping Fees","Fixed delivery fees: West Bank 20 ILS, Jerusalem 30 ILS, Inside 48 70 ILS."],
-["⏱️","Delivery Time","Your order arrives within 2–3 working days."],
-["❌","Order Cancellation","You can cancel your order for free before the parcel leaves us."],
-["🔒","Privacy","Your details (name, phone number and address) are used only to deliver your order and are never shared with anyone else."],
-["💵","Payment","Cash on delivery only."],
-["💬","Contact Us","For any question, exchange or cancellation, message us directly on WhatsApp."]
+["01","Exchange","You may request an exchange within 24 hours of delivery, provided the item remains unused, in its original condition, and with its tags attached."],
+["02","Inspect on Delivery","Please inspect your item when it arrives and confirm the size and details before completing payment."],
+["03","Delivery Fees","West Bank 20 ILS, Jerusalem 30 ILS, and Inside 48 70 ILS."],
+["04","Delivery Time","Orders usually arrive within 2–3 working days, depending on the delivery area."],
+["05","Cancellation","You may cancel your order free of charge before the parcel leaves us."],
+["06","Returns","Returns are not available, except in the case of a clear manufacturing defect."],
+["07","Privacy","Your name, phone number and address are used only to process and deliver your order, and we respect the privacy of your information."],
+["08","Payment & Contact","Cash on Delivery only. For questions, exchanges or cancellations, contact us directly on WhatsApp."]
 ],
 policyWhatsApp:"Chat on WhatsApp",
 
@@ -7705,15 +7974,6 @@ $("collectionTitle")
 x.collection;
 
 
-$("socialTitle")
-.textContent=
-x.socialTitle;
-
-
-$("socialText")
-.textContent=
-x.socialText;
-
 
 $("footerShop")
 .textContent=
@@ -8265,6 +8525,42 @@ error
 
 init();
 
+
+/* Feedback arrow: draw the existing arrow when the feedback section appears */
+function setupFeedbackArrowDraw(){
+  const arrow=document.querySelector(".feedback-drawn-arrow");
+  const section=document.getElementById("feedback");
+  if(!arrow || !section) return;
+
+  const draw=()=>{
+    arrow.classList.remove("is-drawing");
+    void arrow.offsetWidth;
+    arrow.classList.add("is-drawing");
+  };
+
+  if(!("IntersectionObserver" in window)){
+    draw();
+    return;
+  }
+
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        draw();
+      }else{
+        arrow.classList.remove("is-drawing");
+      }
+    });
+  },{threshold:.2,rootMargin:"0px 0px -40px 0px"});
+
+  observer.observe(section);
+}
+
+try{
+  setupFeedbackArrowDraw();
+}catch(error){
+  console.warn("feedback arrow animation failed:",error);
+}
 
 /* ==========================================
    FEEDBACK IMAGE SPEED OPTIMIZATION
