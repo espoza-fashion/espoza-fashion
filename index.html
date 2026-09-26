@@ -5335,8 +5335,9 @@ return customerSupabase;
 }
 function normalizeAdminSettingValue(value,fallback=""){
 if(value==null)return fallback;
-if(typeof value==="string")return value;
-try{return JSON.stringify(value)}catch(_){return fallback}
+if(typeof value==="string" || typeof value==="number" || typeof value==="boolean")return value;
+if(typeof value==="object")return value;
+return fallback;
 }
 function applyThemeFromAdmin(settings){
 const root=document.documentElement;
