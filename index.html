@@ -709,7 +709,13 @@ padding:20px
 
 /* SCROLL REVEAL */
 
-.reveal-item{\nopacity:0;\ntransform:translateY(46px);\ntransition:opacity .78s cubic-bezier(.22,1,.36,1),transform .78s cubic-bezier(.22,1,.36,1);\ntransition-delay:var(--reveal-delay,0ms);\nwill-change:opacity,transform\n}
+.reveal-item{
+opacity:0;
+transform:translateY(46px);
+transition:opacity .78s cubic-bezier(.22,1,.36,1),transform .78s cubic-bezier(.22,1,.36,1);
+transition-delay:var(--reveal-delay,0ms);
+will-change:opacity,transform
+}
 
 .reveal-item.revealed{
 opacity:1;
