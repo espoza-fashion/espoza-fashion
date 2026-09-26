@@ -5405,7 +5405,7 @@ return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.n
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
-const result=await db.from("products").select("id,name,sku,category,price,old_price,description,is_active,is_offer,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+const result=await db.from("products").select("id,name,category,price,old_price,description,active,featured,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
 if(result.error)throw result.error;
 return(result.data||[]).map(dynamicProductToView);
 }
