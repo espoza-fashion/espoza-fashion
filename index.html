@@ -5327,6 +5327,7 @@ const CUSTOMER_SUPABASE_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
 let customerSupabase=null;
 let adminDeliveryAreas=null;
 let adminSliders=null;
+let adminFeedback=null;
 function getCustomerSupabase(){
 if(!window.supabase||typeof window.supabase.createClient!=="function")throw new Error("Supabase غير متاح");
 if(!customerSupabase)customerSupabase=window.supabase.createClient(CUSTOMER_SUPABASE_URL,CUSTOMER_SUPABASE_KEY);
@@ -5337,16 +5338,39 @@ if(value==null)return fallback;
 if(typeof value==="string")return value;
 try{return JSON.stringify(value)}catch(_){return fallback}
 }
+function applyThemeFromAdmin(settings){
+const root=document.documentElement;
+const hex=v=>/^#[0-9a-fA-F]{6}$/.test(String(v||""))?String(v):"";
+const wine=hex(settings.theme_wine),gold=hex(settings.theme_gold),cream=hex(settings.theme_cream),dark=hex(settings.theme_dark);
+if(wine)root.style.setProperty("--wine",wine);
+if(gold)root.style.setProperty("--gold",gold);
+if(cream)root.style.setProperty("--cream",cream);
+if(dark)root.style.setProperty("--dark",dark);
+const cols=Math.min(5,Math.max(3,Number(settings.theme_columns)||4));
+const radius=Math.min(32,Math.max(8,Number(settings.theme_radius)||18));
+root.style.setProperty("--customer-columns",String(cols));
+root.style.setProperty("--customer-card-radius",radius+"px");
+let style=$("customerThemeOverrides");
+if(!style){
+style=document.createElement("style");
+style.id="customerThemeOverrides";
+document.head.appendChild(style);
+}
+style.textContent="@media(min-width:1001px){.products-grid{grid-template-columns:repeat("+cols+",minmax(0,1fr))!important}}.product-card{border-radius:"+radius+"px!important}";
+}
+
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
-const [settingsResult,deliveryResult,sliderResult]=await Promise.all([
-db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers"]),
+const [settingsResult,deliveryResult,sliderResult,feedbackResult]=await Promise.all([
+db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
-db.from("slider").select("id,image_url,title,subtitle,button_text,button_link,is_active,sort_order,created_at").eq("is_active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false})
+db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
+db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true})
 ]);
 if(settingsResult.error)throw settingsResult.error;
 if(deliveryResult.error)throw deliveryResult.error;
 if(sliderResult.error)throw sliderResult.error;
+if(feedbackResult.error)throw feedbackResult.error;
 const settings={};
 (settingsResult.data||[]).forEach(row=>settings[row.key]=normalizeAdminSettingValue(row.value,""));
 if(settings.store_name)store.name=settings.store_name;
@@ -5361,22 +5385,27 @@ if(settings[platform])store.social[platform]=settings[platform];
 for(const platform of ["facebook","instagram","tiktok","snapchat"]){
 if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settings[platform+"_followers"])||0;
 }
+if(settings.site_content_ar && typeof settings.site_content_ar==="object")Object.assign(TEXT.ar,settings.site_content_ar);
+if(settings.site_content_en && typeof settings.site_content_en==="object")Object.assign(TEXT.en,settings.site_content_en);
+applyThemeFromAdmin(settings);
 adminDeliveryAreas=deliveryResult.data||[];
-adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.button_link||"all",button_text:row.button_text||""}));
+adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:t().explore}));
+adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
 applyStore();
 renderDeliveryOptions();
 renderSlider();
+renderFeedback();
 }
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
 const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>x.name).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.is_offer,available:p.is_available!==false,active:p.is_active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
-const result=await db.from("products").select("id,name,sku,category,price,old_price,description,is_active,is_offer,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("is_active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+const result=await db.from("products").select("id,name,sku,category,price,old_price,description,is_active,is_offer,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
 if(result.error)throw result.error;
 return(result.data||[]).map(dynamicProductToView);
 }
@@ -5863,7 +5892,7 @@ function renderPolicies(){
 const box=$("policyContent");
 if(!box)return;
 const x=t();
-const wa=STORE_DEFAULTS&&STORE_DEFAULTS.whatsapp?STORE_DEFAULTS.whatsapp:"";
+const wa=String(store.whatsapp||"").replace(/\D/g,"");
 box.innerHTML=(x.policyItems||[]).map(([icon,title,text],i,arr)=>`
 <div class="policy-section">
 <h3><span class="policy-ico">${esc(icon)}</span> ${esc(title)}</h3>
@@ -6035,9 +6064,12 @@ if(
 return;
 
 
+const sourceFeedback=(Array.isArray(adminFeedback)&&adminFeedback.length)
+?adminFeedback.map(x=>x.image_url).filter(Boolean)
+:FEEDBACK_IMAGES;
 const doubled=[
-...FEEDBACK_IMAGES,
-...FEEDBACK_IMAGES
+...sourceFeedback,
+...sourceFeedback
 ];
 
 
