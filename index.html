@@ -2705,6 +2705,100 @@ footer{
   }
 }
 
+
+/* ===== Espoza Premium Motion Enhancements — additive only ===== */
+.reveal{
+  opacity:0;
+  transform:translateY(28px) scale(.99);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.reveal.visible{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+.product-card,.intro-card,.social-card,.feedback-grid .iphone-frame,
+.social-link,.feature-slide,.section-head,.hero-copy,.search-row,.cat{
+  transition:transform .4s ease,box-shadow .4s ease,border-color .4s ease;
+}
+.product-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 18px 35px rgba(100,31,52,.18);
+  border-color:rgba(185,152,90,.7);
+}
+.product-card:hover .product-img img{
+  transform:scale(1.04);
+  filter:brightness(1.05) saturate(1.05);
+}
+.product-img img{
+  transition:transform .6s ease,filter .6s ease;
+}
+.hero-copy button,.icon-btn,.pill,.cat,.search-row button,.product-card .buy-btn{
+  position:relative;
+  overflow:hidden;
+  transition:all .35s ease;
+}
+.hero-copy button::before,.icon-btn::before,.pill::before,.cat::before,.search-row button::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.35) 50%,transparent 100%);
+  transform:translateX(-120%);
+  transition:transform .7s ease;
+  pointer-events:none;
+}
+.hero-copy button:hover::before,.icon-btn:hover::before,.pill:hover::before,.cat:hover::before,.search-row button:hover::before{
+  transform:translateX(120%);
+}
+.hero-copy button:hover,.icon-btn:hover,.pill:hover,.cat:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 12px 25px rgba(100,31,52,.12);
+}
+.social-link:hover,.feature-slide:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 24px rgba(100,31,52,.12);
+}
+.hero-copy h1{
+  animation:espGlowTitle 3s ease-in-out infinite;
+}
+@keyframes espGlowTitle{
+  0%,100%{text-shadow:0 2px 14px rgba(0,0,0,.18)}
+  50%{text-shadow:0 2px 18px rgba(185,152,90,.45),0 0 25px rgba(185,152,90,.2)}
+}
+.feedback-arrow{
+  animation:espFloatArrow 1.8s ease-in-out infinite;
+}
+@keyframes espFloatArrow{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(8px)}
+}
+.marquee-divider{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.social-card{
+  position:relative;
+  overflow:hidden;
+}
+.social-card::after{
+  content:"";
+  position:absolute;
+  inset:-50% auto auto -20%;
+  width:200px;
+  height:200px;
+  background:rgba(255,255,255,.06);
+  border-radius:50%;
+  filter:blur(12px);
+  pointer-events:none;
+}
+@media(max-width:700px){
+  .product-card:hover{transform:translateY(-5px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .hero-copy h1,.feedback-arrow{animation:none}
+  .product-card:hover,.social-link:hover,.feature-slide:hover,
+  .hero-copy button:hover,.icon-btn:hover,.pill:hover,.cat:hover{transform:none}
+}
+
 </style>
 </head>
 
@@ -8669,6 +8763,48 @@ console.warn("feedback image optimization failed:",error);
 
 
 const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},2000);
+</script>
+
+
+<script>
+/* ===== Espoza Premium Motion — additive only ===== */
+(function(){
+  const revealItems=document.querySelectorAll(
+    '.intro-card, .feedback-grid .iphone-frame, .section-head, .product-card, .social-link, .social-card, .feature-slide, .search-row, .cat'
+  );
+
+  if('IntersectionObserver' in window){
+    const revealObserver=new IntersectionObserver((entries)=>{
+      entries.forEach((entry)=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.15});
+
+    revealItems.forEach((item,index)=>{
+      item.classList.add('reveal');
+      item.style.transitionDelay=Math.min(index*40,360)+'ms';
+      revealObserver.observe(item);
+    });
+  }else{
+    revealItems.forEach((item)=>item.classList.add('visible'));
+  }
+
+  const hero=document.querySelector('.hero');
+  if(hero && window.matchMedia('(prefers-reduced-motion: no-preference)').matches){
+    let ticking=false;
+    window.addEventListener('scroll',()=>{
+      if(ticking)return;
+      ticking=true;
+      requestAnimationFrame(()=>{
+        hero.style.transform='translateY('+(window.scrollY*.02)+'px)';
+        ticking=false;
+      });
+    },{passive:true});
+  }
+})();
 </script>
 
 </body>
