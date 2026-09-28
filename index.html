@@ -972,6 +972,16 @@ grid-template-columns:1.08fr .92fr;
 gap:24px
 }
 
+/* ===== Product image viewer / smooth zoom ===== */
+.product-image-viewer{background:rgba(12,5,8,.88);backdrop-filter:blur(10px);padding:12px;z-index:130;touch-action:none}
+.product-image-viewer .product-image-stage{position:relative;width:100%;height:100%;max-width:1200px;max-height:94vh;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;cursor:zoom-in}
+.product-image-viewer .product-image-stage.zoomed{cursor:grab}
+.product-image-viewer .product-image-stage.dragging{cursor:grabbing}
+.product-image-viewer #productImageViewerImg{max-width:96vw;max-height:92vh;width:auto;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;transform-origin:center center;transition:transform .18s ease-out;will-change:transform;border-radius:8px}
+.product-image-viewer .product-image-close{position:fixed;top:18px;left:18px;background:rgba(255,255,255,.92);z-index:10}
+.product-image-hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 12px;font-size:10px;pointer-events:none;white-space:nowrap}
+@media(max-width:700px){.product-image-viewer #productImageViewerImg{max-width:100vw;max-height:88vh}.product-image-hint{bottom:10px;font-size:9px}}
+
 .detail-main{
 position:relative;
 aspect-ratio:4/5;
@@ -3261,7 +3271,11 @@ onclick="closeModal('productModal')">
 <img
 id="detailImage"
 src=""
-alt="">
+alt=""
+onclick="openProductImageViewer()"
+role="button"
+tabindex="0"
+aria-label="تكبير صورة المنتج">
 
 </div>
 
@@ -3365,6 +3379,15 @@ onclick="addCurrentToCart()">
 
 </div>
 
+
+<!-- FULL PRODUCT IMAGE VIEW -->
+<div class="modal product-image-viewer" id="productImageViewer">
+  <button class="close-btn product-image-close" type="button" onclick="closeProductImageViewer()" aria-label="Close">×</button>
+  <div class="product-image-stage" id="productImageStage">
+    <img id="productImageViewerImg" src="" alt="">
+  </div>
+  <div class="product-image-hint">كبّري بالصابعين أو اضغطي مرتين للتكبير</div>
+</div>
 
 <!-- FEEDBACK IMAGE VIEW -->
 
