@@ -2054,6 +2054,284 @@ body{
 @keyframes splashIn{to{opacity:1;transform:none}}
 @keyframes splashRing{50%{transform:scale(1.06);opacity:.75}}
 @media(prefers-reduced-motion:reduce){#espozaSplash::before{animation:none}.splash-inner{animation:none;opacity:1;transform:none}}
+
+/* =========================================================
+   ESPoza TV / Large Screen Responsive Layer
+   يحافظ على نفس الموقع والمحتوى والتصميم — تكييف المقاسات فقط
+   ========================================================= */
+@media screen and (min-width: 1600px) and (hover: none) and (pointer: coarse),
+       screen and (min-width: 1800px) {
+  html, body {
+    width: 100%;
+    min-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .top-note {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+
+  header {
+    width: 100%;
+  }
+
+  .nav {
+    max-width: 1500px;
+    padding: 18px 28px;
+    gap: 18px;
+  }
+
+  .brand-main {
+    font-size: 38px;
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    margin-top: 8px;
+  }
+
+  .icon-btn,
+  .pill {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .hero-wrap,
+  .intro,
+  .feedback,
+  .toolbar,
+  .catalog,
+  .social,
+  .features {
+    max-width: 1500px;
+  }
+
+  .hero-wrap {
+    padding: 24px 24px 10px;
+  }
+
+  .hero {
+    border-radius: 28px;
+  }
+
+  .hero-slide {
+    height: min(52vh, 620px);
+    min-height: 480px;
+  }
+
+  .hero-copy {
+    padding-bottom: 10px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(42px, 4vw, 68px);
+  }
+
+  .hero-copy p {
+    font-size: 17px;
+  }
+
+  .hero-copy button {
+    padding: 13px 28px;
+    font-size: 15px;
+  }
+
+  .intro {
+    padding: 28px 24px 10px;
+  }
+
+  .intro-card {
+    padding: 42px;
+    border-radius: 28px;
+  }
+
+  .intro h2 {
+    font-size: clamp(36px, 3.2vw, 52px);
+  }
+
+  .intro p {
+    font-size: 16px;
+    max-width: 900px;
+  }
+
+  .mini-stat {
+    min-width: 155px;
+    padding: 13px 18px;
+  }
+
+  .mini-stat b {
+    font-size: 21px;
+  }
+
+  .mini-stat span {
+    font-size: 12px;
+  }
+
+  .feedback {
+    padding: 12px 24px 10px;
+  }
+
+  .feedback-head h2 {
+    font-size: clamp(34px, 3vw, 48px);
+  }
+
+  .feedback-counter {
+    padding: 11px 24px;
+  }
+
+  .feedback-counter b {
+    font-size: 25px;
+  }
+
+  .feedback-counter span {
+    font-size: 14px;
+  }
+
+  .iphone-frame {
+    width: 205px;
+  }
+
+  .feedback-grid {
+    gap: 20px;
+  }
+
+  .toolbar {
+    padding: 26px 24px 16px;
+  }
+
+  .search {
+    padding: 14px 17px;
+    font-size: 15px;
+  }
+
+  .cat {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .catalog {
+    padding: 0 24px 70px;
+  }
+
+  .section-head {
+    margin: 12px 0 21px;
+  }
+
+  .section-head h2 {
+    font-size: 35px;
+  }
+
+  .section-head span {
+    font-size: 14px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .product-card {
+    border-radius: 21px;
+  }
+
+  .product-info {
+    padding: 16px 15px 18px;
+  }
+
+  .product-name {
+    font-size: 16px;
+  }
+
+  .price {
+    font-size: 16px;
+  }
+
+  .old-price {
+    font-size: 12px;
+  }
+
+  .social {
+    padding: 0 24px 70px;
+  }
+
+  .social-card {
+    padding: 38px 28px;
+    border-radius: 28px;
+  }
+
+  .social-card h2 {
+    font-size: 36px;
+  }
+
+  .social-card > p {
+    font-size: 15px;
+  }
+
+  .social-link {
+    padding: 17px 10px;
+  }
+
+  .social-link span {
+    font-size: 12px;
+  }
+
+  .features {
+    padding: 0 24px 70px;
+  }
+
+  .feature-slide {
+    padding: 32px 22px;
+  }
+
+  .feature-title {
+    font-size: 16px;
+  }
+
+  .feature-text {
+    font-size: 14px;
+  }
+
+  footer {
+    padding: 42px 24px;
+  }
+
+  .foot-brand {
+    font-size: 34px;
+  }
+
+  .footer-nav {
+    font-size: 14px;
+    gap: 20px;
+  }
+
+  .copyright {
+    font-size: 12px;
+  }
+}
+
+/* 4K TVs: keep the same centered composition instead of stretching endlessly */
+@media screen and (min-width: 3000px) {
+  .nav,
+  .hero-wrap,
+  .intro,
+  .feedback,
+  .toolbar,
+  .catalog,
+  .social,
+  .features {
+    max-width: 1700px;
+  }
+
+  .hero-slide {
+    height: min(54vh, 760px);
+  }
+
+  .products-grid {
+    gap: 26px;
+  }
+}
+
 </style>
 <style id="espoza-luxury-products">
 .products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
