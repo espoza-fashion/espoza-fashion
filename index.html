@@ -5745,6 +5745,8 @@ let customerSupabase=null;
 let adminDeliveryAreas=null;
 let adminSliders=null;
 let adminFeedback=null;
+let adminCategories=null;
+let adminSiteSections=null;
 function getCustomerSupabase(){
 if(!window.supabase||typeof window.supabase.createClient!=="function")throw new Error("Supabase غير متاح");
 if(!customerSupabase)customerSupabase=window.supabase.createClient(CUSTOMER_SUPABASE_URL,CUSTOMER_SUPABASE_KEY);
@@ -5779,16 +5781,20 @@ style.textContent="@media(min-width:1001px){.products-grid{grid-template-columns
 
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
-const [settingsResult,deliveryResult,sliderResult,feedbackResult]=await Promise.all([
+const [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]=await Promise.all([
 db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
 db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
-db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true})
+db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
+db.from("categories").select("id,slug,name_ar,name_en,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
+db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
 ]);
 if(settingsResult.error)throw settingsResult.error;
 if(deliveryResult.error)throw deliveryResult.error;
 if(sliderResult.error)throw sliderResult.error;
 if(feedbackResult.error)throw feedbackResult.error;
+if(categoryResult.error)throw categoryResult.error;
+if(sectionResult.error)throw sectionResult.error;
 const settings={};
 (settingsResult.data||[]).forEach(row=>settings[row.key]=normalizeAdminSettingValue(row.value,""));
 if(settings.store_name)store.name=settings.store_name;
@@ -5809,7 +5815,11 @@ applyThemeFromAdmin(settings);
 adminDeliveryAreas=deliveryResult.data||[];
 adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:t().explore}));
 adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
+adminCategories=categoryResult.data||[];
+adminSiteSections=sectionResult.data||[];
 applyStore();
+applyAdminSiteSections();
+renderCustomerCategories();
 renderDeliveryOptions();
 renderSlider();
 renderFeedback();
@@ -5978,21 +5988,36 @@ $("copyright")
 `©️ 2019–${new Date().getFullYear()} ${name} — ${t().rights}`;
 
 const credit=$("footerCredit");
-if(credit)credit.textContent=store.siteCredit||"Designed & Created by Yousef Ajra";
-
-
-$("footerSince")
-.textContent=
-t().footerSince;
-
-
-$("footerCredit")
-.textContent=
-t().footerCredit;
+if(credit)credit.textContent=store.siteCredit||t().footerCredit||"Designed & Created by Yousef Ajra";
+$("footerSince").textContent=t().footerSince;
 
 }
 
 
+/* ==========================================
+   محتوى وفئات الموقع من لوحة الإدارة
+   ========================================== */
+function renderCustomerCategories(){
+const wrap=$("categories");
+if(!wrap)return;
+const base=[{slug:"all",name_ar:"الكل",name_en:"All"}];
+const cats=(Array.isArray(adminCategories)&&adminCategories.length)?base.concat(adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||x.name_ar}))):base.concat([{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets"},{slug:"offers",name_ar:"العروضات",name_en:"Offers"}]);
+wrap.innerHTML=cats.map(x=>"<button class=\"cat "+(x.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(x.slug)+"\">"+esc(lang==="en"?x.name_en:x.name_ar)+"</button>").join("");
+wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
+}
+
+function applyAdminSiteSections(){
+const sections=Array.isArray(adminSiteSections)?adminSiteSections:[];
+sections.forEach(section=>{
+const cfg=section.config&&typeof section.config==="object"?section.config:{};
+const id=cfg.element_id||section.section_key;
+const el=$(id);
+if(!el)return;
+el.classList.toggle("hidden",section.visible===false);
+const text=lang==="en"?(cfg.text_en??section.title_en):(cfg.text_ar??section.title_ar);
+if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(target||el).textContent=String(text);}
+});
+}
 /* ==========================================
    التوصيل
    ========================================== */
@@ -6651,8 +6676,7 @@ if(!el)
 return;
 
 
-const target=
-FEEDBACK_IMAGES.length;
+const target=(Array.isArray(adminFeedback)&&adminFeedback.length)?adminFeedback.length:FEEDBACK_IMAGES.length;
 
 
 const duration=
@@ -8079,7 +8103,7 @@ delivery.price
    إرسال الطلب
    ========================================== */
 
-function sendOrder(){
+async function sendOrder(){
 
 if(
 !cart.length
@@ -8235,10 +8259,15 @@ ${linesEn}
 💳 Cash on Delivery`;
 
 
-toast(
-t().waOnly
-);
-
+let savedToAdmin=false;
+try{
+const customerDb=getCustomerSupabase();
+const orderPayload={customer_name:name,phone:phone,region:delivery.name,address:address,items:cart.map(item=>({product_id:item.dbId||null,name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""})),subtotal:Number(itemsTotal||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:notes||null,payment_status:"cod",source:"website"};
+const saved=await customerDb.from("orders").insert(orderPayload).select("id").single();
+if(saved.error)throw saved.error;
+savedToAdmin=true;
+}catch(error){console.warn("Order database save failed:",error);}
+toast(savedToAdmin?t().saved:t().waOnly);
 
 window.open(
 
@@ -8371,13 +8400,7 @@ x.orders;
 startTypewriter();
 
 
-document
-.querySelectorAll(".cat")
-.forEach(
-b=>
-b.textContent=
-x.cats[b.dataset.cat]
-);
+if(!Array.isArray(adminCategories)||!adminCategories.length){document.querySelectorAll(".cat").forEach(b=>b.textContent=x.cats[b.dataset.cat]||b.textContent);}else{renderCustomerCategories();}
 
 
 $("collectionTitle")
@@ -8550,7 +8573,8 @@ x.customerCountSubcaption;
 
 
 renderFeatures();
-
+renderCustomerCategories();
+applyAdminSiteSections();
 renderCartModal();
 
 updateCartBadge();
@@ -8713,34 +8737,7 @@ renderProducts
 );
 
 
-document
-.querySelectorAll(".cat")
-.forEach(
-button=>
-button.addEventListener(
-"click",
-()=>{
 
-currentCategory=
-button.dataset.cat;
-
-
-document
-.querySelectorAll(".cat")
-.forEach(
-b=>
-b.classList.toggle(
-"active",
-b===button
-)
-);
-
-
-renderProducts();
-
-}
-)
-);
 
 
 $("deliverySelect")
