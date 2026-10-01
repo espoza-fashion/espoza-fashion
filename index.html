@@ -8297,6 +8297,109 @@ closeModal(
 }
 
 
+
+/* ==========================================
+   عارض صورة المنتج — تكبير وحركة آمنة
+   ========================================== */
+let productViewerScale=1;
+let productViewerX=0;
+let productViewerY=0;
+let productViewerDragging=false;
+let productViewerStartX=0;
+let productViewerStartY=0;
+let productViewerBaseX=0;
+let productViewerBaseY=0;
+
+function updateProductViewerTransform(){
+  const img=$("productImageViewerImg");
+  const stage=$("productImageStage");
+  if(!img||!stage)return;
+  productViewerScale=Math.max(1,Math.min(4,productViewerScale));
+  img.style.transform=`translate3d(${productViewerX}px,${productViewerY}px,0) scale(${productViewerScale})`;
+  stage.classList.toggle("zoomed",productViewerScale>1);
+}
+
+function resetProductViewer(){
+  productViewerScale=1;
+  productViewerX=0;
+  productViewerY=0;
+  productViewerDragging=false;
+  const img=$("productImageViewerImg");
+  const stage=$("productImageStage");
+  if(img){img.style.transform="translate3d(0,0,0) scale(1)";}
+  if(stage)stage.classList.remove("zoomed","dragging");
+}
+
+function openProductImageViewer(){
+  const source=$("detailImage");
+  const viewer=$("productImageViewer");
+  const img=$("productImageViewerImg");
+  if(!source||!viewer||!img||!source.src)return;
+  img.src=source.currentSrc||source.src;
+  img.alt=source.alt||"";
+  resetProductViewer();
+  viewer.classList.add("open");
+  document.body.style.overflow="hidden";
+}
+
+function closeProductImageViewer(){
+  const viewer=$("productImageViewer");
+  if(!viewer)return;
+  viewer.classList.remove("open");
+  resetProductViewer();
+  document.body.style.overflow="";
+}
+
+function setupProductImageViewer(){
+  const viewer=$("productImageViewer");
+  const stage=$("productImageStage");
+  const img=$("productImageViewerImg");
+  if(!viewer||!stage||!img)return;
+
+  stage.addEventListener("dblclick",function(e){
+    e.preventDefault();
+    productViewerScale=productViewerScale>1?1:2;
+    if(productViewerScale===1){productViewerX=0;productViewerY=0;}
+    updateProductViewerTransform();
+  });
+
+  stage.addEventListener("wheel",function(e){
+    e.preventDefault();
+    productViewerScale+=e.deltaY<0?.25:-.25;
+    if(productViewerScale<=1){productViewerScale=1;productViewerX=0;productViewerY=0;}
+    updateProductViewerTransform();
+  },{passive:false});
+
+  stage.addEventListener("pointerdown",function(e){
+    if(productViewerScale<=1)return;
+    productViewerDragging=true;
+    productViewerStartX=e.clientX;
+    productViewerStartY=e.clientY;
+    productViewerBaseX=productViewerX;
+    productViewerBaseY=productViewerY;
+    stage.setPointerCapture?.(e.pointerId);
+    stage.classList.add("dragging");
+  });
+
+  stage.addEventListener("pointermove",function(e){
+    if(!productViewerDragging)return;
+    productViewerX=productViewerBaseX+(e.clientX-productViewerStartX);
+    productViewerY=productViewerBaseY+(e.clientY-productViewerStartY);
+    updateProductViewerTransform();
+  });
+
+  const endDrag=()=>{
+    productViewerDragging=false;
+    stage.classList.remove("dragging");
+  };
+  stage.addEventListener("pointerup",endDrag);
+  stage.addEventListener("pointercancel",endDrag);
+
+  viewer.addEventListener("click",function(e){
+    if(e.target===viewer)closeProductImageViewer();
+  });
+}
+
 /* ==========================================
    إغلاق النوافذ
    ========================================== */
@@ -8811,6 +8914,8 @@ setupProductSwipe();
 /* ==========================================
    تشغيل الموقع
    ========================================== */
+
+try{setupProductImageViewer();}catch(error){console.warn('product image viewer failed:',error);}
 
 function init(){
 
