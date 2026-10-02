@@ -2355,6 +2355,15 @@ body{
 @media(max-width:900px){.wishlist-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
 @media(max-width:600px){.quick-links{padding-inline:10px}.wishlist-section{padding-inline:10px}.heart-btn{width:33px;height:33px;font-size:17px}}
 
+
+/* Premium modal / counter stability */
+body.modal-lock{overflow:hidden!important;touch-action:none}
+.modal{overscroll-behavior:contain}
+.modal-box{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.close-btn{display:flex!important;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(67,19,33,.08)}
+.wish-header-btn{position:relative}
+.cart-badge,.wish-header-badge{z-index:3}
+
 </style>
 <style id="espoza-luxury-products">
 .products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
@@ -3378,7 +3387,7 @@ data-cat="offers">
 <section class="quick-links" id="quickLinks" aria-label="روابط سريعة">
 <div class="quick-links-inner">
 <button class="quick-link primary" type="button" onclick="scrollToWishlist()">♡ قائمة الأمنيات <span id="quickWishlistCount">0</span></button>
-<button class="quick-link" type="button" onclick="document.getElementById('feedback').scrollIntoView({behavior:'smooth'})">آراء الزبائن</button>
+<button class="quick-link" type="button" onclick="smoothToSection('feedback')">آراء الزبائن</button>
 <button class="quick-link" type="button" onclick="openModal('policiesModal')">سياسة الشركة</button>
 <button class="quick-link" type="button" onclick="openCartModal()">🛍️ السلة والطلب</button>
 </div>
@@ -8947,6 +8956,8 @@ lang
 
 
 applyLanguage();
+refreshAllCounters();
+ensureModalCloseButtons();
 
 }
 );
@@ -9026,6 +9037,103 @@ setupProductSwipe();
 
 }
 
+
+
+/* ==========================================
+   Espoza — Premium UX fixes + bilingual products
+   ========================================== */
+
+const PRODUCT_EN_NAMES = {
+  "فستان سيليست":"Celeste Dress",
+  "فستان سيلفانا":"Silvana Dress",
+  "فستان أستريا":"Astria Dress",
+  "فستان فلورانس":"Florence Dress",
+  "فستان سكارليت":"Scarlett Dress",
+  "فستان ريبيكا":"Rebecca Dress",
+  "فستان روزاليا":"Rosalia Dress",
+  "فستان داليا":"Dalia Dress",
+  "فستان كاميليا":"Camellia Dress",
+  "فستان آيرس":"Iris Dress",
+  "فستان لورينا":"Lorena Dress",
+  "فستان رولانا":"Rolana Dress",
+  "فستان إلورا":"Elora Dress",
+  "فستان أمارا":"Amara Dress",
+  "فستان أريانا":"Ariana Dress",
+  "فستان نيراليا":"Neralia Dress",
+  "فستان سيرافينا":"Serafina Dress",
+  "فستان أوريليا":"Aurelia Dress",
+  "فستان إيلارا":"Elara Dress",
+  "فستان أليورا":"Aliora Dress",
+  "فستان ميلورا":"Melora Dress",
+  "فستان لافيرا":"Lavira Dress",
+  "فستان إيلينا":"Elina Dress",
+  "طقم أفيورا":"Aviora Set",
+  "طقم ناديرا":"Nadira Set",
+  "طقم لوسارا":"Lusara Set",
+  "طقم تيمارا":"Timara Set",
+  "فستان روزيفا":"Roseva Dress",
+  "فستان زيلورا":"Zelora Dress",
+  "فستان تيراليا":"Tiralia Dress",
+  "فستان ناليسا":"Nalissa Dress",
+  "فستان ليورا":"Liora Dress",
+  "طقم سوليرا":"Solira Set",
+  "طقم فالورا":"Valora Set",
+  "فستان نيسارا":"Nisara Dress",
+  "فستان كالينا":"Kalina Dress",
+  "طقم ريفانا":"Rivana Set",
+  "طقم ديلارا":"Delara Set",
+  "فستان ماريلدا":"Marilda Dress",
+  "فستان فينورا":"Finora Dress",
+  "فستان أليندا":"Alinda Dress",
+  "طقم فايورا":"Fayora Set"
+};
+
+function productDisplayName(product){
+  if(!product) return "";
+  if(lang==="ar") return product.name || "";
+  const explicit=product.name_en || product.nameEn || product.english_name;
+  if(explicit) return explicit;
+  const raw=String(product.name||"");
+  if(PRODUCT_EN_NAMES[raw]) return PRODUCT_EN_NAMES[raw];
+  return raw.replace(/^فستان\\s+/,"Dress ").replace(/^طقم\\s+/,"Set ");
+}
+
+/* Keep every modal easy to leave: visible X + backdrop + Escape,
+   without changing the existing visual design. */
+function ensureModalCloseButtons(){
+  document.querySelectorAll(".modal").forEach(modal=>{
+    const box=modal.querySelector(".modal-box");
+    if(!box) return;
+    let close=box.querySelector(".modal-close-fallback");
+    if(!close){
+      close=document.createElement("button");
+      close.type="button";
+      close.className="close-btn modal-close-fallback";
+      close.setAttribute("aria-label",lang==="en"?"Close":"إغلاق");
+      close.textContent="×";
+      close.addEventListener("click",()=>closeModal(modal.id));
+      box.prepend(close);
+    }
+  });
+}
+
+/* Smooth section navigation that cannot leave the page in a half-scrolled
+   state behind the sticky header. */
+function smoothToSection(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  const header=document.querySelector("header");
+  const offset=(header?.getBoundingClientRect().height||0)+12;
+  const top=window.scrollY+el.getBoundingClientRect().top-offset;
+  window.scrollTo({top:Math.max(0,top),behavior:"smooth"});
+}
+
+function refreshAllCounters(){
+  try{ updateWishlistUI(); }catch(_){}
+  try{ updateCartBadge(); }catch(_){}
+}
+
+/* Make sure all existing product renders use the active language. */
 
 /* ==========================================
    تشغيل الموقع
