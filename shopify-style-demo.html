@@ -1,67 +1,155 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#4b1625">
-<title>Espoza Fashion — Shopify Style Demo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#431321">
+<title>Espoza Fashion — Luxury Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--wine:#551827;--deep:#32101a;--gold:#b9985a;--cream:#fbf8f3;--ink:#25191d;--line:#eadfe0}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:Cairo,Arial,sans-serif}
-.top{background:var(--deep);color:#fff;text-align:center;padding:8px 12px;font-size:11px}
-header{position:sticky;top:0;z-index:20;background:rgba(251,248,243,.94);backdrop-filter:blur(15px);border-bottom:1px solid #eee}
-.nav{max-width:1280px;margin:auto;min-height:76px;padding:10px 24px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
-.logo{text-align:center;font-family:"Playfair Display",serif;letter-spacing:5px;color:var(--wine);font-size:29px}.logo small{display:block;font-family:Cairo,sans-serif;font-size:8px;letter-spacing:6px;color:var(--gold);margin-top:2px}
-.navlinks{display:flex;gap:20px;font-size:12px}.navlinks a{text-decoration:none;color:var(--ink)}.actions{display:flex;justify-content:flex-end;gap:8px}.actions button{border:1px solid var(--line);background:#fff;border-radius:30px;padding:8px 12px;color:var(--wine);cursor:pointer}
-.hero{max-width:1280px;margin:18px auto 0;padding:0 18px}.heroBox{min-height:610px;border-radius:24px;overflow:hidden;position:relative;background:linear-gradient(90deg,rgba(35,9,16,.78),rgba(35,9,16,.15)),url("https://raw.githubusercontent.com/Espoza-fashion/espoza-fashion/main/48305C0F-CD76-4B77-9D96-C6111E85F75E.png") center/cover;display:flex;align-items:center}
-.heroBox:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(32,8,14,.35))}
-.heroText{position:relative;z-index:1;color:#fff;padding:7%;max-width:650px}.eyebrow{color:#e2ca96;font-size:11px;letter-spacing:4px}.hero h1{font-family:"Playfair Display",serif;font-weight:500;font-size:clamp(48px,7vw,86px);line-height:1.05;margin:16px 0}.hero p{font-size:16px;line-height:2;color:#f5ebe1;max-width:520px}.goldBtn{display:inline-block;margin-top:12px;background:var(--gold);color:#fff;text-decoration:none;border:0;padding:13px 27px;cursor:pointer}
-.intro{text-align:center;padding:65px 20px 40px}.intro .mini{font-size:11px;color:var(--gold);letter-spacing:3px}.intro h2{font:500 clamp(32px,5vw,55px) "Playfair Display",serif;color:var(--wine);margin:9px 0}.intro p{max-width:690px;margin:auto;color:#776a6e;line-height:2;font-size:13px}
-.section{max-width:1280px;margin:auto;padding:35px 24px 70px}.heading{text-align:center;margin-bottom:32px}.heading span{color:var(--gold);font-size:10px;letter-spacing:3px}.heading h2{font:500 clamp(30px,4vw,45px) "Playfair Display",serif;color:var(--wine);margin:8px 0}
-.cats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:28px}.cat{border:1px solid var(--line);background:#fff;color:var(--wine);padding:9px 18px;border-radius:25px;cursor:pointer}.cat.active{background:var(--wine);color:#fff}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:#fff;border:1px solid #eee4e2;position:relative;overflow:hidden;transition:.3s}.card:hover{transform:translateY(-6px);box-shadow:0 20px 45px #35101d18}.photo{aspect-ratio:4/5;background:#eee;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover;transition:transform .7s}.card:hover img{transform:scale(1.04)}.badge{position:absolute;top:10px;right:10px;background:var(--wine);color:#fff;border-radius:20px;padding:5px 9px;font-size:9px}.info{text-align:center;padding:14px}.name{font-size:13px;font-weight:700;color:var(--deep)}.price{color:var(--wine);font-weight:800;margin-top:5px}.old{text-decoration:line-through;color:#aaa;font-size:11px;margin-left:7px}
-.ribbon{background:linear-gradient(90deg,#32101a,#641f34,#32101a);border-block:1px solid #b9985a;padding:13px 0;overflow:hidden;color:#fff;text-align:center;font-size:11px;letter-spacing:1.5px}
-.trust{text-align:center;padding:75px 20px}.trust .num{font:600 clamp(45px,8vw,76px) "Playfair Display",serif;color:var(--wine)}.trust p{margin:7px 0;color:#776a6e}
-footer{background:linear-gradient(135deg,#241019,#431321);color:#fff;text-align:center;padding:55px 20px}.footerLogo{font:500 30px "Playfair Display",serif;letter-spacing:5px;color:#e3cb98}.footerSub{font-size:8px;letter-spacing:5px;color:#b9985a;margin:3px 0 18px}.footerLinks{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;font-size:11px;color:#ddd}.credit{margin-top:25px;font-size:10px;color:#bcaeb4}
-.cart{position:fixed;left:18px;bottom:18px;z-index:30;border:0;background:var(--wine);color:#fff;border-radius:30px;padding:13px 19px;box-shadow:0 12px 30px #35101d40}
-@media(max-width:800px){.nav{min-height:64px;padding:8px 12px}.navlinks{display:none}.logo{font-size:23px}.hero{padding:8px}.heroBox{min-height:560px;border-radius:16px;background-position:center}.heroText{padding:30px}.hero p{font-size:13px}.section{padding:30px 9px 55px}.grid{grid-template-columns:repeat(2,1fr);gap:9px}.photo{aspect-ratio:4/5}.info{padding:10px 6px}.name{font-size:12px}.price{font-size:12px}.intro{padding:50px 18px 25px}}
-</style>
-</head>
+:root{--wine:#641f34;--deep:#3d1220;--gold:#b9985a;--cream:#fbf9f5;--ink:#271b20;--muted:#75696d;--line:#e9dfe1}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:Cairo,Arial,sans-serif}.top{background:var(--deep);color:#fff;text-align:center;padding:8px 10px;font-size:11px}
+header{position:sticky;top:0;z-index:50;background:rgba(251,249,245,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.nav{max-width:1400px;margin:auto;min-height:74px;padding:9px 24px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}.logo{text-align:center;font:600 29px "Playfair Display",serif;letter-spacing:5px;color:var(--wine)}.logo small{display:block;font:700 8px Cairo,sans-serif;letter-spacing:6px;color:var(--gold);margin-top:2px}.navlinks{display:flex;gap:22px;font-size:12px}.navlinks a{color:var(--ink);text-decoration:none}.actions{display:flex;justify-content:flex-end;gap:8px}.actions button{background:#fff;border:1px solid var(--line);border-radius:24px;color:var(--wine);padding:8px 12px;cursor:pointer}.cartBadge{font-size:10px}
+.hero{max-width:1450px;margin:16px auto;padding:0 14px}.heroBox{height:min(76vh,720px);min-height:430px;border-radius:20px;overflow:hidden;position:relative;background:#eee6df}.heroImg{width:100%;height:100%;object-fit:contain;object-position:center;background:#eee6df;display:block}.heroShade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(50,12,25,.62),rgba(50,12,25,.03) 70%);pointer-events:none}.heroText{position:absolute;z-index:2;inset-inline-start:6%;top:50%;transform:translateY(-50%);color:#fff;max-width:550px}.eyebrow{font-size:11px;letter-spacing:4px;color:#e5cc99}.hero h1{font:600 clamp(44px,7vw,82px)/1.05 "Playfair Display",serif;margin:15px 0}.hero p{font-size:14px;line-height:2;color:#fff;max-width:470px}.btn{display:inline-block;background:var(--gold);color:#fff;border:0;text-decoration:none;padding:13px 26px;cursor:pointer;font-family:inherit}
+.intro{text-align:center;padding:62px 20px 40px}.eyebrow2{font-size:10px;color:var(--gold);letter-spacing:3px}.intro h2,.heading h2{font:500 clamp(31px,4.5vw,48px) "Playfair Display",serif;color:var(--wine);margin:9px 0}.intro p{max-width:760px;margin:auto;color:var(--muted);font-size:13px;line-height:2}
+.section{max-width:1450px;margin:auto;padding:35px 24px 65px}.heading{text-align:center;margin-bottom:30px}.heading span{font-size:10px;letter-spacing:3px;color:var(--gold)}.cats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:30px}.cat{font-family:inherit;border:1px solid var(--line);background:#fff;color:var(--wine);padding:9px 20px;border-radius:30px;cursor:pointer}.cat.active{background:var(--wine);color:#fff}.search{display:block;width:min(620px,100%);margin:0 auto 18px;border:1px solid var(--line);background:#fff;border-radius:30px;padding:12px 18px;font-family:inherit;outline:0}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}.card{background:#fff;border:1px solid #eee4e5;position:relative;overflow:hidden;cursor:pointer;transition:.35s}.card:hover{transform:translateY(-7px);box-shadow:0 22px 50px #3d12201a}.photo{aspect-ratio:4/5;background:#eee;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover;display:block;transition:.7s}.card:hover .photo img{transform:scale(1.045)}.badge{position:absolute;top:11px;right:11px;background:var(--wine);color:#fff;padding:5px 9px;border-radius:20px;font-size:9px;z-index:2}.info{text-align:center;padding:14px 9px 17px}.name{font-size:13px;font-weight:700}.price{color:var(--wine);font-weight:800;margin-top:5px}.old{text-decoration:line-through;color:#aaa;font-size:11px;margin-left:7px}
+.ribbon{margin:0 0 15px;background:linear-gradient(90deg,#32101a,#641f34,#32101a);border-block:1px solid var(--gold);color:#fff;text-align:center;padding:13px 8px;font-size:11px;letter-spacing:1.2px}
+.trust{text-align:center;padding:68px 20px}.trustNum{font:600 clamp(48px,8vw,78px) "Playfair Display",serif;color:var(--wine)}.trust p{color:var(--muted);font-size:13px}.trust h3{font-size:19px;margin:3px}
+.social{max-width:1000px;margin:auto;text-align:center;padding:10px 20px 70px}.social h2{font:500 35px "Playfair Display",serif;color:var(--wine)}.social p{font-size:12px;color:var(--muted)}.socialGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:25px}.socialBox{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px 8px;text-decoration:none;color:var(--wine);transition:.25s}.socialBox:hover{transform:translateY(-5px);border-color:#c6ad7a;box-shadow:0 14px 30px #3d122018}.socialIcon{width:43px;height:43px;border-radius:12px;background:#f7f0ea;display:grid;place-items:center;margin:0 auto 8px;font-weight:800;font-size:18px}.socialBox small{font-size:10px}
+footer{background:linear-gradient(135deg,#241019,#431321);color:#fff;padding:55px 24px 30px;text-align:center}.footerLogo{font:600 31px "Playfair Display",serif;letter-spacing:5px;color:#e2ca96}.footerSub{font-size:8px;letter-spacing:6px;color:var(--gold)}.footerLinks{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin-top:24px}.footerLinks button{font:inherit;background:none;border:0;color:#eee;cursor:pointer}.credit{margin-top:27px;color:#e5d9dc;font-size:13px;font-weight:700}.copyright{margin-top:8px;color:#bcaeb4;font-size:10px}
+.floatCart{position:fixed;left:18px;bottom:18px;z-index:60;border:0;background:var(--wine);color:#fff;border-radius:30px;padding:13px 20px;box-shadow:0 15px 35px #3d12204d;cursor:pointer;font-family:inherit}
+.modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(26,7,13,.68);backdrop-filter:blur(5px);padding:18px;overflow:auto}.modal.open{display:flex;align-items:center;justify-content:center}.box{width:min(850px,100%);max-height:92vh;overflow:auto;background:var(--cream);border-radius:22px;padding:25px;position:relative;box-shadow:0 35px 90px #0004}.close{position:absolute;left:15px;top:12px;border:0;background:#fff;border-radius:50%;width:36px;height:36px;font-size:24px;color:var(--wine);cursor:pointer}.box h2{color:var(--wine);font:500 32px "Playfair Display",serif;margin:0 0 20px}.policyChooser{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.policyCard{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;text-align:right;cursor:pointer}.policyCard strong{display:block;color:var(--wine);margin-bottom:5px}.policyCard span{font-size:11px;color:var(--muted)}.policyView{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;line-height:2;font-size:12px;color:#594b51;display:none}.policyView.show{display:block}.detail{display:grid;grid-template-columns:1fr 1fr;gap:25px}.detailImg{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:15px;background:#eee}.detail h2{margin-top:15px}.priceBig{font-size:20px;color:var(--wine);font-weight:800}.options{margin-top:20px}.options label{display:block;font-size:12px;font-weight:700;margin:10px 0 7px}.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 12px;cursor:pointer}.chip.sel{background:var(--wine);color:#fff}.qty{display:flex;align-items:center;gap:15px;margin:15px 0}.qty button{width:34px;height:34px;border:1px solid var(--line);background:#fff;border-radius:50%;cursor:pointer}.add{width:100%;border:0;background:var(--wine);color:#fff;padding:13px;border-radius:9px;font-family:inherit;cursor:pointer}.cartRow{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.cartRow img{width:68px;height:82px;object-fit:cover;border-radius:8px}.cartRow .grow{flex:1}.cartTotal{display:flex;justify-content:space-between;font-weight:800;color:var(--wine);padding:18px 0}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form .full{grid-column:1/-1}.field{width:100%;border:1px solid var(--line);background:#fff;border-radius:9px;padding:11px;font-family:inherit}.send{margin-top:14px;width:100%;border:0;background:#2b7d46;color:#fff;padding:13px;border-radius:9px;font-family:inherit;cursor:pointer}.note{font-size:11px;color:var(--muted);line-height:1.9}
+@media(max-width:850px){.navlinks{display:none}.nav{grid-template-columns:1fr auto 1fr}.hero{padding:7px}.heroBox{height:64vh;min-height:420px;border-radius:15px}.heroImg{object-fit:contain}.heroShade{background:linear-gradient(90deg,rgba(50,12,25,.52),transparent 78%)}.heroText{inset-inline-start:6%;max-width:48%}.hero p{font-size:11px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.section{padding-inline:9px}.socialGrid{grid-template-columns:repeat(5,1fr);gap:6px}.socialBox{padding:10px 3px}.socialIcon{width:38px;height:38px}.detail{grid-template-columns:1fr}.policyChooser{grid-template-columns:1fr}.form{grid-template-columns:1fr}.form .full{grid-column:auto}}
+@media(max-width:480px){.logo{font-size:22px}.actions button{padding:7px 9px}.heroBox{height:58vh;min-height:390px}.heroText{max-width:57%;top:52%}.hero h1{font-size:42px}.hero p{display:none}.grid{gap:8px}.name{font-size:11.5px}.price{font-size:12px}.social h2{font-size:29px}.socialGrid{gap:4px}.socialBox{border-radius:11px}.socialIcon{width:34px;height:34px;font-size:15px}.socialBox small{font-size:8px}.box{padding:20px 14px}}
+</style></head>
 <body>
 <div class="top">توصيل سريع • الدفع عند الاستلام • تبديل خلال 24 ساعة</div>
 <header><div class="nav">
-<div class="navlinks"><a href="#collection">التشكيلة</a><a href="#new">الجديد</a><a href="#offers">العروض</a></div>
+<nav class="navlinks"><a href="#collection">التشكيلة</a><a href="#new">الجديد</a><a href="#offers">العروض</a></nav>
 <div class="logo">ESPOZA<small>FASHION</small></div>
-<div class="actions"><button>⌕</button><button>♡</button><button>🛍️</button></div>
+<div class="actions"><button onclick="focusSearch()">⌕</button><button onclick="openPolicies()">سياسة</button><button onclick="openCart()">🛍️ <span class="cartBadge" id="cartCount">0</span></button></div>
 </div></header>
 
-<section class="hero"><div class="heroBox"><div class="heroText">
-<div class="eyebrow">ESPOZA FASHION • SINCE 2019</div>
-<h1>أناقة<br>تُشبهكِ.</h1>
-<p>تشكيلة مختارة بعناية من الفساتين والأطقم، بتجربة متجر فاخرة مستوحاة من متاجر الأزياء العالمية.</p>
-<a class="goldBtn" href="#collection">اكتشفي التشكيلة</a>
-</div></div></section>
-
-<section class="intro" id="new"><div class="mini">THE ESPOZA EXPERIENCE</div><h2>تفاصيل تليق بإطلالتك</h2><p>واجهة أنظف، صور أكبر، منتجات أوضح، وتجربة موبايل أقرب لمتاجر الأزياء الفاخرة — مع الحفاظ على منتجات Espoza والطلب عبر واتساب.</p></section>
-
-<section class="section" id="collection"><div class="heading"><span>THE COLLECTION</span><h2>تشكيلتنا</h2></div>
-<div class="cats"><button class="cat active">الكل</button><button class="cat">الفساتين</button><button class="cat">الأطقم</button><button class="cat">العروض</button></div>
-<div class="grid">
-<div class="card"><span class="badge">جديد</span><div class="photo"><img src="https://raw.githubusercontent.com/Espoza-fashion/espoza-fashion/main/1d2e71eb-887f-4c5c-acfe-5844cacd3d80.jpeg"></div><div class="info"><div class="name">فستان سيلفانا</div><div class="price">₪250</div></div></div>
-<div class="card"><span class="badge">الأكثر طلباً</span><div class="photo"><img src="https://raw.githubusercontent.com/Espoza-fashion/espoza-fashion/main/d5b1682e-b1af-43bd-a07c-4b10ec765d54.jpeg"></div><div class="info"><div class="name">فستان ريبيكا</div><div class="price"><span class="old">₪650</span>₪350</div></div></div>
-<div class="card"><div class="photo"><img src="https://raw.githubusercontent.com/Espoza-fashion/espoza-fashion/main/25a8684d-e240-4645-8ad2-13115240e748.jpeg"></div><div class="info"><div class="name">طقم سوليرا</div><div class="price">₪350</div></div></div>
-<div class="card"><div class="photo"><img src="https://raw.githubusercontent.com/Espoza-fashion/espoza-fashion/main/3802415a-fcc0-458d-a9b8-8a776d8b4468.jpeg"></div><div class="info"><div class="name">فستان أوريليا</div><div class="price">₪320</div></div></div>
+<section class="hero"><div class="heroBox">
+<img class="heroImg" src="https://raw.githubusercontent.com/Espoza-fashion/espoza-fashion/main/48305C0F-CD76-4B77-9D96-C6111E85F75E.png" alt="Espoza Fashion">
+<div class="heroShade"></div><div class="heroText"><div class="eyebrow">ESPOZA FASHION • SINCE 2019</div><h1>أناقة<br>تُشبهكِ.</h1><p>تشكيلة مختارة بعناية من الفساتين والأطقم، بتجربة متجر فاخرة وراقية.</p><a class="btn" href="#collection">اكتشفي التشكيلة</a></div>
 </div></section>
 
-<div class="ribbon">بدأنا من 2019 ✦ ESPОZA FASHION ✦ أجود الأقمشة وتفضّل الأسعار ✦ خيارك للتألق</div>
+<section class="intro" id="new"><div class="eyebrow2">THE ESPOZA EXPERIENCE</div><h2>تفاصيل تليق بإطلالتك</h2><p>تجربة تسوق كاملة: اكتشاف القطعة، اختيار اللون والمقاس، إضافتها للسلة، ثم إرسال الطلب عبر واتساب بسهولة.</p></section>
 
-<section class="trust"><div class="num">7,750+</div><h2>زبونة وزبون اختاروا Espoza Fashion</h2><p>ثقة تتجدد مع كل طلب</p></section>
+<section class="section" id="collection"><div class="heading"><span>THE COLLECTION</span><h2>تشكيلتنا</h2></div>
+<input id="search" class="search" placeholder="ابحثي عن قطعة أو اسم المنتج..." oninput="render()">
+<div class="cats"><button class="cat active" onclick="setCat('all',this)">الكل</button><button class="cat" onclick="setCat('dresses',this)">الفساتين</button><button class="cat" onclick="setCat('sets',this)">الأطقم</button><button class="cat" onclick="setCat('offers',this)">العروض</button></div>
+<div class="grid" id="products"></div></section>
 
-<section class="section" id="offers"><div class="heading"><span>CONTACT & TRUST</span><h2>تجربة تسوق راقية</h2></div><div style="text-align:center;color:#776a6e;line-height:2;font-size:13px">طلب سريع عبر واتساب • الدفع عند الاستلام • توصيل للضفة والقدس والداخل</div></section>
+<div class="ribbon">بدأنا من 2019 ✦ Espoza Fashion ✦ أجود الأقمشة وتفضّل الأسعار ✦ خيارك للتألق</div>
+<section class="trust"><div class="trustNum">7,750+</div><h3>زبونة وزبون اختاروا Espoza Fashion</h3><p>ثقة تتجدد مع كل طلب</p></section>
 
-<footer><div class="footerLogo">ESPOZA</div><div class="footerSub">FASHION</div><div>إسبوزا فاشن — منذ 2019</div><div class="footerLinks" style="margin-top:20px"><span>التشكيلة</span><span>سياسة الاستبدال</span><span>تواصل معنا</span><span>Instagram</span><span>TikTok</span></div><div class="credit">Designed &amp; Created by Yousef Ajra</div></footer>
-<button class="cart">🛍️ السلة <b>0</b></button>
+<section class="social" id="offers"><h2>تابعينا أينما كنتِ</h2><p>اضغطي على أي منصة للانتقال مباشرة إلى حساب Espoza Fashion.</p>
+<div class="socialGrid">
+<a class="socialBox" href="https://www.instagram.com/espoza_fashion" target="_blank"><div class="socialIcon">◎</div><small>Instagram</small></a>
+<a class="socialBox" href="https://www.facebook.com/share/19DhHV6Aty/?mibextid=wwXIfr" target="_blank"><div class="socialIcon">f</div><small>Facebook</small></a>
+<a class="socialBox" href="https://www.tiktok.com/@espoza.fashion" target="_blank"><div class="socialIcon">♪</div><small>TikTok</small></a>
+<a class="socialBox" href="https://snapchat.com/t/qn0wx9ou" target="_blank"><div class="socialIcon">👻</div><small>Snapchat</small></a>
+<a class="socialBox" href="https://wa.me/972595461861" target="_blank"><div class="socialIcon">☏</div><small>WhatsApp</small></a>
+</div></section>
+
+<footer><div class="footerLogo">ESPOZA</div><div class="footerSub">FASHION</div><p>إسبوزا فاشن — منذ 2019</p>
+<div class="footerLinks"><a href="#collection" style="color:#fff;text-decoration:none">التشكيلة</a><button onclick="openPolicies()">سياسات الشركة</button><a href="https://wa.me/972595461861" target="_blank" style="color:#fff;text-decoration:none">تواصل معنا</a></div>
+<div class="credit">Designed &amp; Created by Yousef Ajra</div><div class="copyright">© 2026 Espoza Fashion. جميع الحقوق محفوظة.</div></footer>
+<button class="floatCart" onclick="openCart()">🛍️ السلة <span id="floatCount">0</span></button>
+
+<div class="modal" id="policyModal"><div class="box"><button class="close" onclick="closeModal('policyModal')">×</button><h2>سياسات الشركة</h2>
+<div class="policyChooser">
+<button class="policyCard" onclick="policy('exchange')"><strong>سياسة الاستبدال</strong><span>شروط ومدة الاستبدال</span></button>
+<button class="policyCard" onclick="policy('delivery')"><strong>سياسة الطلب والتوصيل</strong><span>مناطق وأسعار التوصيل</span></button>
+<button class="policyCard" onclick="policy('payment')"><strong>سياسة الدفع</strong><span>الدفع عند الاستلام وتأكيد الطلب</span></button>
+<button class="policyCard" onclick="policy('privacy')"><strong>الخصوصية والتواصل</strong><span>كيف نتعامل مع بيانات الطلب</span></button>
+</div><div class="policyView" id="policyView"></div></div></div>
+
+<div class="modal" id="productModal"><div class="box"><button class="close" onclick="closeModal('productModal')">×</button><div class="detail">
+<div><img id="detailImg" class="detailImg"></div><div><h2 id="detailName"></h2><div class="priceBig" id="detailPrice"></div><div class="options"><label>المقاس</label><div class="chips" id="sizes"></div><label>اللون</label><div class="chips" id="colors"></div><label>الكمية</label><div class="qty"><button onclick="qty(-1)">−</button><b id="qty">1</b><button onclick="qty(1)">+</button></div><button class="add" onclick="addToCart()">أضيفي للسلة</button></div></div></div></div></div>
+
+<div class="modal" id="cartModal"><div class="box"><button class="close" onclick="closeModal('cartModal')">×</button><h2>سلة التسوق</h2><div id="cartItems"></div><div class="cartTotal"><span>المجموع</span><span id="cartTotal">₪0</span></div><button class="add" onclick="checkout()">إتمام الطلب</button></div></div>
+
+<div class="modal" id="orderModal"><div class="box"><button class="close" onclick="closeModal('orderModal')">×</button><h2>إتمام الطلب</h2><div class="form">
+<div><label>الاسم الكامل</label><input class="field" id="customerName"></div><div><label>رقم الهاتف</label><input class="field" id="customerPhone" type="tel"></div>
+<div class="full"><label>منطقة التوصيل</label><select class="field" id="delivery"><option value="20">الضفة الغربية — ₪20</option><option value="30">القدس — ₪30</option><option value="70">الداخل / 48 — ₪70</option></select></div>
+<div class="full"><label>العنوان بالتفصيل</label><textarea class="field" id="address" rows="3" placeholder="المدينة / البلدة / الحي / الشارع"></textarea></div>
+<div class="full"><label>ملاحظات</label><textarea class="field" id="notes" rows="2"></textarea></div>
+</div><p class="note">الدفع عند الاستلام. يرجى التأكد من رقم الهاتف والعنوان قبل إرسال الطلب.</p><button class="send" onclick="sendOrder()">إرسال الطلب عبر واتساب</button></div></div>
+
+<script>
+function P(name,category,price,sizesStr,imagesArg,extra){const o=Object.assign({name,category,price,sizes:sizesStr?sizesStr.split(","):[],images:Array.isArray(imagesArg)?imagesArg:[imagesArg]},extra||{});if(typeof o.colors==="string")o.colors=o.colors.split(",");return o;}
+const STATIC_PRODUCTS=[
+
+P("فستان سيليست","dresses",400,"38,40,42,44,46","B08EE5A6-A22B-4060-866C-30CA4B0D5A5B.jpeg"),
+P("فستان سيلفانا","dresses",250,"42,44,46,48,50,52,54","1d2e71eb-887f-4c5c-acfe-5844cacd3d80.jpeg"),
+P("فستان أستريا","dresses",280,"44,46,48,50,52,54,56","IMG_3062.jpeg"),
+P("فستان فلورانس","dresses",300,"42,44,46,48,50,52,54,56","bba65b45-65ac-4bcf-9951-ccd0aee6b7e3.jpeg"),
+P("فستان سكارليت","dresses",300,"42,44,46,48,50,52,54","a5824a77-f846-495a-8b9b-f017e5db60b1.jpeg"),
+P("فستان ريبيكا","dresses",350,"38,40,42,44","d5b1682e-b1af-43bd-a07c-4b10ec765d54.jpeg",{oldPrice:650,offer:true}),
+P("فستان روزاليا","dresses",280,"40,42,44,46","96d63dcc-5bb1-41f5-afc0-12cc18a95987.jpeg"),
+P("فستان داليا","dresses",260,"42,44,46,48,50,52,54","f1cdadad-8329-4409-9e0f-6cafaac54118.jpeg"),
+P("فستان كاميليا","dresses",320,"38,40,42,44,46","7035804c-9be8-46cb-be3e-b7368f5021c4.jpeg"),
+P("فستان آيرس","dresses",280,"42,44,46,48,50,52,54,56","76a94ecc-4a8a-4559-9f73-fdfb29b56a76.jpeg"),
+P("فستان لورينا","dresses",250,"42,44,46,48,50,52,54","4eeb7b16-4dd3-40f1-b4fc-b47d2d1f8c2f.jpeg"),
+P("فستان رولانا","dresses",400,"50,52,54","e8aea098-0346-4cb0-994d-fec2e8ba380c.jpeg"),
+P("فستان إلورا","dresses",300,"38,40,42,44,46","IMG_3331.jpeg"),
+P("فستان أمارا","dresses",280,"42,44,46,48,50,52,54","4abd7c1d-5c7c-4ea3-91a8-a5f367d42117.jpeg"),
+P("فستان أريانا","dresses",250,"42,44,46,48,50,52,54","21de8edf-b602-4102-98af-3daa451d782a.jpeg"),
+P("فستان نيراليا","dresses",260,"42,44,46","d595d10e-d3e1-40b0-b32e-dae06ebc38d4.jpeg"),
+P("فستان سيرافينا","dresses",300,"44,46,48,50,52,54,56","0d60249c-784a-4aeb-9c1a-f0e00786b96d.jpeg"),
+P("فستان أوريليا","dresses",320,"44,46,48,50,52","3802415a-fcc0-458d-a9b8-8a776d8b4468.jpeg"),
+P("فستان إيلارا","dresses",300,"44,46,48,50,52,54,56,58","52b190e5-e6e2-43c4-bc0b-29bd4fff703d.jpeg"),
+P("فستان أليورا","dresses",250,"48,50,52,54,56,58,60",["IMG_3413.jpeg","IMG_3414.jpeg"],{colors:"زيتي,بني"}),
+P("فستان ميلورا","dresses",280,"44,46,48,50,52","3294543a-5a41-4e3c-aa52-ae9a56166169.jpeg"),
+P("فستان لافيرا","dresses",250,"42,44,46,48,50,52,54","1721952f-b2fb-47d4-812e-59d7d1f552d3.jpeg"),
+P("فستان إيلينا","dresses",280,"40,42,44,46,48,50,52,54",["efb60c11-651a-49cc-bca2-5c4673416142.jpeg","fcd71140-fe8b-4e20-82c2-15fa10856e17.jpeg"],{colors:"كحلي,خمري"}),
+P("طقم أفيورا","sets",250,"38,40,42,44","CDDB9175-C192-466A-A5F2-BAE98767E909.png"),
+P("طقم ناديرا","sets",270,"44,46,48,50,52,54","f7b6f62a-31b3-4f3f-ae99-c198da51af0b.jpeg"),
+P("طقم لوسارا","sets",220,"44,46,48,50,52,54,56","43c0471b-d34b-4709-bcb6-2060f442bd51.jpeg"),
+P("طقم تيمارا","sets",220,"40,42,44,46,48,50,52","a3611702-a408-42f4-b14b-8762c10ddde1.jpeg"),
+P("فستان روزيفا","dresses",300,"42,44,46,48,50","452d0ae1-964c-4bf9-8893-56ad370240de.jpeg"),
+P("فستان زيلورا","dresses",100,"46,48","62BBCC70-847F-407A-A8EB-3D6BC3B00561.png",{oldPrice:270,offer:true}),
+P("فستان تيراليا","dresses",100,"42,44","6420BB84-199C-4479-9A19-20D44772C5D3.png",{oldPrice:270,offer:true}),
+P("فستان ناليسا","dresses",100,"42,44,46,48,50,52","CE736C47-5B25-4310-BDD1-41470F7ACF88.png",{oldPrice:350,offer:true}),
+P("فستان ليورا","dresses",250,"42,44,46,48,50,52,54","60843747-a8a2-4f91-8a91-92e1e07d1755.jpeg"),
+P("طقم سوليرا","sets",350,"42,44,46,48,50,52,54",["25a8684d-e240-4645-8ad2-13115240e748.jpeg","adefc759-64ce-485c-8e13-2fcefa0cf343.jpeg","5f64d5a2-8c50-41ee-8e14-079ce0a59a64.jpeg"],{colors:"أسود,أخضر,خمري"}),
+P("طقم فالورا","sets",290,"42,44,46,48,50,52,54","d25eb23c-800b-432b-95ea-d008c721c04c.jpeg"),
+P("فستان نيسارا","dresses",260,"42,44,46,48,50,52",["IMG_3065.jpeg","eZy Watermark_08-08-2026_08-27-51-6200PM.jpeg"],{colors:"كحلي,أخضر"}),
+P("فستان كالينا","dresses",250,"42,44,46,48,50,52,54","03431a2b-ed8b-45db-8533-2765b0896f1f.jpeg"),
+P("طقم ريفانا","sets",220,"40,42,44,46,48,50,52","6fe7c5d2-e21d-4ccc-a5e5-4e81b850d394.jpeg"),
+P("طقم ديلارا","sets",220,"38,40,42,44,46,48","29ac75c5-42f9-41d6-9b7e-f067d1a90bd7.jpeg"),
+P("فستان ماريلدا","dresses",400,"38,40,42,44,46","IMG_3268.jpeg"),
+P("فستان فينورا","dresses",450,"46,48","10968618-b416-4abe-bf4d-65e80d4f2dc7.jpeg"),
+P("فستان أليندا","dresses",270,"44,46,48,50,52,54","171db8cd-1a12-4055-a350-bf323ac8748e.jpeg"),
+P("طقم فايورا","sets",250,"44,46,48,50,52,54,56","8791d719-9671-4744-8989-209a348e3e4f.jpeg"),
+];
+const productsData=STATIC_PRODUCTS;
+const RAW='https://raw.githubusercontent.com/Espoza-fashion/espoza-fashion/main/';
+const img=x=>RAW+encodeURIComponent(x);
+let category='all', current=null, selectedSize='', selectedColor='', quantity=1, cart=[];
+const $=id=>document.getElementById(id);
+function setCat(c,el){category=c;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();location.hash='collection'}
+function render(){const q=($('search').value||'').trim().toLowerCase();let list=productsData.filter(p=>(category==='all'||p.category===category||(category==='offers'&&p.offer))&&(!q||p.name.toLowerCase().includes(q)));$('products').innerHTML=list.map((p,i)=>{const src=Array.isArray(p.images)?p.images[0]:p.images;return '<article class="card" onclick="openProduct('+i+')">'+(p.offer?'<span class="badge">عرض</span>':'')+'<div class="photo"><img src="'+img(src)+'" alt="'+p.name+'" loading="lazy" onerror="this.style.opacity=.3"></div><div class="info"><div class="name">'+p.name+'</div><div class="price">'+(p.oldPrice?'<span class="old">₪'+p.oldPrice+'</span>':'')+'₪'+p.price+'</div></div></article>'}).join('')}
+function openProduct(i){current=productsData[i];selectedSize=current.sizes[0]||'';selectedColor=(current.colors&&current.colors[0])||'';quantity=1;$('detailImg').src=img(Array.isArray(current.images)?current.images[0]:current.images);$('detailName').textContent=current.name;$('detailPrice').textContent='₪'+current.price;$('qty').textContent=quantity;$('sizes').innerHTML=(current.sizes||[]).map(s=>'<button class="chip '+(s===selectedSize?'sel':'')+'" onclick="selectSize(this)">'+s+'</button>').join('');$('colors').innerHTML=(current.colors||['متوفر']).map(c=>'<button class="chip '+(c===selectedColor?'sel':'')+'" onclick="selectColor(this)">'+c+'</button>').join('');openModal('productModal')}
+function selectSize(b){selectedSize=b.textContent;document.querySelectorAll('#sizes .chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+function selectColor(b){selectedColor=b.textContent;document.querySelectorAll('#colors .chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
+function qty(n){quantity=Math.max(1,quantity+n);$('qty').textContent=quantity}
+function addToCart(){cart.push({p:current,size:selectedSize,color:selectedColor,qty:quantity});updateCart();closeModal('productModal');openCart()}
+function updateCart(){$('cartCount').textContent=cart.reduce((a,x)=>a+x.qty,0);$('floatCount').textContent=cart.reduce((a,x)=>a+x.qty,0)}
+function openCart(){const box=$('cartItems');if(!cart.length){box.innerHTML='<p class="note">السلة فارغة حاليًا. اختاري قطعة من التشكيلة.</p>'}else{box.innerHTML=cart.map((x,i)=>'<div class="cartRow"><img src="'+img(Array.isArray(x.p.images)?x.p.images[0]:x.p.images)+'"><div class="grow"><b>'+x.p.name+'</b><div class="note">مقاس: '+x.size+' • لون: '+x.color+' • كمية: '+x.qty+'</div></div><button class="chip" onclick="removeCart('+i+')">حذف</button></div>').join('')}$('cartTotal').textContent='₪'+cart.reduce((a,x)=>a+x.p.price*x.qty,0);openModal('cartModal')}
+function removeCart(i){cart.splice(i,1);updateCart();openCart()}
+function checkout(){if(!cart.length)return;closeModal('cartModal');openModal('orderModal')}
+function sendOrder(){const name=$('customerName').value.trim(),phone=$('customerPhone').value.trim(),address=$('address').value.trim(),delivery=Number($('delivery').value);if(!name||!phone||!address){alert('يرجى تعبئة الاسم ورقم الهاتف والعنوان.');return}const items=cart.map(x=>x.p.name+' | مقاس '+x.size+' | '+x.color+' | ×'+x.qty).join('%0A');const subtotal=cart.reduce((a,x)=>a+x.p.price*x.qty,0),total=subtotal+delivery;const msg='طلب جديد من موقع Espoza Fashion%0A%0Aالاسم: '+encodeURIComponent(name)+'%0Aالهاتف: '+encodeURIComponent(phone)+'%0Aالعنوان: '+encodeURIComponent(address)+'%0A%0Aالمنتجات:%0A'+items+'%0A%0Aمجموع المنتجات: ₪'+subtotal+'%0Aالتوصيل: ₪'+delivery+'%0Aالمجموع النهائي: ₪'+total+'%0Aطريقة الدفع: الدفع عند الاستلام';window.open('https://wa.me/972595461861?text='+msg,'_blank')}
+const policyText={exchange:'يسمح بالاستبدال خلال 24 ساعة من استلام الطرد، بشرط أن تكون القطعة بحالتها الأصلية وغير مستخدمة وغير مغسولة ومع الحفاظ على التغليف والبطاقات إن وجدت. لا يتم قبول الاستبدال بعد انتهاء المدة المحددة. القطع المخفضة أو الخاصة قد تخضع لشروط إضافية موضحة عند الطلب.',delivery:'يتم تجهيز الطلبات وإرسالها بأسرع وقت ممكن، وعادةً خلال 2–3 أيام حسب المنطقة وشركة التوصيل. رسوم التوصيل: الضفة ₪20، القدس ₪30، والداخل/48 ₪70. يفضل التأكد من توفر الهاتف والعنوان قبل تأكيد الطلب.',payment:'الدفع عند الاستلام. يتم تأكيد الطلب عبر واتساب، وقد يتم التواصل مع الزبونة للتأكد من تفاصيل المقاس والعنوان. الأسعار الظاهرة في الموقع هي أسعار القطع ولا تشمل التوصيل إلا إذا ذُكر خلاف ذلك.',privacy:'نستخدم بيانات الاسم والهاتف والعنوان فقط لمعالجة الطلب والتوصيل والتواصل المرتبط بالطلب. لا نطلب بيانات بطاقات الدفع في الموقع في هذه النسخة التجريبية، ولا يتم عرض معلومات الطلب للعامة.'};
+function policy(k){$('policyView').innerHTML='<h3>'+({exchange:'سياسة الاستبدال',delivery:'سياسة الطلب والتوصيل',payment:'سياسة الدفع',privacy:'الخصوصية والتواصل'})[k]+'</h3><p>'+policyText[k]+'</p>';$('policyView').classList.add('show')}
+function openPolicies(){$('policyView').classList.remove('show');openModal('policyModal')}
+function openModal(id){$(id).classList.add('open')}
+function closeModal(id){$(id).classList.remove('open')}
+function focusSearch(){location.hash='collection';setTimeout(()=>$('search').focus(),300)}
+window.addEventListener('click',e=>{if(e.target.classList.contains('modal'))e.target.classList.remove('open')});
+render();updateCart();
+</script>
 </body></html>
