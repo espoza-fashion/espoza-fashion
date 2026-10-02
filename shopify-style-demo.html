@@ -21,13 +21,36 @@ footer{background:linear-gradient(135deg,#241019,#431321);color:#fff;padding:55p
 .modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(26,7,13,.68);backdrop-filter:blur(5px);padding:18px;overflow:auto}.modal.open{display:flex;align-items:center;justify-content:center}.box{width:min(850px,100%);max-height:92vh;overflow:auto;background:var(--cream);border-radius:22px;padding:25px;position:relative;box-shadow:0 35px 90px #0004}.close{position:absolute;left:15px;top:12px;border:0;background:#fff;border-radius:50%;width:36px;height:36px;font-size:24px;color:var(--wine);cursor:pointer}.box h2{color:var(--wine);font:500 32px "Playfair Display",serif;margin:0 0 20px}.policyChooser{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.policyCard{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;text-align:right;cursor:pointer}.policyCard strong{display:block;color:var(--wine);margin-bottom:5px}.policyCard span{font-size:11px;color:var(--muted)}.policyView{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;line-height:2;font-size:12px;color:#594b51;display:none}.policyView.show{display:block}.detail{display:grid;grid-template-columns:1fr 1fr;gap:25px}.detailImg{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:15px;background:#eee}.detail h2{margin-top:15px}.priceBig{font-size:20px;color:var(--wine);font-weight:800}.options{margin-top:20px}.options label{display:block;font-size:12px;font-weight:700;margin:10px 0 7px}.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 12px;cursor:pointer}.chip.sel{background:var(--wine);color:#fff}.qty{display:flex;align-items:center;gap:15px;margin:15px 0}.qty button{width:34px;height:34px;border:1px solid var(--line);background:#fff;border-radius:50%;cursor:pointer}.add{width:100%;border:0;background:var(--wine);color:#fff;padding:13px;border-radius:9px;font-family:inherit;cursor:pointer}.cartRow{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.cartRow img{width:68px;height:82px;object-fit:cover;border-radius:8px}.cartRow .grow{flex:1}.cartTotal{display:flex;justify-content:space-between;font-weight:800;color:var(--wine);padding:18px 0}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form .full{grid-column:1/-1}.field{width:100%;border:1px solid var(--line);background:#fff;border-radius:9px;padding:11px;font-family:inherit}.send{margin-top:14px;width:100%;border:0;background:#2b7d46;color:#fff;padding:13px;border-radius:9px;font-family:inherit;cursor:pointer}.note{font-size:11px;color:var(--muted);line-height:1.9}
 @media(max-width:850px){.navlinks{display:none}.nav{grid-template-columns:1fr auto 1fr}.hero{padding:7px}.heroBox{height:64vh;min-height:420px;border-radius:15px}.heroImg{object-fit:contain}.heroShade{background:linear-gradient(90deg,rgba(50,12,25,.52),transparent 78%)}.heroText{inset-inline-start:6%;max-width:48%}.hero p{font-size:11px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.section{padding-inline:9px}.socialGrid{grid-template-columns:repeat(5,1fr);gap:6px}.socialBox{padding:10px 3px}.socialIcon{width:38px;height:38px}.detail{grid-template-columns:1fr}.policyChooser{grid-template-columns:1fr}.form{grid-template-columns:1fr}.form .full{grid-column:auto}}
 @media(max-width:480px){.logo{font-size:22px}.actions button{padding:7px 9px}.heroBox{height:58vh;min-height:390px}.heroText{max-width:57%;top:52%}.hero h1{font-size:42px}.hero p{display:none}.grid{gap:8px}.name{font-size:11.5px}.price{font-size:12px}.social h2{font-size:29px}.socialGrid{gap:4px}.socialBox{border-radius:11px}.socialIcon{width:34px;height:34px;font-size:15px}.socialBox small{font-size:8px}.box{padding:20px 14px}}
+
+<style>
+/* === Espoza Premium additions === */
+.navlinks a{cursor:pointer}
+.wishCount{font-size:10px}
+.wishBtn{position:relative}
+.wishBadge{position:absolute;top:-6px;right:-6px;background:var(--gold);color:#fff;min-width:17px;height:17px;border-radius:20px;font-size:9px;display:grid;place-items:center}
+.card .heartBtn{position:absolute;left:10px;top:10px;z-index:4;width:35px;height:35px;border:0;border-radius:50%;background:rgba(255,255,255,.94);color:var(--wine);font-size:18px;cursor:pointer;box-shadow:0 5px 15px #0001}
+.card .heartBtn.active{background:var(--wine);color:#fff}
+.wishlist-section,.feedback-section,.story-section{max-width:1450px;margin:auto;padding:55px 24px}
+.wishlist-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.feedback-section{padding-top:20px}
+.feedback-track-wrap{overflow:hidden;border-radius:18px;-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
+.feedback-track{display:flex;direction:ltr;gap:14px;width:max-content;animation:feedbackMove 48s linear infinite}
+.feedback-track img{width:145px;height:235px;object-fit:cover;border-radius:18px;background:#eee;border:5px solid #fff;box-shadow:0 10px 25px #3d122018;cursor:pointer}
+@keyframes feedbackMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.story-section{background:linear-gradient(135deg,#fff,#f7eef0);border-block:1px solid var(--line);text-align:center}
+.story-inner{max-width:850px;margin:auto}
+.story-inner h2{font:500 clamp(32px,5vw,52px) "Playfair Display",serif;color:var(--wine);margin:8px 0 15px}
+.story-inner p{color:var(--muted);line-height:2;font-size:13px}
+.daily{font-size:13px;color:var(--wine);font-weight:800;margin-top:10px}
+.counterSub{color:var(--muted);font-size:12px}
+@media(max-width:850px){.wishlist-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.wishlist-section,.feedback-section,.story-section{padding-inline:10px}.feedback-track img{width:125px;height:205px}}
 </style></head>
 <body>
 <div class="top">توصيل سريع • الدفع عند الاستلام • تبديل خلال 24 ساعة</div>
 <header><div class="nav">
-<nav class="navlinks"><a href="#collection">التشكيلة</a><a href="#new">الجديد</a><a href="#offers">العروض</a></nav>
+<nav class="navlinks"><a href="#collection">التشكيلة</a><a href="#new">الجديد</a><a href="#offers">العروض</a><a href="#feedback">الفيدباك</a></nav>
 <div class="logo">ESPOZA<small>FASHION</small></div>
-<div class="actions"><button onclick="focusSearch()">⌕</button><button onclick="openPolicies()">سياسة</button><button onclick="openCart()">🛍️ <span class="cartBadge" id="cartCount">0</span></button></div>
+<div class="actions"><button onclick="focusSearch()">⌕</button><button onclick="openPolicies()">سياسة</button><button class="wishBtn" onclick="scrollToWishlist()">♡ <span class="wishBadge" id="wishCount">0</span></button><button onclick="openCart()">🛍️ <span class="cartBadge" id="cartCount">0</span></button></div>
 </div></header>
 
 <section class="hero"><div class="heroBox">
@@ -42,8 +65,20 @@ footer{background:linear-gradient(135deg,#241019,#431321);color:#fff;padding:55p
 <div class="cats"><button class="cat active" onclick="setCat('all',this)">الكل</button><button class="cat" onclick="setCat('dresses',this)">الفساتين</button><button class="cat" onclick="setCat('sets',this)">الأطقم</button><button class="cat" onclick="setCat('offers',this)">العروض</button></div>
 <div class="grid" id="products"></div></section>
 
-<div class="ribbon">بدأنا من 2019 ✦ Espoza Fashion ✦ أجود الأقمشة وتفضّل الأسعار ✦ خيارك للتألق</div>
-<section class="trust"><div class="trustNum">7,750+</div><h3>زبونة وزبون اختاروا Espoza Fashion</h3><p>ثقة تتجدد مع كل طلب</p></section>
+<div class="ribbon" style="overflow:hidden;padding:0;background:linear-gradient(90deg,#32101a,#641f34,#32101a);border-block:1px solid var(--gold)">
+<div class="marquee-track" style="animation:marqueeDemo 22s linear infinite;display:flex;width:max-content;direction:ltr">
+<span style="padding:13px 28px;white-space:nowrap">بدأنا من 2019 ✦ Espoza Fashion ✦ أجود الأقمشة وأفضل الأسعار ✦ مئات الرسائل يومياً ✦ خيارك للتألق ✦ </span>
+<span style="padding:13px 28px;white-space:nowrap">بدأنا من 2019 ✦ Espoza Fashion ✦ أجود الأقمشة وأفضل الأسعار ✦ مئات الرسائل يومياً ✦ خيارك للتألق ✦ </span>
+<span style="padding:13px 28px;white-space:nowrap">بدأنا من 2019 ✦ Espoza Fashion ✦ أجود الأقمشة وأفضل الأسعار ✦ مئات الرسائل يومياً ✦ خيارك للتألق ✦ </span>
+</div></div>
+<style>@keyframes marqueeDemo{from{transform:translateX(0)}to{transform:translateX(-33.333%)}}</style>
+<section class="trust"><div class="trustNum"><span id="customerCounter">7,500</span>+</div><h3>زبونة وزبون اختاروا Espoza Fashion</h3><p class="counterSub">ثقة تتجدد مع كل طلب • مئات الرسائل يومياً</p></section>
+
+<section class="wishlist-section" id="wishlist"><div class="heading"><span>YOUR WISHLIST</span><h2>قائمة الأمنيات</h2></div><p style="text-align:center;color:var(--muted);font-size:12px;margin-top:-18px;margin-bottom:25px">احفظي القطع التي أعجبتكِ وارجعي لها بأي وقت.</p><div class="wishlist-grid" id="wishlistGrid"></div></section>
+
+<section class="feedback-section" id="feedback"><div class="heading"><span>CUSTOMER FEEDBACK</span><h2>20+ آراء زبائننا</h2><p class="daily">مئات الرسائل يومياً من زبائن Espoza Fashion</p></div><div class="feedback-track-wrap"><div class="feedback-track" id="feedbackTrack"></div></div></section>
+
+<section class="story-section"><div class="story-inner"><div class="eyebrow2">OUR STORY • SINCE 2019</div><h2>من أين بدأت قصة Espoza Fashion؟</h2><p>بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. ومع الوقت كبرت التشكيلة، وكبرت معها ثقة زبائننا، لنستمر اليوم في تقديم الفساتين والأطقم والقطع الأنيقة بعناية واهتمام بكل تفصيل.</p><div class="daily">مئات الرسائل يومياً • ثقة تتجدد مع كل طلب • Espoza Fashion</div></div></section>
 
 <section class="social" id="offers"><h2>تابعينا أينما كنتِ</h2><p>اضغطي على أي منصة للانتقال مباشرة إلى حساب Espoza Fashion.</p>
 <div class="socialGrid">
@@ -55,7 +90,7 @@ footer{background:linear-gradient(135deg,#241019,#431321);color:#fff;padding:55p
 </div></section>
 
 <footer><div class="footerLogo">ESPOZA</div><div class="footerSub">FASHION</div><p>إسبوزا فاشن — منذ 2019</p>
-<div class="footerLinks"><a href="#collection" style="color:#fff;text-decoration:none">التشكيلة</a><button onclick="openPolicies()">سياسات الشركة</button><a href="https://wa.me/972595461861" target="_blank" style="color:#fff;text-decoration:none">تواصل معنا</a></div>
+<div class="footerLinks"><a href="#collection" style="color:#fff;text-decoration:none">التشكيلة</a><a href="#wishlist" style="color:#fff;text-decoration:none">قائمة الأمنيات</a><a href="#feedback" style="color:#fff;text-decoration:none">الفيدباك</a><button onclick="openPolicies()">سياسات الشركة</button><a href="https://wa.me/972595461861" target="_blank" style="color:#fff;text-decoration:none">تواصل معنا</a></div>
 <div class="credit">Designed &amp; Created by Yousef Ajra</div><div class="copyright">© 2026 Espoza Fashion. جميع الحقوق محفوظة.</div></footer>
 <button class="floatCart" onclick="openCart()">🛍️ السلة <span id="floatCount">0</span></button>
 
@@ -70,12 +105,13 @@ footer{background:linear-gradient(135deg,#241019,#431321);color:#fff;padding:55p
 <div class="modal" id="productModal"><div class="box"><button class="close" onclick="closeModal('productModal')">×</button><div class="detail">
 <div><img id="detailImg" class="detailImg"></div><div><h2 id="detailName"></h2><div class="priceBig" id="detailPrice"></div><div class="options"><label>المقاس</label><div class="chips" id="sizes"></div><label>اللون</label><div class="chips" id="colors"></div><label>الكمية</label><div class="qty"><button onclick="qty(-1)">−</button><b id="qty">1</b><button onclick="qty(1)">+</button></div><button class="add" onclick="addToCart()">أضيفي للسلة</button></div></div></div></div></div>
 
-<div class="modal" id="cartModal"><div class="box"><button class="close" onclick="closeModal('cartModal')">×</button><h2>سلة التسوق</h2><div id="cartItems"></div><div class="cartTotal"><span>المجموع</span><span id="cartTotal">₪0</span></div><button class="add" onclick="checkout()">إتمام الطلب</button></div></div>
+<div class="modal" id="cartModal"><div class="box"><button class="close" onclick="closeModal('cartModal')">×</button><h2>سلة التسوق</h2><div id="cartItems"></div><div class="cartTotal"><span>مجموع القطع</span><span id="cartTotal">₪0</span></div><p class="note">سيتم احتساب التوصيل عند إتمام الطلب: الضفة ₪20 • القدس ₪30 • الداخل/48 ₪70.</p><button class="add" onclick="checkout()">إتمام الطلب</button></div></div>
 
 <div class="modal" id="orderModal"><div class="box"><button class="close" onclick="closeModal('orderModal')">×</button><h2>إتمام الطلب</h2><div class="form">
 <div><label>الاسم الكامل</label><input class="field" id="customerName"></div><div><label>رقم الهاتف</label><input class="field" id="customerPhone" type="tel"></div>
 <div class="full"><label>منطقة التوصيل</label><select class="field" id="delivery"><option value="20">الضفة الغربية — ₪20</option><option value="30">القدس — ₪30</option><option value="70">الداخل / 48 — ₪70</option></select></div>
-<div class="full"><label>العنوان بالتفصيل</label><textarea class="field" id="address" rows="3" placeholder="المدينة / البلدة / الحي / الشارع"></textarea></div>
+<div><label>المدينة / البلدة</label><input class="field" id="city" placeholder="مثال: Bethlehem"></div><div><label>المنطقة / الحي</label><input class="field" id="district" placeholder="مثال: الدوحة"></div>
+<div class="full"><label>العنوان بالتفصيل</label><textarea class="field" id="address" rows="3" placeholder="مثال: الدوحة، بجانب المنطقة الصناعية، اسم الشارع، رقم البناية / أقرب نقطة دالة"></textarea></div>
 <div class="full"><label>ملاحظات</label><textarea class="field" id="notes" rows="2"></textarea></div>
 </div><p class="note">الدفع عند الاستلام. يرجى التأكد من رقم الهاتف والعنوان قبل إرسال الطلب.</p><button class="send" onclick="sendOrder()">إرسال الطلب عبر واتساب</button></div></div>
 
@@ -132,7 +168,7 @@ const img=x=>RAW+encodeURIComponent(x);
 let category='all', current=null, selectedSize='', selectedColor='', quantity=1, cart=[];
 const $=id=>document.getElementById(id);
 function setCat(c,el){category=c;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();location.hash='collection'}
-function render(){const q=($('search').value||'').trim().toLowerCase();let list=productsData.filter(p=>(category==='all'||p.category===category||(category==='offers'&&p.offer))&&(!q||p.name.toLowerCase().includes(q)));$('products').innerHTML=list.map((p,i)=>{const src=Array.isArray(p.images)?p.images[0]:p.images;return '<article class="card" onclick="openProduct('+i+')">'+(p.offer?'<span class="badge">عرض</span>':'')+'<div class="photo"><img src="'+img(src)+'" alt="'+p.name+'" loading="lazy" onerror="this.style.opacity=.3"></div><div class="info"><div class="name">'+p.name+'</div><div class="price">'+(p.oldPrice?'<span class="old">₪'+p.oldPrice+'</span>':'')+'₪'+p.price+'</div></div></article>'}).join('')}
+function render(){const q=($('search').value||'').trim().toLowerCase();let list=productsData.filter(p=>(category==='all'||p.category===category||(category==='offers'&&p.offer))&&(!q||p.name.toLowerCase().includes(q)));$('products').innerHTML=list.map(p=>{const idx=productsData.indexOf(p);const src=Array.isArray(p.images)?p.images[0]:p.images;const fav=isWishlisted(p);return '<article class="card" onclick="openProduct('+idx+')">'+(p.offer?'<span class="badge">عرض</span>':'')+'<button class="heartBtn '+(fav?'active':'')+'" onclick="event.stopPropagation();toggleWishlist('+idx+')">'+(fav?'♥':'♡')+'</button><div class="photo"><img src="'+img(src)+'" alt="'+p.name+'" loading="lazy" onerror="this.style.opacity=.3"></div><div class="info"><div class="name">'+p.name+'</div><div class="price">'+(p.oldPrice?'<span class="old">₪'+p.oldPrice+'</span>':'')+'₪'+p.price+'</div></div></article>'}).join('')}
 function openProduct(i){current=productsData[i];selectedSize=current.sizes[0]||'';selectedColor=(current.colors&&current.colors[0])||'';quantity=1;$('detailImg').src=img(Array.isArray(current.images)?current.images[0]:current.images);$('detailName').textContent=current.name;$('detailPrice').textContent='₪'+current.price;$('qty').textContent=quantity;$('sizes').innerHTML=(current.sizes||[]).map(s=>'<button class="chip '+(s===selectedSize?'sel':'')+'" onclick="selectSize(this)">'+s+'</button>').join('');$('colors').innerHTML=(current.colors||['متوفر']).map(c=>'<button class="chip '+(c===selectedColor?'sel':'')+'" onclick="selectColor(this)">'+c+'</button>').join('');openModal('productModal')}
 function selectSize(b){selectedSize=b.textContent;document.querySelectorAll('#sizes .chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
 function selectColor(b){selectedColor=b.textContent;document.querySelectorAll('#colors .chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}
@@ -142,7 +178,15 @@ function updateCart(){$('cartCount').textContent=cart.reduce((a,x)=>a+x.qty,0);$
 function openCart(){const box=$('cartItems');if(!cart.length){box.innerHTML='<p class="note">السلة فارغة حاليًا. اختاري قطعة من التشكيلة.</p>'}else{box.innerHTML=cart.map((x,i)=>'<div class="cartRow"><img src="'+img(Array.isArray(x.p.images)?x.p.images[0]:x.p.images)+'"><div class="grow"><b>'+x.p.name+'</b><div class="note">مقاس: '+x.size+' • لون: '+x.color+' • كمية: '+x.qty+'</div></div><button class="chip" onclick="removeCart('+i+')">حذف</button></div>').join('')}$('cartTotal').textContent='₪'+cart.reduce((a,x)=>a+x.p.price*x.qty,0);openModal('cartModal')}
 function removeCart(i){cart.splice(i,1);updateCart();openCart()}
 function checkout(){if(!cart.length)return;closeModal('cartModal');openModal('orderModal')}
-function sendOrder(){const name=$('customerName').value.trim(),phone=$('customerPhone').value.trim(),address=$('address').value.trim(),delivery=Number($('delivery').value);if(!name||!phone||!address){alert('يرجى تعبئة الاسم ورقم الهاتف والعنوان.');return}const items=cart.map(x=>x.p.name+' | مقاس '+x.size+' | '+x.color+' | ×'+x.qty).join('%0A');const subtotal=cart.reduce((a,x)=>a+x.p.price*x.qty,0),total=subtotal+delivery;const msg='طلب جديد من موقع Espoza Fashion%0A%0Aالاسم: '+encodeURIComponent(name)+'%0Aالهاتف: '+encodeURIComponent(phone)+'%0Aالعنوان: '+encodeURIComponent(address)+'%0A%0Aالمنتجات:%0A'+items+'%0A%0Aمجموع المنتجات: ₪'+subtotal+'%0Aالتوصيل: ₪'+delivery+'%0Aالمجموع النهائي: ₪'+total+'%0Aطريقة الدفع: الدفع عند الاستلام';window.open('https://wa.me/972595461861?text='+msg,'_blank')}
+function sendOrder(){const name=$('customerName').value.trim(),phone=$('customerPhone').value.trim(),city=$('city').value.trim(),district=$('district').value.trim(),address=$('address').value.trim(),delivery=Number($('delivery').value);if(!name||!phone||!city||!district||!address){alert('يرجى تعبئة الاسم ورقم الهاتف والمدينة/البلدة والمنطقة والعنوان بالتفصيل.');return}const items=cart.map(x=>x.p.name+' | مقاس '+x.size+' | '+x.color+' | ×'+x.qty).join('%0A');const subtotal=cart.reduce((a,x)=>a+x.p.price*x.qty,0),total=subtotal+delivery;const fullAddress=city+' — '+district+' — '+address;const msg='طلب جديد من موقع Espoza Fashion%0A%0Aالاسم: '+encodeURIComponent(name)+'%0Aالهاتف: '+encodeURIComponent(phone)+'%0Aمنطقة التوصيل: '+encodeURIComponent(delivery===20?'الضفة الغربية':delivery===30?'القدس':'الداخل / 48')+'%0Aالعنوان بالتفصيل: '+encodeURIComponent(fullAddress)+'%0A%0Aالمنتجات:%0A'+items+'%0A%0Aمجموع المنتجات: ₪'+subtotal+'%0Aالتوصيل: ₪'+delivery+'%0Aالمجموع النهائي: ₪'+total+'%0Aطريقة الدفع: الدفع عند الاستلام';window.open('https://wa.me/972595461861?text='+msg,'_blank')}
+let wishlist=JSON.parse(localStorage.getItem('espoza_wishlist')||'[]');
+function productKey(p){return p.name+'|'+p.price}
+function isWishlisted(p){return wishlist.includes(productKey(p))}
+function toggleWishlist(i){const p=productsData[i];const k=productKey(p);wishlist=wishlist.includes(k)?wishlist.filter(x=>x!==k):[...wishlist,k];localStorage.setItem('espoza_wishlist',JSON.stringify(wishlist));updateWishlist();render();}
+function updateWishlist(){$('wishCount').textContent=wishlist.length;const box=$('wishlistGrid');if(!wishlist.length){box.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:25px">قائمة الأمنيات فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.</div>';return}const list=productsData.filter(isWishlisted);box.innerHTML=list.map(p=>{const idx=productsData.indexOf(p);const src=Array.isArray(p.images)?p.images[0]:p.images;return '<article class="card" onclick="openProduct('+idx+')"><button class="heartBtn active" onclick="event.stopPropagation();toggleWishlist('+idx+')">♥</button><div class="photo"><img src="'+img(src)+'" alt="'+p.name+'"></div><div class="info"><div class="name">'+p.name+'</div><div class="price">'+(p.oldPrice?'<span class="old">₪'+p.oldPrice+'</span>':'')+'₪'+p.price+'</div></div></article>'}).join('')}
+function scrollToWishlist(){location.hash='wishlist';updateWishlist()}
+function renderFeedback(){const files=['IMG_3356.jpeg','IMG_3358.jpeg','IMG_3359.jpeg','IMG_3361.jpeg','0dc20e39-4885-4ad0-8cdf-ebffa2e4a3b9.jpeg','IMG_1841.jpeg','IMG_1850.jpeg','IMG_1851.jpeg','IMG_1863.jpeg','IMG_2062.jpeg','IMG_1965.jpeg','IMG_1959.jpeg','IMG_2075.jpeg','IMG_2237.jpeg','b64cf974-a296-4755-8537-bb43170a19a9.jpeg','737c236a-2bd8-418c-95be-2f4178bc4e30.jpeg','IMG_2277.jpeg','IMG_2238.jpeg','IMG_2490.jpeg','IMG_2284.jpeg','IMG_3363.jpeg','IMG_3364.jpeg','IMG_3365.jpeg'];const html=files.map(f=>'<img src="'+img(f)+'" alt="رأي زبون" loading="lazy">').join('');$('feedbackTrack').innerHTML=html+html}
+function animateCustomerCounter(){const el=$('customerCounter');if(!el)return;const start=7500,end=10000,duration=2800,t0=performance.now();function step(now){const p=Math.min(1,(now-t0)/duration);const eased=1-Math.pow(1-p,3);el.textContent=Math.floor(start+(end-start)*eased).toLocaleString('en-US');if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
 const policyText={exchange:'يسمح بالاستبدال خلال 24 ساعة من استلام الطرد، بشرط أن تكون القطعة بحالتها الأصلية وغير مستخدمة وغير مغسولة ومع الحفاظ على التغليف والبطاقات إن وجدت. لا يتم قبول الاستبدال بعد انتهاء المدة المحددة. القطع المخفضة أو الخاصة قد تخضع لشروط إضافية موضحة عند الطلب.',delivery:'يتم تجهيز الطلبات وإرسالها بأسرع وقت ممكن، وعادةً خلال 2–3 أيام حسب المنطقة وشركة التوصيل. رسوم التوصيل: الضفة ₪20، القدس ₪30، والداخل/48 ₪70. يفضل التأكد من توفر الهاتف والعنوان قبل تأكيد الطلب.',payment:'الدفع عند الاستلام. يتم تأكيد الطلب عبر واتساب، وقد يتم التواصل مع الزبونة للتأكد من تفاصيل المقاس والعنوان. الأسعار الظاهرة في الموقع هي أسعار القطع ولا تشمل التوصيل إلا إذا ذُكر خلاف ذلك.',privacy:'نستخدم بيانات الاسم والهاتف والعنوان فقط لمعالجة الطلب والتوصيل والتواصل المرتبط بالطلب. لا نطلب بيانات بطاقات الدفع في الموقع في هذه النسخة التجريبية، ولا يتم عرض معلومات الطلب للعامة.'};
 function policy(k){$('policyView').innerHTML='<h3>'+({exchange:'سياسة الاستبدال',delivery:'سياسة الطلب والتوصيل',payment:'سياسة الدفع',privacy:'الخصوصية والتواصل'})[k]+'</h3><p>'+policyText[k]+'</p>';$('policyView').classList.add('show')}
 function openPolicies(){$('policyView').classList.remove('show');openModal('policyModal')}
@@ -150,6 +194,6 @@ function openModal(id){$(id).classList.add('open')}
 function closeModal(id){$(id).classList.remove('open')}
 function focusSearch(){location.hash='collection';setTimeout(()=>$('search').focus(),300)}
 window.addEventListener('click',e=>{if(e.target.classList.contains('modal'))e.target.classList.remove('open')});
-render();updateCart();
+render();updateCart();updateWishlist();renderFeedback();animateCustomerCounter();
 </script>
 </body></html>
