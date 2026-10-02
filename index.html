@@ -7038,11 +7038,11 @@ return `
 <article class="product-card">
 <button class="heart-btn active" type="button" aria-label="إزالة من قائمة الأمنيات" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
 <div class="product-img" onclick="openProduct('${esc(p.id)}')">
-<img src="${esc(image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
+<img src="${esc(image)}" alt="${esc(productDisplayName(p))}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
 ${p.offer?'<span class="offer-badge">'+esc(t().offer)+'</span>':''}
 </div>
 <div class="product-info">
-<div class="product-name">${esc(p.name)}</div>
+<div class="product-name">${esc(productDisplayName(p))}</div>
 <div class="price-row"><span class="price">${money(p.price)} ₪</span>${p.oldPrice?`<span class="old-price">${money(p.oldPrice)} ₪</span>`:''}</div>
 </div>
 </article>`;
@@ -7119,7 +7119,7 @@ p.images[0]?.url
 ||
 PLACEHOLDER
 )}"
-alt="${esc(p.name)}"
+alt="${esc(productDisplayName(p))}"
 loading="lazy"
 onerror="this.src='${PLACEHOLDER}'">
 
@@ -7153,7 +7153,7 @@ ${t().unavailable}
 <div class="product-info">
 
 <div class="product-name">
-${esc(p.name)}
+${esc(productDisplayName(p))}
 </div>
 
 <div class="price-row">
@@ -7410,12 +7410,12 @@ PLACEHOLDER;
 
 $("detailImage")
 .alt=
-currentProduct.name;
+productDisplayName(currentProduct);
 
 
 $("detailName")
 .textContent=
-currentProduct.name;
+productDisplayName(currentProduct);
 
 
 $("detailPrice")
@@ -7925,13 +7925,13 @@ cart
 
 <img
 src="${esc(item.image)}"
-alt="${esc(item.name)}"
+alt="${esc(productDisplayName(item))}"
 onerror="this.src='${PLACEHOLDER}'">
 
 <div class="cart-line-info">
 
 <div class="cart-line-name">
-${esc(item.name)}
+${esc(productDisplayName(item))}
 </div>
 
 <div class="cart-line-meta">
@@ -8076,7 +8076,7 @@ item=>
 <div class="order-summary-line">
 
 <span>
-${esc(item.name)}
+${esc(productDisplayName(item))}
 ${
 item.color
 ||
@@ -8318,7 +8318,7 @@ const linesAr=
 cart
 .map(
 item=>
-`👗 ${item.name}
+`👗 ${productDisplayName(item)}
    المقاس: ${item.size}${item.color?`
    اللون: ${item.color}`:""}
    الكمية: ${item.qty}
@@ -8331,7 +8331,7 @@ const linesEn=
 cart
 .map(
 item=>
-`👗 ${item.name}
+`👗 ${productDisplayName(item)}
    Size: ${item.size}${item.color?`
    Color: ${item.color}`:""}
    Qty: ${item.qty}
