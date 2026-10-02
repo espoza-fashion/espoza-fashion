@@ -2332,6 +2332,28 @@ body{
   }
 }
 
+
+/* ===== Espoza Demo features moved to the customer site ===== */
+.wish-header-btn{position:relative}
+.wish-header-badge{position:absolute;top:-6px;right:-6px;min-width:17px;height:17px;border-radius:20px;background:var(--gold);color:#fff;font-size:9px;font-weight:800;display:grid;place-items:center;padding:0 3px}
+.quick-links{max-width:1240px;margin:0 auto;padding:0 18px 18px}
+.quick-links-inner{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.quick-link{border:1px solid var(--line);background:#fff;color:var(--wine);border-radius:28px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer}
+.quick-link.primary{background:var(--wine);color:#fff;border-color:var(--wine)}
+.heart-btn{position:absolute;left:10px;top:10px;z-index:4;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.95);color:var(--wine);font-size:19px;line-height:1;box-shadow:0 6px 16px rgba(0,0,0,.10);cursor:pointer}
+.heart-btn.active{background:var(--wine);color:#fff}
+.wishlist-section,.story-section{max-width:1240px;margin:auto;padding:34px 18px 55px}
+.wishlist-section{scroll-margin-top:100px}
+.wishlist-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.wishlist-empty{grid-column:1/-1;text-align:center;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px}
+.story-section{max-width:none;background:linear-gradient(135deg,#fff,#f7eef0);border-block:1px solid var(--line);text-align:center;scroll-margin-top:100px}
+.story-inner{max-width:820px;margin:auto}
+.story-inner h2{font-family:"Playfair Display","Cairo",serif;color:var(--wine);font-size:clamp(30px,4vw,46px);margin:8px 0 12px}
+.story-inner p{color:var(--muted);line-height:2;font-size:13px;margin:0}
+.story-tag{margin-top:12px;color:var(--wine);font-weight:800;font-size:12px}
+@media(max-width:900px){.wishlist-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+@media(max-width:600px){.quick-links{padding-inline:10px}.wishlist-section{padding-inline:10px}.heart-btn{width:33px;height:33px;font-size:17px}}
+
 </style>
 <style id="espoza-luxury-products">
 .products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
@@ -3132,6 +3154,15 @@ FASHION
 <div class="nav-side end">
 
 <button
+class="icon-btn wish-header-btn"
+id="wishlistBtn"
+type="button"
+onclick="scrollToWishlist()">
+♡
+<span class="wish-header-badge" id="wishlistCount">0</span>
+</button>
+
+<button
 class="icon-btn cart-btn"
 id="cartBtn"
 type="button"
@@ -3343,6 +3374,15 @@ data-cat="offers">
 
 </section>
 
+<section class="quick-links" id="quickLinks" aria-label="روابط سريعة">
+<div class="quick-links-inner">
+<button class="quick-link primary" type="button" onclick="scrollToWishlist()">♡ قائمة الأمنيات <span id="quickWishlistCount">0</span></button>
+<button class="quick-link" type="button" onclick="document.getElementById('feedback').scrollIntoView({behavior:'smooth'})">آراء الزبائن</button>
+<button class="quick-link" type="button" onclick="openModal('policiesModal')">سياسة الشركة</button>
+<button class="quick-link" type="button" onclick="openCartModal()">🛍️ السلة والطلب</button>
+</div>
+</section>
+
 
 <!-- PRODUCTS -->
 
@@ -3396,6 +3436,23 @@ id="featuresTrack">
 
 <div class="features-tagline" id="featuresTagline"></div>
 
+</section>
+
+<section class="wishlist-section" id="wishlistSection">
+<div class="section-head">
+<h2>قائمة الأمنيات</h2>
+<span>القطع التي حفظتها</span>
+</div>
+<div class="wishlist-grid" id="wishlistGrid"></div>
+</section>
+
+<section class="story-section" id="story">
+<div class="story-inner">
+<div class="eyebrow2">OUR STORY • SINCE 2019</div>
+<h2>قصة بداية Espoza Fashion</h2>
+<p>بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. ومع الوقت كبرت التشكيلة، وكبرت معها ثقة زبائننا، لنستمر في تقديم الفساتين والأطقم والقطع الأنيقة بعناية واهتمام بكل تفصيل.</p>
+<div class="story-tag">مئات الرسائل يومياً • ثقة تتجدد مع كل طلب • Espoza Fashion</div>
+</div>
 </section>
 
 </main>
@@ -3471,6 +3528,10 @@ FASHION
 </p>
 
 <div class="footer-links">
+<a href="#wishlistSection"><span>03</span>قائمة الأمنيات</a>
+<a href="#feedback"><span>04</span>آراء الزبائن</a>
+<a href="#story"><span>05</span>قصة Espoza</a>
+
 
 <a href="#shop" id="footerShop">
 <span>01</span>
@@ -6946,6 +7007,50 @@ searchOk
    عرض المنتجات
    ========================================== */
 
+
+/* ===== Wishlist moved from Demo ===== */
+let wishlistIds=[];
+try{wishlistIds=JSON.parse(localStorage.getItem("espoza_wishlist_ids")||"[]");if(!Array.isArray(wishlistIds))wishlistIds=[];}catch(_){wishlistIds=[];}
+
+function productWishKey(p){return String(p.id||p.name||"");}
+function isWishlistedProduct(p){return wishlistIds.includes(productWishKey(p));}
+
+function updateWishlistUI(){
+const count=wishlistIds.length;
+const badge=$("wishlistCount"); if(badge)badge.textContent=count;
+const quick=$("quickWishlistCount"); if(quick)quick.textContent=count;
+const grid=$("wishlistGrid"); if(!grid)return;
+const list=products.filter(isWishlistedProduct);
+if(!list.length){grid.innerHTML='<div class="wishlist-empty">قائمة الأمنيات فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.</div>';return;}
+grid.innerHTML=list.map(p=>{
+const image=p.images&&p.images[0]?p.images[0].url:PLACEHOLDER;
+return `
+<article class="product-card">
+<button class="heart-btn active" type="button" aria-label="إزالة من قائمة الأمنيات" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
+<div class="product-img" onclick="openProduct('${esc(p.id)}')">
+<img src="${esc(image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
+${p.offer?'<span class="offer-badge">'+esc(t().offer)+'</span>':''}
+</div>
+<div class="product-info">
+<div class="product-name">${esc(p.name)}</div>
+<div class="price-row"><span class="price">${money(p.price)} ₪</span>${p.oldPrice?`<span class="old-price">${money(p.oldPrice)} ₪</span>`:''}</div>
+</div>
+</article>`;
+}).join("");
+}
+
+function toggleWishlistByProduct(id){
+const key=String(id||""); if(!key)return;
+wishlistIds=wishlistIds.includes(key)?wishlistIds.filter(x=>x!==key):[...wishlistIds,key];
+localStorage.setItem("espoza_wishlist_ids",JSON.stringify(wishlistIds));
+updateWishlistUI(); renderProducts();
+}
+
+function scrollToWishlist(){
+const el=$("wishlistSection"); if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+updateWishlistUI();
+}
+
 function renderProducts(){
 
 const list=
@@ -6985,6 +7090,14 @@ marqueeDividerHTML(Math.floor(i/GROUP_SIZE)-1)
 }
 
 <article class="product-card reveal-item" style="--reveal-delay:${Math.min(i%8,7)*70}ms">
+
+<button
+class="heart-btn"
+type="button"
+aria-label="إضافة إلى قائمة الأمنيات"
+onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">
+${isWishlistedProduct(p) ? "♥" : "♡"}
+</button>
 
 <div
 class="product-img"
@@ -8696,6 +8809,8 @@ applyStore();
 
 renderProducts();
 
+updateWishlistUI();
+
 renderDeliveryOptions();
 
 renderSlider();
@@ -8719,7 +8834,7 @@ return;
 
 const target=10000;
 const duration=2300;
-const startValue=1900;
+const startValue=7500;
 const start=performance.now();
 
 function tick(now){
@@ -8950,6 +9065,8 @@ error
 try{
 
 setupProducts();
+
+setTimeout(()=>{try{updateWishlistUI();}catch(_){ }},300);
 
 }catch(error){
 
