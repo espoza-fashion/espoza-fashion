@@ -3151,6 +3151,18 @@ footer{
 @media(max-width:800px){.public-wishes-list{grid-template-columns:1fr 1fr}.wish-form{flex-direction:column}.wish-submit{min-height:46px}}
 @media(max-width:560px){.wish-btn-label{display:none}.public-wishes-section{padding-inline:10px}.public-wishes-card{padding:20px 14px;border-radius:20px}.public-wishes-list{grid-template-columns:1fr}.floating-cart{right:12px;bottom:14px;padding:11px 13px}}
 </style>
+<style id="espoza-final-motion-fixes">
+/* Feedback must keep moving on desktop, tablet and mobile */
+.feedback-showcase-track{
+  animation-duration:52s!important;
+  animation-iteration-count:infinite!important;
+  animation-timing-function:linear!important;
+  animation-play-state:running!important;
+  will-change:transform;
+}
+@media(max-width:900px){.feedback-showcase-track{animation-duration:46s!important}}
+@media(max-width:560px){.feedback-showcase-track{animation-duration:38s!important}}
+</style>
 </head>
 
 <body>
@@ -8703,12 +8715,12 @@ const feedbackTrack=
 $("feedbackShowcaseTrack");
 
 if(feedbackTrack){
-feedbackTrack.style.animationName=
-lang==="ar"
-?
-"feedbackShowcaseScrollRTL"
-:
-"feedbackShowcaseScroll";
+feedbackTrack.style.setProperty(
+"animation-name",
+lang==="ar" ? "feedbackShowcaseScrollRTL" : "feedbackShowcaseScroll",
+"important"
+);
+feedbackTrack.style.setProperty("animation-play-state","running","important");
 }
 
 $("langBtn")
