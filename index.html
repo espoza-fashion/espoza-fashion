@@ -3213,6 +3213,34 @@ footer{
   .cart-badge{top:-7px!important;right:-6px!important}
 }
 </style>
+<style id="espoza-universal-slider-motion">
+/* Universal hero slider: smooth, elegant and consistent on every screen */
+.slides-track{
+  display:flex!important;
+  direction:ltr!important;
+  transition:transform 1.15s cubic-bezier(.22,.61,.36,1)!important;
+  will-change:transform;
+  transform:translate3d(0,0,0);
+  backface-visibility:hidden;
+}
+.hero-slide{
+  flex:0 0 100%!important;
+  min-width:100%!important;
+  overflow:hidden!important;
+  backface-visibility:hidden;
+}
+.hero-slide img{
+  transform:none!important;
+  transition:none!important;
+  will-change:auto;
+}
+.hero:hover .hero-slide img{
+  transform:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .slides-track{transition-duration:.01ms!important}
+}
+</style>
 </head>
 
 <body>
@@ -6498,7 +6526,7 @@ setInterval(
 ()=>{
 moveSlide(1);
 },
-5000
+7000
 );
 
 }
