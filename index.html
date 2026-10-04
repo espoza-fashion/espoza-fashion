@@ -3163,6 +3163,56 @@ footer{
 @media(max-width:900px){.feedback-showcase-track{animation-duration:46s!important}}
 @media(max-width:560px){.feedback-showcase-track{animation-duration:38s!important}}
 </style>
+<style id="espoza-cart-final">
+/* Luxury cart button: same visual language as Favorites, with a permanently visible count */
+.cart-btn{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  min-width:88px!important;
+  min-height:40px!important;
+  padding:9px 18px!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+  border-radius:999px!important;
+}
+.cart-btn-icon{font-size:16px!important;line-height:1!important}
+.cart-btn-label{font-size:12px!important;font-weight:800!important}
+.cart-badge{
+  position:absolute!important;
+  top:-8px!important;
+  right:-7px!important;
+  z-index:20!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:21px!important;
+  width:auto!important;
+  height:21px!important;
+  padding:0 5px!important;
+  border:2px solid #fff!important;
+  border-radius:999px!important;
+  background:var(--wine)!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  box-sizing:border-box!important;
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none;
+}
+.cart-btn:hover .cart-badge{transform:scale(1.06)!important}
+.nav-side,.nav-side.end{overflow:visible!important}
+@media(max-width:560px){
+  .cart-btn{min-width:78px!important;padding-inline:14px!important}
+  .cart-btn-label{font-size:11px!important}
+  .cart-btn-icon{font-size:15px!important}
+  .cart-badge{top:-7px!important;right:-6px!important}
+}
+</style>
 </head>
 
 <body>
@@ -3221,11 +3271,11 @@ aria-label="المفضلة">
 class="icon-btn cart-btn"
 id="cartBtn"
 type="button"
-onclick="openCartModal()">
-🛍️
-<span
-class="cart-badge"
-id="cartCount">0</span>
+onclick="openCartModal()"
+aria-label="السلة">
+<span class="cart-btn-icon">🛍️</span>
+<span class="cart-btn-label">السلة</span>
+<span class="cart-badge" id="cartCount">0</span>
 </button>
 
 <a
