@@ -3120,6 +3120,37 @@ footer{
 }
 
 </style>
+<style id="espoza-favorites-wishes-cart">
+.wish-header-btn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.wish-btn-label{font-size:11px;font-weight:800}
+.quick-links-inner{justify-content:center;align-items:center;gap:9px;max-width:1100px;margin:auto}
+.quick-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:9px 15px;border-radius:999px;box-shadow:0 5px 16px rgba(67,19,33,.06);transition:transform .25s ease,box-shadow .25s ease,background .25s ease}
+.quick-link:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(67,19,33,.10)}
+.quick-link.primary{box-shadow:0 8px 22px rgba(67,19,33,.16)}
+.public-wishes-section{max-width:1240px;margin:auto;padding:8px 18px 55px;scroll-margin-top:100px}
+.public-wishes-card{background:linear-gradient(135deg,#fff,#f8eef1);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 12px 36px rgba(67,19,33,.06)}
+.public-wishes-head{text-align:center;max-width:760px;margin:0 auto 20px}
+.public-wishes-head h2{font-family:"Playfair Display","Cairo",serif;color:var(--wine);font-size:clamp(27px,4vw,40px);margin:0 0 7px}
+.public-wishes-head p{color:var(--muted);font-size:13px;line-height:1.9;margin:0}
+.wish-form{display:flex;gap:9px;max-width:820px;margin:18px auto 22px}
+.wish-input{flex:1;min-height:48px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:11px 14px;outline:none;resize:none}
+.wish-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(185,152,90,.12)}
+.wish-submit{border:0;border-radius:14px;background:var(--wine);color:#fff;padding:0 20px;font-weight:800;white-space:nowrap}
+.public-wishes-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.public-wish{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;min-height:72px;display:flex;align-items:center;gap:10px}
+.public-wish::before{content:"♡";color:var(--gold);font-size:18px;flex:0 0 auto}
+.public-wish-text{color:var(--dark);font-size:12px;line-height:1.8}
+.public-wishes-empty{text-align:center;color:var(--muted);padding:18px;grid-column:1/-1}
+.floating-cart{position:fixed;right:20px;bottom:20px;z-index:260;display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:linear-gradient(135deg,var(--wine),var(--dark));color:#fff;padding:12px 16px;box-shadow:0 16px 38px rgba(43,13,25,.28);font-weight:800;cursor:pointer;backdrop-filter:blur(12px);transition:transform .25s ease,box-shadow .25s ease}
+.floating-cart:hover{transform:translateY(-3px);box-shadow:0 20px 45px rgba(43,13,25,.34)}
+.floating-cart-icon{font-size:17px;line-height:1}.floating-cart-label{font-size:11px}.floating-cart-count{min-width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--wine);font-size:10px}
+.footer-links a span,.footer-links button span{display:none!important}
+.footer-links a,.footer-links button{justify-content:space-between!important;gap:12px!important}
+.footer-links a::after,.footer-links button::after{content:"›";color:var(--gold);font-size:18px;line-height:1;transition:transform .25s ease}
+.footer-links a:hover::after,.footer-links button:hover::after{transform:translateX(-3px)}
+@media(max-width:800px){.public-wishes-list{grid-template-columns:1fr 1fr}.wish-form{flex-direction:column}.wish-submit{min-height:46px}}
+@media(max-width:560px){.wish-btn-label{display:none}.public-wishes-section{padding-inline:10px}.public-wishes-card{padding:20px 14px;border-radius:20px}.public-wishes-list{grid-template-columns:1fr}.floating-cart{right:12px;bottom:14px;padding:11px 13px}}
+</style>
 </head>
 
 <body>
@@ -3167,8 +3198,10 @@ FASHION
 class="icon-btn wish-header-btn"
 id="wishlistBtn"
 type="button"
-onclick="scrollToWishlist()">
+onclick="scrollToWishlist()"
+aria-label="المفضلة">
 ♡
+<span class="wish-btn-label" id="wishlistBtnLabel">المفضلة</span>
 <span class="wish-header-badge" id="wishlistCount">0</span>
 </button>
 
@@ -3386,10 +3419,11 @@ data-cat="offers">
 
 <section class="quick-links" id="quickLinks" aria-label="روابط سريعة">
 <div class="quick-links-inner">
-<button class="quick-link primary" type="button" onclick="scrollToWishlist()">♡ قائمة الأمنيات <span id="quickWishlistCount">0</span></button>
+<button class="quick-link primary" type="button" onclick="scrollToWishlist()">♡ <span id="quickFavoritesLabel">المفضلة</span> <span id="quickWishlistCount">0</span></button>
+<button class="quick-link" type="button" onclick="scrollToPublicWishes()">✨ <span id="quickWishesLabel">قائمة الأمنيات</span></button>
 <button class="quick-link" type="button" onclick="smoothToSection('feedback')">آراء الزبائن</button>
 <button class="quick-link" type="button" onclick="openModal('policiesModal')">سياسة الشركة</button>
-<button class="quick-link" type="button" onclick="openCartModal()">🛍️ السلة والطلب</button>
+<button class="quick-link" type="button" onclick="openCartModal()">🛍️ السلة والطلب <span id="quickCartCount">0</span></button>
 </div>
 </section>
 
@@ -3450,10 +3484,24 @@ id="featuresTrack">
 
 <section class="wishlist-section" id="wishlistSection">
 <div class="section-head">
-<h2>قائمة الأمنيات</h2>
-<span>القطع التي حفظتها</span>
+<h2 id="favoritesTitle">المفضلة</h2>
+<span id="favoritesSubtitle">القطع التي حفظتها</span>
 </div>
 <div class="wishlist-grid" id="wishlistGrid"></div>
+</section>
+
+<section class="public-wishes-section" id="publicWishesSection">
+<div class="public-wishes-card">
+<div class="public-wishes-head">
+<h2 id="publicWishesTitle">✨ أمنيتك القادمة مع Espoza Fashion؟</h2>
+<p id="publicWishesIntro">أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍</p>
+</div>
+<form class="wish-form" id="wishForm">
+<textarea class="wish-input" id="wishInput" maxlength="240" rows="1" placeholder="اكتبي أمنيتك هنا..."></textarea>
+<button class="wish-submit" id="wishSubmit" type="submit">إرسال الأمنية</button>
+</form>
+<div class="public-wishes-list" id="publicWishesList"></div>
+</div>
 </section>
 
 <section class="story-section" id="story">
@@ -3538,21 +3586,12 @@ FASHION
 </p>
 
 <div class="footer-links">
-<a href="#wishlistSection"><span>03</span>قائمة الأمنيات</a>
-<a href="#feedback"><span>04</span>آراء الزبائن</a>
-<a href="#story"><span>05</span>قصة Espoza</a>
-
-
-<a href="#shop" id="footerShop">
-<span>01</span>
-التشكيلة
-</a>
-
-<button type="button" id="policiesBtn" onclick="openModal('policiesModal')">
-<span>02</span>
-سياستنا
-</button>
-
+<a href="#shop" id="footerShop">التشكيلة</a>
+<a href="#wishlistSection">المفضلة</a>
+<a href="#publicWishesSection">قائمة الأمنيات</a>
+<a href="#feedback">آراء الزبائن</a>
+<a href="#story">قصة Espoza</a>
+<button type="button" id="policiesBtn" onclick="openModal('policiesModal')">سياستنا</button>
 </div>
 
 </div>
@@ -3595,6 +3634,12 @@ FASHION
 <div class="copyright footer-credit" id="footerCredit" style="margin-top:10px"></div>
 
 </footer>
+
+<button class="floating-cart" id="floatingCartBtn" type="button" onclick="openCartModal()" aria-label="السلة">
+<span class="floating-cart-icon">🛍️</span>
+<span class="floating-cart-label" id="floatingCartLabel">السلة</span>
+<span class="floating-cart-count" id="floatingCartCount">0</span>
+</button>
 
 <!-- PRODUCT DETAILS -->
 
@@ -7031,12 +7076,12 @@ const badge=$("wishlistCount"); if(badge)badge.textContent=count;
 const quick=$("quickWishlistCount"); if(quick)quick.textContent=count;
 const grid=$("wishlistGrid"); if(!grid)return;
 const list=products.filter(isWishlistedProduct);
-if(!list.length){grid.innerHTML='<div class="wishlist-empty">قائمة الأمنيات فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.</div>';return;}
+if(!list.length){grid.innerHTML='<div class="wishlist-empty">المفضلة فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.</div>';return;}
 grid.innerHTML=list.map(p=>{
 const image=p.images&&p.images[0]?p.images[0].url:PLACEHOLDER;
 return `
 <article class="product-card">
-<button class="heart-btn active" type="button" aria-label="إزالة من قائمة الأمنيات" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
+<button class="heart-btn active" type="button" aria-label="إزالة من المفضلة" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
 <div class="product-img" onclick="openProduct('${esc(p.id)}')">
 <img src="${esc(image)}" alt="${esc(productDisplayName(p))}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
 ${p.offer?'<span class="offer-badge">'+esc(t().offer)+'</span>':''}
@@ -7059,6 +7104,10 @@ updateWishlistUI(); renderProducts();
 function scrollToWishlist(){
 const el=$("wishlistSection"); if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
 updateWishlistUI();
+}
+function scrollToPublicWishes(){
+const el=$("publicWishesSection"); if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+loadPublicWishes();
 }
 
 function renderProducts(){
@@ -7104,7 +7153,7 @@ marqueeDividerHTML(Math.floor(i/GROUP_SIZE)-1)
 <button
 class="heart-btn"
 type="button"
-aria-label="إضافة إلى قائمة الأمنيات"
+aria-label="إضافة إلى المفضلة"
 onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">
 ${isWishlistedProduct(p) ? "♥" : "♡"}
 </button>
@@ -7769,6 +7818,8 @@ sum+Number(item.qty||0),
 
 el.textContent=
 String(count);
+const floating=$("floatingCartCount"); if(floating)floating.textContent=String(count);
+const quickCart=$("quickCartCount"); if(quickCart)quickCart.textContent=String(count);
 
 }
 
@@ -8563,6 +8614,75 @@ document.body.style.overflow=
 
 
 /* ==========================================
+   قائمة الأمنيات العامة — مشتركة بين جميع الزوار
+   ========================================== */
+let publicWishesLoaded=false;
+let publicWishesLoading=false;
+
+function renderPublicWishes(rows=[]){
+  const list=$("publicWishesList");
+  if(!list)return;
+  if(!rows.length){
+    list.innerHTML='<div class="public-wishes-empty">'+(lang==="en"?"No wishes yet. Be the first to share yours ✨":"لسه ما في أمنيات. كوني أول من يشارك أمنيتك ✨")+'</div>';
+    return;
+  }
+  list.innerHTML=rows.map(row=>'<article class="public-wish"><span class="public-wish-text">'+esc(String(row.wish_text||""))+'</span></article>').join("");
+}
+
+async function loadPublicWishes(){
+  if(publicWishesLoading)return;
+  publicWishesLoading=true;
+  try{
+    const db=getCustomerSupabase();
+    const result=await db.from("wish_requests").select("id,wish_text,created_at").order("created_at",{ascending:false}).limit(60);
+    if(result.error)throw result.error;
+    renderPublicWishes(result.data||[]);
+    publicWishesLoaded=true;
+  }catch(error){
+    console.warn("Public wishes load failed:",error);
+    const list=$("publicWishesList");
+    if(list)list.innerHTML='<div class="public-wishes-empty">'+(lang==="en"?"Wishes are temporarily unavailable.":"قائمة الأمنيات غير متاحة مؤقتًا.")+'</div>';
+  }finally{
+    publicWishesLoading=false;
+  }
+}
+
+async function submitPublicWish(event){
+  event.preventDefault();
+  const input=$("wishInput"), button=$("wishSubmit");
+  if(!input||!button)return;
+  const wish=String(input.value||"").trim();
+  if(wish.length<2){
+    toast(lang==="en"?"Please write your wish first.":"اكتبي أمنيتك أولاً 🤍");
+    input.focus();
+    return;
+  }
+  button.disabled=true;
+  try{
+    const db=getCustomerSupabase();
+    const result=await db.from("wish_requests").insert({wish_text:wish}).select("id,wish_text,created_at").single();
+    if(result.error)throw result.error;
+    input.value="";
+    toast(lang==="en"?"Your wish was shared with everyone ✨":"تمت إضافة أمنيتك للجميع ✨");
+    await loadPublicWishes();
+  }catch(error){
+    console.warn("Public wish submit failed:",error);
+    toast(lang==="en"?"We couldn't add the wish right now.":"ما قدرنا نضيف الأمنية حاليًا، حاولي مرة ثانية.");
+  }finally{
+    button.disabled=false;
+  }
+}
+
+function setupPublicWishes(){
+  const form=$("wishForm");
+  if(form&&!form.dataset.ready){
+    form.dataset.ready="1";
+    form.addEventListener("submit",submitPublicWish);
+  }
+  loadPublicWishes();
+}
+
+/* ==========================================
    تغيير اللغة
    ========================================== */
 
@@ -8765,6 +8885,16 @@ x.footerContactTitle;
 $("footerLinksTitle")
 .textContent=
 x.footerLinksTitle;
+if($("wishlistBtnLabel"))$("wishlistBtnLabel").textContent=lang==="en"?"Favorites":"المفضلة";
+if($("quickFavoritesLabel"))$("quickFavoritesLabel").textContent=lang==="en"?"Favorites":"المفضلة";
+if($("quickWishesLabel"))$("quickWishesLabel").textContent=lang==="en"?"Wish List":"قائمة الأمنيات";
+if($("favoritesTitle"))$("favoritesTitle").textContent=lang==="en"?"Favorites":"المفضلة";
+if($("favoritesSubtitle"))$("favoritesSubtitle").textContent=lang==="en"?"Pieces you saved":"القطع التي حفظتها";
+if($("publicWishesTitle"))$("publicWishesTitle").textContent=lang==="en"?"✨ What is your next wish from Espoza Fashion?":"✨ أمنيتك القادمة مع Espoza Fashion؟";
+if($("publicWishesIntro"))$("publicWishesIntro").textContent=lang==="en"?"Tell us what piece you wish we offered — your idea could become our next addition 🤍":"أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍";
+if($("wishInput"))$("wishInput").placeholder=lang==="en"?"Write your wish here...":"اكتبي أمنيتك هنا...";
+if($("wishSubmit"))$("wishSubmit").textContent=lang==="en"?"Share your wish":"إرسال الأمنية";
+if($("floatingCartLabel"))$("floatingCartLabel").textContent=lang==="en"?"Cart":"السلة";
 
 $("policiesBtn")
 .textContent=
@@ -9233,6 +9363,12 @@ try{
 updateCartBadge();
 
 }catch(error){}
+
+try{
+setupPublicWishes();
+}catch(error){
+console.warn("public wishes setup failed:",error);
+}
 
 
 try{
