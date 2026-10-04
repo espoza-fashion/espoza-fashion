@@ -3241,6 +3241,12 @@ footer{
   .slides-track{transition-duration:.01ms!important}
 }
 </style>
+<style id="espoza-wishes-final">
+.public-wishes-section{scroll-margin-top:110px}
+.public-wishes-list{min-height:40px}
+.public-wish{overflow:hidden}
+.public-wish-text{word-break:break-word;overflow-wrap:anywhere}
+</style>
 </head>
 
 <body>
@@ -8750,7 +8756,7 @@ async function submitPublicWish(event){
   button.disabled=true;
   try{
     const db=getCustomerSupabase();
-    const result=await db.from("wish_requests").insert({wish_text:wish}).select("id,wish_text,created_at").single();
+    const result=await db.from("wish_requests").insert({wish_text:wish});
     if(result.error)throw result.error;
     input.value="";
     toast(lang==="en"?"Your wish was shared with everyone ✨":"تمت إضافة أمنيتك للجميع ✨");
@@ -8769,7 +8775,26 @@ function setupPublicWishes(){
     form.dataset.ready="1";
     form.addEventListener("submit",submitPublicWish);
   }
-  loadPublicWishes();
+
+  // Supabase may load a moment after the page script. Keep retrying instead of
+  // permanently showing "unavailable" on first load.
+  const tryLoad=()=>{
+    if(window.supabase && typeof window.supabase.createClient==="function"){
+      loadPublicWishes();
+      return true;
+    }
+    return false;
+  };
+
+  if(tryLoad()) return;
+
+  let attempts=0;
+  const timer=setInterval(()=>{
+    attempts++;
+    if(tryLoad() || attempts>=30) clearInterval(timer);
+  },500);
+
+  window.addEventListener("load",()=>{tryLoad();},{once:true});
 }
 
 /* ==========================================
