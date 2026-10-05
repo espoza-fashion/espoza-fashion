@@ -6041,11 +6041,11 @@ const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Nu
 const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>x.name).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
-const result=await db.from("products").select("id,name,category,price,old_price,description,active,featured,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+const result=await db.from("products").select("id,name,name_en,category,price,old_price,description,description_en,active,featured,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
 if(result.error)throw result.error;
 return(result.data||[]).map(dynamicProductToView);
 }
