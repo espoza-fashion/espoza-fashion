@@ -7584,10 +7584,8 @@ ${money(currentProduct.oldPrice)} ₪
 
 $("detailDescription")
 .textContent=
-currentProduct.description
-
+(lang==="en" ? (currentProduct.description_en || currentProduct.description) : currentProduct.description)
 ||
-
 t().desc;
 
 
