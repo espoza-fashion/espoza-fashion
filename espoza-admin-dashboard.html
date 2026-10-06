@@ -506,7 +506,16 @@ async function loadAll(){
 async function loadOrders(){
   const {data,error} = await sb.from("orders").select("*").order("created_at",{ascending:false});
   if(error) throw error;
-  orders = data||[];
+  orders = (data||[]).map(o=>{
+    const first = Array.isArray(o.items) ? o.items[0] : null;
+    return {
+      ...o,
+      total_price: o.total,
+      product_name: first?.name || first?.product_name || "—",
+      selected_color: first?.color || first?.selected_color || "—",
+      selected_size: first?.size || first?.selected_size || "—"
+    };
+  });
 }
 async function loadProducts(){
   const {data,error} = await sb.from("products").select("*").order("created_at",{ascending:false});
@@ -685,7 +694,7 @@ function openProductModal(id){
   const p = id ? products.find(x=>String(x.id)===String(id)) : null;
   const imgs = id ? productImages.filter(i=>String(i.product_id)===String(id)).map(i=>i.image_url) : [];
   const sizes = id ? productSizes.filter(s=>String(s.product_id)===String(id)).map(s=>s.size) : [];
-  const colors = id ? productColors.filter(c=>String(c.product_id)===String(id)).map(c=>c.color_name) : [];
+  const colors = id ? productColors.filter(c=>String(c.product_id)===String(id)).map(c=>c.name) : [];
 
   const state = { images: imgs.slice(), sizes: sizes.slice(), colors: colors.slice() };
 
