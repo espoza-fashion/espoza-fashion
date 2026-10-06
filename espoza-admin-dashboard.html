@@ -809,31 +809,74 @@ function modalRemoveImage(idx){
   window._pfState.images.splice(idx,1);
   renderModalImages();
 }
+async function requireAdminSession(){
+  const {data,error}=await sb.auth.getSession();
+  if(error) throw error;
+  const session=data?.session;
+  if(!session) throw new Error("انتهت جلسة المدير. سجّل الدخول من جديد.");
+  const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",session.user.id).maybeSingle();
+  if(adminError) throw adminError;
+  if(!adminRow){
+    await sb.auth.signOut();
+    throw new Error("الحساب الحالي غير مصرح له كمدير.");
+  }
+  adminAuthSession=session;
+  return session;
+}
+
 async function handleImageFiles(e){
   const files = Array.from(e.target.files||[]);
   if(!files.length) return;
-  toast("جاري رفع الصور…");
-  for(const file of files){
-    try{
-      const path = `products/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g,"")}`;
-      const {error} = await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
+  try{
+    await requireAdminSession();
+    toast("جاري رفع الصور…");
+    for(const file of files){
+      if(!file.type || !file.type.startsWith("image/")) throw new Error("الملف المختار ليس صورة.");
+      if(file.size > 10 * 1024 * 1024) throw new Error("حجم الصورة أكبر من 10MB.");
+      const ext = (file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
+      const path = `products/${crypto.randomUUID()}.${ext}`;
+      const {error} = await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:false,contentType:file.type,cacheControl:"31536000"});
       if(error) throw error;
-      const publicUrl = sb.storage.from(STORAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+      const {data:urlData}=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      const publicUrl=urlData?.publicUrl;
+      if(!publicUrl) throw new Error("تم رفع الصورة لكن تعذر إنشاء رابطها العام.");
       window._pfState.images.push(publicUrl);
-    }catch(error){
-      console.error(error);
-      toast(friendlyError(error),"err");
+      renderModalImages();
     }
+    toast("تم رفع الصور بنجاح");
+  }catch(error){
+    console.error("Image upload failed:",error);
+    toast(friendlyError(error),"err");
+  }finally{
+    renderModalImages();
+    e.target.value="";
   }
-  renderModalImages();
-  e.target.value="";
 }
 
 async function saveProduct(id){
   const btn = $("pf_save");
   btn.disabled = true;
+  let productId = id;
+  let createdNew = false;
+  let oldChildren = null;
   try{
+    await requireAdminSession();
     const existing = id ? products.find(x=>String(x.id)===String(id)) : null;
+    const st = window._pfState;
+    if(!st || !Array.isArray(st.images) || !Array.isArray(st.sizes) || !Array.isArray(st.colors)) throw new Error("بيانات المنتج غير مكتملة. افتح نافذة المنتج من جديد.");
+
+    if(id){
+      const [oldSizes,oldColors,oldImages]=await Promise.all([
+        sb.from("product_sizes").select("*").eq("product_id",id).order("sort_order",{ascending:true}),
+        sb.from("product_colors").select("*").eq("product_id",id).order("sort_order",{ascending:true}),
+        sb.from("product_images").select("*").eq("product_id",id).order("sort_order",{ascending:true})
+      ]);
+      if(oldSizes.error) throw oldSizes.error;
+      if(oldColors.error) throw oldColors.error;
+      if(oldImages.error) throw oldImages.error;
+      oldChildren={sizes:oldSizes.data||[],colors:oldColors.data||[],images:oldImages.data||[]};
+    }
+
     const payload = {
       name: $("pf_name").value.trim(),
       sku: $("pf_sku").value.trim() || null,
@@ -848,7 +891,6 @@ async function saveProduct(id){
     };
     if(!payload.name){ toast("اسم المنتج مطلوب","err"); btn.disabled=false; return; }
 
-    let productId = id;
     if(id){
       const {error} = await sb.from("products").update(payload).eq("id",id);
       if(error) throw error;
@@ -856,27 +898,29 @@ async function saveProduct(id){
       const {data,error} = await sb.from("products").insert(payload).select().single();
       if(error) throw error;
       productId = data.id;
+      createdNew = true;
     }
 
-    // sync children: delete then reinsert
-    await sb.from("product_sizes").delete().eq("product_id",productId);
-    await sb.from("product_colors").delete().eq("product_id",productId);
-    await sb.from("product_images").delete().eq("product_id",productId);
+    const delSizes=await sb.from("product_sizes").delete().eq("product_id",productId);
+    if(delSizes.error) throw delSizes.error;
+    const delColors=await sb.from("product_colors").delete().eq("product_id",productId);
+    if(delColors.error) throw delColors.error;
+    const delImages=await sb.from("product_images").delete().eq("product_id",productId);
+    if(delImages.error) throw delImages.error;
 
-    const st = window._pfState;
     if(st.sizes.length){
-      const rows = st.sizes.map((size,i)=>({product_id:productId, size, sort_order:i}));
-      const {error} = await sb.from("product_sizes").insert(rows);
+      const rows=st.sizes.map((size,i)=>({product_id:productId,size,sort_order:i}));
+      const {error}=await sb.from("product_sizes").insert(rows);
       if(error) throw error;
     }
     if(st.colors.length){
-      const rows = st.colors.map((name,i)=>({product_id:productId, name, sort_order:i}));
-      const {error} = await sb.from("product_colors").insert(rows);
+      const rows=st.colors.map((name,i)=>({product_id:productId,name,sort_order:i}));
+      const {error}=await sb.from("product_colors").insert(rows);
       if(error) throw error;
     }
     if(st.images.length){
-      const rows = st.images.map((image_url,i)=>({product_id:productId, image_url, sort_order:i}));
-      const {error} = await sb.from("product_images").insert(rows);
+      const rows=st.images.map((image_url,i)=>({product_id:productId,image_url,sort_order:i}));
+      const {error}=await sb.from("product_images").insert(rows);
       if(error) throw error;
     }
 
@@ -886,12 +930,26 @@ async function saveProduct(id){
     renderProducts();
     renderDashboard();
   }catch(error){
-    console.error(error);
+    console.error("Product save failed:",error);
+    if(productId && createdNew){
+      await sb.from("product_sizes").delete().eq("product_id",productId);
+      await sb.from("product_colors").delete().eq("product_id",productId);
+      await sb.from("product_images").delete().eq("product_id",productId);
+      await sb.from("products").delete().eq("id",productId);
+    }else if(productId && oldChildren){
+      // Restore the previous child records if an edit fails midway.
+      await sb.from("product_sizes").delete().eq("product_id",productId);
+      await sb.from("product_colors").delete().eq("product_id",productId);
+      await sb.from("product_images").delete().eq("product_id",productId);
+      if(oldChildren.sizes.length) await sb.from("product_sizes").insert(oldChildren.sizes.map(({id,...row})=>row));
+      if(oldChildren.colors.length) await sb.from("product_colors").insert(oldChildren.colors.map(({id,...row})=>row));
+      if(oldChildren.images.length) await sb.from("product_images").insert(oldChildren.images.map(({id,...row})=>row));
+    }
     toast(friendlyError(error),"err");
+  }finally{
+    btn.disabled = false;
   }
-  btn.disabled = false;
 }
-
 async function deleteProduct(id){
   if(!confirm("هل تريد حذف هذا المنتج نهائيًا؟")) return;
   try{
