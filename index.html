@@ -8824,9 +8824,43 @@ async function submitPublicWish(event){
   }
   button.disabled=true;
   try{
-    const db=getCustomerSupabase();
-    const result=await db.from("wish_requests").insert({wish_text:wish});
-    if(result.error)throw result.error;
+    let saved=false;
+    let clientError=null;
+
+    // Primary path: Supabase JS client.
+    try{
+      const db=getCustomerSupabase();
+      const result=await db.from("wish_requests").insert({wish_text:wish});
+      if(!result.error) saved=true;
+      else clientError=result.error;
+    }catch(error){
+      clientError=error;
+    }
+
+    // Fallback: direct REST request. This keeps the public wish form working
+    // even if the browser's Supabase JS client fails to initialize/request.
+    if(!saved){
+      const response=await fetch(CUSTOMER_SUPABASE_URL+"/rest/v1/wish_requests",{
+        method:"POST",
+        headers:{
+          "apikey":CUSTOMER_SUPABASE_KEY,
+          "Authorization":"Bearer "+CUSTOMER_SUPABASE_KEY,
+          "Content-Type":"application/json",
+          "Prefer":"return=minimal"
+        },
+        body:JSON.stringify({wish_text:wish})
+      });
+      if(!response.ok){
+        let details="";
+        try{details=await response.text();}catch(_){}
+        const fallbackError=new Error("Wish REST request failed: "+response.status+" "+details);
+        fallbackError.clientError=clientError;
+        throw fallbackError;
+      }
+      saved=true;
+    }
+
+    if(!saved)throw clientError||new Error("Wish was not saved");
     input.value="";
     toast(lang==="en"?"Your wish was shared with everyone ✨":"تمت إضافة أمنيتك للجميع ✨");
     await loadPublicWishes();
