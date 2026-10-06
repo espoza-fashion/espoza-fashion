@@ -8798,10 +8798,38 @@ async function loadPublicWishes(){
   if(publicWishesLoading)return;
   publicWishesLoading=true;
   try{
-    const db=getCustomerSupabase();
-    const result=await db.from("wish_requests").select("id,wish_text,created_at").order("created_at",{ascending:false}).limit(60);
-    if(result.error)throw result.error;
-    renderPublicWishes(result.data||[]);
+    let rows=null;
+    let clientError=null;
+
+    // Primary path: Supabase JS client.
+    try{
+      const db=getCustomerSupabase();
+      const result=await db.from("wish_requests").select("id,wish_text,created_at").order("created_at",{ascending:false}).limit(60);
+      if(!result.error) rows=result.data||[];
+      else clientError=result.error;
+    }catch(error){
+      clientError=error;
+    }
+
+    // Fallback: direct REST read if the JS client is unavailable/fails.
+    if(rows===null){
+      const response=await fetch(CUSTOMER_SUPABASE_URL+"/rest/v1/wish_requests?select=id%2Cwish_text%2Ccreated_at&order=created_at.desc&limit=60",{
+        headers:{
+          "apikey":CUSTOMER_SUPABASE_KEY,
+          "Authorization":"Bearer "+CUSTOMER_SUPABASE_KEY
+        }
+      });
+      if(!response.ok){
+        let details="";
+        try{details=await response.text();}catch(_){}
+        const fallbackError=new Error("Wish REST read failed: "+response.status+" "+details);
+        fallbackError.clientError=clientError;
+        throw fallbackError;
+      }
+      rows=await response.json();
+    }
+
+    renderPublicWishes(rows||[]);
     publicWishesLoaded=true;
   }catch(error){
     console.warn("Public wishes load failed:",error);
