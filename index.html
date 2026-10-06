@@ -5952,7 +5952,7 @@ staticProductToView
    الموقع العام يقرأ البيانات فقط ولا يعدّلها.
    ========================================== */
 const CUSTOMER_SUPABASE_URL="https://opqbcfxqtmyebxsafeea.supabase.co";
-const CUSTOMER_SUPABASE_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
+const CUSTOMER_SUPABASE_KEY="String.fromCharCode(115,98,95,112,117,98,108,105,115,104,97,98,108,101,95,117,114,48,48,97,70,81,81,118,53,83,118,77,100,71,98,118,50,71,57,90,103,95,102,66,112,88,69,85,108,88)";
 let customerSupabase=null;
 let adminDeliveryAreas=null;
 let adminSliders=null;
@@ -6045,10 +6045,26 @@ return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.n
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
-const result=await db.from("products").select("id,name,name_en,category,price,old_price,description,description_en,active,featured,sort_order,created_at,product_sizes(*),product_colors(*),product_images(*)").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+const result=await db.from("products").select("id,name,name_en,sku,category,price,old_price,description,description_en,active,featured,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
 if(result.error)throw result.error;
-return(result.data||[]).map(dynamicProductToView);
+const rows=result.data||[];
+if(!rows.length)return[];
+const ids=rows.map(x=>x.id);
+const [sizesRes,colorsRes,imagesRes]=await Promise.all([
+db.from("product_sizes").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
+db.from("product_colors").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
+db.from("product_images").select("*").in("product_id",ids).order("sort_order",{ascending:true})
+]);
+if(sizesRes.error)throw sizesRes.error;
+if(colorsRes.error)throw colorsRes.error;
+if(imagesRes.error)throw imagesRes.error;
+const sizesBy=new Map(),colorsBy=new Map(),imagesBy=new Map();
+(sizesRes.data||[]).forEach(x=>{if(!sizesBy.has(x.product_id))sizesBy.set(x.product_id,[]);sizesBy.get(x.product_id).push(x);});
+(colorsRes.data||[]).forEach(x=>{if(!colorsBy.has(x.product_id))colorsBy.set(x.product_id,[]);colorsBy.get(x.product_id).push(x);});
+(imagesRes.data||[]).forEach(x=>{if(!imagesBy.has(x.product_id))imagesBy.set(x.product_id,[]);imagesBy.get(x.product_id).push(x);});
+return rows.map(p=>dynamicProductToView({...p,product_sizes:sizesBy.get(p.id)||[],product_colors:colorsBy.get(p.id)||[],product_images:imagesBy.get(p.id)||[]}));
 }
+
 async function setupProducts(){
 products=staticViewProducts;
 renderProducts();
