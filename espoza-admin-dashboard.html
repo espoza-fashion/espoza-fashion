@@ -511,7 +511,12 @@ async function loadOrders(){
 async function loadProducts(){
   const {data,error} = await sb.from("products").select("*").order("created_at",{ascending:false});
   if(error) throw error;
-  products = data||[];
+  products = (data||[]).map(p=>({
+    ...p,
+    is_active: p.active !== false,
+    is_offer: !!p.featured || p.old_price != null,
+    is_available: p.stock == null ? true : Number(p.stock) > 0
+  }));
   const ids = products.map(p=>p.id);
   if(!ids.length){ productImages=[]; productSizes=[]; productColors=[]; return; }
   const [imgRes,sizeRes,colorRes] = await Promise.all([
@@ -527,26 +532,33 @@ async function loadProducts(){
   productColors = colorRes.data||[];
 }
 async function loadSlider(){
-  const {data,error} = await sb.from("slider").select("*").order("sort_order",{ascending:true});
+  const {data,error} = await sb.from("sliders").select("*").order("sort_order",{ascending:true});
   if(error) throw error;
-  sliderRows = data||[];
+  sliderRows = (data||[]).map(s=>({
+    ...s,
+    is_active: s.active !== false,
+    button_text: null,
+    button_link: s.link_url || ""
+  }));
 }
 async function loadDeliveryAreas(){
-  const {data,error} = await sb.from("delivery_areas").select("*").order("id",{ascending:true});
+  const {data,error} = await sb.from("delivery_areas").select("*").order("sort_order",{ascending:true});
   if(error) throw error;
-  deliveryAreas = data||[];
+  deliveryAreas = (data||[]).map(a=>({...a,is_active:a.active!==false}));
 }
 async function loadStoreSettings(){
-  const {data,error} = await sb.from("store_settings").select("*").limit(1).maybeSingle();
+  const {data,error} = await sb.from("store_settings").select("id,key,value");
   if(error) throw error;
-  storeSettings = data||null;
+  const mapped = {};
+  (data||[]).forEach(row=>{ mapped[row.key] = row.value; });
+  storeSettings = { id:null, ...mapped };
 }
 
 /* ===================== Dashboard ===================== */
 function renderDashboard(){
   const totalOrders = orders.length;
   const newOrders = orders.filter(o=>(o.status||"new")==="new").length;
-  const revenue = orders.filter(o=>o.status!=="cancelled").reduce((s,o)=>s+Number(o.total_price||0),0);
+  const revenue = orders.filter(o=>o.status!=="cancelled").reduce((s,o)=>s+Number(o.total||0),0);
   const activeProducts = products.filter(p=>p.is_active!==false).length;
 
   $("statCards").innerHTML = `
@@ -812,6 +824,7 @@ async function saveProduct(id){
   const btn = $("pf_save");
   btn.disabled = true;
   try{
+    const existing = id ? products.find(x=>String(x.id)===String(id)) : null;
     const payload = {
       name: $("pf_name").value.trim(),
       sku: $("pf_sku").value.trim() || null,
@@ -819,9 +832,10 @@ async function saveProduct(id){
       price: Number($("pf_price").value||0),
       old_price: $("pf_old_price").value ? Number($("pf_old_price").value) : null,
       description: $("pf_description").value.trim() || null,
-      is_available: $("pf_available").checked,
-      is_offer: $("pf_offer").checked,
-      is_active: $("pf_active").checked
+      active: $("pf_active").checked,
+      featured: $("pf_offer").checked,
+      stock: $("pf_available").checked ? (existing?.stock ?? null) : 0,
+      updated_at: new Date().toISOString()
     };
     if(!payload.name){ toast("اسم المنتج مطلوب","err"); btn.disabled=false; return; }
 
@@ -847,7 +861,7 @@ async function saveProduct(id){
       if(error) throw error;
     }
     if(st.colors.length){
-      const rows = st.colors.map((color_name,i)=>({product_id:productId, color_name, sort_order:i}));
+      const rows = st.colors.map((name,i)=>({product_id:productId, name, sort_order:i}));
       const {error} = await sb.from("product_colors").insert(rows);
       if(error) throw error;
     }
@@ -948,13 +962,12 @@ async function saveSlide(id){
       image_url: $("sf_image").value.trim(),
       title: $("sf_title").value.trim() || null,
       subtitle: $("sf_subtitle").value.trim() || null,
-      button_text: $("sf_button_text").value.trim() || null,
-      button_link: $("sf_button_link").value.trim() || null,
+      link_url: $("sf_button_link").value.trim() || null,
       sort_order: Number($("sf_sort_order").value||0),
-      is_active: $("sf_active").checked
+      active: $("sf_active").checked
     };
-    if(id){ const {error}=await sb.from("slider").update(payload).eq("id",id); if(error) throw error; }
-    else{ const {error}=await sb.from("slider").insert(payload); if(error) throw error; }
+    if(id){ const {error}=await sb.from("sliders").update(payload).eq("id",id); if(error) throw error; }
+    else{ const {error}=await sb.from("sliders").insert(payload); if(error) throw error; }
     toast(id?"تم تحديث الشريحة":"تم إضافة الشريحة");
     closeModal();
     await loadSlider();
@@ -965,7 +978,7 @@ async function saveSlide(id){
 async function deleteSlide(id){
   if(!confirm("حذف هذه الشريحة؟")) return;
   try{
-    const {error} = await sb.from("slider").delete().eq("id",id);
+    const {error} = await sb.from("sliders").delete().eq("id",id);
     if(error) throw error;
     toast("تم حذف الشريحة");
     await loadSlider();
@@ -1006,7 +1019,7 @@ function openAreaModal(id){
 async function saveArea(id){
   const btn=$("af_save"); btn.disabled=true;
   try{
-    const payload = { area_name: $("af_name").value.trim(), price: Number($("af_price").value||0), is_active: $("af_active").checked };
+    const payload = { area_name: $("af_name").value.trim(), price: Number($("af_price").value||0), active: $("af_active").checked };
     if(!payload.area_name){ toast("اسم المنطقة مطلوب","err"); btn.disabled=false; return; }
     if(id){ const {error}=await sb.from("delivery_areas").update(payload).eq("id",id); if(error) throw error; }
     else{ const {error}=await sb.from("delivery_areas").insert(payload); if(error) throw error; }
@@ -1048,7 +1061,7 @@ function renderSettingsForm(){
 $("saveSettingsBtn").addEventListener("click", async ()=>{
   const btn = $("saveSettingsBtn"); btn.disabled=true;
   try{
-    const payload = {
+    const settings = {
       store_name: $("s_store_name").value.trim(),
       whatsapp: $("s_whatsapp").value.trim(),
       facebook: $("s_facebook").value.trim(),
@@ -1063,15 +1076,13 @@ $("saveSettingsBtn").addEventListener("click", async ()=>{
       jerusalem_delivery: Number($("s_jerusalem_delivery").value||0),
       inside_delivery: Number($("s_inside_delivery").value||0)
     };
-    if(storeSettings && storeSettings.id!=null){
-      const {error} = await sb.from("store_settings").update(payload).eq("id",storeSettings.id);
-      if(error) throw error;
-    }else{
-      const {error} = await sb.from("store_settings").insert(payload);
+    for(const [key,value] of Object.entries(settings)){
+      const {error}=await sb.from("store_settings").upsert({key,value},{onConflict:"key"});
       if(error) throw error;
     }
     toast("تم حفظ إعدادات المتجر");
     await loadStoreSettings();
+    renderSettingsForm();
   }catch(error){ console.error(error); toast(friendlyError(error),"err"); }
   btn.disabled=false;
 });
