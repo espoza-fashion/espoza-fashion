@@ -6045,41 +6045,94 @@ return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.n
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
-const result=await db.from("products").select("id,name,name_en,sku,category,price,old_price,description,description_en,active,featured,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+
+const result=await db.from("products")
+.select("id,name,name_en,sku,category,price,old_price,description,description_en,active,featured,sort_order,created_at")
+.eq("active",true)
+.order("sort_order",{ascending:true})
+.order("created_at",{ascending:false});
+
 if(result.error)throw result.error;
+
 const rows=result.data||[];
 if(!rows.length)return[];
+
 const ids=rows.map(x=>x.id);
-const [sizesRes,colorsRes,imagesRes]=await Promise.all([
+
+const [sizesResult,colorsResult,imagesResult]=await Promise.allSettled([
 db.from("product_sizes").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
 db.from("product_colors").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
 db.from("product_images").select("*").in("product_id",ids).order("sort_order",{ascending:true})
 ]);
-if(sizesRes.error)throw sizesRes.error;
-if(colorsRes.error)throw colorsRes.error;
-if(imagesRes.error)throw imagesRes.error;
-const sizesBy=new Map(),colorsBy=new Map(),imagesBy=new Map();
-(sizesRes.data||[]).forEach(x=>{if(!sizesBy.has(x.product_id))sizesBy.set(x.product_id,[]);sizesBy.get(x.product_id).push(x);});
-(colorsRes.data||[]).forEach(x=>{if(!colorsBy.has(x.product_id))colorsBy.set(x.product_id,[]);colorsBy.get(x.product_id).push(x);});
-(imagesRes.data||[]).forEach(x=>{if(!imagesBy.has(x.product_id))imagesBy.set(x.product_id,[]);imagesBy.get(x.product_id).push(x);});
-return rows.map(p=>dynamicProductToView({...p,product_sizes:sizesBy.get(p.id)||[],product_colors:colorsBy.get(p.id)||[],product_images:imagesBy.get(p.id)||[]}));
+
+const childData=(settled)=>{
+if(settled.status==="fulfilled" && !settled.value.error)return settled.value.data||[];
+console.warn("Supabase product child data failed:",settled.status==="rejected"?settled.reason:settled.value?.error);
+return[];
+};
+
+const sizes=childData(sizesResult);
+const colors=childData(colorsResult);
+const images=childData(imagesResult);
+
+const sizesBy=new Map();
+const colorsBy=new Map();
+const imagesBy=new Map();
+
+sizes.forEach(x=>{
+if(!sizesBy.has(x.product_id))sizesBy.set(x.product_id,[]);
+sizesBy.get(x.product_id).push(x);
+});
+
+colors.forEach(x=>{
+if(!colorsBy.has(x.product_id))colorsBy.set(x.product_id,[]);
+colorsBy.get(x.product_id).push(x);
+});
+
+images.forEach(x=>{
+if(!imagesBy.has(x.product_id))imagesBy.set(x.product_id,[]);
+imagesBy.get(x.product_id).push(x);
+});
+
+return rows.map((p,index)=>dynamicProductToView({
+...p,
+product_sizes:sizesBy.get(p.id)||[],
+product_colors:colorsBy.get(p.id)||[],
+product_images:imagesBy.get(p.id)||[]
+},index));
+}
+
+async function refreshSupabaseProducts(){
+try{
+const remoteProducts=await loadSupabaseProducts();
+if(remoteProducts.length){
+products=remoteProducts;
+renderProducts();
+$("productTotal").textContent=String(products.length)+"+";
+updateWishlistUI();
+}
+}catch(error){
+console.warn("Supabase products refresh failed; keeping current products:",error);
+}
 }
 
 async function setupProducts(){
 products=staticViewProducts;
 renderProducts();
 $("productTotal").textContent=String(products.length)+"+";
-try{
-const remoteProducts=await loadSupabaseProducts();
-if(remoteProducts.length){
-  products=remoteProducts;
-  renderProducts();
-  $("productTotal").textContent=String(products.length)+"+";
+
+await refreshSupabaseProducts();
+
+/* Keep the customer catalogue synced with Admin/Supabase while the page
+   remains open. No design or existing product data is changed. */
+if(!window.__espozaProductRefreshTimer){
+window.__espozaProductRefreshTimer=setInterval(refreshSupabaseProducts,15000);
+document.addEventListener("visibilitychange",()=>{
+if(!document.hidden)refreshSupabaseProducts();
+});
 }
-}catch(error){
-  console.warn("Supabase products failed; using static products:",error);
 }
-}
+
 async function setupAdminConnections(){
 try{await loadAdminStoreData();}
 catch(error){console.warn("Supabase admin data failed; keeping built-in site defaults:",error);}
