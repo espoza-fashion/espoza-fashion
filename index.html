@@ -3288,6 +3288,79 @@ footer{
 .public-wish{overflow:hidden}
 .public-wish-text{word-break:break-word;overflow-wrap:anywhere}
 </style>
+
+<style id="espoza-royal-background">
+/* ===== Espoza Fashion — Royal Luxury Customer Background =====
+   Additive visual layer only: no products, links, layout or functionality changed.
+*/
+body{
+  position:relative;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(185,152,90,.12) 0, rgba(185,152,90,0) 24%),
+    radial-gradient(circle at 92% 28%, rgba(100,31,52,.20) 0, rgba(100,31,52,0) 30%),
+    radial-gradient(circle at 50% 100%, rgba(67,19,33,.16) 0, rgba(67,19,33,0) 38%),
+    linear-gradient(135deg,#fbf9f5 0%,#f7f0f1 46%,#fbf8f3 100%);
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.48;
+  background:
+    radial-gradient(ellipse at 14% 20%, transparent 0 56px, rgba(185,152,90,.10) 57px, transparent 59px),
+    radial-gradient(ellipse at 86% 78%, transparent 0 72px, rgba(100,31,52,.07) 73px, transparent 75px),
+    repeating-linear-gradient(45deg, transparent 0 34px, rgba(185,152,90,.018) 35px, transparent 36px),
+    repeating-linear-gradient(-45deg, transparent 0 46px, rgba(67,19,33,.014) 47px, transparent 48px);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),rgba(0,0,0,.45));
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),rgba(0,0,0,.45));
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(255,255,255,.72), transparent 28%),
+    linear-gradient(90deg, rgba(100,31,52,.025), transparent 18%, transparent 82%, rgba(185,152,90,.035));
+}
+.hero-wrap,
+.intro,
+.feedback,
+.toolbar,
+.catalog,
+.social,
+.features{
+  position:relative;
+}
+.hero-wrap::before,
+.intro::before,
+.feedback::before,
+.toolbar::before,
+.catalog::before,
+.social::before,
+.features::before{
+  content:"";
+  position:absolute;
+  inset:0 18px;
+  z-index:-1;
+  pointer-events:none;
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 50% 0, rgba(185,152,90,.045), transparent 42%);
+}
+@media(max-width:700px){
+  body::before{opacity:.28}
+  body::after{opacity:.65}
+}
+@media(prefers-reduced-motion:reduce){
+  body::before,
+  body::after{position:absolute}
+}
+</style>
+
 </head>
 
 <body>
