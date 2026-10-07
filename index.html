@@ -9821,5 +9821,69 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 })();
 </script>
 
+
+<style id="espoza-content-protection">
+/* Espoza Fashion — content protection deterrents */
+.product-img img,
+.detail-main img,
+.product-image-viewer img,
+.thumb,
+.hero-slide img,
+.feedback-showcase img{
+  -webkit-user-drag:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+}
+.product-img,
+.detail-main,
+.product-image-stage{
+  -webkit-touch-callout:none;
+}
+</style>
+
+<script id="espoza-rights-protection">
+(function(){
+  const protectedSelector = [
+    ".product-img img",
+    ".detail-main img",
+    ".product-image-viewer img",
+    ".thumb",
+    ".hero-slide img",
+    ".feedback-showcase img"
+  ].join(",");
+
+  function protectImages(){
+    document.querySelectorAll(protectedSelector).forEach(img=>{
+      img.setAttribute("draggable","false");
+      img.setAttribute("oncontextmenu","return false");
+      img.addEventListener("dragstart",e=>e.preventDefault(),{passive:false});
+      img.addEventListener("contextmenu",e=>e.preventDefault(),{passive:false});
+    });
+  }
+
+  document.addEventListener("contextmenu",function(e){
+    if(e.target && e.target.closest(protectedSelector)) e.preventDefault();
+  },{passive:false});
+
+  document.addEventListener("dragstart",function(e){
+    if(e.target && e.target.closest(protectedSelector)) e.preventDefault();
+  },{passive:false});
+
+  document.addEventListener("selectstart",function(e){
+    if(e.target && e.target.closest(protectedSelector)) e.preventDefault();
+  },{passive:false});
+
+  protectImages();
+  const observer=new MutationObserver(protectImages);
+  observer.observe(document.documentElement,{childList:true,subtree:true});
+
+  /* Keep the site's copyright notice explicit without changing product data. */
+  const copyright=document.querySelector(".copyright");
+  if(copyright && !copyright.textContent.includes("جميع الحقوق محفوظة")){
+    copyright.textContent="© 2026 Espoza Fashion. جميع الحقوق محفوظة.";
+  }
+})();
+</script>
 </body>
 </html>
