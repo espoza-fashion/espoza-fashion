@@ -696,7 +696,43 @@ white-space:nowrap
 }
 
 .product-meta{
-display:none
+display:block;
+margin-top:7px;
+font-size:10px;
+font-weight:700;
+letter-spacing:.35px;
+color:#9a858c;
+direction:ltr;
+text-align:right
+}
+.product-meta::before{
+content:"SKU: ";
+color:var(--gold);
+font-weight:800
+}
+.product-img::after,
+.detail-main::after{
+content:"ESPOZA FASHION • ©";
+position:absolute;
+left:10px;
+bottom:9px;
+z-index:3;
+padding:4px 8px;
+border-radius:999px;
+background:rgba(67,19,33,.38);
+color:rgba(255,255,255,.82);
+font-size:8px;
+font-weight:800;
+letter-spacing:.6px;
+pointer-events:none;
+user-select:none;
+-webkit-user-select:none;
+}
+.product-img::after{
+opacity:.72;
+}
+.detail-main::after{
+opacity:.8;
 }
 
 .empty{
@@ -981,7 +1017,11 @@ gap:24px
 .product-image-viewer #productImageViewerImg{max-width:96vw;max-height:92vh;width:auto;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;transform-origin:center center;transition:transform .18s ease-out;will-change:transform;border-radius:8px}
 .product-image-viewer .product-image-close{position:fixed;top:18px;left:18px;background:rgba(255,255,255,.92);z-index:10}
 .product-image-hint{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 12px;font-size:10px;pointer-events:none;white-space:nowrap}
-@media(max-width:700px){.product-image-viewer #productImageViewerImg{max-width:100vw;max-height:88vh}.product-image-hint{bottom:10px;font-size:9px}}
+.product-image-watermark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-18deg);z-index:2;color:rgba(255,255,255,.16);font-size:clamp(14px,2.2vw,24px);font-weight:900;letter-spacing:2px;white-space:nowrap;pointer-events:none;user-select:none;-webkit-user-select:none}
+.product-image-actions{position:fixed;right:18px;bottom:18px;z-index:12;display:flex;align-items:center;gap:8px;direction:rtl}
+.product-image-download{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.94);color:var(--wine);border:1px solid rgba(255,255,255,.6);border-radius:999px;padding:8px 13px;font-size:11px;font-weight:800;box-shadow:0 8px 22px rgba(0,0,0,.18)}
+.product-image-rights{color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 10px;font-size:9px}
+@media(max-width:700px){.product-image-viewer #productImageViewerImg{max-width:100vw;max-height:88vh}.product-image-hint{bottom:10px;font-size:9px}.product-image-actions{left:50%;right:auto;transform:translateX(-50%);bottom:42px;width:max-content;max-width:calc(100vw - 20px);}.product-image-rights{display:none}.product-image-watermark{font-size:12px;letter-spacing:1px}}
 
 .detail-main{
 position:relative;
@@ -3875,6 +3915,13 @@ onclick="addCurrentToCart()">
   <button class="close-btn product-image-close" type="button" onclick="closeProductImageViewer()" aria-label="Close">×</button>
   <div class="product-image-stage" id="productImageStage">
     <img id="productImageViewerImg" src="" alt="">
+    <div class="product-image-watermark" aria-hidden="true">ESPOZA FASHION • © ALL RIGHTS RESERVED</div>
+  </div>
+  <div class="product-image-actions">
+    <a id="productImageDownload" class="product-image-download" href="#" target="_blank" rel="noopener">
+      حفظ الصورة
+    </a>
+    <span class="product-image-rights">© Espoza Fashion — جميع الحقوق محفوظة</span>
   </div>
   <div class="product-image-hint">كبّري بالصابعين أو اضغطي مرتين للتكبير</div>
 </div>
@@ -8673,9 +8720,17 @@ function openProductImageViewer(){
   const source=$("detailImage");
   const viewer=$("productImageViewer");
   const img=$("productImageViewerImg");
+  const download=$("productImageDownload");
   if(!source||!viewer||!img||!source.src)return;
-  img.src=source.currentSrc||source.src;
+  const src=source.currentSrc||source.src;
+  img.src=src;
   img.alt=source.alt||"";
+  if(download){
+    download.href=src;
+    download.setAttribute("download","");
+    download.setAttribute("aria-label",lang==="en"?"Save product image":"حفظ صورة المنتج");
+    download.textContent=lang==="en"?"Save image":"حفظ الصورة";
+  }
   resetProductViewer();
   viewer.classList.add("open");
   document.body.style.overflow="hidden";
@@ -9881,7 +9936,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
   /* Keep the site's copyright notice explicit without changing product data. */
   const copyright=document.querySelector(".copyright");
   if(copyright && !copyright.textContent.includes("جميع الحقوق محفوظة")){
-    copyright.textContent="© 2026 Espoza Fashion. جميع الحقوق محفوظة.";
+    copyright.textContent=lang==="en"?"© 2026 Espoza Fashion. All Rights Reserved.":"© 2026 Espoza Fashion. جميع الحقوق محفوظة.";
   }
 })();
 </script>
