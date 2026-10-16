@@ -8644,6 +8644,16 @@ ${linesEn}
 💳 Cash on Delivery`;
 
 
+const whatsappUrl=`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
+/* افتح واتساب مباشرة من ضغطة المستخدم حتى لا يمنع Safari النافذة بعد انتظار قاعدة البيانات */
+let whatsappWindow=null;
+try{
+whatsappWindow=window.open("about:blank","_blank");
+if(whatsappWindow){
+whatsappWindow.opener=null;
+whatsappWindow.location.href=whatsappUrl;
+}
+}catch(openError){console.warn("WhatsApp window open failed:",openError);}
 let savedToAdmin=false;
 try{
 const customerDb=getCustomerSupabase();
@@ -8652,17 +8662,10 @@ const saved=await customerDb.from("orders").insert(orderPayload).select("id").si
 if(saved.error)throw saved.error;
 savedToAdmin=true;
 }catch(error){console.warn("Order database save failed:",error);}
+if(!whatsappWindow){window.location.href=whatsappUrl;return;}
 toast(savedToAdmin?t().saved:t().waOnly);
 
-window.open(
 
-`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`,
-
-"_blank",
-
-"noopener"
-
-);
 
 
 cart=[];
