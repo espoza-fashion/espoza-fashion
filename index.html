@@ -6537,7 +6537,7 @@ s.image_url
 <img
 src="${esc(s.image_url)}"
 alt="${esc(s.title||"Espoza Fashion")}"
-onerror="this.src='${PLACEHOLDER}'">
+onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
 `
 :
 ""
@@ -6815,7 +6815,7 @@ aria-label="Espoza Fashion customer feedback">
 src="${esc(url)}"
 alt="Espoza Fashion — Customer Feedback"
 loading="lazy"
-onerror="this.src='${PLACEHOLDER}'">
+onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
 
 </div>
 
