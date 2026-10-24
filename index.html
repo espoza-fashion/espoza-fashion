@@ -6099,6 +6099,7 @@ if(!cart.length&&Array.isArray(savedItems)&&savedItems.length){
  });
  try{localStorage.setItem("espoza_cart",JSON.stringify(cart));}catch(_){}
  updateCartBadge();
+ await syncCustomerCart();
  if(cart.length)toast("تم استرجاع سلتك المحفوظة على حسابك.");
 }else if(cart.length){
  await syncCustomerCart();
