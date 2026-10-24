@@ -4040,6 +4040,12 @@ style="color:var(--wine);margin:4px 0 18px">
 <div id="cartItems">
 </div>
 
+<div id="cartCouponBox" style="margin:12px 0;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff">
+ <label for="cartCouponCode" style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">كود الخصم (اختياري)</label>
+ <div style="display:flex;gap:7px;align-items:center"><input id="cartCouponCode" type="text" autocomplete="off" placeholder="أدخلي كود الخصم" style="min-width:0;flex:1"><button type="button" class="chip clickable" onclick="applyCartCoupon()">تطبيق</button><button type="button" class="chip clickable" onclick="clearCartCoupon()" aria-label="إزالة الكود">×</button></div>
+ <p id="cartCouponMessage" class="muted" role="status" style="font-size:12px;line-height:1.6;margin:7px 0 0"></p>
+</div>
+
 <div class="total-box">
 
 <div class="total-line hidden" id="cartSubtotalRow">
@@ -6079,6 +6085,7 @@ let customerProfile=null;
 let customerAuthListenerReady=false;
 let customerHasPreviousOrders=null;
 let activeAutomaticOffers=[];
+let appliedManualCoupon=null;
 let adminDeliveryAreas=null;
 let adminSliders=null;
 let adminFeedback=null;
@@ -8319,32 +8326,83 @@ const product=products.find(p=>String(p.id)===String(item?.productId)||String(p.
 return String(product?.category||"");
 }
 
-function getAutomaticOffer(){
+function calculateOfferDiscount(offer){
+if(!offer||!offer.active)return null;
 const now=Date.now();
-let best=null;
-for(const offer of activeAutomaticOffers||[]){
-if(!offer||!offer.active||!offer.auto_apply)continue;
 const starts=offer.starts_at?new Date(offer.starts_at).getTime():0;
 const ends=offer.ends_at?new Date(offer.ends_at).getTime():Infinity;
-if((starts&&now<starts)||(ends&&now>ends))continue;
-if(offer.usage_limit!=null&&Number(offer.used_count||0)>=Number(offer.usage_limit))continue;
-if(offer.first_order_only&&customerHasPreviousOrders!==false)continue;
+if((starts&&now<starts)||(ends&&now>ends))return null;
+if(offer.usage_limit!=null&&Number(offer.used_count||0)>=Number(offer.usage_limit))return null;
+if(offer.first_order_only&&customerHasPreviousOrders!==false)return null;
 const productIds=Array.isArray(offer.product_ids)?offer.product_ids.map(String):[];
 const categories=Array.isArray(offer.category_slugs)?offer.category_slugs.map(String):[];
 const eligible=cart.filter(item=>{
-const productMatch=!productIds.length||productIds.includes(String(item.dbId||""));
-const category=cartItemCategory(item);
-const categoryMatch=!categories.length||categories.includes(category);
-return productMatch&&categoryMatch;
+ const productMatch=!productIds.length||productIds.includes(String(item.dbId||""));
+ const category=cartItemCategory(item);
+ const categoryMatch=!categories.length||categories.includes(category);
+ return productMatch&&categoryMatch;
 });
 const quantity=eligible.reduce((sum,item)=>sum+Math.max(0,Number(item.qty)||0),0);
 const subtotal=eligible.reduce((sum,item)=>sum+Math.max(0,Number(item.price)||0)*Math.max(0,Number(item.qty)||0),0);
-if(quantity<Math.max(1,Number(offer.min_quantity)||1)||subtotal<Math.max(0,Number(offer.min_order)||0)||subtotal<=0)continue;
+if(quantity<Math.max(1,Number(offer.min_quantity)||1)||subtotal<Math.max(0,Number(offer.min_order)||0)||subtotal<=0)return null;
 let discount=offer.discount_type==="percent"?subtotal*Math.min(100,Math.max(0,Number(offer.discount_value)||0))/100:Math.min(subtotal,Math.max(0,Number(offer.discount_value)||0));
 discount=Math.round(discount*100)/100;
-if(discount>0&&(!best||discount>best.discount))best={id:offer.id,label:offer.code||"عرض خاص",discount,eligibleSubtotal:subtotal,quantity,offer};
+if(discount<=0)return null;
+return {id:offer.id,label:offer.code||"عرض خاص",discount,eligibleSubtotal:subtotal,quantity,offer};
+}
+
+function getAutomaticOffer(){
+let best=null;
+for(const offer of activeAutomaticOffers||[]){
+ if(!offer||!offer.active||!offer.auto_apply)continue;
+ const candidate=calculateOfferDiscount(offer);
+ if(candidate&&(!best||candidate.discount>best.discount))best=candidate;
+}
+if(appliedManualCoupon){
+ const candidate=calculateOfferDiscount(appliedManualCoupon);
+ if(candidate&&(!best||candidate.discount>best.discount))best=candidate;
 }
 return best;
+}
+
+async function applyCartCoupon(){
+const input=$("cartCouponCode"),message=$("cartCouponMessage");
+const code=String(input?.value||"").trim().toUpperCase();
+if(!code){appliedManualCoupon=null;if(message)message.textContent="اكتبي كود الخصم أولًا.";renderCartModal();return;}
+try{
+ const db=getCustomerSupabase();
+ const result=await db.from("coupons").select("*").eq("code",code).eq("active",true).maybeSingle();
+ if(result.error)throw result.error;
+ if(!result.data){appliedManualCoupon=null;if(message)message.textContent="الكود غير صحيح أو العرض غير فعال.";renderCartModal();return;}
+ if(result.data.first_order_only&&customerHasPreviousOrders!==false){
+  appliedManualCoupon=null;
+  if(message)message.textContent="هذا العرض لأول طلب ويتطلب تسجيل الدخول بحساب لم يسبق له الطلب.";
+  renderCartModal();return;
+ }
+ const candidate=calculateOfferDiscount(result.data);
+ if(!candidate){
+  appliedManualCoupon=null;
+  if(message)message.textContent="الكود صحيح، لكن شروط العرض غير متحققة في السلة الحالية أو أن العرض انتهى.";
+  renderCartModal();return;
+ }
+ appliedManualCoupon=result.data;
+ const best=getAutomaticOffer();
+ if(message)message.textContent=best?.id!==result.data.id&&best?.discount>candidate.discount?"الكود صالح، لكن احتسبنا أفضل خصم واحد متاح دون جمع العروض.":"تم التحقق من الكود، وسيُحتسب الخصم عند تأكيد الطلب.";
+ renderCartModal();
+}catch(error){
+ appliedManualCoupon=null;
+ if(message)message.textContent="تعذّر التحقق من الكود الآن. حاولي مرة أخرى.";
+ console.warn("Coupon validation failed:",error);
+ renderCartModal();
+}
+}
+
+function clearCartCoupon(){
+appliedManualCoupon=null;
+const input=$("cartCouponCode"),message=$("cartCouponMessage");
+if(input)input.value="";
+if(message)message.textContent="تمت إزالة كود الخصم.";
+renderCartModal();
 }
 
 function cartSubtotal(){
@@ -8965,7 +9023,7 @@ try{
 const customerDb=getCustomerSupabase();
 const profileForOrder=await ensureCustomerProfile();
 if(profileForOrder)customerProfile=profileForOrder;
-const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:cart.map(item=>({product_id:item.dbId||null,name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""})),subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
+const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:cart.map(item=>({product_id:item.dbId||null,category:item.category||cartItemCategory(item)||"",name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""})),coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.from("orders").insert(orderPayload).select("id").single();
 if(saved.error)throw saved.error;
 savedToAdmin=true;
