@@ -253,7 +253,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
 </head>
 <body>
 
-<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" autocomplete="username" required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form></div></div><div class="shell">
+<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" autocomplete="username" required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form><button type="button" class="btn" onclick="resetAdminPassword()">نسيت كلمة المرور؟</button></div></div><div class="shell" inert>
 
   <aside class="sidebar" id="sidebar">
     <div class="brand">
@@ -265,6 +265,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
       <button class="nav-btn" data-page="orders"><span class="ico">◆</span> الطلبات</button>
       <button class="nav-btn" data-page="products"><span class="ico">◆</span> المنتجات</button>
       <button class="nav-btn" data-page="slider"><span class="ico">◆</span> سلايدر الرئيسية</button>
+      <button class="nav-btn" data-page="feedback"><span class="ico">◆</span> آراء الزبائن</button>
       <button class="nav-btn" data-page="delivery"><span class="ico">◆</span> مناطق التوصيل</button>
       <button class="nav-btn" data-page="settings"><span class="ico">◆</span> إعدادات المتجر</button>
     </nav>
@@ -347,6 +348,9 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
         </div>
       </section>
 
+      <section id="page-feedback" class="hidden">
+        <div class="panel"><div class="panel-head"><div class="panel-title">صور آراء الزبائن</div><button class="btn primary" onclick="openFeedbackModal(null)">+ إضافة تقييم</button></div><div class="card-grid" id="feedbackGrid"></div></div>
+      </section>
       <!-- DELIVERY -->
       <section id="page-delivery" class="hidden">
         <div class="panel">
@@ -418,6 +422,7 @@ const PLACEHOLDER = "https://placehold.co/400x500?text=Espoza";
 
 /* ===================== State ===================== */
 let orders = [], products = [], productImages = [], productSizes = [], productColors = [];
+let feedbackRows = [];
 let sliderRows = [], deliveryAreas = [], storeSettings = null;
 let orderStatusFilter = "all";
 let productCatFilter = "all";
@@ -428,6 +433,7 @@ const PAGE_META = {
   orders:{title:"الطلبات", sub:"إدارة ومتابعة طلبات العملاء"},
   products:{title:"المنتجات", sub:"إضافة وتعديل منتجات المتجر"},
   slider:{title:"سلايدر الرئيسية", sub:"الشرائح الظاهرة في أعلى الموقع"},
+  feedback:{title:"آراء الزبائن",sub:"إدارة صور التقييمات المعروضة في المتجر"},
   delivery:{title:"مناطق التوصيل", sub:"إدارة أسعار التوصيل حسب المنطقة"},
   settings:{title:"إعدادات المتجر", sub:"معلومات المتجر وحسابات التواصل"}
 };
@@ -457,7 +463,7 @@ function toast(msg,type="ok"){
 function friendlyError(error){
   const msg=(error && (error.message||error.details||error.hint))||"حدث خطأ غير متوقع";
   if(/row-level security|permission|policy/i.test(msg)){
-    return "تم رفض العملية بسبب صلاحيات قاعدة البيانات (RLS). يلزم تفعيل صلاحية الكتابة لهذا الجدول في Supabase.";
+    return "تم رفض العملية. تحققي من صلاحية المدير وسياسات RLS؛ لا تمنحي الزوار صلاحيات إضافية.";
   }
   return msg;
 }
@@ -486,7 +492,8 @@ $("refreshBtn").addEventListener("click",loadAll);
 async function loadAll(){
   $("connText").textContent="جاري الاتصال…";
   try{
-    await Promise.all([loadOrders(), loadProducts(), loadSlider(), loadDeliveryAreas(), loadStoreSettings()]);
+    await requireAdminSession();
+    await Promise.all([loadOrders(), loadProducts(), loadSlider(), loadDeliveryAreas(), loadStoreSettings(), loadFeedback()]);
     $("connDot").classList.remove("off");
     $("connText").textContent="متصلة الآن";
   }catch(error){
@@ -501,6 +508,7 @@ async function loadAll(){
   renderSlider();
   renderAreas();
   renderSettingsForm();
+  renderFeedback();
 }
 
 async function loadOrders(){
@@ -853,6 +861,29 @@ async function handleImageFiles(e){
   }
 }
 
+async function syncProductChildren(table,productId,key,values,previous){
+  const wanted=[...new Set(values.map(value=>String(value).trim()).filter(Boolean))];
+  const retained=new Set();
+  for(const [sort_order,value] of wanted.entries()){
+    const old=previous.find(row=>String(row[key])===value&&!retained.has(row.id));
+    if(old){
+      retained.add(old.id);
+      if(Number(old.sort_order)!==sort_order){
+        const result=await sb.from(table).update({sort_order}).eq("id",old.id).eq("product_id",productId).select("id").single();
+        if(result.error)throw result.error;
+      }
+    }else{
+      const result=await sb.from(table).insert({product_id:productId,[key]:value,sort_order});
+      if(result.error)throw result.error;
+    }
+  }
+  for(const old of previous){
+    if(retained.has(old.id))continue;
+    const result=await sb.from(table).delete().eq("id",old.id).eq("product_id",productId);
+    if(result.error)throw result.error;
+  }
+}
+
 async function saveProduct(id){
   const btn = $("pf_save");
   btn.disabled = true;
@@ -886,13 +917,14 @@ async function saveProduct(id){
       description: $("pf_description").value.trim() || null,
       active: $("pf_active").checked,
       featured: $("pf_offer").checked,
-      stock: $("pf_available").checked ? (existing?.stock ?? null) : 0,
+      stock: $("pf_available").checked ? (Number(existing?.stock)>0 ? existing.stock : null) : 0,
       updated_at: new Date().toISOString()
     };
+    if(!Number.isFinite(payload.price)||payload.price<0||payload.old_price!=null&&(!Number.isFinite(payload.old_price)||payload.old_price<0))throw new Error("السعر يجب أن يكون رقمًا غير سالب.");
     if(!payload.name){ toast("اسم المنتج مطلوب","err"); btn.disabled=false; return; }
 
     if(id){
-      const {error} = await sb.from("products").update(payload).eq("id",id);
+      const {error} = await sb.from("products").update(payload).eq("id",id).select("id").single();
       if(error) throw error;
     }else{
       const {data,error} = await sb.from("products").insert(payload).select().single();
@@ -901,28 +933,10 @@ async function saveProduct(id){
       createdNew = true;
     }
 
-    const delSizes=await sb.from("product_sizes").delete().eq("product_id",productId);
-    if(delSizes.error) throw delSizes.error;
-    const delColors=await sb.from("product_colors").delete().eq("product_id",productId);
-    if(delColors.error) throw delColors.error;
-    const delImages=await sb.from("product_images").delete().eq("product_id",productId);
-    if(delImages.error) throw delImages.error;
-
-    if(st.sizes.length){
-      const rows=st.sizes.map((size,i)=>({product_id:productId,size,sort_order:i}));
-      const {error}=await sb.from("product_sizes").insert(rows);
-      if(error) throw error;
-    }
-    if(st.colors.length){
-      const rows=st.colors.map((name,i)=>({product_id:productId,name,sort_order:i}));
-      const {error}=await sb.from("product_colors").insert(rows);
-      if(error) throw error;
-    }
-    if(st.images.length){
-      const rows=st.images.map((image_url,i)=>({product_id:productId,image_url,sort_order:i}));
-      const {error}=await sb.from("product_images").insert(rows);
-      if(error) throw error;
-    }
+    // Preserve existing child IDs/metadata; write additions before removing explicitly removed values.
+    await syncProductChildren("product_sizes",productId,"size",st.sizes,oldChildren?.sizes||[]);
+    await syncProductChildren("product_colors",productId,"name",st.colors,oldChildren?.colors||[]);
+    await syncProductChildren("product_images",productId,"image_url",st.images,oldChildren?.images||[]);
 
     toast(id?"تم تحديث المنتج":"تم إضافة المنتج");
     closeModal();
@@ -931,31 +945,22 @@ async function saveProduct(id){
     renderDashboard();
   }catch(error){
     console.error("Product save failed:",error);
-    if(productId && createdNew){
-      await sb.from("product_sizes").delete().eq("product_id",productId);
-      await sb.from("product_colors").delete().eq("product_id",productId);
-      await sb.from("product_images").delete().eq("product_id",productId);
-      await sb.from("products").delete().eq("id",productId);
-    }else if(productId && oldChildren){
-      // Restore the previous child records if an edit fails midway.
-      await sb.from("product_sizes").delete().eq("product_id",productId);
-      await sb.from("product_colors").delete().eq("product_id",productId);
-      await sb.from("product_images").delete().eq("product_id",productId);
-      if(oldChildren.sizes.length) await sb.from("product_sizes").insert(oldChildren.sizes.map(({id,...row})=>row));
-      if(oldChildren.colors.length) await sb.from("product_colors").insert(oldChildren.colors.map(({id,...row})=>row));
-      if(oldChildren.images.length) await sb.from("product_images").insert(oldChildren.images.map(({id,...row})=>row));
+    // Do not perform destructive client-side "rollback" after a partial network failure.
+    // Keep the editor open and existing records intact so the operator can inspect and retry.
+    if(createdNew && productId){
+      toast("تم إنشاء المنتج لكن بعض التفاصيل لم تُحفظ. أعيدي فتحه من القائمة للتحقق قبل التعديل.","err");
+      btn.disabled=true;
     }
     toast(friendlyError(error),"err");
   }finally{
-    btn.disabled = false;
+    btn.disabled = createdNew;
   }
 }
 async function deleteProduct(id){
   if(!confirm("هل تريد حذف هذا المنتج نهائيًا؟")) return;
   try{
-    await sb.from("product_sizes").delete().eq("product_id",id);
-    await sb.from("product_colors").delete().eq("product_id",id);
-    await sb.from("product_images").delete().eq("product_id",id);
+    await requireAdminSession();
+    // Let database foreign keys enforce atomic deletion; never delete children first.
     const {error} = await sb.from("products").delete().eq("id",id);
     if(error) throw error;
     toast("تم حذف المنتج");
@@ -1108,6 +1113,61 @@ async function deleteArea(id){
   }catch(error){ console.error(error); toast(friendlyError(error),"err"); }
 }
 
+/* ===================== Customer feedback ===================== */
+async function loadFeedback(){
+ const {data,error}=await sb.from("feedback").select("id,image_url,title,alt_text,active,sort_order").order("sort_order",{ascending:true});
+ if(error)throw error;
+ feedbackRows=data||[];
+}
+function renderFeedback(){
+ const grid=$("feedbackGrid");grid.replaceChildren();
+ for(const row of feedbackRows){
+  const card=document.createElement("div");card.className="pcard";
+  const image=document.createElement("img");image.src=normalizeImage(row.image_url);image.alt=row.alt_text||row.title||"تقييم";image.loading="lazy";image.style.cssText="width:100%;height:220px;object-fit:contain";
+  const body=document.createElement("div");body.className="pcard-body";
+  const title=document.createElement("p");title.textContent=(row.title||"تقييم")+(row.active?" — مفعّل":" — مخفي");
+  const edit=document.createElement("button");edit.className="btn sm";edit.textContent="تعديل";edit.addEventListener("click",()=>openFeedbackModal(row.id));
+  body.append(title,edit);card.append(image,body);grid.append(card);
+ }
+ if(!feedbackRows.length)grid.textContent="لا توجد تقييمات بعد.";
+}
+function openFeedbackModal(id){
+ const row=feedbackRows.find(x=>x.id===id);
+ $("modalRoot").innerHTML=`<div class="overlay"><div class="modal"><div class="modal-head"><div class="modal-title">${row?"تعديل تقييم":"إضافة تقييم"}</div><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body">
+ <div class="field"><label for="ff_image">رابط الصورة</label><input class="text-input" id="ff_image" value="${esc(row?.image_url||"")}"></div>
+ <input id="ff_file" type="file" accept="image/jpeg,image/png,image/webp">
+ <div class="field"><label for="ff_title">العنوان</label><input class="text-input" id="ff_title" value="${esc(row?.title||"")}"></div>
+ <div class="field"><label for="ff_alt">وصف الصورة</label><input class="text-input" id="ff_alt" value="${esc(row?.alt_text||"")}"></div>
+ <div class="field"><label for="ff_sort">الترتيب</label><input class="text-input" type="number" id="ff_sort" value="${Number(row?.sort_order)||0}"></div>
+ <label><input type="checkbox" id="ff_active" ${row?.active!==false?"checked":""}> إظهار التقييم</label>
+ </div><div class="modal-foot"><button class="btn primary" id="ff_save">حفظ</button></div></div></div>`;
+ const save=$("ff_save"),fileInput=$("ff_file");
+ fileInput.addEventListener("change",async()=>{
+  const file=fileInput.files[0];if(!file)return;save.disabled=true;
+  try{
+   await requireAdminSession();
+   if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>8*1024*1024)throw new Error("اختاري صورة JPG أو PNG أو WebP بحجم لا يتجاوز 8 MB.");
+   const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type];
+   const path="feedback/"+crypto.randomUUID()+"."+ext;
+   const {error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:false,contentType:file.type});
+   if(error)throw error;
+   $("ff_image").value=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+  }catch(error){toast(friendlyError(error),"err");}finally{save.disabled=false;}
+ });
+ save.addEventListener("click",async()=>{
+  save.disabled=true;
+  try{
+   await requireAdminSession();
+   const image_url=$("ff_image").value.trim();
+   if(!image_url)throw new Error("أضيفي صورة للتقييم أولًا.");
+   const payload={image_url,title:$("ff_title").value.trim(),alt_text:$("ff_alt").value.trim(),sort_order:Number($("ff_sort").value)||0,active:$("ff_active").checked};
+   const result=id?await sb.from("feedback").update(payload).eq("id",id).select("id").single():await sb.from("feedback").insert(payload).select("id").single();
+   if(result.error)throw result.error;
+   closeModal();await loadFeedback();renderFeedback();toast("تم حفظ التقييم");
+  }catch(error){toast(friendlyError(error),"err");}finally{save.disabled=false;}
+ });
+}
+
 /* ===================== Store settings ===================== */
 function renderSettingsForm(){
   const d = storeSettings || {};
@@ -1162,8 +1222,8 @@ async function verifyAdminSession(){
   if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();return false;}
   adminAuthSession=session; return true;
 }
-function showAuthGate(message=""){ $("authGate").classList.remove("hidden"); $("adminLoginError").textContent=message; }
-function hideAuthGate(){ $("authGate").classList.add("hidden"); $("adminLoginError").textContent=""; }
+function showAuthGate(message=""){ document.querySelector(".shell").inert=true; $("authGate").classList.remove("hidden"); $("adminLoginError").textContent=message; }
+function hideAuthGate(){ document.querySelector(".shell").inert=false; $("authGate").classList.add("hidden"); $("adminLoginError").textContent=""; }
 function setLoginLocked(seconds){
   loginLockedUntil=Date.now()+seconds*1000;
   const tick=()=>{const left=Math.max(0,Math.ceil((loginLockedUntil-Date.now())/1000)); $("adminLoginLock").textContent=left ? "محاولات الدخول متوقفة مؤقتًا: "+left+" ثانية" : ""; $("adminLoginBtn").disabled=left>0; if(left) setTimeout(tick,250);}; tick();
@@ -1177,8 +1237,24 @@ $("adminLoginForm").addEventListener("submit",async e=>{
     if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();throw new Error("not_admin");}
     adminAuthSession=data.session; loginAttempts=0; hideAuthGate(); await loadAll();
   }catch(error){ loginAttempts++; $("adminLoginError").textContent="بيانات الدخول غير صحيحة أو الحساب غير مصرح له."; if(loginAttempts>=5){loginAttempts=0;setLoginLocked(30);}else{btn.disabled=false;} }
+  finally{if(Date.now()>=loginLockedUntil)btn.disabled=false;}
 });
-$("logoutBtn").addEventListener("click",async()=>{await sb.auth.signOut();adminAuthSession=null;showAuthGate("تم تسجيل الخروج.");$("adminPassword").value="";});
+$("logoutBtn").addEventListener("click",async()=>{
+ const {error}=await sb.auth.signOut();
+ if(error){toast("تعذر تسجيل الخروج. حاولي مرة أخرى.","err");return;}
+ adminAuthSession=null;showAuthGate("تم تسجيل الخروج.");$("adminPassword").value="";
+ orders=[];products=[];productImages=[];productSizes=[];productColors=[];
+ closeModal();renderOrders();renderProducts();renderDashboard();
+});
+async function resetAdminPassword(){
+ const email=$("adminEmail").value.trim(),msg=$("adminLoginError");
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="أدخلي بريدًا إلكترونيًا صحيحًا.";return;}
+ try{
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:"https://espoza-fashion.github.io/espoza-fashion/"});
+  if(error)throw error;
+  msg.textContent="إذا كان البريد مسجّلًا، ستصلك رسالة الاستعادة. بعد تغيير كلمة المرور ارجعي إلى لوحة الأدمن.";
+ }catch(error){msg.textContent="تعذّر طلب رسالة الاستعادة: "+error.message;}
+}
 async function initAdminAuth(){
   try{const ok=await verifyAdminSession(); if(ok){hideAuthGate();await loadAll();}else showAuthGate("");}
   catch(error){console.error(error);showAuthGate("تعذر التحقق من جلسة المدير. حاول مرة أخرى.");}
