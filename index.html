@@ -10407,7 +10407,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
  form.addEventListener("submit",event=>{event.preventDefault();send(input.value);});
  document.querySelectorAll("[data-chat]").forEach(button=>button.addEventListener("click",()=>send(button.getAttribute("data-chat"))));
  const whatsappButton=document.getElementById("espozaChatWhatsApp");
- if(whatsappButton)whatsappButton.addEventListener("click",()=>{const number=String(store.whatsapp||"").replace(/\\D/g,"");if(number)window.open("https://wa.me/"+number,"_blank","noopener,noreferrer");else send("أريد التواصل مع خدمة الزبائن");});
+ if(whatsappButton)whatsappButton.addEventListener("click",()=>{const number=String(store.whatsapp||"").replace(/\D/g,"");if(number)window.open("https://wa.me/"+number,"_blank","noopener,noreferrer");else send("أريد التواصل مع خدمة الزبائن");});
 })();
 </script>
 
