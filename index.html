@@ -3303,6 +3303,28 @@ footer{
   #menuBtn{min-width:34px;padding:7px 9px!important}
 }
 </style>
+<style id="espoza-assistant-widget-style">
+#espozaAssistantWidget{position:fixed;left:16px;bottom:18px;z-index:1200;font-family:"Cairo",Arial,sans-serif}
+#espozaAssistantLauncher{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:13px 17px;background:linear-gradient(135deg,#641f34,#431321);color:#fff;font-weight:800;box-shadow:0 12px 32px rgba(67,19,33,.28);cursor:pointer;display:flex;align-items:center;gap:8px}
+#espozaAssistantPanel{position:absolute;left:0;bottom:64px;width:min(370px,calc(100vw - 28px));height:min(520px,calc(100dvh - 110px));background:#fbf9f5;border:1px solid #eadfe1;border-radius:20px;overflow:hidden;box-shadow:0 22px 65px rgba(45,16,26,.24);display:flex;flex-direction:column}
+#espozaAssistantPanel.hidden{display:none!important}
+.espoza-assistant-head{background:linear-gradient(120deg,#431321,#641f34);color:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.espoza-assistant-head b{display:block;font-size:15px}
+.espoza-assistant-head small{display:block;color:#f1dfe4;font-size:11px;margin-top:3px}
+.espoza-assistant-head button{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:50%;width:32px;height:32px;font-size:22px;line-height:1}
+#espozaAssistantMessages{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.espoza-assistant-bubble{max-width:90%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.espoza-assistant-bubble.assistant{align-self:flex-start;background:#fff;border:1px solid #eadfe1;color:#32151f;border-bottom-right-radius:4px}
+.espoza-assistant-bubble.user{align-self:flex-end;background:#641f34;color:#fff;border-bottom-left-radius:4px}
+#espozaAssistantForm{display:flex;gap:8px;padding:10px;border-top:1px solid #eadfe1;background:#fff}
+#espozaAssistantInput{flex:1;min-width:0;border:1px solid #eadfe1;border-radius:12px;padding:10px 12px;outline:none;font:inherit;font-size:13px}
+#espozaAssistantInput:focus{border-color:#b9985a;box-shadow:0 0 0 3px rgba(185,152,90,.13)}
+#espozaAssistantSend{border:0;border-radius:12px;padding:0 14px;background:#641f34;color:#fff;font-weight:800}
+#espozaAssistantSend:disabled{opacity:.55;cursor:wait}
+.espoza-assistant-foot{padding:0 12px 9px;color:#85777c;font-size:10px;text-align:center;background:#fff}
+@media(max-width:430px){#espozaAssistantWidget{left:10px;bottom:12px}#espozaAssistantLauncher{padding:11px 14px;font-size:12px}#espozaAssistantPanel{bottom:58px;width:calc(100vw - 20px);height:min(500px,calc(100dvh - 95px))}}
+@media(prefers-reduced-motion:reduce){#espozaAssistantMessages{scroll-behavior:auto}}
+</style>
 </head>
 
 <body>
@@ -10469,5 +10491,69 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 })();
 </script>
 
+<div id="espozaAssistantWidget" dir="rtl">
+  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">💬 اسألي إسبوزا</button>
+  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="مساعد إسبوزا">
+    <div class="espoza-assistant-head">
+      <div><b>مساعد إسبوزا</b><small>المنتجات · المقاسات · التوصيل · الاستبدال</small></div>
+      <button type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
+    </div>
+    <div id="espozaAssistantMessages" aria-live="polite">
+      <div class="espoza-assistant-bubble assistant">أهلًا وسهلًا فيكِ ❤️ اسأليني عن موديل أو سعر أو مقاس أو التوصيل. سأعتمد على المعلومات المتوفرة في المتجر، وإذا لم أجد جوابًا مؤكدًا سأوجّهكِ للتواصل معنا.</div>
+    </div>
+    <form id="espozaAssistantForm" onsubmit="sendEspozaAssistant(event)">
+      <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="اكتبي سؤالك..." aria-label="سؤالك">
+      <button id="espozaAssistantSend" type="submit">إرسال</button>
+    </form>
+    <div class="espoza-assistant-foot">للتأكيد النهائي على التوفر، تواصلي مع المتجر عبر واتساب.</div>
+  </section>
+</div>
+<script id="espoza-assistant-widget-script">
+const espozaAssistantHistory=[];
+function toggleEspozaAssistant(force){
+ const panel=document.getElementById("espozaAssistantPanel");
+ const launcher=document.getElementById("espozaAssistantLauncher");
+ const open=typeof force==="boolean"?force:panel.classList.contains("hidden");
+ panel.classList.toggle("hidden",!open);
+ launcher.setAttribute("aria-expanded",String(open));
+ if(open)setTimeout(()=>document.getElementById("espozaAssistantInput")?.focus(),40);
+}
+function addEspozaAssistantBubble(role,text){
+ const box=document.getElementById("espozaAssistantMessages");
+ const bubble=document.createElement("div");
+ bubble.className="espoza-assistant-bubble "+(role==="user"?"user":"assistant");
+ bubble.textContent=String(text||"");
+ box.appendChild(bubble);
+ box.scrollTop=box.scrollHeight;
+ return bubble;
+}
+async function sendEspozaAssistant(event){
+ event.preventDefault();
+ const input=document.getElementById("espozaAssistantInput");
+ const button=document.getElementById("espozaAssistantSend");
+ const message=input.value.trim();
+ if(!message)return;
+ addEspozaAssistantBubble("user",message);
+ const history=espozaAssistantHistory.slice(-6);
+ espozaAssistantHistory.push({role:"user",content:message});
+ input.value="";
+ button.disabled=true;
+ const pending=addEspozaAssistantBubble("assistant","لحظة، بدوّر لك على المعلومة…");
+ try{
+  const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/espoza-assistant",{
+   method:"POST",
+   headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
+   body:JSON.stringify({message,history})
+  });
+  const data=await response.json();
+  if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
+  pending.textContent=data.answer;
+  espozaAssistantHistory.push({role:"assistant",content:data.answer});
+ }catch(error){
+  pending.textContent="المساعد غير متاح للحظة. تواصلي معنا من زر واتساب في الموقع، وسنساعدكِ بالمعلومة المؤكدة.";
+ }
+ finally{button.disabled=false;input.focus();}
+}
+</script>
 </body>
 </html>
