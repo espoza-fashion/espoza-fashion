@@ -3975,10 +3975,16 @@ onclick="addCurrentToCart()">
   <div class="modal-box order-box" style="width:min(600px,100%);padding:24px">
     <button class="close-btn" type="button" onclick="closeModal('customerAccountModal')" aria-label="إغلاق">×</button>
     <h2 style="margin:8px 0 6px">حسابي في Espoza</h2>
-    <p class="muted" style="margin:0 0 18px">دخول آمن بالبريد الإلكتروني — لا تحتاجين إلى كلمة مرور.</p>
+    <p class="muted" style="margin:0 0 18px">أنشئي حسابك بكلمة سر خاصة فيكِ، أو ادخلي لحسابك للمتابعة ومعرفة طلباتك.</p>
     <div id="customerAccountLoggedOut">
-      <div class="field"><label for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
-      <button class="order-btn" type="button" style="width:100%" onclick="requestCustomerLogin()">إرسال رابط الدخول / إنشاء حساب</button>
+      <div class="field"><label for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com" required></div>
+      <div class="field"><label for="customerPassword">كلمة السر</label><input id="customerPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8 أحرف على الأقل" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
+        <button id="customerLoginMode" class="order-btn" type="button" onclick="setCustomerAuthMode('login')">تسجيل الدخول</button>
+        <button id="customerSignupMode" class="btn ghost" type="button" onclick="setCustomerAuthMode('signup')">إنشاء حساب جديد</button>
+      </div>
+      <button id="customerAuthSubmit" class="order-btn" type="button" style="width:100%" onclick="submitCustomerAuth()">تسجيل الدخول</button>
+      <button class="btn ghost" type="button" style="width:100%;margin-top:8px" onclick="resetCustomerPassword()">نسيت كلمة السر؟</button>
       <p id="customerAuthMsg" class="muted" role="status" style="line-height:1.7"></p>
     </div>
     <div id="customerAccountLoggedIn" class="hidden">
@@ -6242,23 +6248,68 @@ const msg=$("customerAuthMsg");if(msg)msg.textContent="";
 refreshCustomerAccount().catch(error=>{console.warn(error);if(msg)msg.textContent="تعذّر تحميل الحساب الآن. حاول مرة أخرى.";});
 }
 
-async function requestCustomerLogin(){
-const email=$("customerEmail").value.trim();
-const msg=$("customerAuthMsg");
-if(!email){msg.textContent="اكتب البريد الإلكتروني أولًا.";return;}
-if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّق من البريد الإلكتروني.";return;}
-msg.textContent="جارٍ إرسال رابط الدخول…";
-try{
- const db=getCustomerSupabase();
- const localHost=location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1";
- const redirectTo=localHost?"https://espoza-fashion.github.io/espoza-fashion/":location.origin+location.pathname;
- const result=await db.auth.signInWithOtp({email,options:{emailRedirectTo:redirectTo,shouldCreateUser:true}});
- if(result.error)throw result.error;
- msg.textContent="أرسلنا رابطًا آمنًا إلى بريدك. افتحه لإكمال الدخول أو إنشاء الحساب، ويفضّل فتحه في المتصفح نفسه.";
-}catch(error){
- const detail=String(error?.message||"");
- msg.textContent=/redirect/i.test(detail)?"رابط العودة غير مسموح في إعدادات Supabase. أضف https://espoza-fashion.github.io/espoza-fashion/ إلى Authentication > URL Configuration > Redirect URLs.":(detail||"تعذّر إرسال رابط الدخول.");
+let customerAuthMode="login";
+function setCustomerAuthMode(mode){
+ customerAuthMode=mode==="signup"?"signup":"login";
+ const login=$("customerLoginMode"),signup=$("customerSignupMode"),submit=$("customerAuthSubmit"),password=$("customerPassword");
+ if(login){login.className=customerAuthMode==="login"?"order-btn":"btn ghost";}
+ if(signup){signup.className=customerAuthMode==="signup"?"order-btn":"btn ghost";}
+ if(submit)submit.textContent=customerAuthMode==="signup"?"إنشاء حساب وإرسال رابط التأكيد":"تسجيل الدخول";
+ if(password)password.autocomplete=customerAuthMode==="signup"?"new-password":"current-password";
+ const msg=$("customerAuthMsg");if(msg)msg.textContent="";
 }
+function customerRedirectUrl(){
+ const localHost=location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1";
+ return localHost?"https://espoza-fashion.github.io/espoza-fashion/":location.origin+location.pathname;
+}
+async function submitCustomerAuth(){
+ const email=$("customerEmail").value.trim().toLowerCase();
+ const password=$("customerPassword").value;
+ const msg=$("customerAuthMsg"),submit=$("customerAuthSubmit");
+ if(!email){msg.textContent="اكتبي البريد الإلكتروني أولًا.";return;}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ if(!password||password.length<8){msg.textContent="كلمة السر لازم تكون 8 أحرف على الأقل.";return;}
+ msg.textContent=customerAuthMode==="signup"?"جارٍ إنشاء حسابك وإرسال رابط التأكيد…":"جارٍ تسجيل الدخول…";
+ if(submit)submit.disabled=true;
+ try{
+  const db=getCustomerSupabase();
+  let result;
+  if(customerAuthMode==="signup"){
+   result=await db.auth.signUp({email,password,options:{emailRedirectTo:customerRedirectUrl(),data:{account_type:"customer"}}});
+   if(result.error)throw result.error;
+   if(result.data?.session){
+    msg.textContent="تم إنشاء حسابك وتسجيل دخولك بنجاح.";
+    await refreshCustomerAccount();
+   }else{
+    msg.textContent="تم إنشاء الحساب. افتحي رسالة التأكيد التي أرسلناها إلى بريدك، ثم ارجعي إلى الموقع وسجّلي الدخول بالإيميل وكلمة السر التي اخترتيها.";
+   }
+  }else{
+   result=await db.auth.signInWithPassword({email,password});
+   if(result.error)throw result.error;
+   msg.textContent="تم تسجيل الدخول بنجاح.";
+   await refreshCustomerAccount();
+  }
+ }catch(error){
+  const detail=String(error?.message||"");
+  if(/email not confirmed/i.test(detail))msg.textContent="لازم تأكدي بريدك أولًا. افتحي رسالة التأكيد ثم جرّبي تسجيل الدخول.";
+  else if(/invalid login credentials/i.test(detail))msg.textContent="الإيميل أو كلمة السر غير صحيحة. إذا ما عندك حساب، اختاري «إنشاء حساب جديد».";
+  else if(/already registered|user already registered/i.test(detail))msg.textContent="هذا البريد مسجّل من قبل. اختاري «تسجيل الدخول» أو «نسيت كلمة السر؟».";
+  else if(/password.*weak|weak password/i.test(detail))msg.textContent="اختاري كلمة سر أقوى، 8 أحرف على الأقل.";
+  else if(/redirect/i.test(detail))msg.textContent="رابط تأكيد البريد غير مسموح. أضيفي https://espoza-fashion.github.io/espoza-fashion/ إلى Supabase Authentication > URL Configuration > Redirect URLs.";
+  else msg.textContent=detail||"تعذّر إكمال العملية. حاولي مرة ثانية.";
+ }finally{if(submit)submit.disabled=false;}
+}
+async function requestCustomerLogin(){return submitCustomerAuth();}
+async function resetCustomerPassword(){
+ const email=$("customerEmail").value.trim().toLowerCase(),msg=$("customerAuthMsg");
+ if(!email){msg.textContent="اكتبي بريدك الإلكتروني أولًا، ثم اضغطي نسيت كلمة السر.";return;}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ msg.textContent="جارٍ إرسال رابط إعادة تعيين كلمة السر…";
+ try{
+  const result=await getCustomerSupabase().auth.resetPasswordForEmail(email,{redirectTo:customerRedirectUrl()});
+  if(result.error)throw result.error;
+  msg.textContent="إذا كان البريد مسجّلًا، رح توصلك رسالة فيها رابط آمن لإعادة تعيين كلمة السر.";
+ }catch(error){msg.textContent="تعذّر إرسال رسالة الاستعادة حاليًا. حاولي مرة ثانية.";}
 }
 
 async function saveCustomerProfile(){
