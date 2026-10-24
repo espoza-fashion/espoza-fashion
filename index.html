@@ -6237,6 +6237,8 @@ const result=await db.from("orders").select("id,created_at,status,items,subtotal
 if(result.error)throw result.error;
 const orders=result.data||[];
 customerHasPreviousOrders=orders.length>0;
+if($("cartModal")?.classList.contains("open"))renderCartModal();
+if($("orderModal")?.classList.contains("open"))updateOrderTotal();
 if(!orders.length){box.innerHTML='<p class="muted">لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.</p>';return;}
 const labels={new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"قيد التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"};
 box.innerHTML=orders.map(order=>{
