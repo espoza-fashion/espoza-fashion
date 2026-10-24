@@ -7930,23 +7930,29 @@ refreshProductModal();
 }
 
 
+function cartModelKey(item){
+if(item?.productId!==undefined&&item?.productId!==null&&String(item.productId)!=="")return "id:"+String(item.productId);
+if(item?.dbId!==undefined&&item?.dbId!==null&&String(item.dbId)!=="")return "db:"+String(item.dbId);
+return "name:"+String(item?.name||"").trim().toLocaleLowerCase();
+}
+
+function cartModelQuantity(key){
+return cart.reduce((sum,item)=>sum+(cartModelKey(item)===key?Math.max(0,Number(item.qty)||0):0),0);
+}
+
 function changeQty(delta){
-
-currentQty=
-Math.max(
-1,
-(currentQty||1)+delta
-);
-
-
-const el=
-$("qtyValue");
-
-
-if(el)
-el.textContent=
-String(currentQty);
-
+if(!currentProduct)return;
+const key=cartModelKey({productId:currentProduct.id,dbId:currentProduct.dbId,name:currentProduct.name});
+const inCart=cartModelQuantity(key);
+const maxQty=Math.max(1,4-inCart);
+const next=Math.max(1,Math.min(maxQty,(currentQty||1)+delta));
+if(delta>0&&next===(currentQty||1)&&currentQty>=maxQty){
+alert("يمكنك شراء 4 قطع كحد أقصى من نفس الموديل، مهما اختلف اللون أو المقاس.");
+return;
+}
+currentQty=next;
+const el=$("qtyValue");
+if(el)el.textContent=String(currentQty);
 }
 
 
@@ -8081,11 +8087,13 @@ currentProduct.colors[0]
 );
 
 
-const qty=
-currentQty
-||
-1;
-
+const qty=Math.max(1,Number(currentQty)||1);
+const modelKey=cartModelKey({productId:currentProduct.id,dbId:currentProduct.dbId,name:currentProduct.name});
+const alreadyInCart=cartModelQuantity(modelKey);
+if(alreadyInCart+qty>4){
+alert("الحد الأقصى 4 قطع من نفس الموديل، مع احتساب جميع الألوان والمقاسات. يمكنك اختيار موديلات أخرى دون حد إجمالي للسلة.");
+return;
+}
 
 const existing=
 cart.find(
@@ -8261,28 +8269,16 @@ $("checkoutBtn")
 
 
 function changeCartQty(idx,delta){
-
-const item=
-cart[idx];
-
-
-if(!item)
+const item=cart[idx];
+if(!item)return;
+if(delta>0&&cartModelQuantity(cartModelKey(item))+delta>4){
+alert("الحد الأقصى 4 قطع من نفس الموديل، مع احتساب جميع الألوان والمقاسات.");
 return;
-
-
-item.qty=
-Math.max(
-1,
-item.qty+delta
-);
-
-
+}
+item.qty=Math.max(1,Number(item.qty||1)+delta);
 saveCart();
-
 updateCartBadge();
-
 renderCartModal();
-
 }
 
 
@@ -8489,13 +8485,16 @@ delivery.price
    ========================================== */
 
 async function sendOrder(){
-
-if(
-!cart.length
-)
+if(!cart.length)return;
+const modelCounts=new Map();
+for(const item of cart){
+const key=cartModelKey(item);
+modelCounts.set(key,(modelCounts.get(key)||0)+Math.max(0,Number(item.qty)||0));
+}
+if([...modelCounts.values()].some(count=>count>4)){
+alert("في السلة أكثر من 4 قطع من نفس الموديل. عدّل الكميات قبل إرسال الطلب.");
 return;
-
-
+}
 const name=
 $("customerName")
 .value
