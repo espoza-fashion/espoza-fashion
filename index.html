@@ -6189,6 +6189,8 @@ $("customerProfilePhone").value=customerProfile?.phone||"";
 $("customerProfileAddress").value=customerProfile?.address||"";
 await restoreCustomerCart();
 await loadCustomerOrders();
+if(cart.length)renderCartModal();
+if($("orderModal")?.classList.contains("open"))updateOrderTotal();
 }
 
 function customerAuthUrlError(){
