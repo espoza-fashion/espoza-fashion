@@ -6099,9 +6099,26 @@ $("customerProfileAddress").value=customerProfile?.address||"";
 await loadCustomerOrders();
 }
 
+function customerAuthUrlError(){
+const query=new URLSearchParams(location.search);
+const hash=new URLSearchParams(location.hash.replace(/^#/,""));
+const code=query.get("error_code")||hash.get("error_code")||query.get("error")||hash.get("error");
+const description=query.get("error_description")||hash.get("error_description");
+if(!code&&!description)return "";
+history.replaceState({},document.title,location.pathname);
+if(code==="otp_expired"||code==="access_denied")return "رابط الدخول انتهت صلاحيته أو استُخدم سابقًا. أرسل رابطًا جديدًا.";
+return description||"تعذّر إكمال تسجيل الدخول. أرسل رابطًا جديدًا وحاول مرة أخرى.";
+}
+
 function setupCustomerAuth(){
 try{
  const db=getCustomerSupabase();
+ const urlError=customerAuthUrlError();
+ if(urlError){
+  $("customerAccountModal").classList.add("open");
+  document.body.style.overflow="hidden";
+  $("customerAuthMsg").textContent=urlError;
+ }
  if(!customerAuthListenerReady){
   db.auth.onAuthStateChange((event,session)=>{
    if(event==="SIGNED_IN"&&session){
