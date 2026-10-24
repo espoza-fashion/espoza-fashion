@@ -6131,6 +6131,7 @@ const session=sessionResult.data.session;
 const loggedOut=$("customerAccountLoggedOut"),loggedIn=$("customerAccountLoggedIn");
 if(!session){
  customerProfile=null;
+ customerHasPreviousOrders=null;
  if(loggedOut)loggedOut.classList.remove("hidden");
  if(loggedIn)loggedIn.classList.add("hidden");
  return;
@@ -6235,6 +6236,7 @@ const db=getCustomerSupabase();
 const result=await db.from("orders").select("id,created_at,status,items,subtotal,delivery_fee,total,notes").eq("customer_id",customerProfile.id).order("created_at",{ascending:false}).limit(20);
 if(result.error)throw result.error;
 const orders=result.data||[];
+customerHasPreviousOrders=orders.length>0;
 if(!orders.length){box.innerHTML='<p class="muted">لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.</p>';return;}
 const labels={new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"قيد التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"};
 box.innerHTML=orders.map(order=>{
@@ -8549,9 +8551,18 @@ ${t().cartEmpty}
 `;
 
 
-$("cartTotal")
-.textContent=
-`₪${money(cartSubtotal())}`;
+const offer=getAutomaticOffer();
+const discount=offer?.discount||0;
+const subtotalRow=$("cartSubtotalRow"),discountRow=$("cartDiscountRow");
+if(subtotalRow)subtotalRow.classList.toggle("hidden",discount<=0);
+if(discountRow)discountRow.classList.toggle("hidden",discount<=0);
+if(discount>0){
+$("cartSubtotalValue").textContent=`₪${money(cartSubtotal())}`;
+$("cartDiscountLabel").textContent="عرض تلقائي ("+offer.label+")";
+$("cartDiscountValue").textContent="−₪"+money(discount);
+}
+$("cartTotalLabel").textContent=discount>0?"المجموع بعد الخصم":t().total;
+$("cartTotal").textContent=`₪${money(Math.max(0,cartSubtotal()-discount))}`;
 
 
 $("checkoutBtn")
@@ -8744,31 +8755,18 @@ const delivery=
 selectedDelivery();
 
 
-const subtotal=
-cartSubtotal();
-
-
-$("itemPrice")
-.textContent=
-`₪${money(
-subtotal
-)}`;
-
-
-$("deliveryPrice")
-.textContent=
-`₪${money(
-delivery.price
-)}`;
-
-
-$("totalPrice")
-.textContent=
-`₪${money(
-subtotal
-+
-delivery.price
-)}`;
+const subtotal=cartSubtotal();
+const offer=getAutomaticOffer();
+const discount=offer?.discount||0;
+const discountRow=$("orderDiscountRow");
+if(discountRow)discountRow.classList.toggle("hidden",discount<=0);
+if(discount>0){
+$("orderDiscountLabel").textContent="عرض تلقائي ("+offer.label+")";
+$("orderDiscountValue").textContent="−₪"+money(discount);
+}
+$("itemPrice").textContent=`₪${money(subtotal)}`;
+$("deliveryPrice").textContent=`₪${money(delivery.price)}`;
+$("totalPrice").textContent=`₪${money(Math.max(0,subtotal-discount)+delivery.price)}`;
 
 }
 
