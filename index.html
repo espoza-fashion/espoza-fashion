@@ -6062,6 +6062,8 @@ const CUSTOMER_SUPABASE_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
 let customerSupabase=null;
 let customerProfile=null;
 let customerAuthListenerReady=false;
+let customerHasPreviousOrders=null;
+let activeAutomaticOffers=[];
 let adminDeliveryAreas=null;
 let adminSliders=null;
 let adminFeedback=null;
@@ -6316,6 +6318,11 @@ adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:ro
 adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
 adminCategories=categoryResult.data||[];
 adminSiteSections=sectionResult.data||[];
+try{
+const offersResult=await db.from("coupons").select("id,code,discount_type,discount_value,min_order,min_quantity,first_order_only,starts_at,ends_at,usage_limit,used_count,product_ids,category_slugs,active,auto_apply").eq("active",true).eq("auto_apply",true);
+if(offersResult.error)throw offersResult.error;
+activeAutomaticOffers=offersResult.data||[];
+}catch(error){console.warn("Automatic offers unavailable:",error);activeAutomaticOffers=[];}
 applyStore();
 applyAdminSiteSections();
 renderCustomerCategories();
@@ -8287,6 +8294,40 @@ const quickCart=$("quickCartCount"); if(quickCart)quickCart.textContent=String(c
 }
 
 
+function cartItemCategory(item){
+if(item?.category)return String(item.category);
+const product=products.find(p=>String(p.id)===String(item?.productId)||String(p.dbId||"")===String(item?.dbId||""));
+return String(product?.category||"");
+}
+
+function getAutomaticOffer(){
+const now=Date.now();
+let best=null;
+for(const offer of activeAutomaticOffers||[]){
+if(!offer||!offer.active||!offer.auto_apply)continue;
+const starts=offer.starts_at?new Date(offer.starts_at).getTime():0;
+const ends=offer.ends_at?new Date(offer.ends_at).getTime():Infinity;
+if((starts&&now<starts)||(ends&&now>ends))continue;
+if(offer.usage_limit!=null&&Number(offer.used_count||0)>=Number(offer.usage_limit))continue;
+if(offer.first_order_only&&customerHasPreviousOrders!==false)continue;
+const productIds=Array.isArray(offer.product_ids)?offer.product_ids.map(String):[];
+const categories=Array.isArray(offer.category_slugs)?offer.category_slugs.map(String):[];
+const eligible=cart.filter(item=>{
+const productMatch=!productIds.length||productIds.includes(String(item.dbId||""));
+const category=cartItemCategory(item);
+const categoryMatch=!categories.length||categories.includes(category);
+return productMatch&&categoryMatch;
+});
+const quantity=eligible.reduce((sum,item)=>sum+Math.max(0,Number(item.qty)||0),0);
+const subtotal=eligible.reduce((sum,item)=>sum+Math.max(0,Number(item.price)||0)*Math.max(0,Number(item.qty)||0),0);
+if(quantity<Math.max(1,Number(offer.min_quantity)||1)||subtotal<Math.max(0,Number(offer.min_order)||0)||subtotal<=0)continue;
+let discount=offer.discount_type==="percent"?subtotal*Math.min(100,Math.max(0,Number(offer.discount_value)||0))/100:Math.min(subtotal,Math.max(0,Number(offer.discount_value)||0));
+discount=Math.round(discount*100)/100;
+if(discount>0&&(!best||discount>best.discount))best={id:offer.id,label:offer.code||"عرض خاص",discount,eligibleSubtotal:subtotal,quantity,offer};
+}
+return best;
+}
+
 function cartSubtotal(){
 
 return cart.reduce(
@@ -8372,6 +8413,9 @@ currentProduct.dbId||null,
 
 name:
 currentProduct.name,
+
+category:
+currentProduct.category||"",
 
 price:
 currentProduct.price,
