@@ -6045,6 +6045,8 @@ staticProductToView
 const CUSTOMER_SUPABASE_URL="https://opqbcfxqtmyebxsafeea.supabase.co";
 const CUSTOMER_SUPABASE_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
 let customerSupabase=null;
+let customerProfile=null;
+let customerAuthListenerReady=false;
 let adminDeliveryAreas=null;
 let adminSliders=null;
 let adminFeedback=null;
@@ -6055,6 +6057,138 @@ if(!window.supabase||typeof window.supabase.createClient!=="function")throw new 
 if(!customerSupabase)customerSupabase=window.supabase.createClient(CUSTOMER_SUPABASE_URL,CUSTOMER_SUPABASE_KEY);
 return customerSupabase;
 }
+
+async function ensureCustomerProfile(){
+const db=getCustomerSupabase();
+const sessionResult=await db.auth.getSession();
+if(sessionResult.error)throw sessionResult.error;
+const user=sessionResult.data.session?.user;
+if(!user)return null;
+const found=await db.from("customers").select("*").eq("user_id",user.id).maybeSingle();
+if(found.error)throw found.error;
+if(found.data)return found.data;
+const email=user.email||"";
+const created=await db.from("customers").insert({user_id:user.id,email,name:email.split("@")[0]||"زبونة Espoza"}).select("*").single();
+if(created.error){
+ const retry=await db.from("customers").select("*").eq("user_id",user.id).maybeSingle();
+ if(retry.data)return retry.data;
+ throw created.error;
+}
+return created.data;
+}
+
+async function refreshCustomerAccount(){
+const db=getCustomerSupabase();
+const sessionResult=await db.auth.getSession();
+if(sessionResult.error)throw sessionResult.error;
+const session=sessionResult.data.session;
+const loggedOut=$("customerAccountLoggedOut"),loggedIn=$("customerAccountLoggedIn");
+if(!session){
+ customerProfile=null;
+ if(loggedOut)loggedOut.classList.remove("hidden");
+ if(loggedIn)loggedIn.classList.add("hidden");
+ return;
+}
+customerProfile=await ensureCustomerProfile();
+if(loggedOut)loggedOut.classList.add("hidden");
+if(loggedIn)loggedIn.classList.remove("hidden");
+$("customerAccountEmail").textContent=session.user.email||"";
+$("customerProfileName").value=customerProfile?.name||"";
+$("customerProfilePhone").value=customerProfile?.phone||"";
+$("customerProfileAddress").value=customerProfile?.address||"";
+await loadCustomerOrders();
+}
+
+function setupCustomerAuth(){
+try{
+ const db=getCustomerSupabase();
+ if(!customerAuthListenerReady){
+  db.auth.onAuthStateChange((event,session)=>{
+   if(event==="SIGNED_IN"&&session){
+    window.setTimeout(()=>{
+     refreshCustomerAccount().then(()=>{
+      $("customerAccountModal").classList.add("open");
+      document.body.style.overflow="hidden";
+     }).catch(error=>{console.warn("Customer account refresh failed:",error);const msg=$("customerAuthMsg");if(msg)msg.textContent="تم تسجيل الدخول، لكن تعذّر تحميل بيانات الحساب. حدّث الصفحة وحاول مرة أخرى.";});
+    },0);
+   }
+  });
+  customerAuthListenerReady=true;
+ }
+ refreshCustomerAccount().catch(error=>console.warn("Customer account startup failed:",error));
+}catch(error){console.warn("Customer auth unavailable:",error);}
+}
+
+function openCustomerMenu(){
+$("customerMenuModal").classList.add("open");
+document.body.style.overflow="hidden";
+}
+function openCustomerAccount(){
+closeModal("customerMenuModal",false);
+$("customerAccountModal").classList.add("open");
+document.body.style.overflow="hidden";
+const msg=$("customerAuthMsg");if(msg)msg.textContent="";
+refreshCustomerAccount().catch(error=>{console.warn(error);if(msg)msg.textContent="تعذّر تحميل الحساب الآن. حاول مرة أخرى.";});
+}
+
+async function requestCustomerLogin(){
+const email=$("customerEmail").value.trim();
+const msg=$("customerAuthMsg");
+if(!email){msg.textContent="اكتب البريد الإلكتروني أولًا.";return;}
+if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){msg.textContent="تحقّق من البريد الإلكتروني.";return;}
+msg.textContent="جارٍ إرسال رابط الدخول…";
+try{
+ const db=getCustomerSupabase();
+ const localHost=location.protocol==="file:"||location.hostname==="localhost"||location.hostname==="127.0.0.1";
+ const redirectTo=localHost?"https://espoza-fashion.github.io/espoza-fashion/":location.origin+location.pathname;
+ const result=await db.auth.signInWithOtp({email,options:{emailRedirectTo:redirectTo,shouldCreateUser:true}});
+ if(result.error)throw result.error;
+ msg.textContent="أرسلنا رابطًا آمنًا إلى بريدك. افتحه لإكمال الدخول أو إنشاء الحساب، ويفضّل فتحه في المتصفح نفسه.";
+}catch(error){
+ const detail=String(error?.message||"");
+ msg.textContent=/redirect/i.test(detail)?"رابط العودة غير مسموح في إعدادات Supabase. أضف https://espoza-fashion.github.io/espoza-fashion/ إلى Authentication > URL Configuration > Redirect URLs.":(detail||"تعذّر إرسال رابط الدخول.");
+}
+}
+
+async function saveCustomerProfile(){
+if(!customerProfile)return;
+const name=$("customerProfileName").value.trim();
+const phone=$("customerProfilePhone").value.trim();
+const address=$("customerProfileAddress").value.trim();
+if(!name){toast("الاسم مطلوب.");return;}
+const db=getCustomerSupabase();
+const result=await db.from("customers").update({name,phone:phone||null,address:address||null,email:customerProfile.email||null,updated_at:new Date().toISOString()}).eq("id",customerProfile.id).select("*").single();
+if(result.error){toast("تعذّر حفظ البيانات: "+result.error.message);return;}
+customerProfile=result.data;
+toast("تم حفظ بيانات حسابك.");
+}
+
+async function loadCustomerOrders(){
+const box=$("customerOrders");
+if(!box||!customerProfile)return;
+box.innerHTML='<p class="muted">جارٍ تحميل الطلبات…</p>';
+const db=getCustomerSupabase();
+const result=await db.from("orders").select("id,created_at,status,items,subtotal,delivery_fee,total,notes").eq("customer_id",customerProfile.id).order("created_at",{ascending:false}).limit(20);
+if(result.error)throw result.error;
+const orders=result.data||[];
+if(!orders.length){box.innerHTML='<p class="muted">لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.</p>';return;}
+const labels={new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"قيد التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"};
+box.innerHTML=orders.map(order=>{
+ const items=Array.isArray(order.items)?order.items.map(item=>esc(item.name||item.product_name||"منتج")+" × "+Math.max(1,Number(item.qty)||1)).join("، "):"";
+ const date=order.created_at?new Date(order.created_at).toLocaleDateString(lang==="en"?"en-US":"ar-PS",{year:"numeric",month:"short",day:"numeric"}):"";
+ return '<div style="border:1px solid var(--line);border-radius:14px;padding:13px;margin:9px 0;background:#fff"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>طلب #'+esc(String(order.id).slice(0,8))+'</b><span class="muted">'+esc(date)+'</span></div><p style="margin:8px 0">'+esc(labels[order.status]||order.status||"قيد المراجعة")+'</p><p style="margin:0 0 8px;font-size:13px;line-height:1.7">'+items+'</p><b>الإجمالي: ₪'+money(order.total)+'</b></div>';
+}).join("");
+}
+
+async function customerLogout(){
+const db=getCustomerSupabase();
+const result=await db.auth.signOut();
+if(result.error){toast("تعذّر تسجيل الخروج.");return;}
+customerProfile=null;
+await refreshCustomerAccount();
+toast("تم تسجيل الخروج.");
+}
+
 function normalizeAdminSettingValue(value,fallback=""){
 if(value==null)return fallback;
 if(typeof value==="string" || typeof value==="number" || typeof value==="boolean")return value;
@@ -8719,7 +8853,8 @@ whatsappWindow.location.href=whatsappUrl;
 let savedToAdmin=false;
 try{
 const customerDb=getCustomerSupabase();
-const orderPayload={customer_name:name,phone:phone,region:delivery.name,address:address,items:cart.map(item=>({product_id:item.dbId||null,name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""})),subtotal:Number(itemsTotal||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:notes||null,payment_status:"cod",source:"website"};
+const profileForOrder=await ensureCustomerProfile();
+const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:cart.map(item=>({product_id:item.dbId||null,name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""})),subtotal:Number(itemsTotal||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:notes||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.from("orders").insert(orderPayload).select("id").single();
 if(saved.error)throw saved.error;
 savedToAdmin=true;
@@ -9773,6 +9908,8 @@ setupAdminConnections();
 console.warn("admin connection setup failed:",error);
 
 }
+
+try{setupCustomerAuth();}catch(error){console.warn("customer auth setup failed:",error);}
 
 
 try{
