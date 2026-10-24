@@ -10359,7 +10359,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 <section id="espozaChatPanel" role="dialog" aria-label="مساعد Espoza" aria-modal="false">
  <div id="espozaChatHead"><div><strong>مساعد Espoza</strong><small>مساعدة فورية من معلومات المتجر</small></div><button id="espozaChatClose" type="button" aria-label="إغلاق">×</button></div>
  <div id="espozaChatMessages" aria-live="polite"></div>
- <div id="espozaChatQuick"><button type="button" data-chat="التوصيل">التوصيل</button><button type="button" data-chat="الاستبدال والإرجاع">الاستبدال</button><button type="button" data-chat="كيف أعرف المقاس؟">المقاسات</button><button type="button" data-chat="أريد أحدث العروض">العروض</button></div>
+ <div id="espozaChatQuick"><button type="button" data-chat="التوصيل">التوصيل</button><button type="button" data-chat="الاستبدال والإرجاع">الاستبدال</button><button type="button" data-chat="كيف أعرف المقاس؟">المقاسات</button><button type="button" data-chat="أريد أحدث العروض">العروض</button><button type="button" id="espozaChatWhatsApp">واتساب</button></div>
  <form id="espozaChatForm"><input id="espozaChatInput" autocomplete="off" placeholder="اكتبي سؤالك هنا…" aria-label="اكتبي سؤالك"><button id="espozaChatSend" type="submit">إرسال</button></form>
 </section>
 <script id="espoza-assistant-script">
@@ -10406,6 +10406,8 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
  const send=async value=>{const query=String(value||"").trim();if(!query)return;add(query,"user");input.value="";const reply=answer(query);window.setTimeout(()=>add(reply,"bot"),120);};
  form.addEventListener("submit",event=>{event.preventDefault();send(input.value);});
  document.querySelectorAll("[data-chat]").forEach(button=>button.addEventListener("click",()=>send(button.getAttribute("data-chat"))));
+ const whatsappButton=document.getElementById("espozaChatWhatsApp");
+ if(whatsappButton)whatsappButton.addEventListener("click",()=>{const number=String(store.whatsapp||"").replace(/\\D/g,"");if(number)window.open("https://wa.me/"+number,"_blank","noopener,noreferrer");else send("أريد التواصل مع خدمة الزبائن");});
 })();
 </script>
 
