@@ -6077,6 +6077,34 @@ if(created.error){
 return created.data;
 }
 
+async function syncCustomerCart(){
+if(!customerProfile?.user_id)return;
+const db=getCustomerSupabase();
+const result=await db.from("customer_carts").upsert({user_id:customerProfile.user_id,items:Array.isArray(cart)?cart:[],updated_at:new Date().toISOString()},{onConflict:"user_id"});
+if(result.error)console.warn("Saved cart sync failed:",result.error.message);
+}
+
+async function restoreCustomerCart(){
+if(!customerProfile?.user_id)return;
+const db=getCustomerSupabase();
+const result=await db.from("customer_carts").select("items").eq("user_id",customerProfile.user_id).maybeSingle();
+if(result.error)throw result.error;
+const savedItems=result.data?.items;
+if(!cart.length&&Array.isArray(savedItems)&&savedItems.length){
+ const counts=new Map();
+ cart=savedItems.filter(item=>item&&typeof item==="object").map(item=>({...item,qty:Math.max(1,Math.min(4,Number(item.qty)||1))})).filter(item=>{
+  const key=cartModelKey(item),previous=counts.get(key)||0,qty=Math.min(Number(item.qty)||1,4-previous);
+  if(qty<=0)return false;
+  item.qty=qty;counts.set(key,previous+qty);return true;
+ });
+ try{localStorage.setItem("espoza_cart",JSON.stringify(cart));}catch(_){}
+ updateCartBadge();
+ if(cart.length)toast("تم استرجاع سلتك المحفوظة على حسابك.");
+}else if(cart.length){
+ await syncCustomerCart();
+}
+}
+
 async function refreshCustomerAccount(){
 const db=getCustomerSupabase();
 const sessionResult=await db.auth.getSession();
@@ -6096,6 +6124,7 @@ $("customerAccountEmail").textContent=session.user.email||"";
 $("customerProfileName").value=customerProfile?.name||"";
 $("customerProfilePhone").value=customerProfile?.phone||"";
 $("customerProfileAddress").value=customerProfile?.address||"";
+await restoreCustomerCart();
 await loadCustomerOrders();
 }
 
@@ -8175,23 +8204,13 @@ if(el)el.textContent=String(currentQty);
    ========================================== */
 
 function saveCart(){
-
 try{
-
-localStorage.setItem(
-"espoza_cart",
-JSON.stringify(cart)
-);
-
-}catch(error){
-
-console.warn(
-"cart save:",
-error
-);
-
+localStorage.setItem("espoza_cart",JSON.stringify(cart));
+}catch(error){console.warn("cart save:",error);}
+if(customerProfile?.user_id){
+ clearTimeout(window.__espozaCartSyncTimer);
+ window.__espozaCartSyncTimer=setTimeout(()=>syncCustomerCart(),700);
 }
-
 }
 
 
