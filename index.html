@@ -8394,24 +8394,29 @@ const input=$("cartCouponCode"),message=$("cartCouponMessage");
 const code=String(input?.value||"").trim().toUpperCase();
 if(!code){appliedManualCoupon=null;if(message)message.textContent="اكتبي كود الخصم أولًا.";renderCartModal();return;}
 try{
- const db=getCustomerSupabase();
- const result=await db.from("coupons").select("*").eq("code",code).eq("active",true).maybeSingle();
- if(result.error)throw result.error;
- if(!result.data){appliedManualCoupon=null;if(message)message.textContent="الكود غير صحيح أو العرض غير فعال.";renderCartModal();return;}
- if(result.data.first_order_only&&customerHasPreviousOrders!==false){
+ const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/validate-coupon",{
+  method:"POST",
+  headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
+  body:JSON.stringify({code})
+ });
+ const data=await response.json();
+ if(!response.ok)throw new Error(data.error||"تعذّر التحقق من الكود.");
+ const coupon=data.coupon;
+ if(!coupon){appliedManualCoupon=null;if(message)message.textContent="الكود غير صحيح أو العرض غير فعال.";renderCartModal();return;}
+ if(coupon.first_order_only&&customerHasPreviousOrders!==false){
   appliedManualCoupon=null;
   if(message)message.textContent="هذا العرض لأول طلب ويتطلب تسجيل الدخول بحساب لم يسبق له الطلب.";
   renderCartModal();return;
  }
- const candidate=calculateOfferDiscount(result.data);
+ const candidate=calculateOfferDiscount(coupon);
  if(!candidate){
   appliedManualCoupon=null;
-  if(message)message.textContent="الكود صحيح، لكن شروط العرض غير متحققة في السلة الحالية أو أن العرض انتهى.";
+  if(message)message.textContent="الكود صحيح، لكن شروط العرض غير متحققة في السلة الحالية.";
   renderCartModal();return;
  }
- appliedManualCoupon=result.data;
+ appliedManualCoupon=coupon;
  const best=getAutomaticOffer();
- if(message)message.textContent=best?.id!==result.data.id&&best?.discount>candidate.discount?"الكود صالح، لكن احتسبنا أفضل خصم واحد متاح دون جمع العروض.":"تم التحقق من الكود، وسيُحتسب الخصم عند تأكيد الطلب.";
+ if(message)message.textContent=best?.id!==coupon.id&&best?.discount>candidate.discount?"الكود صالح، لكن احتسبنا أفضل خصم واحد متاح دون جمع العروض.":"تم التحقق من الكود، وسيُحتسب الخصم عند تأكيد الطلب.";
  renderCartModal();
 }catch(error){
  appliedManualCoupon=null;
