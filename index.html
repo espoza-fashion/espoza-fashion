@@ -9065,11 +9065,12 @@ toast(savedToAdmin?t().saved:t().waOnly);
 
 
 cart=[];
-
+appliedManualCoupon=null;
+const couponInput=$("cartCouponCode"),couponMessage=$("cartCouponMessage");
+if(couponInput)couponInput.value="";
+if(couponMessage)couponMessage.textContent="";
 saveCart();
-
 updateCartBadge();
-
 
 closeModal(
 "orderModal"
