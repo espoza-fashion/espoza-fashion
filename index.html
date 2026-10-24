@@ -3864,6 +3864,7 @@ id="detailSizes">
 
 </div>
 
+<button type="button" id="sizeGuideBtn" class="chip clickable" style="margin:10px 0;display:none" onclick="openSizeGuide()">دليل المقاسات</button>
 
 <div id="qtySection">
 
@@ -3910,6 +3911,15 @@ onclick="addCurrentToCart()">
 
 </div>
 
+
+<div class="modal" id="sizeGuideModal">
+  <div class="modal-box" style="width:min(680px,100%);padding:22px">
+    <button class="close-btn" type="button" onclick="closeModal('sizeGuideModal')" aria-label="إغلاق">×</button>
+    <h2 id="sizeGuideTitle" style="margin:8px 0 16px">دليل المقاسات</h2>
+    <p id="sizeGuideNote" class="muted" style="margin:0 0 14px">القياسات بالسنتيمتر ما لم يُذكر غير ذلك.</p>
+    <div id="sizeGuideTable" style="overflow:auto"></div>
+  </div>
+</div>
 
 <!-- FULL PRODUCT IMAGE VIEW -->
 <div class="modal product-image-viewer" id="productImageViewer">
@@ -6086,13 +6096,13 @@ const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Nu
 const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>x.name).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)]};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],sizeChart:p.size_chart||null};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
 
 const result=await db.from("products")
-.select("id,name,name_en,sku,category,price,old_price,description,description_en,active,featured,sort_order,created_at")
+.select("id,name,name_en,sku,category,price,old_price,description,description_en,size_chart,active,featured,sort_order,created_at")
 .eq("active",true)
 .order("sort_order",{ascending:true})
 .order("created_at",{ascending:false});
@@ -7794,6 +7804,10 @@ ${esc(size)}
 .join("");
 
 
+const sizeGuideBtn=$("sizeGuideBtn");
+const sizeChart=currentProduct.sizeChart;
+if(sizeGuideBtn){const valid=!!(sizeChart&&Array.isArray(sizeChart.headers)&&sizeChart.headers.length>1&&Array.isArray(sizeChart.rows)&&sizeChart.rows.length);sizeGuideBtn.style.display=valid?"inline-flex":"none";sizeGuideBtn.textContent=lang==="en"?"Size guide":"دليل المقاسات";}
+
 $("qtyValue")
 .textContent=
 String(
@@ -7818,6 +7832,19 @@ t().unavailable;
 
 }
 
+
+function openSizeGuide(){
+if(!currentProduct||!currentProduct.sizeChart)return;
+const chart=currentProduct.sizeChart;
+const headers=Array.isArray(chart.headers)?chart.headers:[];
+const rows=Array.isArray(chart.rows)?chart.rows:[];
+if(headers.length<2||!rows.length)return;
+$("sizeGuideTitle").textContent=lang==="en"?"Size guide":"دليل المقاسات";
+$("sizeGuideNote").textContent=lang==="en"?"Measurements are in centimeters unless noted otherwise.":"القياسات بالسنتيمتر ما لم يُذكر غير ذلك.";
+$("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+$("sizeGuideModal").classList.add("open");
+document.body.style.overflow="hidden";
+}
 
 function setProductImage(index){
 
