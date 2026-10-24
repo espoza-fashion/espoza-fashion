@@ -10489,6 +10489,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 </script>
 
 <style id="espoza-assistant-style">
+#espozaChatLauncher,#espozaChatPanel{display:none!important}
 #espozaChatLauncher{position:fixed;left:20px;bottom:24px;z-index:80;border:0;border-radius:999px;background:#641f34;color:#fff;box-shadow:0 10px 30px rgba(45,15,28,.25);padding:13px 17px;font-weight:800;display:flex;align-items:center;gap:9px}
 #espozaChatPanel{position:fixed;left:20px;bottom:82px;width:min(370px,calc(100vw - 28px));height:min(520px,calc(100dvh - 120px));z-index:81;background:#fff;border:1px solid #eadfe2;border-radius:22px;box-shadow:0 20px 60px rgba(45,15,28,.22);display:none;overflow:hidden;direction:rtl}
 #espozaChatPanel.open{display:flex;flex-direction:column}
@@ -10565,20 +10566,20 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 </script>
 
 <div id="espozaAssistantWidget" dir="rtl">
-  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">💬 اسألي إسبوزا</button>
+  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">✦ تحدث مع ELYRA AI</button>
   <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="مساعد إسبوزا">
     <div class="espoza-assistant-head">
-      <div><b>مساعد إسبوزا</b><small>المنتجات · المقاسات · التوصيل · الاستبدال</small></div>
+      <div><b>ELYRA AI</b><small>مساعدك الذكي · Your intelligent companion</small></div>
       <button type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
     </div>
     <div id="espozaAssistantMessages" aria-live="polite">
-      <div class="espoza-assistant-bubble assistant">أهلًا وسهلًا فيكِ ❤️ اسأليني عن موديل أو سعر أو مقاس أو التوصيل. سأعتمد على المعلومات المتوفرة في المتجر، وإذا لم أجد جوابًا مؤكدًا سأوجّهكِ للتواصل معنا.</div>
+      <div class="espoza-assistant-bubble assistant">أهلًا! أنا إيليرا ✨ بقدر أساعدك بالتسوّق والأسئلة العامة والكتابة والترجمة والأفكار، بالعربي أو English. وبمعلومات المتجر رح أعتمد على البيانات المؤكدة فقط.</div>
     </div>
     <form id="espozaAssistantForm" onsubmit="sendEspozaAssistant(event)">
       <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="اكتبي سؤالك..." aria-label="سؤالك">
       <button id="espozaAssistantSend" type="submit">إرسال</button>
     </form>
-    <div class="espoza-assistant-foot">للتأكيد النهائي على التوفر، تواصلي مع المتجر عبر واتساب.</div>
+    <div class="espoza-assistant-foot">ELYRA AI · العربية والإنجليزية · معلومات المتجر تُعرض حسب البيانات المتاحة.</div>
   </section>
 </div>
 <script id="espoza-assistant-widget-script">
@@ -10600,6 +10601,13 @@ function addEspozaAssistantBubble(role,text){
  box.scrollTop=box.scrollHeight;
  return bubble;
 }
+function setElyraTyping(bubble){
+ bubble.textContent="إيليرا تفكّر وتحلّل";
+ bubble.setAttribute("aria-label","إيليرا تفكّر وتحلّل");
+ let dots=0;
+ const timer=window.setInterval(()=>{if(!bubble.isConnected){window.clearInterval(timer);return;}dots=(dots+1)%4;bubble.textContent="إيليرا تفكّر وتحلّل"+".".repeat(dots);},450);
+ return ()=>window.clearInterval(timer);
+}
 async function sendEspozaAssistant(event){
  event.preventDefault();
  const input=document.getElementById("espozaAssistantInput");
@@ -10611,7 +10619,8 @@ async function sendEspozaAssistant(event){
  espozaAssistantHistory.push({role:"user",content:message});
  input.value="";
  button.disabled=true;
- const pending=addEspozaAssistantBubble("assistant","لحظة، بدوّر لك على المعلومة…");
+ const pending=addEspozaAssistantBubble("assistant","");
+ const stopTyping=setElyraTyping(pending);
  try{
   const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/espoza-assistant",{
    method:"POST",
@@ -10620,10 +10629,12 @@ async function sendEspozaAssistant(event){
   });
   const data=await response.json();
   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
+  stopTyping();
   pending.textContent=data.answer;
   espozaAssistantHistory.push({role:"assistant",content:data.answer});
  }catch(error){
-  pending.textContent="المساعد غير متاح للحظة. تواصلي معنا من زر واتساب في الموقع، وسنساعدكِ بالمعلومة المؤكدة.";
+  stopTyping();
+  pending.textContent="إيليرا مش متاحة للحظة. جرّب مرة ثانية، أو تواصل مع المتجر عبر واتساب.";
  }
  finally{button.disabled=false;input.focus();}
 }
