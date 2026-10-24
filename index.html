@@ -3353,6 +3353,8 @@ aria-label="السلة">
 <span class="cart-badge" id="cartCount">0</span>
 </button>
 
+<button class="icon-btn" id="menuBtn" type="button" onclick="openCustomerMenu()" aria-label="القائمة وحسابي" title="القائمة">☰</button>
+
 <a
 class="pill wa"
 id="whatsappHeader"
@@ -3918,6 +3920,40 @@ onclick="addCurrentToCart()">
     <h2 id="sizeGuideTitle" style="margin:8px 0 16px">دليل المقاسات</h2>
     <p id="sizeGuideNote" class="muted" style="margin:0 0 14px">القياسات بالسنتيمتر ما لم يُذكر غير ذلك.</p>
     <div id="sizeGuideTable" style="overflow:auto"></div>
+  </div>
+</div>
+
+<div class="modal" id="customerMenuModal">
+  <div class="modal-box" style="width:min(390px,100%);padding:24px">
+    <button class="close-btn" type="button" onclick="closeModal('customerMenuModal')" aria-label="إغلاق">×</button>
+    <h2 style="margin:8px 0 18px">القائمة</h2>
+    <button class="order-btn" type="button" style="width:100%;margin:8px 0" onclick="openCustomerAccount()">حسابي · دخول أو إنشاء حساب</button>
+    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');scrollToWishlist()">المفضلة</button>
+    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');openCartModal()">السلة</button>
+    <p class="muted" style="font-size:13px;line-height:1.8;margin-bottom:0">سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.</p>
+  </div>
+</div>
+
+<div class="modal" id="customerAccountModal">
+  <div class="modal-box order-box" style="width:min(600px,100%);padding:24px">
+    <button class="close-btn" type="button" onclick="closeModal('customerAccountModal')" aria-label="إغلاق">×</button>
+    <h2 style="margin:8px 0 6px">حسابي في Espoza</h2>
+    <p class="muted" style="margin:0 0 18px">دخول آمن بالبريد الإلكتروني — لا تحتاجين إلى كلمة مرور.</p>
+    <div id="customerAccountLoggedOut">
+      <div class="field"><label for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com"></div>
+      <button class="order-btn" type="button" style="width:100%" onclick="requestCustomerLogin()">إرسال رابط الدخول / إنشاء حساب</button>
+      <p id="customerAuthMsg" class="muted" role="status" style="line-height:1.7"></p>
+    </div>
+    <div id="customerAccountLoggedIn" class="hidden">
+      <p id="customerAccountEmail" class="muted"></p>
+      <div class="field"><label for="customerProfileName">الاسم</label><input id="customerProfileName" autocomplete="name"></div>
+      <div class="field"><label for="customerProfilePhone">رقم الهاتف / واتساب</label><input id="customerProfilePhone" autocomplete="tel"></div>
+      <div class="field"><label for="customerProfileAddress">العنوان المفضّل</label><input id="customerProfileAddress" autocomplete="street-address"></div>
+      <button class="btn gold" type="button" onclick="saveCustomerProfile()">حفظ بياناتي</button>
+      <h3 style="margin:22px 0 10px">طلباتي السابقة</h3>
+      <div id="customerOrders"><p class="muted">جارٍ تحميل الطلبات…</p></div>
+      <button class="btn ghost" type="button" style="margin-top:14px" onclick="customerLogout()">تسجيل الخروج</button>
+    </div>
   </div>
 </div>
 
