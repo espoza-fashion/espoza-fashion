@@ -6280,7 +6280,7 @@ const db=getCustomerSupabase();
 const result=await db.from("orders").select("id,created_at,status,items,subtotal,delivery_fee,total,notes").eq("customer_id",customerProfile.id).order("created_at",{ascending:false}).limit(20);
 if(result.error)throw result.error;
 const orders=result.data||[];
-customerHasPreviousOrders=orders.length>0;
+customerHasPreviousOrders=orders.some(order=>order.status!=="cancelled");
 if($("cartModal")?.classList.contains("open"))renderCartModal();
 if($("orderModal")?.classList.contains("open"))updateOrderTotal();
 if(!orders.length){box.innerHTML='<p class="muted">لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.</p>';return;}
