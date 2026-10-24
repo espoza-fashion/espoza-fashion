@@ -6135,7 +6135,7 @@ async function requestCustomerLogin(){
 const email=$("customerEmail").value.trim();
 const msg=$("customerAuthMsg");
 if(!email){msg.textContent="اكتب البريد الإلكتروني أولًا.";return;}
-if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){msg.textContent="تحقّق من البريد الإلكتروني.";return;}
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّق من البريد الإلكتروني.";return;}
 msg.textContent="جارٍ إرسال رابط الدخول…";
 try{
  const db=getCustomerSupabase();
