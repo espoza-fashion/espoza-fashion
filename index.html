@@ -3984,7 +3984,8 @@ onclick="addCurrentToCart()">
         <button id="customerSignupMode" class="btn ghost" type="button" onclick="setCustomerAuthMode('signup')">إنشاء حساب جديد</button>
       </div>
       <button id="customerAuthSubmit" class="order-btn" type="button" style="width:100%" onclick="submitCustomerAuth()">تسجيل الدخول</button>
-      <button class="btn ghost" type="button" style="width:100%;margin-top:8px" onclick="resetCustomerPassword()">نسيت كلمة السر؟</button>
+      <button id="customerResetPassword" class="btn ghost" type="button" style="width:100%;margin-top:8px" onclick="resetCustomerPassword()">نسيت كلمة السر؟</button>
+      <button id="customerResendConfirmation" class="btn ghost" type="button" style="width:100%;margin-top:8px" onclick="resendCustomerConfirmation()">إعادة إرسال رسالة تأكيد البريد</button>
       <p id="customerAuthMsg" class="muted" role="status" style="line-height:1.7"></p>
     </div>
     <div id="customerAccountLoggedIn" class="hidden">
@@ -4318,7 +4319,7 @@ id="toast">
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
 
 <script>
 const PLACEHOLDER=
@@ -4787,7 +4788,7 @@ saved:
 "تم تسجيل طلبك، وسيتم فتح واتساب الآن.",
 
 waOnly:
-"سيتم فتح واتساب لإكمال الطلب.",
+"لم يُحفظ الطلب في النظام. سلتك محفوظة؛ أرسلي الرسالة عبر واتساب لإكمال الطلب.",
 
 accordingImage:
 "حسب الصورة",
@@ -5126,7 +5127,7 @@ saved:
 "Your order was saved. WhatsApp will open now.",
 
 waOnly:
-"WhatsApp will open to complete your order.",
+"Your order was not saved to the system. Your cart is kept; send the WhatsApp message to complete the order.",
 
 accordingImage:
 "As shown",
@@ -6178,6 +6179,7 @@ const db=getCustomerSupabase();
 const sessionResult=await db.auth.getSession();
 if(sessionResult.error)throw sessionResult.error;
 const session=sessionResult.data.session;
+if(customerAuthMode==="recovery")return;
 const loggedOut=$("customerAccountLoggedOut"),loggedIn=$("customerAccountLoggedIn");
 if(!session){
  customerProfile=null;
@@ -6187,6 +6189,7 @@ if(!session){
  return;
 }
 customerProfile=await ensureCustomerProfile();
+if(customerAuthMode==="recovery")return;
 if(loggedOut)loggedOut.classList.add("hidden");
 if(loggedIn)loggedIn.classList.remove("hidden");
 $("customerAccountEmail").textContent=session.user.email||"";
@@ -6222,6 +6225,7 @@ try{
  if(!customerAuthListenerReady){
   db.auth.onAuthStateChange((event,session)=>{
    if(event==="PASSWORD_RECOVERY"){
+    customerAuthMode="recovery";
     window.setTimeout(()=>{
      $("customerAccountModal").classList.add("open");
      document.body.style.overflow="hidden";
@@ -6229,11 +6233,11 @@ try{
      $("customerAuthMsg").textContent="اختاري كلمة سر جديدة لحسابك.";
     },0);
    }
-   if(event==="SIGNED_IN"&&session){
+   if(event==="SIGNED_OUT"){window.setTimeout(()=>refreshCustomerAccount().catch(console.warn),0);}
+   if(event==="SIGNED_IN"&&session&&customerAuthMode!=="recovery"){
     window.setTimeout(()=>{
      refreshCustomerAccount().then(()=>{
-      $("customerAccountModal").classList.add("open");
-      document.body.style.overflow="hidden";
+      // Refresh session data without reopening a dismissed dialog on token refresh.
      }).catch(error=>{console.warn("Customer account refresh failed:",error);const msg=$("customerAuthMsg");if(msg)msg.textContent="تم تسجيل الدخول، لكن تعذّر تحميل بيانات الحساب. حدّث الصفحة وحاول مرة أخرى.";});
     },0);
    }
@@ -6263,6 +6267,11 @@ function setCustomerAuthMode(mode){
  if(login)login.style.display=customerAuthMode==="recovery"?"none":"";
  if(signup)signup.style.display=customerAuthMode==="recovery"?"none":"";
  if(submit)submit.textContent=customerAuthMode==="signup"?"إنشاء حساب وإرسال رابط التأكيد":customerAuthMode==="recovery"?"حفظ كلمة السر الجديدة":"تسجيل الدخول";
+ const recovery=customerAuthMode==="recovery";
+ $("customerEmail").closest(".field").classList.toggle("hidden",recovery);
+ $("customerResetPassword").classList.toggle("hidden",recovery);
+ $("customerResendConfirmation").classList.toggle("hidden",recovery);
+ if(recovery){$("customerAccountLoggedOut").classList.remove("hidden");$("customerAccountLoggedIn").classList.add("hidden");}
  if(password){password.autocomplete=customerAuthMode==="signup"||customerAuthMode==="recovery"?"new-password":"current-password";password.placeholder=customerAuthMode==="recovery"?"اكتبي كلمة السر الجديدة":"8 أحرف على الأقل";}
  const msg=$("customerAuthMsg");if(msg)msg.textContent="";
 }
@@ -6274,9 +6283,10 @@ async function submitCustomerAuth(){
  const email=$("customerEmail").value.trim().toLowerCase();
  const password=$("customerPassword").value;
  const msg=$("customerAuthMsg"),submit=$("customerAuthSubmit");
- if(!email){msg.textContent="اكتبي البريد الإلكتروني أولًا.";return;}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
- if(!password||password.length<8){msg.textContent="كلمة السر لازم تكون 8 أحرف على الأقل.";return;}
+ if(submit?.disabled)return;
+ if(customerAuthMode!=="recovery"&&!email){msg.textContent="اكتبي البريد الإلكتروني أولًا.";return;}
+ if(customerAuthMode!=="recovery"&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ if(!password||(customerAuthMode!=="login"&&password.length<8)){msg.textContent="كلمة السر لازم تكون 8 أحرف على الأقل.";return;}
  msg.textContent=customerAuthMode==="signup"?"جارٍ إنشاء حسابك وإرسال رابط التأكيد…":"جارٍ تسجيل الدخول…";
  if(submit)submit.disabled=true;
  try{
@@ -6285,8 +6295,11 @@ async function submitCustomerAuth(){
   if(customerAuthMode==="recovery"){
    result=await db.auth.updateUser({password});
    if(result.error)throw result.error;
-   msg.textContent="تم تغيير كلمة السر بنجاح. يمكنكِ الآن تسجيل الدخول بها.";
+   const signedOut=await db.auth.signOut();
+   if(signedOut.error)throw signedOut.error;
    setCustomerAuthMode("login");
+   $("customerPassword").value="";
+   msg.textContent="تم تغيير كلمة السر بنجاح. يمكنكِ الآن تسجيل الدخول بها.";
   }else if(customerAuthMode==="signup"){
    result=await db.auth.signUp({email,password,options:{emailRedirectTo:customerRedirectUrl(),data:{account_type:"customer"}}});
    if(result.error)throw result.error;
@@ -6311,6 +6324,18 @@ async function submitCustomerAuth(){
   else if(/redirect/i.test(detail))msg.textContent="رابط تأكيد البريد غير مسموح. أضيفي https://espoza-fashion.github.io/espoza-fashion/ إلى Supabase Authentication > URL Configuration > Redirect URLs.";
   else msg.textContent=detail||"تعذّر إكمال العملية. حاولي مرة ثانية.";
  }finally{if(submit)submit.disabled=false;}
+}
+async function resendCustomerConfirmation(){
+ const email=$("customerEmail").value.trim().toLowerCase(),msg=$("customerAuthMsg"),button=$("customerResendConfirmation");
+ if(button.disabled)return;
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ button.disabled=true;
+ try{
+  const {error}=await getCustomerSupabase().auth.resend({type:"signup",email,options:{emailRedirectTo:customerRedirectUrl()}});
+  if(error)throw error;
+  msg.textContent="تم طلب إعادة إرسال التأكيد. افحصي الوارد والبريد غير المرغوب فيه.";
+ }catch(error){msg.textContent="تعذّر طلب رسالة التأكيد. "+(error.message||"حاولي لاحقًا.");}
+ finally{button.disabled=false;}
 }
 async function requestCustomerLogin(){return submitCustomerAuth();}
 async function resetCustomerPassword(){
@@ -6404,12 +6429,9 @@ db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,create
 db.from("categories").select("id,slug,name_ar,name_en,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
 db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
 ]);
-if(settingsResult.error)throw settingsResult.error;
-if(deliveryResult.error)throw deliveryResult.error;
-if(sliderResult.error)throw sliderResult.error;
-if(feedbackResult.error)throw feedbackResult.error;
-if(categoryResult.error)throw categoryResult.error;
-if(sectionResult.error)throw sectionResult.error;
+for(const result of [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]){
+if(result.error)console.warn("Store section could not refresh:",result.error);
+}
 const settings={};
 (settingsResult.data||[]).forEach(row=>settings[row.key]=normalizeAdminSettingValue(row.value,""));
 if(settings.store_name)store.name=settings.store_name;
@@ -6427,11 +6449,11 @@ if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settin
 if(settings.site_content_ar && typeof settings.site_content_ar==="object")Object.assign(TEXT.ar,settings.site_content_ar);
 if(settings.site_content_en && typeof settings.site_content_en==="object")Object.assign(TEXT.en,settings.site_content_en);
 applyThemeFromAdmin(settings);
-adminDeliveryAreas=deliveryResult.data||[];
-adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:t().explore}));
-adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
-adminCategories=categoryResult.data||[];
-adminSiteSections=sectionResult.data||[];
+if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
+if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:t().explore}));
+if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
+if(!categoryResult.error)adminCategories=categoryResult.data||[];
+if(!sectionResult.error)adminSiteSections=sectionResult.data||[];
 try{
 const offersResult=await db.from("coupons").select("id,code,discount_type,discount_value,min_order,min_quantity,first_order_only,starts_at,ends_at,usage_limit,used_count,product_ids,category_slugs,active,auto_apply").eq("active",true).eq("auto_apply",true);
 if(offersResult.error)throw offersResult.error;
@@ -6449,13 +6471,13 @@ const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Nu
 const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>x.name).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false,active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],sizeChart:p.size_chart||null};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],sizeChart:p.size_chart||null};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
 
 const result=await db.from("products")
-.select("id,name,name_en,sku,category,price,old_price,description,description_en,size_chart,active,featured,sort_order,created_at")
+.select("id,name,name_en,sku,category,price,old_price,description,description_en,size_chart,stock,active,featured,sort_order,created_at")
 .eq("active",true)
 .order("sort_order",{ascending:true})
 .order("created_at",{ascending:false});
@@ -6475,8 +6497,7 @@ db.from("product_images").select("*").in("product_id",ids).order("sort_order",{a
 
 const childData=(settled)=>{
 if(settled.status==="fulfilled" && !settled.value.error)return settled.value.data||[];
-console.warn("Supabase product child data failed:",settled.status==="rejected"?settled.reason:settled.value?.error);
-return[];
+throw (settled.status==="rejected"?settled.reason:settled.value.error);
 };
 
 const sizes=childData(sizesResult);
@@ -6513,12 +6534,10 @@ product_images:imagesBy.get(p.id)||[]
 async function refreshSupabaseProducts(){
 try{
 const remoteProducts=await loadSupabaseProducts();
-if(remoteProducts.length){
 products=remoteProducts;
 renderProducts();
 $("productTotal").textContent=String(products.length)+"+";
 updateWishlistUI();
-}
 }catch(error){
 console.warn("Supabase products refresh failed; keeping current products:",error);
 }
@@ -6859,7 +6878,7 @@ button_link:
 
 function activeSlides(){
 
-return Array.isArray(adminSliders) && adminSliders.length
+return Array.isArray(adminSliders)
 ? adminSliders
 : fallbackSlides();
 
@@ -7202,7 +7221,7 @@ if(
 return;
 
 
-const sourceFeedback=(Array.isArray(adminFeedback)&&adminFeedback.length)
+const sourceFeedback=(Array.isArray(adminFeedback))
 ?adminFeedback.map(x=>x.image_url).filter(Boolean)
 :FEEDBACK_IMAGES;
 const doubled=[
@@ -7365,7 +7384,7 @@ if(!el)
 return;
 
 
-const target=(Array.isArray(adminFeedback)&&adminFeedback.length)?adminFeedback.length:FEEDBACK_IMAGES.length;
+const target=(Array.isArray(adminFeedback))?adminFeedback.length:FEEDBACK_IMAGES.length;
 
 
 const duration=
@@ -8943,8 +8962,12 @@ $("totalPrice").textContent=`₪${money(Math.max(0,subtotal-discount)+delivery.p
    إرسال الطلب
    ========================================== */
 
+let orderSubmissionPending=false;
 async function sendOrder(){
-if(!cart.length)return;
+if(orderSubmissionPending||!cart.length)return;
+orderSubmissionPending=true;
+$("sendOrderBtn").disabled=true;
+try{
 const modelCounts=new Map();
 for(const item of cart){
 const key=cartModelKey(item);
@@ -9117,13 +9140,14 @@ const customerDb=getCustomerSupabase();
 const profileForOrder=await ensureCustomerProfile();
 if(profileForOrder)customerProfile=profileForOrder;
 const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:cart.map(item=>({product_id:item.dbId||null,category:item.category||cartItemCategory(item)||"",name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""})),coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
-const saved=await customerDb.from("orders").insert(orderPayload).select("id").single();
+const saved=await customerDb.from("orders").insert(orderPayload);
 if(saved.error)throw saved.error;
 savedToAdmin=true;
 if(profileForOrder)customerHasPreviousOrders=true;
 }catch(error){console.warn("Order database save failed:",error);}
 if(!whatsappWindow){window.location.href=whatsappUrl;return;}
 toast(savedToAdmin?t().saved:t().waOnly);
+if(!savedToAdmin)return;
 
 
 
@@ -9139,7 +9163,7 @@ updateCartBadge();
 closeModal(
 "orderModal"
 );
-
+}finally{orderSubmissionPending=false;$("sendOrderBtn").disabled=false;}
 }
 
 
@@ -10569,7 +10593,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
   <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">✦ تحدث مع ELYRA AI</button>
   <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="مساعد إسبوزا">
     <div class="espoza-assistant-head">
-      <div><b>ELYRA AI</b><small>مساعدك الذكي · Your intelligent companion</small></div>
+      <div><b>ELYRA AI — إيليرا</b><small>مساعدك الذكي · Your intelligent companion</small></div>
       <button type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
     </div>
     <div id="espozaAssistantMessages" aria-live="polite">
@@ -10613,30 +10637,35 @@ async function sendEspozaAssistant(event){
  const input=document.getElementById("espozaAssistantInput");
  const button=document.getElementById("espozaAssistantSend");
  const message=input.value.trim();
- if(!message)return;
+ if(!message||button.disabled)return;
+ if(!navigator.onLine){addEspozaAssistantBubble("assistant","الاتصال بالإنترنت مقطوع. حاولي بعد عودة الاتصال.");return;}
  addEspozaAssistantBubble("user",message);
  const history=espozaAssistantHistory.slice(-6);
- espozaAssistantHistory.push({role:"user",content:message});
  input.value="";
  button.disabled=true;
  const pending=addEspozaAssistantBubble("assistant","");
  const stopTyping=setElyraTyping(pending);
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),30000);
  try{
   const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/espoza-assistant",{
    method:"POST",
+   signal:controller.signal,
    headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
    body:JSON.stringify({message,history})
   });
   const data=await response.json();
   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
   stopTyping();
-  pending.textContent=data.answer;
-  espozaAssistantHistory.push({role:"assistant",content:data.answer});
+  pending.textContent=(data.mode==="faq"?"إيليرا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n":"")+data.answer;
+  espozaAssistantHistory.push({role:"user",content:message},{role:"assistant",content:data.answer});
+  if(espozaAssistantHistory.length>12)espozaAssistantHistory.splice(0,espozaAssistantHistory.length-12);
  }catch(error){
   stopTyping();
-  pending.textContent="إيليرا مش متاحة للحظة. جرّب مرة ثانية، أو تواصل مع المتجر عبر واتساب.";
+  pending.textContent=error.name==="AbortError"?"استغرق الرد وقتًا طويلًا. حاولي مرة أخرى.":"إيليرا مش متاحة للحظة. جرّب مرة ثانية، أو تواصل مع المتجر عبر واتساب.";
+  input.value=message;
  }
- finally{button.disabled=false;input.focus();}
+ finally{clearTimeout(timeout);stopTyping();button.disabled=false;input.focus();}
 }
 </script>
 </body>
