@@ -262,6 +262,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
     </div>
     <nav class="nav" id="navList">
       <button class="nav-btn active" data-page="dashboard"><span class="ico">◆</span> نظرة عامة</button>
+      <button class="nav-btn" data-page="carts"><span class="ico">◆</span> السلات المتروكة</button>
       <button class="nav-btn" data-page="orders"><span class="ico">◆</span> الطلبات</button>
       <button class="nav-btn" data-page="products"><span class="ico">◆</span> المنتجات</button>
       <button class="nav-btn" data-page="slider"><span class="ico">◆</span> سلايدر الرئيسية</button>
@@ -320,6 +321,16 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
             </tr></thead>
             <tbody id="ordersBody"><tr><td colspan="9" class="loading-row"><span class="spin"></span>جارٍ التحميل…</td></tr></tbody>
           </table></div>
+        </div>
+      </section>
+
+      <section id="page-carts" class="hidden">
+        <div class="panel">
+          <div class="panel-head"><h3>السلات المتروكة</h3><button class="btn" id="refreshCartsBtn">تحديث السلات</button></div>
+          <p style="padding:0 20px">سلات الحسابات المسجّلة فقط؛ سلات الزائرات محفوظة في أجهزتهن. تُعد السلة غير نشطة بعد ساعة من آخر تعديل، وهذا لا يؤكد مغادرة الزبونة. لا تُرسل أي رسائل تلقائيًا.</p>
+          <div class="panel-head"><input class="search-input" id="cartSearch" placeholder="بحث بالاسم أو البريد أو الهاتف"><select id="cartAgeFilter" class="status-select"><option value="1">غير نشطة منذ ساعة</option><option value="24">منذ 24 ساعة</option><option value="72">منذ 3 أيام</option><option value="0">كل السلات غير الفارغة</option></select></div>
+          <p id="cartSummary" style="padding:0 20px" role="status"></p>
+          <div class="table-wrap"><table><thead><tr><th>الزبونة والتواصل</th><th>محتويات السلة</th><th>قيمة تقريبية دون توصيل</th><th>آخر تعديل</th><th>الحالة</th></tr></thead><tbody id="cartsBody"></tbody></table></div>
         </div>
       </section>
 
@@ -423,6 +434,7 @@ const PLACEHOLDER = "https://placehold.co/400x500?text=Espoza";
 /* ===================== State ===================== */
 let orders = [], products = [], productImages = [], productSizes = [], productColors = [];
 let feedbackRows = [];
+let customerCarts = [], cartCustomers = [], cartsLoadError = "", cartsLoadedAt = null;
 let sliderRows = [], deliveryAreas = [], storeSettings = null;
 let orderStatusFilter = "all";
 let productCatFilter = "all";
@@ -430,6 +442,7 @@ let currentPage = "dashboard";
 
 const PAGE_META = {
   dashboard:{title:"نظرة عامة", sub:"ملخص أداء المتجر اليوم"},
+  carts:{title:"السلات المتروكة",sub:"متابعة السلات المحفوظة وغير النشطة"},
   orders:{title:"الطلبات", sub:"إدارة ومتابعة طلبات العملاء"},
   products:{title:"المنتجات", sub:"إضافة وتعديل منتجات المتجر"},
   slider:{title:"سلايدر الرئيسية", sub:"الشرائح الظاهرة في أعلى الموقع"},
@@ -484,6 +497,7 @@ function goPage(page){
   $("pageTitle").textContent=PAGE_META[page].title;
   $("pageSub").textContent=PAGE_META[page].sub;
   $("sidebar").classList.remove("open");
+  if(page==="carts")refreshCarts();
 }
 $("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
 $("refreshBtn").addEventListener("click",loadAll);
@@ -493,7 +507,7 @@ async function loadAll(){
   $("connText").textContent="جاري الاتصال…";
   try{
     await requireAdminSession();
-    await Promise.all([loadOrders(), loadProducts(), loadSlider(), loadDeliveryAreas(), loadStoreSettings(), loadFeedback()]);
+    await Promise.all([loadOrders(), loadProducts(), loadSlider(), loadDeliveryAreas(), loadStoreSettings(), loadFeedback(), refreshCarts()]);
     $("connDot").classList.remove("off");
     $("connText").textContent="متصلة الآن";
   }catch(error){
@@ -510,6 +524,48 @@ async function loadAll(){
   renderSettingsForm();
   renderFeedback();
 }
+
+// Cart snapshots are private: existing RLS permits only their owner and admins.
+function cartIsInactive(row,hours,now=Date.now()){
+  const timestamp=Date.parse(row.updated_at);
+  return Array.isArray(row.items)&&row.items.length>0&&Number.isFinite(timestamp)&&timestamp<=now-hours*3600000;
+}
+function cartEstimatedValue(items){
+  return items.reduce((sum,item)=>{const price=Number(item.price),qty=Number(item.qty);return sum+(Number.isFinite(price)&&price>=0&&Number.isFinite(qty)&&qty>0?price*qty:0);},0);
+}
+async function readAllCartRows(table,columns,sort){
+  let rows=[];
+  for(let offset=0;;offset+=500){
+    const {data,error}=await sb.from(table).select(columns).order(sort,{ascending:true}).range(offset,offset+499);
+    if(error)throw error;
+    rows.push(...(data||[]));
+    if(!data||data.length<500)return rows;
+  }
+}
+async function refreshCarts(){
+  if($("refreshCartsBtn").disabled)return;
+  $("refreshCartsBtn").disabled=true;
+  try{
+    await requireAdminSession();
+    const [rows,customers]=await Promise.all([readAllCartRows("customer_carts","user_id,items,updated_at","user_id"),readAllCartRows("customers","user_id,name,email,phone","id")]);
+    customerCarts=rows;cartCustomers=customers;cartsLoadError="";cartsLoadedAt=new Date().toISOString();
+  }catch(error){cartsLoadError=friendlyError(error);}
+  finally{$("refreshCartsBtn").disabled=false;renderCarts();}
+}
+function renderCarts(){
+  const hours=Number($("cartAgeFilter").value||0),q=$("cartSearch").value.trim().toLowerCase();
+  const profiles=new Map(cartCustomers.filter(p=>p.user_id).map(p=>[p.user_id,p]));
+  const rows=customerCarts.filter(row=>cartIsInactive(row,hours)).filter(row=>{const p=profiles.get(row.user_id)||{};return !q||[p.name,p.phone,p.email].some(v=>String(v||"").toLowerCase().includes(q));}).sort((a,b)=>Date.parse(a.updated_at)-Date.parse(b.updated_at));
+  $("cartSummary").textContent=cartsLoadError?"تعذر التحديث: "+cartsLoadError+" — البيانات السابقة قد تكون قديمة.":`${rows.length} سلة مطابقة — آخر تحديث: ${fmtDate(cartsLoadedAt)}`;
+  $("cartsBody").innerHTML=rows.length?rows.map(row=>{
+    const p=profiles.get(row.user_id)||{},items=row.items.filter(item=>item&&typeof item==="object");
+    return `<tr><td>${esc(p.name||"حساب مسجّل")}<div class="tsub">${esc(p.phone||"لا يوجد هاتف محفوظ")}</div><div class="tsub">${esc(p.email||"")}</div></td><td>${items.map(item=>`<div>${esc(item.name||"منتج")} — ${esc(item.size||"—")} / ${esc(item.color||"—")} × ${esc(item.qty||1)}</div>`).join("")}</td><td>₪${money(cartEstimatedValue(items))}<div class="tsub">الأسعار المحفوظة؛ قد تتغير</div></td><td>${esc(fmtDate(row.updated_at))}</td><td>${cartIsInactive(row,1)?"غير نشطة منذ ساعة أو أكثر":"نشاط حديث"}</td></tr>`;
+  }).join(""):`<tr><td colspan="5" class="empty">${cartsLoadError?"تعذر تحميل السلات":"لا توجد سلات مطابقة"}</td></tr>`;
+}
+$("refreshCartsBtn").addEventListener("click",refreshCarts);
+$("cartSearch").addEventListener("input",renderCarts);
+$("cartAgeFilter").addEventListener("change",renderCarts);
+setInterval(()=>{if(currentPage==="carts")renderCarts();},60000);
 
 async function loadOrders(){
   const {data,error} = await sb.from("orders").select("*").order("created_at",{ascending:false});

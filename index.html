@@ -6145,11 +6145,21 @@ if(created.error){
 return created.data;
 }
 
+let customerCartWriteQueue=Promise.resolve();
 async function syncCustomerCart(){
 if(!customerProfile?.user_id)return;
+const userId=customerProfile.user_id;
+const items=JSON.parse(JSON.stringify(Array.isArray(cart)?cart:[]));
 const db=getCustomerSupabase();
-const result=await db.from("customer_carts").upsert({user_id:customerProfile.user_id,items:Array.isArray(cart)?cart:[],updated_at:new Date().toISOString()},{onConflict:"user_id"});
-if(result.error)console.warn("Saved cart sync failed:",result.error.message);
+// Serialize snapshots so a slower old write cannot resurrect a checked-out cart.
+customerCartWriteQueue=customerCartWriteQueue.catch(()=>{}).then(async()=>{
+ const session=await db.auth.getSession();
+ if(session.error)throw session.error;
+ if(session.data.session?.user?.id!==userId)return;
+ const result=await db.from("customer_carts").upsert({user_id:userId,items,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ if(result.error)throw result.error;
+});
+try{await customerCartWriteQueue;}catch(error){console.warn("Saved cart sync failed:",error.message);throw error;}
 }
 
 async function restoreCustomerCart(){
@@ -6167,7 +6177,6 @@ if(!cart.length&&Array.isArray(savedItems)&&savedItems.length){
  });
  try{localStorage.setItem("espoza_cart",JSON.stringify(cart));}catch(_){}
  updateCartBadge();
- await syncCustomerCart();
  if(cart.length)toast("تم استرجاع سلتك المحفوظة على حسابك.");
 }else if(cart.length){
  await syncCustomerCart();
@@ -8365,7 +8374,7 @@ localStorage.setItem("espoza_cart",JSON.stringify(cart));
 }catch(error){console.warn("cart save:",error);}
 if(customerProfile?.user_id){
  clearTimeout(window.__espozaCartSyncTimer);
- window.__espozaCartSyncTimer=setTimeout(()=>syncCustomerCart(),700);
+ window.__espozaCartSyncTimer=setTimeout(()=>syncCustomerCart().catch(()=>{}),700);
 }
 }
 
@@ -9158,6 +9167,8 @@ const couponInput=$("cartCouponCode"),couponMessage=$("cartCouponMessage");
 if(couponInput)couponInput.value="";
 if(couponMessage)couponMessage.textContent="";
 saveCart();
+clearTimeout(window.__espozaCartSyncTimer);
+try{await syncCustomerCart();}catch(_){toast("تم حفظ الطلب، لكن تعذر تحديث السلة المحفوظة. يرجى إعادة المحاولة عند عودة الاتصال.");}
 updateCartBadge();
 
 closeModal(
