@@ -6,6 +6,8 @@ const shop=fs.readFileSync('index.html','utf8'),admin=fs.readFileSync('espoza-ad
 function fn(source,name){
  const start=source.search(new RegExp('^(?:async )?function '+name+'\\(','m'));
  assert.ok(start>=0,name);
+ const line=source.slice(start,source.indexOf('\n',start));
+ try{new vm.Script('('+line+')');return line;}catch{}
  for(let end=source.indexOf('\n}',start);end>=0;end=source.indexOf('\n}',end+2)){
   const text=source.slice(start,end+2);
   try{new vm.Script('('+text+')');return text;}catch{}
@@ -79,4 +81,26 @@ test('checkout API failure preserves basket and releases submission lock',async(
 });
 test('checkout confirmed insert clears basket and releases submission lock',async()=>{
  const c=checkoutContext(null);await c.sendOrder();assert.equal(c.cart.length,0);assert.equal(c.orderSubmissionPending,false);assert.equal(c.$('sendOrderBtn').disabled,false);
+});
+
+test('abandoned cart classification excludes empty, recent and invalid dates',()=>{
+ const c=context(admin,['cartIsInactive','cartEstimatedValue']);const now=Date.now();
+ assert.equal(c.cartIsInactive({items:[{}],updated_at:new Date(now-3600000).toISOString()},1,now),true);
+ assert.equal(c.cartIsInactive({items:[{}],updated_at:new Date(now-1000).toISOString()},1,now),false);
+ assert.equal(c.cartIsInactive({items:[],updated_at:new Date(0).toISOString()},1,now),false);
+ assert.equal(c.cartIsInactive({items:[{}],updated_at:'bad'},0,now),false);
+ assert.equal(c.cartEstimatedValue([{price:100,qty:2},{price:'bad',qty:2}]),200);
+});
+test('cart writes are serialized and checkout empty snapshot wins',async()=>{
+ const writes=[];let release;
+ const c=context(shop,['syncCustomerCart'],{customerCartWriteQueue:Promise.resolve(),customerProfile:{user_id:'owner'},cart:[{name:'dress'}],getCustomerSupabase:()=>({auth:{getSession:async()=>({data:{session:{user:{id:'owner'}}}})},from:()=>({upsert:async payload=>{writes.push(payload);if(writes.length===1)await new Promise(r=>release=r);return {};}})})});
+ const first=c.syncCustomerCart();await new Promise(r=>setImmediate(r));c.cart=[];const second=c.syncCustomerCart();await new Promise(r=>setImmediate(r));assert.equal(writes.length,1);release();await Promise.all([first,second]);assert.equal(writes.length,2);assert.equal(writes[1].items.length,0);
+});
+test('queued cart write cannot cross account sign-out',async()=>{
+ const c=context(shop,['syncCustomerCart'],{customerCartWriteQueue:Promise.resolve(),customerProfile:{user_id:'old'},cart:[{}],getCustomerSupabase:()=>({auth:{getSession:async()=>({data:{session:{user:{id:'new'}}}})},from:()=>{throw Error('wrong account write');}})});
+ await c.syncCustomerCart();
+});
+test('cart rendering escapes stored customer and item markup',()=>{
+ const c=context(admin,['renderCarts','cartIsInactive','cartEstimatedValue','esc','money','fmtDate'],{customerCarts:[{user_id:'u',items:[{name:'<img onerror=alert(1)>',price:20,qty:2}],updated_at:new Date(0).toISOString()}],cartCustomers:[{user_id:'u',name:'<script>bad</script>'}],cartsLoadError:'',cartsLoadedAt:null});
+ c.$('cartAgeFilter').value='1';c.renderCarts();assert.ok(!c.$('cartsBody').innerHTML.includes('<script>'));assert.ok(!c.$('cartsBody').innerHTML.includes('<img'));assert.match(c.$('cartsBody').innerHTML,/&lt;img/);
 });
