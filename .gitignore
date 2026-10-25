@@ -1,0 +1,3 @@
+
+# Private audit snapshots must not be published.
+supabase/backups/
