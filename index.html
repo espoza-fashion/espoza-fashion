@@ -6687,7 +6687,7 @@ await refreshSupabaseProducts();
 /* Keep the customer catalogue synced with Admin/Supabase while the page
    remains open. No design or existing product data is changed. */
 if(!window.__espozaProductRefreshTimer){
-window.__espozaProductRefreshTimer=setInterval(refreshSupabaseProducts,15000);
+window.__espozaProductRefreshTimer=setInterval(refreshSupabaseProducts,60000);
 document.addEventListener("visibilitychange",()=>{
 if(!document.hidden)refreshSupabaseProducts();
 });
@@ -10820,6 +10820,44 @@ async function sendEspozaAssistant(event){
  }
  finally{clearTimeout(timeout);stopTyping();button.disabled=false;input.focus();}
 }
+</script>
+<script>
+/* Live synchronization: all public storefront data stays in Supabase.
+   Admin changes are reflected without waiting for the next page visit. */
+(function setupEspozaRealtimeSync(){
+  if (!("supabase" in window) || typeof getCustomerSupabase !== "function") return;
+  let refreshTimer = null;
+  const productTables = ["products","product_sizes","product_colors","product_images"];
+  const contentTables = ["categories","site_sections","coupons","sliders","feedback","store_settings","delivery_areas"];
+  const db = getCustomerSupabase();
+  const scheduleRefresh = (kind) => {
+    if (refreshTimer) clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(async () => {
+      const jobs = [];
+      if (kind === "products" || kind === "all") {
+        if (typeof refreshSupabaseProducts === "function") jobs.push(refreshSupabaseProducts());
+      }
+      if (kind === "content" || kind === "all") {
+        if (typeof loadAdminStoreData === "function") jobs.push(loadAdminStoreData());
+      }
+      await Promise.allSettled(jobs);
+    }, 350);
+  };
+  let channel = db.channel("espoza-storefront-live-sync");
+  for (const table of productTables) {
+    channel = channel.on("postgres_changes", { event: "*", schema: "public", table }, () => scheduleRefresh("products"));
+  }
+  for (const table of contentTables) {
+    channel = channel.on("postgres_changes", { event: "*", schema: "public", table }, () => scheduleRefresh("content"));
+  }
+  window.__espozaRealtimeChannel = channel.subscribe((status) => {
+    if (status === "SUBSCRIBED") {
+      console.info("Espoza live store synchronization connected.");
+    } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+      console.warn("Espoza live synchronization temporarily unavailable:", status);
+    }
+  });
+})();
 </script>
 <script>
 /* Keep the installed Espoza PWA synchronized with the published website. */
