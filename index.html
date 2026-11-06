@@ -3691,10 +3691,10 @@ id="featuresTrack">
 
 <section class="story-section" id="story">
 <div class="story-inner">
-<div class="eyebrow2">OUR STORY • SINCE 2019</div>
-<h2>قصة بداية Espoza Fashion</h2>
-<p>بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. ومع الوقت كبرت التشكيلة، وكبرت معها ثقة زبائننا، لنستمر في تقديم الفساتين والأطقم والقطع الأنيقة بعناية واهتمام بكل تفصيل.</p>
-<div class="story-tag">مئات الرسائل يومياً • ثقة تتجدد مع كل طلب • Espoza Fashion</div>
+<div class="eyebrow2" id="storyEyebrow">حكايتنا • منذ 2019</div>
+<h2 id="storyTitle">قصة بداية Espoza Fashion</h2>
+<p id="storyText">بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. ومع الوقت كبرت التشكيلة، وكبرت معها ثقة زبائننا، لنستمر في تقديم الفساتين والأطقم والقطع الأنيقة بعناية واهتمام بكل تفصيل.</p>
+<div class="story-tag" id="storyTag">مئات الرسائل يومياً • ثقة تتجدد مع كل طلب • Espoza Fashion</div>
 </div>
 </section>
 
@@ -4939,11 +4939,23 @@ feedbackSwipeHint:
 footerStoryTitle:
 "من أين بدأت قصة Espoza؟",
 
+storyEyebrow:
+"حكايتنا • منذ 2019",
+
+storyTitle:
+"قصة بداية Espoza Fashion",
+
+storyText:
+"بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. ومع الوقت كبرت التشكيلة، وكبرت معها ثقة زبائننا، لنستمر في تقديم الفساتين والأطقم والقطع الأنيقة بعناية واهتمام بكل تفصيل.",
+
+storyTag:
+"مئات الرسائل يومياً • ثقة تتجدد مع كل طلب",
+
 footerStoryText:
 "بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. واليوم نواصل تقديم الملابس والأطقم والفساتين الأنيقة والرسمية وفساتين السهرة بعناية واهتمام بالتفاصيل.",
 
 footerContactTitle:
-"Contact Us",
+"تواصلي معنا",
 
 footerLinksTitle:
 "روابط سريعة",
@@ -5284,7 +5296,67 @@ feedbackTitle:
 "What our customers say",
 
 feedbackCounterLabel:
-"real reviews from our customers"
+"Real reviews from our customers",
+
+feedbackDaily:
+"Hundreds of messages every day",
+
+feedbackSwipeHint:
+"Swipe to see more",
+
+footerStoryTitle:
+"Where the Espoza Story Began",
+
+footerStoryText:
+"Espoza Fashion began in 2019 with a genuine passion for style and a vision to offer distinctive pieces that bring together quality and refined design. As our collection grew, so did our customers’ trust. Today, we continue to offer elegant everyday, formal and evening dresses and coordinated sets, chosen with care and attention to every detail.",
+
+footerContactTitle:
+"Contact Us",
+
+footerLinksTitle:
+"Quick Links",
+
+returnPolicyTitle:
+"Return Policy",
+
+returnPolicyText:
+"Returns are not accepted, except when an item has a clear manufacturing defect.",
+
+exchangePolicyTitle:
+"Exchange Policy",
+
+exchangePolicyText:
+"An exchange may be requested within 24 hours of receiving the order. The item must remain in its original condition, unused and undamaged.",
+
+notReceivedPolicyTitle:
+"Uncollected Orders",
+
+notReceivedPolicyText:
+"If an order is not collected and is returned to us, we reserve the right to decline future orders if non-collection is repeated.",
+
+paymentPolicyTitle:
+"Payment",
+
+paymentPolicyText:
+"Cash on Delivery (COD).",
+
+customerCountCaption:
+"10,000 customers have chosen Espoza Fashion",
+
+customerCountSubcaption:
+"Trust renewed with every order",
+
+storyEyebrow:
+"Our Story • Since 2019",
+
+storyTitle:
+"The Story of Espoza Fashion",
+
+storyText:
+"Espoza Fashion began in 2019 with a genuine passion for style and a vision to offer distinctive pieces that bring together quality and refined design. Over time, our collection grew, along with the trust of our customers. We continue to offer elegant dresses, coordinated sets and thoughtfully selected pieces, with care given to every detail.",
+
+storyTag:
+"Hundreds of messages every day • Trust renewed with every order • Espoza Fashion"
 
 }
 
@@ -6501,9 +6573,18 @@ function productColorDisplayName(value){
  "رمادي":"Gray","gray":"Gray","رمادي أزرق":"Blue Gray","رمادي ازرق":"Blue Gray",
  "رمادي فحمي":"Charcoal Gray","زهري":"Pink","وردي":"Pink","pink":"Pink",
  "زهري موف":"Dusty Mauve","عنابي":"Burgundy","خمري":"Wine Red",
- "البوردوا":"Bordeaux","ذهبي":"Gold","gold":"Gold"
+ "البوردوا":"Bordeaux","ذهبي":"Gold","gold":"Gold",
+ "زيتي":"Olive","زيتي غامق":"Dark Olive","موف":"Mauve",
+ "سكري":"Ivory","عاجي":"Ivory","كريمي":"Cream","كريمي فاتح":"Light Cream",
+ "سماوي":"Sky Blue","تركواز":"Turquoise","فيروزي":"Turquoise",
+ "نبيتي":"Burgundy","رصاصي":"Gray","فضي":"Silver","فضي":"Silver",
+ "وردي فاتح":"Light Pink","زهري فاتح":"Light Pink","أخضر فاتح":"Light Green",
+ "أخضر غامق":"Dark Green","أزرق فاتح":"Light Blue","بني فاتح":"Light Brown",
+ "بني غامق":"Dark Brown","أصفر":"Yellow","اصفر":"Yellow","برتقالي":"Orange",
+ "ليلكي":"Lilac","لافندر":"Lavender"
  };
- return lang==="en"?(names[key]||(/^[\x00-\x7F]*$/.test(raw)?raw:localizeDynamicText(raw))):raw;
+ if(lang!=="en")return raw;
+ return names[key]||(/^[\x00-\x7F]*$/.test(raw)?raw:"Color");
 }
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
@@ -8187,7 +8268,7 @@ color===currentColor
 }"
 type="button"
 onclick="selectColor('${esc(color)}')">
-${esc(color)}
+${esc(lang==="en"?productColorDisplayName(color):color)}
 </button>
 `
 )
@@ -9808,6 +9889,11 @@ $("footerStoryText")
 .textContent=
 x.footerStoryText;
 
+if($("storyEyebrow"))$("storyEyebrow").textContent=x.storyEyebrow||"";
+if($("storyTitle"))$("storyTitle").textContent=x.storyTitle||"";
+if($("storyText"))$("storyText").textContent=x.storyText||"";
+if($("storyTag"))$("storyTag").textContent=x.storyTag||"";
+
 $("footerContactTitle")
 .textContent=
 x.footerContactTitle;
@@ -10137,7 +10223,7 @@ function localizeDynamicText(value,known={}){
  const raw=String(value||"").trim();if(!raw)return "";
  if(lang==="ar")return raw;
  if(known[raw])return known[raw];
- return /[\u0600-\u06FF]/.test(raw)?transliterateArabic(raw):raw;
+ return /[\u0600-\u06FF]/.test(raw)?"":raw;
 }
 function productDisplayName(product){
  if(!product)return "";
@@ -10148,7 +10234,7 @@ function productDisplayName(product){
  if(PRODUCT_EN_NAMES[raw])return PRODUCT_EN_NAMES[raw];
  const clean=raw.replace(/^فستان\s+/,"").replace(/^طقم\s+/,"");
  const prefix=/^فستان\s+/.test(raw)?"Dress ":/^طقم\s+/.test(raw)?"Set ":"";
- return prefix+transliterateArabic(clean);
+ return prefix?(prefix.trim()):"Product";
 }
 
 /* Keep every modal easy to leave: visible X + backdrop + Escape,
