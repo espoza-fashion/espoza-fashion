@@ -997,8 +997,7 @@ z-index:5;
 border:0;
 width:38px;
 height:38px;
-border-radius:50%;
-background:#f2e9eb;
+border-radius:50%;background:#f2e9eb;
 color:var(--wine);
 font-size:21px
 }
@@ -1997,8 +1996,7 @@ body{
   margin:9px 0;
 }
 .policy-section h3{
-  color:var(--wine);
-  margin:0 0 5px;
+  color:var(--wine);  margin:0 0 5px;
   font-size:14px;
 }
 .policy-section p{
@@ -2997,8 +2995,7 @@ footer{
   align-items:center;
   min-height:31px;
   padding:4px 10px;
-  border-radius:10px;
-  background:linear-gradient(135deg,#fbf1ee,#fff);
+  border-radius:10px;  background:linear-gradient(135deg,#fbf1ee,#fff);
   border:1px solid rgba(185,152,90,.18);
   color:var(--wine);
   font-family:"Playfair Display","Cairo",serif;
@@ -3997,8 +3994,7 @@ onclick="addCurrentToCart()">
       <h3 style="margin:22px 0 10px">طلباتي السابقة</h3>
       <div id="customerOrders"><p class="muted">جارٍ تحميل الطلبات…</p></div>
       <button class="btn ghost" type="button" style="margin-top:14px" onclick="customerLogout()">تسجيل الخروج</button>
-    </div>
-  </div>
+    </div>  </div>
 </div>
 
 <!-- FULL PRODUCT IMAGE VIEW -->
@@ -4997,8 +4993,7 @@ dir:"ltr",
 
 langBtn:"AR",
 
-top:
-"Welcome to Espoza Fashion",
+top:"Welcome to Espoza Fashion",
 
 wa:
 "WhatsApp",
@@ -5997,8 +5992,7 @@ index
 
 const images=
 (p.images||[])
-.map(
-(url,i)=>({
+.map((url,i)=>({
 
 id:
 `${p.id}-img-${i}`,
@@ -6996,7 +6990,6 @@ $("slidesTrack")
 `translateX(-${sliderIndex*100}%)`;
 
 }
-
 
 function moveSlide(delta){
 
@@ -7997,7 +7990,6 @@ currentProduct.images[0]?.color
 ||
 
 currentProduct.colors[0]
-
 ||
 
 "";
@@ -8442,6 +8434,13 @@ const product=products.find(p=>String(p.id)===String(item?.productId)||String(p.
 return String(product?.category||"");
 }
 
+function cartItemIsOffer(item){
+if(item?.offer===true)return true;
+if(item?.offer===false)return false;
+const product=products.find(p=>String(p.id)===String(item?.productId)||String(p.dbId||"")===String(item?.dbId||""));
+return !!product?.offer;
+}
+
 function calculateOfferDiscount(offer){
 if(!offer||!offer.active)return null;
 const now=Date.now();
@@ -8453,6 +8452,7 @@ if(offer.first_order_only&&customerHasPreviousOrders!==false)return null;
 const productIds=Array.isArray(offer.product_ids)?offer.product_ids.map(String):[];
 const categories=Array.isArray(offer.category_slugs)?offer.category_slugs.map(String):[];
 const eligible=cart.filter(item=>{
+ if(cartItemIsOffer(item))return false;
  const productMatch=!productIds.length||productIds.includes(String(item.dbId||""));
  const category=cartItemCategory(item);
  const categoryMatch=!categories.length||categories.includes(category);
@@ -8617,6 +8617,9 @@ currentProduct.category||"",
 
 price:
 currentProduct.price,
+
+offer:
+!!currentProduct.offer,
 
 image:
 currentProduct.images[0]?.url
@@ -8986,8 +8989,7 @@ if([...modelCounts.values()].some(count=>count>4)){
 alert("في السلة أكثر من 4 قطع من نفس الموديل. عدّل الكميات قبل إرسال الطلب.");
 return;
 }
-const name=
-$("customerName")
+const name=$("customerName")
 .value
 .trim();
 
@@ -9986,8 +9988,7 @@ renderProducts
 
 $("deliverySelect")
 .addEventListener(
-"change",
-updateOrderTotal
+"change",updateOrderTotal
 );
 
 
