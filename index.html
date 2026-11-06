@@ -6426,7 +6426,7 @@ const db=getCustomerSupabase();
 const [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]=await Promise.all([
 db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
-db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
+db.from("sliders").select("id,image_url,title,title_ar,title_en,subtitle,subtitle_ar,subtitle_en,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
 db.from("categories").select("id,slug,name_ar,name_en,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
 db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
@@ -6452,7 +6452,7 @@ if(settings.site_content_ar && typeof settings.site_content_ar==="object")Object
 if(settings.site_content_en && typeof settings.site_content_en==="object")Object.assign(TEXT.en,settings.site_content_en);
 applyThemeFromAdmin(settings);
 if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
-if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",subtitle:row.subtitle||"",button_link:row.link_url||"all",button_text:t().explore}));
+if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",subtitle:lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",button_link:row.link_url||"all",button_text:t().explore}));
 if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
 if(!categoryResult.error)adminCategories=categoryResult.data||[];
 if(!sectionResult.error)adminSiteSections=sectionResult.data||[];
@@ -6470,7 +6470,7 @@ renderFeedback();
 }
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
-const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>x.name).filter(Boolean);
+const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>lang==="en"?(x.name_en||localizeDynamicText(x.name||"")):(x.name_ar||x.name||"")).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
 return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],sizeChart:p.size_chart||null};
@@ -6698,7 +6698,7 @@ $("copyright")
 `©️ 2019–${new Date().getFullYear()} ${name} — ${t().rights}`;
 
 const credit=$("footerCredit");
-if(credit)credit.textContent=store.siteCredit||t().footerCredit||"Designed & Created by Yousef Ajra";
+if(credit)credit.textContent=lang==="en"?(store.siteCredit||t().footerCredit||"Designed & Created by Yousef Ajra"):(t().footerCredit||"Designed & Created by Yousef Ajra");
 $("footerSince").textContent=t().footerSince;
 
 }
@@ -6716,7 +6716,7 @@ const englishNames={all:"All",dresses:"Dresses",sets:"Sets","winter-sets":"Winte
 const configured=Array.isArray(adminCategories)&&adminCategories.length?adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," ").replace(/\b\w/g,c=>c.toUpperCase())})):[];
 const source=configured.length?configured:defaults;
 const unique=new Map();
-source.forEach(x=>{if(!x||!x.slug)return;const key=/^(winter|winter[-_]sets|winter[-_]collection)$/i.test(x.slug)?"winter-sets":x.slug;if(!unique.has(key))unique.set(key,{...x,slug:key});});
+source.forEach(x=>{if(!x||!x.slug)return;const key=/^(winter|winter[-_]sets|winter[-_]collection)$/i.test(x.slug)?"winter-sets":x.slug;if(key!=="all"&&!unique.has(key))unique.set(key,{...x,slug:key});});
 if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
 const cats=base.concat([...unique.values()]);
 wrap.innerHTML=cats.map(x=>{const slug=x.slug;const key=slug.replace(/-/g,"_");const label=lang==="en"?(x.name_en||englishNames[slug]||humanizeEnglish(slug)):(x.name_ar||t().cats[key]||"قسم");return "<button class=\"cat "+(slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(slug)+"\">"+esc(label)+"</button>";}).join("");
@@ -6741,7 +6741,7 @@ if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(ta
 
 function deliveryList(){
 if(Array.isArray(adminDeliveryAreas) && adminDeliveryAreas.length){
-return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside}),price:Number(row.price||0)}));
+return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),price:Number(row.price||0)}));
 }
 return[
 {key:"westbank",name:t().westbank,price:Number(store.delivery.westbank||0)},
@@ -8083,7 +8083,7 @@ ${money(currentProduct.oldPrice)} ₪
 
 $("detailDescription")
 .textContent=
-(lang==="en" ? (currentProduct.description_en || currentProduct.description) : currentProduct.description)
+(lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description||currentProduct.description_en||""))
 ||
 t().desc;
 
