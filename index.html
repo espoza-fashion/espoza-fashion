@@ -10827,17 +10827,21 @@ async function sendEspozaAssistant(event){
 (function setupEspozaRealtimeSync(){
   if (!("supabase" in window) || typeof getCustomerSupabase !== "function") return;
   let refreshTimer = null;
+  const pendingRefreshKinds = new Set();
   const productTables = ["products","product_sizes","product_colors","product_images"];
   const contentTables = ["categories","site_sections","coupons","sliders","feedback","store_settings","delivery_areas"];
   const db = getCustomerSupabase();
   const scheduleRefresh = (kind) => {
+    pendingRefreshKinds.add(kind);
     if (refreshTimer) clearTimeout(refreshTimer);
     refreshTimer = setTimeout(async () => {
+      const kinds = new Set(pendingRefreshKinds);
+      pendingRefreshKinds.clear();
       const jobs = [];
-      if (kind === "products" || kind === "all") {
+      if (kinds.has("products")) {
         if (typeof refreshSupabaseProducts === "function") jobs.push(refreshSupabaseProducts());
       }
-      if (kind === "content" || kind === "all") {
+      if (kinds.has("content")) {
         if (typeof loadAdminStoreData === "function") jobs.push(loadAdminStoreData());
       }
       await Promise.allSettled(jobs);
