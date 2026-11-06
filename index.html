@@ -4689,6 +4689,8 @@ dresses:"الفساتين",
 
 sets:"الأطقم",
 
+winter_sets:"الطقوم الشتوية",
+
 offers:"العروضات"
 
 },
@@ -5026,6 +5028,8 @@ all:"All",
 dresses:"Dresses",
 
 sets:"Sets",
+
+winter_sets:"Winter Sets",
 
 offers:"Offers"
 
@@ -6712,7 +6716,10 @@ function renderCustomerCategories(){
 const wrap=$("categories");
 if(!wrap)return;
 const base=[{slug:"all",name_ar:"الكل",name_en:"All"}];
-const cats=(Array.isArray(adminCategories)&&adminCategories.length)?base.concat(adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||x.name_ar}))):base.concat([{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets"},{slug:"offers",name_ar:"العروضات",name_en:"Offers"}]);
+const defaults=[{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets"},{slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets"},{slug:"offers",name_ar:"العروضات",name_en:"Offers"}];
+const configured=Array.isArray(adminCategories)&&adminCategories.length?adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||x.name_ar})):[];
+const cats=base.concat(configured.length?configured:defaults);
+if(!cats.some(x=>x.slug==="winter-sets"))cats.push(defaults.find(x=>x.slug==="winter-sets"));
 wrap.innerHTML=cats.map(x=>"<button class=\"cat "+(x.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(x.slug)+"\">"+esc(lang==="en"?x.name_en:x.name_ar)+"</button>").join("");
 wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
 }
