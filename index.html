@@ -6716,10 +6716,10 @@ const englishNames={all:"All",dresses:"Dresses",sets:"Sets","winter-sets":"Winte
 const configured=Array.isArray(adminCategories)&&adminCategories.length?adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," ").replace(/\b\w/g,c=>c.toUpperCase())})):[];
 const source=configured.length?configured:defaults;
 const unique=new Map();
-source.forEach(x=>{if(x&&x.slug&&!unique.has(x.slug))unique.set(x.slug,x);});
+source.forEach(x=>{if(!x||!x.slug)return;const key=/^(winter|winter[-_]sets|winter[-_]collection)$/i.test(x.slug)?"winter-sets":x.slug;if(!unique.has(key))unique.set(key,{...x,slug:key});});
 if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
 const cats=base.concat([...unique.values()]);
-wrap.innerHTML=cats.map(x=>"<button class=\"cat "+(x.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(x.slug)+"\">"+esc(lang==="en"?(x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," ")): (x.name_ar||x.name_en||englishNames[x.slug]||x.slug))+"</button>").join("");
+wrap.innerHTML=cats.map(x=>{const slug=x.slug;const key=slug.replace(/-/g,"_");const label=lang==="en"?(x.name_en||englishNames[slug]||humanizeEnglish(slug)):(x.name_ar||t().cats[key]||"قسم");return "<button class=\"cat "+(slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(slug)+"\">"+esc(label)+"</button>";}).join("");
 wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
 }
 
@@ -6731,7 +6731,7 @@ const id=cfg.element_id||section.section_key;
 const el=$(id);
 if(!el)return;
 el.classList.toggle("hidden",section.visible===false);
-const text=lang==="en"?(cfg.text_en??section.title_en??String(section.section_key||"").replace(/[-_]+/g," ")):(cfg.text_ar??section.title_ar??String(section.section_key||"").replace(/[-_]+/g," "));
+const text=lang==="en"?(cfg.text_en??section.title_en??humanizeEnglish(section.section_key||"")):(cfg.text_ar??section.title_ar??"");
 if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(target||el).textContent=String(text);}
 });
 }
@@ -6741,7 +6741,7 @@ if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(ta
 
 function deliveryList(){
 if(Array.isArray(adminDeliveryAreas) && adminDeliveryAreas.length){
-return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:row.area_name||"",price:Number(row.price||0)}));
+return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside}),price:Number(row.price||0)}));
 }
 return[
 {key:"westbank",name:t().westbank,price:Number(store.delivery.westbank||0)},
@@ -6927,7 +6927,7 @@ s.image_url
 `
 <img
 src="${esc(s.image_url)}"
-alt="${esc(s.title||"Espoza Fashion")}"
+alt="${esc(localizeDynamicText(s.title||"Espoza Fashion"))}"
 onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
 `
 :
@@ -6939,11 +6939,7 @@ onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=d
 <div class="hero-copy">
 
 <h1>
-${esc(
-s.title
-||
-t().newCollection
-)}
+${esc(localizeDynamicText(s.title||t().newCollection,{"تشكيلة جديدة":t().newCollection,"مجموعة جديدة":t().newCollection}))}
 </h1>
 
 ${
@@ -6951,7 +6947,7 @@ s.subtitle
 ?
 `
 <p>
-${esc(s.subtitle)}
+${esc(localizeDynamicText(s.subtitle))}
 </p>
 `
 :
@@ -10082,14 +10078,27 @@ const PRODUCT_EN_NAMES = {
   "طقم فايورا":"Fayora Set"
 };
 
+function humanizeEnglish(value){return String(value||"").replace(/[-_]+/g," ").replace(/\b\w/g,c=>c.toUpperCase());}
+function transliterateArabic(value){
+ const map={"ا":"a","أ":"a","إ":"i","آ":"aa","ب":"b","ت":"t","ث":"th","ج":"j","ح":"h","خ":"kh","د":"d","ذ":"dh","ر":"r","ز":"z","س":"s","ش":"sh","ص":"s","ض":"d","ط":"t","ظ":"z","ع":"a","غ":"gh","ف":"f","ق":"q","ك":"k","ل":"l","م":"m","ن":"n","ه":"h","ة":"a","و":"w","ي":"y","ى":"a","ء":"","ؤ":"w","ئ":"y","ﻻ":"la"};
+ return String(value||"").replace(/[\u064B-\u065F\u0670]/g,"").split("").map(ch=>map[ch]??ch).join("").replace(/\s+/g," ").trim();
+}
+function localizeDynamicText(value,known={}){
+ const raw=String(value||"").trim();if(!raw)return "";
+ if(lang==="ar")return raw;
+ if(known[raw])return known[raw];
+ return /[\u0600-\u06FF]/.test(raw)?transliterateArabic(raw):raw;
+}
 function productDisplayName(product){
-  if(!product) return "";
-  if(lang==="ar") return product.name || "";
-  const explicit=product.name_en || product.nameEn || product.english_name;
-  if(explicit) return explicit;
-  const raw=String(product.name||"");
-  if(PRODUCT_EN_NAMES[raw]) return PRODUCT_EN_NAMES[raw];
-  return raw.replace(/^فستان\\s+/,"Dress ").replace(/^طقم\\s+/,"Set ");
+ if(!product)return "";
+ const raw=String(product.name||"").trim();
+ if(lang==="ar")return raw||String(product.name_en||product.nameEn||product.english_name||"");
+ const explicit=String(product.name_en||product.nameEn||product.english_name||"").trim();
+ if(explicit)return explicit;
+ if(PRODUCT_EN_NAMES[raw])return PRODUCT_EN_NAMES[raw];
+ const clean=raw.replace(/^فستان\s+/,"").replace(/^طقم\s+/,"");
+ const prefix=/^فستان\s+/.test(raw)?"Dress ":/^طقم\s+/.test(raw)?"Set ":"";
+ return prefix+transliterateArabic(clean);
 }
 
 /* Keep every modal easy to leave: visible X + backdrop + Escape,
