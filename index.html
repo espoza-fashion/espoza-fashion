@@ -534,12 +534,12 @@ box-shadow:0 0 0 3px rgba(185,152,90,.12)
 
 .cats{
  display:flex;
- flex-wrap:nowrap;
+ flex-wrap:wrap;
  gap:8px;
- overflow-x:auto;
- overflow-y:visible;
+ overflow:visible;
  padding:12px 0 8px;
  scrollbar-width:none;
+ width:100%;
  min-width:0
 }
 
@@ -548,9 +548,12 @@ display:none
 }
 
 .cat{
+ display:inline-flex;
+ align-items:center;
  white-space:nowrap;
  flex:0 0 auto;
  width:max-content;
+ min-width:max-content;
  max-width:none;
  overflow:visible!important;
  text-overflow:clip;
@@ -558,7 +561,8 @@ display:none
  background:#fff;
  color:var(--wine);
  border-radius:28px;
- padding:8px 17px;
+ padding:9px 17px;
+ font-size:14px;
  font-weight:700
 }
 
@@ -6476,9 +6480,34 @@ renderDeliveryOptions();
 renderSlider();
 renderFeedback();
 }
+function productColorDisplayName(value){
+ const raw=String(value||"").trim();
+ if(!raw)return "";
+ const key=raw.replace(/[ًٌٍَُِّْ]/g,"").replace(/\s+/g," ").trim().toLowerCase();
+ const names={
+ "أبيض":"White","ابيض":"White","white":"White",
+ "أسود":"Black","اسود":"Black","black":"Black",
+ "أحمر":"Red","احمر":"Red","red":"Red",
+ "أخضر":"Green","اخضر":"Green","green":"Green",
+ "أخضر زمردي":"Emerald Green","اخضر زمردي":"Emerald Green",
+ "أزرق":"Blue","ازرق":"Blue","blue":"Blue",
+ "أزرق ملكي":"Royal Blue","ازرق ملكي":"Royal Blue",
+ "أزرق بترولي":"Petrol Blue","ازرق بترولي":"Petrol Blue",
+ "أزرق غامق":"Dark Blue","ازرق غامق":"Dark Blue",
+ "أزرق نيلي":"Indigo Blue","ازرق نيلي":"Indigo Blue",
+ "كحلي":"Navy Blue","navy":"Navy Blue",
+ "بنفسجي":"Purple","purple":"Purple","بنفسجي داكن":"Dark Purple",
+ "بيج":"Beige","beige":"Beige","بني":"Brown","brown":"Brown",
+ "رمادي":"Gray","gray":"Gray","رمادي أزرق":"Blue Gray","رمادي ازرق":"Blue Gray",
+ "رمادي فحمي":"Charcoal Gray","زهري":"Pink","وردي":"Pink","pink":"Pink",
+ "زهري موف":"Dusty Mauve","عنابي":"Burgundy","خمري":"Wine Red",
+ "البوردوا":"Bordeaux","ذهبي":"Gold","gold":"Gold"
+ };
+ return lang==="en"?(names[key]||(/^[\x00-\x7F]*$/.test(raw)?raw:localizeDynamicText(raw))):raw;
+}
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
-const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>lang==="en"?(x.name_en||localizeDynamicText(x.name||"")):(x.name_ar||x.name||"")).filter(Boolean);
+const colors=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>lang==="en"?(x.name_en||productColorDisplayName(x.name_ar||x.name||"")):(x.name_ar||x.name||"")).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
 return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured || p.old_price!=null,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],sizeChart:p.size_chart||null};
