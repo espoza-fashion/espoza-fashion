@@ -10821,5 +10821,29 @@ async function sendEspozaAssistant(event){
  finally{clearTimeout(timeout);stopTyping();button.disabled=false;input.focus();}
 }
 </script>
+<script>
+/* Keep the installed Espoza PWA synchronized with the published website. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    const hadController = Boolean(navigator.serviceWorker.controller);
+    let reloadingForUpdate = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (hadController && !reloadingForUpdate) {
+        reloadingForUpdate = true;
+        window.location.reload();
+      }
+    });
+    try {
+      const registration = await navigator.serviceWorker.register("./sw.js", {
+        scope: "./",
+        updateViaCache: "none"
+      });
+      try { await registration.update(); } catch (_) {}
+    } catch (error) {
+      console.warn("Espoza PWA update check failed:", error);
+    }
+  });
+}
+</script>
 </body>
 </html>
