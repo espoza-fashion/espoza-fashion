@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#641f34">
 <title>Espoza Fashion</title>
-<meta name="description" content="Espoza Fashion - فساتين وأطقم نسائية أنيقة">
+<meta name="description" content="Espoza Fashion - Elegant dresses and women’s sets">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3340,7 +3340,7 @@ footer{
 
 <button
 class="icon-btn"
-id="langBtn"
+id="langBtn" aria-hidden="true" tabindex="-1"
 type="button">
 EN
 </button>
@@ -3950,7 +3950,7 @@ onclick="addCurrentToCart()">
 
 <div class="modal" id="sizeGuideModal">
   <div class="modal-box" style="width:min(680px,100%);padding:22px">
-    <button class="close-btn" type="button" onclick="closeModal('sizeGuideModal')" aria-label="إغلاق">×</button>
+    <button class="close-btn" type="button" onclick="closeModal('sizeGuideModal')" aria-label="Close">×</button>
     <h2 id="sizeGuideTitle" style="margin:8px 0 16px">دليل المقاسات</h2>
     <p id="sizeGuideNote" class="muted" style="margin:0 0 14px">القياسات بالسنتيمتر ما لم يُذكر غير ذلك.</p>
     <div id="sizeGuideTable" style="overflow:auto"></div>
@@ -4548,12 +4548,7 @@ let featuresIndex=0;
 
 let featuresTimer=null;
 
-let lang=
-localStorage.getItem("espoza_lang")==="en"
-?
-"en"
-:
-"ar";
+let lang="en";
 
 let typewriterTimer=null;
 
@@ -6717,10 +6712,14 @@ const wrap=$("categories");
 if(!wrap)return;
 const base=[{slug:"all",name_ar:"الكل",name_en:"All"}];
 const defaults=[{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets"},{slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets"},{slug:"offers",name_ar:"العروضات",name_en:"Offers"}];
-const configured=Array.isArray(adminCategories)&&adminCategories.length?adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||x.name_ar})):[];
-const cats=base.concat(configured.length?configured:defaults);
-if(!cats.some(x=>x.slug==="winter-sets"))cats.push(defaults.find(x=>x.slug==="winter-sets"));
-wrap.innerHTML=cats.map(x=>"<button class=\"cat "+(x.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(x.slug)+"\">"+esc(lang==="en"?x.name_en:x.name_ar)+"</button>").join("");
+const englishNames={all:"All",dresses:"Dresses",sets:"Sets","winter-sets":"Winter Sets",offers:"Offers"};
+const configured=Array.isArray(adminCategories)&&adminCategories.length?adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," ").replace(/\b\w/g,c=>c.toUpperCase())})):[];
+const source=configured.length?configured:defaults;
+const unique=new Map();
+source.forEach(x=>{if(x&&x.slug&&!unique.has(x.slug))unique.set(x.slug,x);});
+if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
+const cats=base.concat([...unique.values()]);
+wrap.innerHTML=cats.map(x=>"<button class=\"cat "+(x.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(x.slug)+"\">"+esc(x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," "))+"</button>").join("");
 wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
 }
 
@@ -6732,7 +6731,7 @@ const id=cfg.element_id||section.section_key;
 const el=$(id);
 if(!el)return;
 el.classList.toggle("hidden",section.visible===false);
-const text=lang==="en"?(cfg.text_en??section.title_en):(cfg.text_ar??section.title_ar);
+const text=cfg.text_en??section.title_en??String(section.section_key||"").replace(/[-_]+/g," ");
 if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(target||el).textContent=String(text);}
 });
 }
@@ -9956,31 +9955,7 @@ observer.observe(box);
 
 function setupEvents(){
 
-$("langBtn")
-.addEventListener(
-"click",
-()=>{
-
-lang=
-lang==="ar"
-?
-"en"
-:
-"ar";
-
-
-localStorage.setItem(
-"espoza_lang",
-lang
-);
-
-
-applyLanguage();
-refreshAllCounters();
-ensureModalCloseButtons();
-
-}
-);
+$("langBtn").style.display="none";
 
 
 $("searchInput")
@@ -10587,12 +10562,12 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
   }
   if(/عرض|خصم|عروض|offer|discount|sale/.test(q)){
    const offers=(Array.isArray(activeAutomaticOffers)?activeAutomaticOffers:[]).filter(o=>o.active&&(!o.first_order_only||customerHasPreviousOrders===false));
-   if(offers.length)return (english?"Available offers: ":"العروض المتاحة: ")+offers.map(o=>o.code+": "+(o.discount_type==="percent"?o.discount_value+"%":"₪"+o.discount_value)+" خصم").join("، ")+". "+(english?"Applicable offers are applied automatically when their conditions are met.":"العروض التلقائية تنطبق لما تتحقق شروطها.");
+   if(offers.length)return (english?"Available offers: ":"العروض المتاحة: ")+offers.map(o=>o.code+": "+(o.discount_type==="percent"?o.discount_value+"%":"₪"+o.discount_value)+(english?" off":" خصم")).join(english?", ": "، ")+". "+(english?"Applicable offers are applied automatically when their conditions are met.":"العروض التلقائية تنطبق لما تتحقق شروطها.");
    return english?"No automatic offer is currently available. Check the Offers category for discounted items.":"ما في عرض تلقائي متاح حاليًا، لكن بتقدري تشوفي فئة «العروضات» بالمتجر.";
   }
   if(/سعر|بكم|كم السعر|price|cost|how much/.test(q)&&found.length)return found.map(p=>(p.name||p.name_en)+" — "+moneyText(p.price)+(p.oldPrice&&p.oldPrice>p.price?" (بدل "+moneyText(p.oldPrice)+")":"")).join("\n");
-  if(/منتج|فستان|طقم|موديل|دور|ابحث|product|dress|set|looking for/.test(q)&&found.length)return found.map(p=>(p.name||p.name_en)+" — "+moneyText(p.price)+(p.sizes?.length?" | المقاسات: "+p.sizes.join("، "):"")+(p.available===false?" | غير متوفر":"")).join("\n");
-  if(found.length)return found.map(p=>(p.name||p.name_en)+" — "+moneyText(p.price)+(p.sizes?.length?" | المقاسات: "+p.sizes.join("، "):"")).join("\n");
+  if(/منتج|فستان|طقم|موديل|دور|ابحث|product|dress|set|looking for/.test(q)&&found.length)return found.map(p=>(p.name_en||p.name||"Product")+" — "+moneyText(p.price)+(p.sizes?.length?" | Sizes: "+p.sizes.join(", "):"")+(p.available===false?" | Unavailable":"")).join("\n");
+  if(found.length)return found.map(p=>(p.name_en||p.name||"Product")+" — "+moneyText(p.price)+(p.sizes?.length?" | Sizes: "+p.sizes.join(", "):"")).join("\n");
   if(/طلب|واتساب|تواصل|اتصل|order|whatsapp|contact/.test(q)){
    const number=String(store.whatsapp||"").replace(/\D/g,"");
    return number?(english?"You can contact us on WhatsApp: https://wa.me/":"تقدري تتواصلي معنا مباشرة على واتساب: https://wa.me/")+number:(english?"Please use the WhatsApp contact link on the website.":"استخدمي رابط واتساب الموجود بالموقع للتواصل معنا.");
@@ -10609,20 +10584,20 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 </script>
 
 <div id="espozaAssistantWidget" dir="rtl">
-  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">✦ تحدث مع ELYRA AI</button>
-  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="مساعد إسبوزا">
+  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">✦ Chat with ELYRA AI</button>
+  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="Espoza Assistant">
     <div class="espoza-assistant-head">
-      <div><b>ELYRA AI — إيليرا</b><small>مساعدك الذكي · Your intelligent companion</small></div>
+      <div><b>ELYRA AI</b><small>Your intelligent companion</small></div>
       <button type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
     </div>
     <div id="espozaAssistantMessages" aria-live="polite">
-      <div class="espoza-assistant-bubble assistant">أهلًا! أنا إيليرا ✨ بقدر أساعدك بالتسوّق والأسئلة العامة والكتابة والترجمة والأفكار، بالعربي أو English. وبمعلومات المتجر رح أعتمد على البيانات المؤكدة فقط.</div>
+      <div class="espoza-assistant-bubble assistant">Hello! I’m ELYRA ✨ I can help with shopping, general questions, writing, translation and ideas. For store information, I’ll use confirmed details only.</div>
     </div>
     <form id="espozaAssistantForm" onsubmit="sendEspozaAssistant(event)">
-      <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="اكتبي سؤالك..." aria-label="سؤالك">
-      <button id="espozaAssistantSend" type="submit">إرسال</button>
+      <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="Type your question..." aria-label="Your question">
+      <button id="espozaAssistantSend" type="submit">Send</button>
     </form>
-    <div class="espoza-assistant-foot">ELYRA AI · العربية والإنجليزية · معلومات المتجر تُعرض حسب البيانات المتاحة.</div>
+    <div class="espoza-assistant-foot">ELYRA AI · Store information is shown according to available data.</div>
   </section>
 </div>
 <script id="espoza-assistant-widget-script">
