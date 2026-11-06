@@ -2102,17 +2102,24 @@ body{
 .feedback-showcase:hover .feedback-showcase-track{animation-play-state:running}
 .policy-ico{margin-inline-end:4px}
 .policy-wa{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:800;text-decoration:none}
-/* ESPoza luxury opening */
-#espozaSplash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,#7b2944 0%,#641f34 38%,#431321 100%);color:#fff;overflow:hidden;transition:opacity .55s ease,visibility .55s ease}
-#espozaSplash::before{content:"";position:absolute;width:280px;height:280px;border:1px solid rgba(185,152,90,.32);border-radius:50%;box-shadow:0 0 80px rgba(185,152,90,.12);animation:splashRing 1.9s ease-in-out infinite}
+/* ESPOZA — cinematic luxury entrance */
+#espozaSplash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;isolation:isolate;background:radial-gradient(ellipse at 50% 48%,#743047 0%,#641f34 48%,#2b101b 100%);color:#fff;overflow:hidden;transition:opacity .38s ease,visibility .38s ease}
+#espozaSplash::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(110deg,transparent 35%,rgba(255,231,180,.08) 49%,rgba(255,255,255,.42) 50%,rgba(255,231,180,.08) 51%,transparent 65%);transform:translateX(-120%);animation:splashGleam 1.35s .35s ease-out forwards;pointer-events:none}
 #espozaSplash.hide{opacity:0;visibility:hidden;pointer-events:none}
-.splash-inner{position:relative;text-align:center;opacity:0;transform:translateY(12px);animation:splashIn .8s .12s cubic-bezier(.2,.8,.2,1) forwards}
-.splash-logo{font-family:"Playfair Display",serif;font-size:clamp(38px,9vw,72px);font-weight:700;letter-spacing:6px;margin:0}
-.splash-tag{margin-top:13px;color:#ead6a9;font-size:13px;letter-spacing:2px}
-.splash-since{margin-top:8px;color:rgba(255,255,255,.7);font:11px "Playfair Display",serif;letter-spacing:3px}
-@keyframes splashIn{to{opacity:1;transform:none}}
-@keyframes splashRing{50%{transform:scale(1.06);opacity:.75}}
-@media(prefers-reduced-motion:reduce){#espozaSplash::before{animation:none}.splash-inner{animation:none;opacity:1;transform:none}}
+.splash-door{position:absolute;z-index:2;top:0;bottom:0;width:50.2%;background:linear-gradient(145deg,#7b3048 0%,#641f34 48%,#3d1424 100%);box-shadow:inset 0 0 35px rgba(15,4,10,.35),inset 0 0 0 1px rgba(185,152,90,.28);will-change:transform}
+.splash-door.left{left:0;transform-origin:left center;animation:doorLeft 1.25s .25s cubic-bezier(.7,0,.2,1) forwards}
+.splash-door.right{right:0;transform-origin:right center;animation:doorRight 1.25s .25s cubic-bezier(.7,0,.2,1) forwards}
+.splash-door::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(transparent,#e8ca8d,transparent);opacity:.8}
+.splash-door.left::after{right:18px}.splash-door.right::after{left:18px}
+.splash-inner{position:relative;z-index:3;text-align:center;padding:28px 18px;opacity:0;transform:scale(.94);animation:splashBrand .65s .45s ease-out forwards;text-shadow:0 3px 25px rgba(0,0,0,.25)}
+.splash-logo{font-family:"Playfair Display",serif;font-size:clamp(34px,8vw,64px);font-weight:700;letter-spacing:clamp(3px,1vw,7px);margin:0;color:#f5dfb3;white-space:nowrap}
+.splash-tag{margin-top:13px;color:#fff0d1;font-size:12px;letter-spacing:2px}
+.splash-since{margin-top:8px;color:rgba(255,255,255,.72);font:10px "Playfair Display",serif;letter-spacing:3px}
+@keyframes doorLeft{to{transform:perspective(900px) rotateY(-105deg);opacity:.88}}
+@keyframes doorRight{to{transform:perspective(900px) rotateY(105deg);opacity:.88}}
+@keyframes splashGleam{to{transform:translateX(120%);opacity:0}}
+@keyframes splashBrand{to{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.splash-door,.splash-inner,#espozaSplash::before{animation:none}.splash-door{opacity:0}.splash-inner{opacity:1;transform:none}}
 
 /* =========================================================
    ESPoza TV / Large Screen Responsive Layer
@@ -3344,7 +3351,7 @@ footer{
 </head>
 
 <body>
-<div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-inner"><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag" id="splashTag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
+<div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-door left" aria-hidden="true"></div><div class="splash-door right" aria-hidden="true"></div><div class="splash-inner"><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag" id="splashTag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
 
 
 <div class="top-note" id="topNote">
@@ -10548,7 +10555,7 @@ console.warn("feedback image optimization failed:",error);
 }
 
 
-const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},2000);
+const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},1650);
 </script>
 
 
