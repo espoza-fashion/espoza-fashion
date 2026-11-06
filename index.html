@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#641f34">
 <title>Espoza Fashion</title>
-<meta name="description" content="Espoza Fashion - Elegant dresses and women’s sets">
+<meta name="description" content="Espoza Fashion - فساتين وأطقم نسائية أنيقة">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3340,7 +3340,7 @@ footer{
 
 <button
 class="icon-btn"
-id="langBtn" aria-hidden="true" tabindex="-1"
+id="langBtn"
 type="button">
 EN
 </button>
@@ -4548,7 +4548,7 @@ let featuresIndex=0;
 
 let featuresTimer=null;
 
-let lang="en";
+let lang=localStorage.getItem("espoza_lang")==="en"?"en":"ar";
 
 let typewriterTimer=null;
 
@@ -6719,7 +6719,7 @@ const unique=new Map();
 source.forEach(x=>{if(x&&x.slug&&!unique.has(x.slug))unique.set(x.slug,x);});
 if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
 const cats=base.concat([...unique.values()]);
-wrap.innerHTML=cats.map(x=>"<button class=\"cat "+(x.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(x.slug)+"\">"+esc(x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," "))+"</button>").join("");
+wrap.innerHTML=cats.map(x=>"<button class=\"cat "+(x.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(x.slug)+"\">"+esc(lang==="en"?(x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," ")): (x.name_ar||x.name_en||englishNames[x.slug]||x.slug))+"</button>").join("");
 wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
 }
 
@@ -6731,7 +6731,7 @@ const id=cfg.element_id||section.section_key;
 const el=$(id);
 if(!el)return;
 el.classList.toggle("hidden",section.visible===false);
-const text=cfg.text_en??section.title_en??String(section.section_key||"").replace(/[-_]+/g," ");
+const text=lang==="en"?(cfg.text_en??section.title_en??String(section.section_key||"").replace(/[-_]+/g," ")):(cfg.text_ar??section.title_ar??String(section.section_key||"").replace(/[-_]+/g," "));
 if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(target||el).textContent=String(text);}
 });
 }
@@ -9955,7 +9955,7 @@ observer.observe(box);
 
 function setupEvents(){
 
-$("langBtn").style.display="none";
+$("langBtn").addEventListener("click",()=>{lang=lang==="ar"?"en":"ar";localStorage.setItem("espoza_lang",lang);applyLanguage();refreshAllCounters();ensureModalCloseButtons();});
 
 
 $("searchInput")
