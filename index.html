@@ -533,11 +533,14 @@ box-shadow:0 0 0 3px rgba(185,152,90,.12)
 }
 
 .cats{
-display:flex;
-gap:8px;
-overflow:auto;
-padding:12px 0 0;
-scrollbar-width:none
+ display:flex;
+ flex-wrap:nowrap;
+ gap:8px;
+ overflow-x:auto;
+ overflow-y:visible;
+ padding:12px 0 8px;
+ scrollbar-width:none;
+ min-width:0
 }
 
 .cats::-webkit-scrollbar{
@@ -545,13 +548,18 @@ display:none
 }
 
 .cat{
-white-space:nowrap;
-border:1px solid var(--line);
-background:#fff;
-color:var(--wine);
-border-radius:28px;
-padding:8px 17px;
-font-weight:700
+ white-space:nowrap;
+ flex:0 0 auto;
+ width:max-content;
+ max-width:none;
+ overflow:visible!important;
+ text-overflow:clip;
+ border:1px solid var(--line);
+ background:#fff;
+ color:var(--wine);
+ border-radius:28px;
+ padding:8px 17px;
+ font-weight:700
 }
 
 .cat.active{
@@ -3325,7 +3333,7 @@ footer{
 </head>
 
 <body>
-<div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-inner"><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
+<div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-inner"><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag" id="splashTag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
 
 
 <div class="top-note" id="topNote">
@@ -3594,9 +3602,9 @@ data-cat="offers">
 <div class="quick-links-inner">
 <button class="quick-link primary" type="button" onclick="scrollToWishlist()">♡ <span id="quickFavoritesLabel">المفضلة</span> <span id="quickWishlistCount">0</span></button>
 <button class="quick-link" type="button" onclick="scrollToPublicWishes()">✨ <span id="quickWishesLabel">قائمة الأمنيات</span></button>
-<button class="quick-link" type="button" onclick="smoothToSection('feedback')">آراء الزبائن</button>
-<button class="quick-link" type="button" onclick="openModal('policiesModal')">سياسة الشركة</button>
-<button class="quick-link" type="button" onclick="openCartModal()">🛍️ السلة والطلب <span id="quickCartCount">0</span></button>
+<button class="quick-link" type="button" onclick="smoothToSection('feedback')"><span id="quickFeedbackLabel">آراء الزبائن</span></button>
+<button class="quick-link" type="button" onclick="openModal('policiesModal')"><span id="quickPoliciesLabel">سياسة الشركة</span></button>
+<button class="quick-link" type="button" onclick="openCartModal()">🛍️ <span id="quickCartLabel">السلة والطلب</span> <span id="quickCartCount">0</span></button>
 </div>
 </section>
 
@@ -6713,16 +6721,24 @@ if(!wrap)return;
 const base=[{slug:"all",name_ar:"الكل",name_en:"All"}];
 const defaults=[{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets"},{slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets"},{slug:"offers",name_ar:"العروضات",name_en:"Offers"}];
 const englishNames={all:"All",dresses:"Dresses",sets:"Sets","winter-sets":"Winter Sets",offers:"Offers"};
-const configured=Array.isArray(adminCategories)&&adminCategories.length?adminCategories.map(x=>({slug:x.slug,name_ar:x.name_ar,name_en:x.name_en||englishNames[x.slug]||String(x.slug||"").replace(/[-_]+/g," ").replace(/\b\w/g,c=>c.toUpperCase())})):[];
-const source=configured.length?configured:defaults;
+const source=Array.isArray(adminCategories)&&adminCategories.length?adminCategories:defaults;
 const unique=new Map();
-source.forEach(x=>{if(!x||!x.slug)return;const key=/^(winter|winter[-_]sets|winter[-_]collection)$/i.test(x.slug)?"winter-sets":x.slug;if(key!=="all"&&!unique.has(key))unique.set(key,{...x,slug:key});});
+source.forEach(item=>{
+ if(!item)return;
+ const rawSlug=String(item.slug||"").trim();
+ const arName=String(item.name_ar||"").trim();
+ const enName=String(item.name_en||"").trim();
+ const isWinter=/winter|شتو|الشتاء|الطقوم الشتوية/i.test(rawSlug+" "+arName+" "+enName);
+ const slug=isWinter?"winter-sets":rawSlug;
+ if(!slug||slug==="all"||unique.has(slug))return;
+ const fallback=defaults.find(x=>x.slug===slug)||{};
+ unique.set(slug,{slug,name_ar:isWinter?"الطقوم الشتوية":(arName||fallback.name_ar||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug)),name_en:isWinter?"Winter Sets":(enName||fallback.name_en||englishNames[slug]||humanizeEnglish(slug))});
+});
 if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
 const cats=base.concat([...unique.values()]);
-wrap.innerHTML=cats.map(x=>{const slug=x.slug;const key=slug.replace(/-/g,"_");const label=lang==="en"?(x.name_en||englishNames[slug]||humanizeEnglish(slug)):(x.name_ar||t().cats[key]||"قسم");return "<button class=\"cat "+(slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(slug)+"\">"+esc(label)+"</button>";}).join("");
+wrap.innerHTML=cats.map(item=>{const label=lang==="en"?item.name_en:item.name_ar;return "<button class=\"cat "+(item.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(item.slug)+"\">"+esc(label)+"</button>";}).join("");
 wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
 }
-
 function applyAdminSiteSections(){
 const sections=Array.isArray(adminSiteSections)?adminSiteSections:[];
 sections.forEach(section=>{
@@ -9773,6 +9789,11 @@ x.footerLinksTitle;
 if($("wishlistBtnLabel"))$("wishlistBtnLabel").textContent=lang==="en"?"Favorites":"المفضلة";
 if($("quickFavoritesLabel"))$("quickFavoritesLabel").textContent=lang==="en"?"Favorites":"المفضلة";
 if($("quickWishesLabel"))$("quickWishesLabel").textContent=lang==="en"?"Wish List":"قائمة الأمنيات";
+if($("quickFeedbackLabel"))$("quickFeedbackLabel").textContent=lang==="en"?"Customer Reviews":"آراء الزبائن";
+if($("quickPoliciesLabel"))$("quickPoliciesLabel").textContent=lang==="en"?"Store Policies":"سياسة الشركة";
+if($("quickCartLabel"))$("quickCartLabel").textContent=lang==="en"?"Cart & Order":"السلة والطلب";
+if($("splashTag"))$("splashTag").textContent=lang==="en"?"Your Style, Your Shine":"خيارك للتألق";
+if($("quickLinks"))$("quickLinks").setAttribute("aria-label",lang==="en"?"Quick Links":"روابط سريعة");
 if($("favoritesTitle"))$("favoritesTitle").textContent=lang==="en"?"Favorites":"المفضلة";
 if($("favoritesSubtitle"))$("favoritesSubtitle").textContent=lang==="en"?"Pieces you saved":"القطع التي حفظتها";
 if($("publicWishesTitle"))$("publicWishesTitle").textContent=lang==="en"?"✨ What is your next wish from Espoza Fashion?":"✨ أمنيتك القادمة مع Espoza Fashion؟";
