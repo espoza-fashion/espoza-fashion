@@ -24,7 +24,7 @@ self.addEventListener("fetch", event => {
       return response;
     });
     if (cached) {
-      event.waitUntil(network.catch(() => {}));
+      network.catch(() => {});
       return cached;
     }
     try { return await network; }
