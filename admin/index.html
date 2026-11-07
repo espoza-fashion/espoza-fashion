@@ -658,18 +658,24 @@ async function loadProducts(){
     ...p,
     is_active: p.active !== false,
     is_offer: !!p.featured || p.old_price != null,
-    is_available: p.stock == null ? true : Number(p.stock) > 0
+    is_available: p.stock == null ? true : Number(p.stock) > 0,
+    category_ids: []
   }));
   const ids = products.map(p=>p.id);
   if(!ids.length){ productImages=[]; productSizes=[]; productColors=[]; return; }
-  const [imgRes,sizeRes,colorRes] = await Promise.all([
+  const [imgRes,sizeRes,colorRes,categoryRes] = await Promise.all([
     sb.from("product_images").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
     sb.from("product_sizes").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
-    sb.from("product_colors").select("*").in("product_id",ids).order("sort_order",{ascending:true})
+    sb.from("product_colors").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
+    sb.from("product_categories").select("product_id,category_id").in("product_id",ids)
   ]);
   if(imgRes.error) throw imgRes.error;
   if(sizeRes.error) throw sizeRes.error;
   if(colorRes.error) throw colorRes.error;
+  if(categoryRes.error) throw categoryRes.error;
+  const categoryMap=new Map();
+  (categoryRes.data||[]).forEach(row=>{if(!categoryMap.has(row.product_id))categoryMap.set(row.product_id,[]);categoryMap.get(row.product_id).push(row.category_id);});
+  products=products.map(p=>({...p,category_ids:categoryMap.get(p.id)||[]}));
   productImages = imgRes.data||[];
   productSizes = sizeRes.data||[];
   productColors = colorRes.data||[];
