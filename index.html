@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"></noscript>
 
 
 <style>
@@ -2099,15 +2099,15 @@ body{
 .policy-ico{margin-inline-end:4px}
 .policy-wa{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:800;text-decoration:none}
 /* ESPOZA — cinematic luxury entrance */
-#espozaSplash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;isolation:isolate;background:radial-gradient(ellipse at 50% 48%,#743047 0%,#641f34 48%,#2b101b 100%);color:#fff;overflow:hidden;transition:opacity .38s ease,visibility .38s ease}
-#espozaSplash::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(110deg,transparent 35%,rgba(255,231,180,.08) 49%,rgba(255,255,255,.42) 50%,rgba(255,231,180,.08) 51%,transparent 65%);transform:translateX(-120%);animation:splashGleam 1.35s .35s ease-out forwards;pointer-events:none}
+#espozaSplash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;isolation:isolate;background:radial-gradient(ellipse at 50% 48%,#743047 0%,#641f34 48%,#2b101b 100%);color:#fff;overflow:hidden;transition:opacity .2s ease,visibility .2s ease;contain:strict}
+#espozaSplash::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(110deg,transparent 35%,rgba(255,231,180,.08) 49%,rgba(255,255,255,.42) 50%,rgba(255,231,180,.08) 51%,transparent 65%);transform:translateX(-120%);animation:splashGleam .5s .02s ease-out forwards;pointer-events:none}
 #espozaSplash.hide{opacity:0;visibility:hidden;pointer-events:none}
 .splash-door{position:absolute;z-index:2;top:0;bottom:0;width:50.2%;background:linear-gradient(145deg,#7b3048 0%,#641f34 48%,#3d1424 100%);box-shadow:inset 0 0 35px rgba(15,4,10,.35),inset 0 0 0 1px rgba(185,152,90,.28);will-change:transform}
-.splash-door.left{left:0;transform-origin:left center;animation:doorLeft 1.25s .25s cubic-bezier(.7,0,.2,1) forwards}
-.splash-door.right{right:0;transform-origin:right center;animation:doorRight 1.25s .25s cubic-bezier(.7,0,.2,1) forwards}
+.splash-door.left{left:0;transform-origin:left center;animation:doorLeft .48s .04s cubic-bezier(.7,0,.2,1) forwards}
+.splash-door.right{right:0;transform-origin:right center;animation:doorRight .48s .04s cubic-bezier(.7,0,.2,1) forwards}
 .splash-door::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(transparent,#e8ca8d,transparent);opacity:.8}
 .splash-door.left::after{right:18px}.splash-door.right::after{left:18px}
-.splash-inner{position:relative;z-index:3;text-align:center;padding:28px 18px;opacity:0;transform:scale(.94);animation:splashBrand .65s .45s ease-out forwards;text-shadow:0 3px 25px rgba(0,0,0,.25)}
+.splash-inner{position:relative;z-index:3;text-align:center;padding:28px 18px;opacity:0;transform:scale(.94);animation:splashBrand .28s .04s ease-out forwards;text-shadow:0 3px 25px rgba(0,0,0,.25)}
 .splash-logo{font-family:"Playfair Display",serif;font-size:clamp(34px,8vw,64px);font-weight:700;letter-spacing:clamp(3px,1vw,7px);margin:0;color:#f5dfb3;white-space:nowrap}
 .splash-tag{margin-top:13px;color:#fff0d1;font-size:12px;letter-spacing:2px}
 .splash-since{margin-top:8px;color:rgba(255,255,255,.72);font:10px "Playfair Display",serif;letter-spacing:3px}
@@ -10427,21 +10427,17 @@ init();
 /* Supabase must never block first paint. If its CDN arrives late, hydrate remote
    catalogue/settings after the static storefront is already visible. */
 (function retrySupabaseBoot(){
-  if(window.supabase && typeof window.supabase.createClient==="function"){
-    refreshSupabaseProducts().catch(error=>console.warn("Late product refresh failed:",error));
-    loadAdminStoreData().catch(error=>console.warn("Late store settings refresh failed:",error));
-    return;
-  }
+  if(window.supabase && typeof window.supabase.createClient==="function") return;
   let attempts=0;
   const timer=window.setInterval(()=>{
     attempts++;
     if(window.supabase && typeof window.supabase.createClient==="function"){
       window.clearInterval(timer);
-      refreshSupabaseProducts().catch(error=>console.warn("Late product refresh failed:",error));
-      loadAdminStoreData().catch(error=>console.warn("Late store settings refresh failed:",error));
+      setupAdminConnections();
+      refreshSupabaseProducts();
     }else if(attempts>=40){
       window.clearInterval(timer);
-      console.warn("Supabase CDN unavailable; showing built-in storefront content.");
+      console.warn("Supabase CDN unavailable; built-in storefront remains usable.");
     }
   },250);
 })();
@@ -10572,7 +10568,7 @@ console.warn("feedback image optimization failed:",error);
 }
 
 
-const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},1650);
+const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},520);
 </script>
 
 
