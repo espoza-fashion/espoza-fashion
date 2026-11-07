@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "Espoza Fashion",
+  "short_name": "Espoza",
+  "description": "Espoza Fashion — منذ 2019",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#641f34",
+  "theme_color": "#641f34",
+  "icons": [
+    {
+      "src": "./icons/espoza-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/espoza-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
