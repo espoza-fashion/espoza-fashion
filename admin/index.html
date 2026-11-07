@@ -1503,7 +1503,7 @@ function showAdminLogin(){
 async function resetAdminPassword(){
  const msg=$("adminLoginError");
  try{
-  const {error}=await sb.auth.resetPasswordForEmail(ADMIN_EMAIL,{redirectTo:"https://espoza-fashion.github.io/espoza-fashion/espoza-admin-dashboard.html"});
+  const {error}=await sb.auth.resetPasswordForEmail(ADMIN_EMAIL,{redirectTo:"https://espoza-fashion.github.io/espoza-fashion/admin/"});
   if(error)throw error;
   msg.textContent="إذا كان البريد مسجّلًا، ستصلك رسالة الاستعادة على بريد المدير المصرّح به.";
  }catch(error){msg.textContent="تعذّر طلب رسالة الاستعادة: "+error.message;}
