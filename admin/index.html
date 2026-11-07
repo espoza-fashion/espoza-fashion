@@ -240,6 +240,9 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
 @keyframes sp{to{transform:rotate(360deg)}}
 
 @media(max-width:900px){
+  .mobile-admin-nav{display:flex;gap:7px;overflow-x:auto;white-space:nowrap;padding:9px 12px;background:#fff;border-bottom:1px solid var(--line);scrollbar-width:thin;-webkit-overflow-scrolling:touch;position:sticky;top:66px;z-index:19}
+  .mobile-admin-nav .nav-btn{flex:none;width:auto;padding:8px 12px;border:1px solid var(--line);background:#fff;color:var(--wine);font-size:12px;border-radius:20px}
+  .mobile-admin-nav .nav-btn.active{background:var(--wine);border-color:var(--wine);color:#fff}
   .sidebar{position:fixed;right:0;top:0;z-index:60;transform:translateX(100%);transition:.25s;box-shadow:0 0 0 100vmax rgba(0,0,0,0)}
   .sidebar.open{transform:translateX(0);box-shadow:-10px 0 40px rgba(0,0,0,.3)}
   .menu-btn{display:inline-flex}
@@ -295,6 +298,22 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
         <button class="btn" id="refreshBtn">↻ تحديث</button><button class="btn" id="logoutBtn" type="button">تسجيل الخروج</button>
       </div>
     </div>
+
+    <nav class="mobile-admin-nav" id="mobileAdminNav" aria-label="أقسام لوحة التحكم" style="display:none">
+      <button class="nav-btn active" data-page="dashboard">نظرة عامة</button>
+      <button class="nav-btn" data-page="orders">الطلبات</button>
+      <button class="nav-btn" data-page="products">المنتجات</button>
+      <button class="nav-btn" data-page="categories">الأقسام</button>
+      <button class="nav-btn" data-page="coupons">الكوبونات</button>
+      <button class="nav-btn" data-page="accounts">الزبائن</button>
+      <button class="nav-btn" data-page="carts">السلات</button>
+      <button class="nav-btn" data-page="media">الصور</button>
+      <button class="nav-btn" data-page="content">محتوى الموقع</button>
+      <button class="nav-btn" data-page="slider">السلايدر</button>
+      <button class="nav-btn" data-page="feedback">التقييمات</button>
+      <button class="nav-btn" data-page="delivery">التوصيل</button>
+      <button class="nav-btn" data-page="settings">الإعدادات</button>
+    </nav>
 
     <div class="content">
 
@@ -539,6 +558,7 @@ function fmtDate(d){
 document.querySelectorAll(".nav-btn").forEach(btn=>{
   btn.addEventListener("click",()=>goPage(btn.dataset.page));
 });
+if(window.matchMedia("(max-width: 900px)").matches){ $("mobileAdminNav").style.display="flex"; }
 function goPage(page){
   currentPage=page;
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.page===page));
