@@ -2107,7 +2107,8 @@ body{
 .splash-door.right{right:0;transform-origin:right center;animation:doorRight .48s .04s cubic-bezier(.7,0,.2,1) forwards}
 .splash-door::after{content:"";position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(transparent,#e8ca8d,transparent);opacity:.8}
 .splash-door.left::after{right:18px}.splash-door.right::after{left:18px}
-.splash-inner{position:relative;z-index:3;text-align:center;padding:28px 18px;opacity:0;transform:scale(.94);animation:splashBrand .28s .04s ease-out forwards;text-shadow:0 3px 25px rgba(0,0,0,.25)}
+.splash-inner{position:relative;z-index:3;text-align:center;padding:28px 18px;opacity:0;transform:scale(.94);animation:splashBrand .42s .12s ease-out forwards;text-shadow:0 3px 25px rgba(0,0,0,.25)}
+.splash-monogram{width:88px;height:88px;margin:0 auto 18px;border:1.5px solid rgba(232,202,141,.9);border-radius:50%;display:grid;place-items:center;color:#f5dfb3;font-family:"Playfair Display",serif;font-size:62px;line-height:1;background:radial-gradient(circle,rgba(185,152,90,.2),rgba(67,19,33,.08) 68%);box-shadow:0 0 0 6px rgba(185,152,90,.08),0 10px 38px rgba(0,0,0,.2),inset 0 0 22px rgba(245,223,179,.12);text-shadow:0 0 22px rgba(245,223,179,.45)}
 .splash-logo{font-family:"Playfair Display",serif;font-size:clamp(34px,8vw,64px);font-weight:700;letter-spacing:clamp(3px,1vw,7px);margin:0;color:#f5dfb3;white-space:nowrap}
 .splash-tag{margin-top:13px;color:#fff0d1;font-size:12px;letter-spacing:2px}
 .splash-since{margin-top:8px;color:rgba(255,255,255,.72);font:10px "Playfair Display",serif;letter-spacing:3px}
@@ -3347,7 +3348,7 @@ footer{
 </head>
 
 <body>
-<div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-door left" aria-hidden="true"></div><div class="splash-door right" aria-hidden="true"></div><div class="splash-inner"><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag" id="splashTag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
+<div id="espozaSplash" aria-label="Espoza Fashion"><div class="splash-door left" aria-hidden="true"></div><div class="splash-door right" aria-hidden="true"></div><div class="splash-inner"><div class="splash-monogram" aria-hidden="true">E</div><div class="splash-logo">ESPOZA FASHION</div><div class="splash-tag" id="splashTag">خيارك للتألق</div><div class="splash-since">SINCE 2019</div></div></div>
 
 
 <div class="top-note" id="topNote">
@@ -7063,6 +7064,9 @@ s.image_url
 `
 <img
 src="${esc(s.image_url)}"
+loading="${activeSlides().indexOf(s)===0?"eager":"lazy"}"
+fetchpriority="${activeSlides().indexOf(s)===0?"high":"low"}"
+decoding="async"
 alt="${esc(localizeDynamicText(s.title||"Espoza Fashion"))}"
 onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
 `
@@ -7902,6 +7906,8 @@ PLACEHOLDER
 )}"
 alt="${esc(productDisplayName(p))}"
 loading="lazy"
+decoding="async"
+fetchpriority="low"
 onerror="this.src='${PLACEHOLDER}'">
 
 ${
@@ -10550,7 +10556,7 @@ console.warn("feedback image optimization failed:",error);
 }
 
 
-const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},520);
+const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSplash");if(s)s.classList.add("hide");},1450);
 </script>
 
 
