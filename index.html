@@ -3451,7 +3451,7 @@ id="slidesTrack">
 
 <!-- INTRO -->
 
-<section class="intro">
+<section class="intro" id="intro">
 
 <div class="intro-card">
 
@@ -3626,7 +3626,7 @@ data-cat="offers">
 
 <!-- PRODUCTS -->
 
-<section class="catalog">
+<section class="catalog" id="catalog">
 
 <div class="section-head">
 
@@ -6524,7 +6524,7 @@ db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{asce
 db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
 db.from("categories").select("id,slug,name_ar,name_en,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
-db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
+db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").order("sort_order",{ascending:true})
 ]);
 for(const result of [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]){
 if(result.error)console.warn("Store section could not refresh:",result.error);
