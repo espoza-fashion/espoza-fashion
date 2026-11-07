@@ -6858,11 +6858,10 @@ source.forEach(item=>{
  const rawSlug=String(item.slug||"").trim();
  const arName=String(item.name_ar||"").trim();
  const enName=String(item.name_en||"").trim();
- const isWinter=/winter|شتو|الشتاء|الطقوم الشتوية/i.test(rawSlug+" "+arName+" "+enName);
- const slug=isWinter?"winter-sets":rawSlug;
+ const slug=rawSlug==="winter_sets"?"winter-sets":rawSlug;
  if(!slug||slug==="all"||unique.has(slug))return;
  const fallback=defaults.find(x=>x.slug===slug)||{};
- unique.set(slug,{slug,name_ar:isWinter?"الطقوم الشتوية":(arName||fallback.name_ar||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug)),name_en:isWinter?"Winter Sets":(enName||fallback.name_en||englishNames[slug]||humanizeEnglish(slug))});
+ unique.set(slug,{slug,name_ar:arName||fallback.name_ar||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug),name_en:enName||fallback.name_en||englishNames[slug]||humanizeEnglish(slug)});
 });
 if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
 const cats=base.concat([...unique.values()]);
