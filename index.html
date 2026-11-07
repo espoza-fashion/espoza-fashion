@@ -9280,29 +9280,39 @@ ${linesEn}
 
 
 const whatsappUrl=`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
-/* افتح واتساب مباشرة من ضغطة المستخدم حتى لا يمنع Safari النافذة بعد انتظار قاعدة البيانات */
+/* جهّز نافذة واتساب من ضغطة المستخدم، لكن لا ترسل الزبونة إليها قبل تأكيد حفظ الطلب */
 let whatsappWindow=null;
 try{
 whatsappWindow=window.open("about:blank","_blank");
-if(whatsappWindow){
-whatsappWindow.opener=null;
-whatsappWindow.location.href=whatsappUrl;
-}
+if(whatsappWindow)whatsappWindow.opener=null;
 }catch(openError){console.warn("WhatsApp window open failed:",openError);}
-let savedToAdmin=false;
 try{
 const customerDb=getCustomerSupabase();
 const profileForOrder=await ensureCustomerProfile();
 if(profileForOrder)customerProfile=profileForOrder;
-const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:cart.map(item=>({product_id:item.dbId||null,category:item.category||cartItemCategory(item)||"",name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""})),coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
+const orderItems=cart.map(item=>{
+const matchedProduct=products.find(p=>
+String(p.id)===String(item.productId) ||
+(item.dbId&&String(p.dbId||"")===String(item.dbId)) ||
+String(p.name||"").trim()===String(item.name||"").trim()
+);
+const productId=matchedProduct?.dbId||item.dbId||null;
+if(!productId)throw new Error("تعذر ربط أحد المنتجات بكتالوج المتجر. حدّث الصفحة وافتح المنتج من جديد ثم أعد إضافته للسلة.");
+return {product_id:productId,category:item.category||cartItemCategory(item)||"",name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""};
+});
+const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.from("orders").insert(orderPayload);
 if(saved.error)throw saved.error;
-savedToAdmin=true;
 if(profileForOrder)customerHasPreviousOrders=true;
-}catch(error){console.warn("Order database save failed:",error);}
-if(!whatsappWindow){window.location.href=whatsappUrl;return;}
-toast(savedToAdmin?t().saved:t().waOnly);
-if(!savedToAdmin)return;
+}catch(error){
+console.warn("Order database save failed:",error);
+if(whatsappWindow){try{whatsappWindow.close();}catch(_){}}
+toast(error?.message||t().waOnly,"err");
+return;
+}
+if(whatsappWindow)whatsappWindow.location.href=whatsappUrl;
+else window.location.href=whatsappUrl;
+toast(t().saved);
 
 
 
