@@ -846,7 +846,8 @@ function openProductModal(id){
   const imgs = id ? productImages.filter(i=>String(i.product_id)===String(id)).map(i=>i.image_url) : [];
   const sizes = id ? productSizes.filter(s=>String(s.product_id)===String(id)).map(s=>s.size) : [];
   const colors = id ? productColors.filter(c=>String(c.product_id)===String(id)).map(c=>({name:c.name||"",name_en:c.name_en||""})) : [];
-  const selectedCategoryIds = id ? (p?.category_ids||[]) : (categoryRows.find(c=>c.slug==="dresses")?[categoryRows.find(c=>c.slug==="dresses").id]:[]);
+  const legacyCategory=categoryRows.find(c=>c.slug===(p?.category||"dresses"));
+  const selectedCategoryIds = id ? ((p?.category_ids?.length?p.category_ids:(legacyCategory?[legacyCategory.id]:[]))) : (categoryRows.find(c=>c.slug==="dresses")?[categoryRows.find(c=>c.slug==="dresses").id]:[]);
 
   const state = { images: imgs.slice(), sizes: sizes.slice(), colors: colors.slice(), categoryIds:selectedCategoryIds.slice() };
 
