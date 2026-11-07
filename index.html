@@ -2075,9 +2075,9 @@ body{
 }
 @media(prefers-reduced-motion:reduce){
   body,.hero{animation:none}
-  *,
-  *::before,
-  *::after{
+  *:not(#espozaSplash):not(.splash-door):not(.splash-inner),
+  *:not(#espozaSplash)::before,
+  *:not(#espozaSplash)::after{
     animation-duration:.001ms!important;
     animation-iteration-count:1!important;
     scroll-behavior:auto!important;
@@ -2116,7 +2116,7 @@ body{
 @keyframes doorRight{to{transform:perspective(900px) rotateY(105deg);opacity:.88}}
 @keyframes splashGleam{to{transform:translateX(120%);opacity:0}}
 @keyframes splashBrand{to{opacity:1;transform:scale(1)}}
-@media(prefers-reduced-motion:reduce){.splash-door,.splash-inner,#espozaSplash::before{animation:none}.splash-door{opacity:1;transform:none}.splash-inner{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#espozaSplash .splash-door{animation:doorLeft 1.15s 1.65s cubic-bezier(.72,0,.22,1) forwards}#espozaSplash .splash-door.right{animation-name:doorRight}#espozaSplash .splash-inner{animation:splashBrand .42s .12s ease-out forwards}#espozaSplash::before{animation:splashGleam 1.1s 1.8s ease-out forwards}}
 
 /* =========================================================
    ESPoza TV / Large Screen Responsive Layer
