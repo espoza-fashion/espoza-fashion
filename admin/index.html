@@ -657,7 +657,7 @@ async function loadProducts(){
   products = (data||[]).map(p=>({
     ...p,
     is_active: p.active !== false,
-    is_offer: !!p.featured || p.old_price != null,
+    is_offer: !!p.featured,
     is_available: p.stock == null ? true : Number(p.stock) > 0,
     category_ids: []
   }));
