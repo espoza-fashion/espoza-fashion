@@ -253,7 +253,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
 </head>
 <body>
 
-<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" value="ywsfjrt84@gmail.com" autocomplete="username" readonly required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form><button type="button" class="btn" onclick="resetAdminPassword()">نسيت كلمة المرور؟</button></div></div><div class="shell" inert>
+<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" value="ywsfjrt84@gmail.com" autocomplete="username" readonly required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form><button type="button" class="btn" id="adminForgotPasswordBtn" onclick="resetAdminPassword()">نسيت كلمة المرور؟</button><section id="adminRecoveryPanel" hidden><h2 style="margin:18px 0 8px;font-size:20px">تعيين كلمة مرور جديدة</h2><p style="font-size:13px;color:var(--muted)">أدخل كلمة مرور جديدة لحساب مدير Espoza Fashion.</p><form id="adminRecoveryForm"><label for="adminNewPassword">كلمة المرور الجديدة</label><input id="adminNewPassword" type="password" minlength="8" autocomplete="new-password" required><label for="adminConfirmPassword">تأكيد كلمة المرور</label><input id="adminConfirmPassword" type="password" minlength="8" autocomplete="new-password" required><button class="btn primary" id="adminRecoveryBtn" type="submit">حفظ كلمة المرور</button><div class="auth-error" id="adminRecoveryError"></div></form></section></div></div><div class="shell" inert>
 
   <aside class="sidebar" id="sidebar">
     <div class="brand">
@@ -1309,19 +1309,52 @@ $("logoutBtn").addEventListener("click",async()=>{
  closeModal();renderOrders();renderProducts();renderDashboard();
 });
 const ADMIN_EMAIL="ywsfjrt84@gmail.com";
+function showAdminRecovery(message=""){
+ showAuthGate("");
+ $("adminLoginForm").hidden=true;
+ $("adminForgotPasswordBtn").hidden=true;
+ $("adminRecoveryPanel").hidden=false;
+ $("adminRecoveryError").textContent=message;
+}
+function showAdminLogin(){
+ $("adminLoginForm").hidden=false;
+ $("adminForgotPasswordBtn").hidden=false;
+ $("adminRecoveryPanel").hidden=true;
+}
 async function resetAdminPassword(){
  const msg=$("adminLoginError");
  try{
-  const {error}=await sb.auth.resetPasswordForEmail(ADMIN_EMAIL,{redirectTo:"https://espoza-fashion.github.io/espoza-fashion/"});
+  const {error}=await sb.auth.resetPasswordForEmail(ADMIN_EMAIL,{redirectTo:"https://espoza-fashion.github.io/espoza-fashion/espoza-admin-dashboard.html"});
   if(error)throw error;
   msg.textContent="إذا كان البريد مسجّلًا، ستصلك رسالة الاستعادة على بريد المدير المصرّح به.";
  }catch(error){msg.textContent="تعذّر طلب رسالة الاستعادة: "+error.message;}
 }
+$("adminRecoveryForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const password=$("adminNewPassword").value,confirm=$("adminConfirmPassword").value,btn=$("adminRecoveryBtn"),msg=$("adminRecoveryError");
+ msg.textContent="";
+ if(password.length<8){msg.textContent="كلمة المرور يجب أن تكون 8 أحرف على الأقل.";return;}
+ if(password!==confirm){msg.textContent="كلمتا المرور غير متطابقتين.";return;}
+ btn.disabled=true;
+ try{
+  const {data,error}=await sb.auth.updateUser({password});
+  if(error)throw error;
+  if(String(data?.user?.email||"").trim().toLowerCase()!==ADMIN_EMAIL)throw new Error("هذا الرابط لا يخص حساب المدير المصرّح به.");
+  await sb.auth.signOut();
+  $("adminNewPassword").value="";$("adminConfirmPassword").value="";
+  showAdminLogin();showAuthGate("تم تحديث كلمة المرور بنجاح. سجّل الدخول بكلمة المرور الجديدة.");
+ }catch(error){msg.textContent="تعذّر تحديث كلمة المرور: "+error.message;}
+ finally{btn.disabled=false;}
+});
 async function initAdminAuth(){
-  try{const ok=await verifyAdminSession(); if(ok){hideAuthGate();await loadAll();}else showAuthGate("");}
-  catch(error){console.error(error);showAuthGate("تعذر التحقق من جلسة المدير. حاول مرة أخرى.");}
+  if(window.location.hash.includes("type=recovery")){showAdminRecovery("جارٍ التحقق من رابط الاستعادة…");return;}
+  try{const ok=await verifyAdminSession(); if(ok){hideAuthGate();await loadAll();}else{showAdminLogin();showAuthGate("");}}
+  catch(error){console.error(error);showAdminLogin();showAuthGate("تعذر التحقق من جلسة المدير. حاول مرة أخرى.");}
 }
-sb.auth.onAuthStateChange(async(_event,session)=>{if(!session){adminAuthSession=null;showAuthGate("");}});
+sb.auth.onAuthStateChange(async(event,session)=>{
+ if(event==="PASSWORD_RECOVERY"){showAdminRecovery("");return;}
+ if(!session){adminAuthSession=null;if(!$("adminRecoveryPanel").hidden)return;showAdminLogin();showAuthGate("");}
+});
 /* ===================== Init ===================== */
 initAdminAuth();
 </script>
