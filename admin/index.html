@@ -401,7 +401,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
       <section id="page-content" class="hidden"><div class="panel">
         <div class="panel-head"><div><div class="panel-title">أقسام ومحتوى واجهة المتجر</div><div class="hint">التحكم في ظهور أقسام الصفحة الرئيسية وعناوينها وترتيبها.</div></div><button class="btn" id="refreshSectionsBtn">↻ تحديث</button></div>
         <div class="table-wrap"><table><thead><tr><th>القسم</th><th>العنوان بالعربية</th><th>العنوان بالإنجليزية</th><th>الترتيب</th><th>ظاهر</th><th></th></tr></thead><tbody id="sectionsBody"></tbody></table></div>
-      </div><div class="panel"><div class="panel-title">ملاحظات النشر</div><p class="hint">تغييرات المنتجات والأقسام والسلايدر والتقييمات وإعدادات المتجر تُحفظ في Supabase. تظهر للزبائن في العناصر التي تقرأها واجهة الموقع مباشرة. أما بنية الصفحة والوظائف البرمجية فتحتاج تحديثًا منفصلًا للكود.</p></div></section>
+      </div><div class="panel"><div class="panel-title">ملاحظات النشر</div><p class="hint">تنبيه دقة: جدول site_sections موجود لكنه فارغ حاليًا، وواجهة الزبائن لا تطبق إعداداته بعد. لذلك لن أعتبر تعديلات هذا الجدول منشورة للزبائن. المحتوى المرتبط فعليًا الآن هو المنتجات والأقسام النشطة والسلايدر والتقييمات ومفاتيح إعدادات المتجر التي تقرؤها الواجهة. ربط إظهار/إخفاء كل أقسام الصفحة يحتاج تعديلًا منفصلًا في واجهة الزبائن واختباره قبل تفعيله.</p></div></section>
       <!-- SETTINGS -->
       <section id="page-settings" class="hidden">
         <div class="panel">
@@ -689,14 +689,14 @@ function renderDashboard(){
   const monthRevenue = completed.filter(o=>new Date(o.created_at)>=startMonth).reduce((s,o)=>s+Number(o.total||0),0);
   const averageOrder = completed.length?revenue/completed.length:0;
   const activeProducts = products.filter(p=>p.is_active!==false).length;
-  const registeredAccounts = authAccounts.length || customerProfiles.length;
+  const registeredAccounts = authAccountsLoaded ? authAccounts.length : customerProfiles.length;
 
   $("statCards").innerHTML = `
     <div class="stat-card"><div class="stat-label">إجمالي الطلبات</div><div class="stat-value">${totalOrders}</div><div class="stat-note">منذ إنشاء المتجر</div></div>
     <div class="stat-card"><div class="stat-label">طلبات جديدة</div><div class="stat-value">${newOrders}</div><div class="stat-note">بانتظار المتابعة</div></div>
     <div class="stat-card"><div class="stat-label">إجمالي المبيعات</div><div class="stat-value">₪${money(revenue)}</div><div class="stat-note">الطلبات المكتملة فقط</div></div>
-    <div class="stat-card"><div class="stat-label">مبيعات اليوم</div><div class="stat-value">₪${money(todayRevenue)}</div><div class="stat-note">الطلبات المكتملة اليوم</div></div>
-    <div class="stat-card"><div class="stat-label">مبيعات هذا الشهر</div><div class="stat-value">₪${money(monthRevenue)}</div><div class="stat-note">الطلبات المكتملة هذا الشهر</div></div>
+    <div class="stat-card"><div class="stat-label">مبيعات اليوم</div><div class="stat-value">₪${money(todayRevenue)}</div><div class="stat-note">طلبات اكتملت وكان تاريخ إنشائها اليوم</div></div>
+    <div class="stat-card"><div class="stat-label">مبيعات هذا الشهر</div><div class="stat-value">₪${money(monthRevenue)}</div><div class="stat-note">طلبات اكتملت وكان تاريخ إنشائها هذا الشهر</div></div>
     <div class="stat-card"><div class="stat-label">متوسط قيمة الطلب</div><div class="stat-value">₪${money(averageOrder)}</div><div class="stat-note">للطلبات المكتملة</div></div>
     <div class="stat-card"><div class="stat-label">حسابات الزبائن</div><div class="stat-value">${registeredAccounts}</div><div class="stat-note">الحسابات المسجلة</div></div>
     <div class="stat-card"><div class="stat-label">المنتجات النشطة</div><div class="stat-value">${activeProducts}</div><div class="stat-note">من أصل ${products.length} منتج</div></div>
@@ -1402,19 +1402,21 @@ $("saveSettingsBtn").addEventListener("click", async ()=>{
 
 
 // ===== Extended store management =====
-let customerProfiles=[], authAccounts=[], categoryRows=[], couponRows=[], mediaRows=[], siteSectionRows=[];
+let customerProfiles=[], authAccounts=[], authAccountsLoaded=false, categoryRows=[], couponRows=[], mediaRows=[], siteSectionRows=[];
 function fmtSafeDate(v){return v?new Date(v).toLocaleString("ar-PS",{dateStyle:"medium",timeStyle:"short"}):"—";}
 async function loadCustomers(){
  const results=await Promise.all([sb.from("customers").select("id,user_id,name,email,phone,total_orders,total_spend,created_at").order("created_at",{ascending:false}),sb.functions.invoke("admin-users",{body:{}})]);
  if(results[0].error)throw results[0].error;
  customerProfiles=results[0].data||[];
- authAccounts=(!results[1].error&&Array.isArray(results[1].data?.users))?results[1].data.users:[];
+ authAccountsLoaded=!results[1].error&&Array.isArray(results[1].data?.users);
+ authAccounts=authAccountsLoaded?results[1].data.users:[];
  renderCustomers();
  if(results[1].error)$("accountsNote").textContent="قائمة Auth الكاملة غير متاحة بعد؛ تظهر ملفات الزبائن فقط. "+(results[1].error.message||"");
 }
 function renderCustomers(){
  const byId=new Map(customerProfiles.map(x=>[x.user_id,x]));
- const rows=authAccounts.length?authAccounts.map(u=>({u,p:byId.get(u.id)})):customerProfiles.map(p=>({u:null,p}));
+ const rows=authAccountsLoaded?authAccounts.map(u=>({u,p:byId.get(u.id)})):customerProfiles.map(p=>({u:null,p}));
+ if(authAccountsLoaded){const known=new Set(authAccounts.map(u=>u.id));customerProfiles.filter(p=>!p.user_id||!known.has(p.user_id)).forEach(p=>rows.push({u:null,p}));}
  $("customersBody").innerHTML=rows.length?rows.map(({u,p})=>"<tr><td>"+esc(p?.name||u?.email?.split("@")[0]||"—")+"</td><td dir=\"ltr\">"+esc(u?.email||p?.email||"—")+"</td><td dir=\"ltr\">"+esc(p?.phone||"—")+"</td><td>"+fmtSafeDate(u?.created_at||p?.created_at)+"</td><td>"+fmtSafeDate(u?.last_sign_in_at)+"</td><td>"+Number(p?.total_orders||0)+"</td><td>₪"+money(p?.total_spend||0)+"</td></tr>").join(""):"<tr><td colspan=\"7\" class=\"empty\">لا توجد حسابات مسجلة بعد</td></tr>";
 }
 async function loadCategories(){const r=await sb.from("categories").select("*").order("sort_order",{ascending:true});if(r.error)throw r.error;categoryRows=r.data||[];renderCategories();}
