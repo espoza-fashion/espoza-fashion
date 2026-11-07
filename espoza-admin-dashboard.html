@@ -1130,6 +1130,8 @@ function openSlideModal(id){
     const file = e.target.files[0];
     if(!file) return;
     try{
+      await requireAdminSession();
+      if(!file.type || !file.type.startsWith("image/") || file.size>10*1024*1024) throw new Error("اختاري صورة صالحة بحجم لا يتجاوز 10MB.");
       const path = `hero/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g,"")}`;
       const {error} = await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:true});
       if(error) throw error;
@@ -1141,6 +1143,7 @@ function openSlideModal(id){
 async function saveSlide(id){
   const btn = $("sf_save"); btn.disabled=true;
   try{
+    await requireAdminSession();
     const payload = {
       image_url: $("sf_image").value.trim(),
       title: $("sf_title").value.trim() || null,
@@ -1297,8 +1300,28 @@ function renderSettingsForm(){
   $("s_inside_delivery").value = d.inside_delivery ?? "";
   const ar=d.site_content_ar&&typeof d.site_content_ar==="object"?d.site_content_ar:{};
   const en=d.site_content_en&&typeof d.site_content_en==="object"?d.site_content_en:{};
+  const defaultsAr={
+    storyEyebrow:"حكايتنا • منذ 2019",
+    storyTitle:"قصة بداية Espoza Fashion",
+    storyText:"بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. ومع الوقت كبرت التشكيلة، وكبرت معها ثقة زبائننا، لنستمر في تقديم الفساتين والأطقم والقطع الأنيقة بعناية واهتمام بكل تفصيل.",
+    storyTag:"مئات الرسائل يومياً • ثقة تتجدد مع كل طلب • Espoza Fashion",
+    footerStoryTitle:"من أين بدأت قصة Espoza؟",
+    footerStoryText:"بدأت قصة Espoza Fashion عام 2019، من شغف حقيقي بالأناقة ورغبة في تقديم قطع مميزة تجمع بين الجودة والتصميم الراقي. واليوم نواصل تقديم الملابس والأطقم والفساتين الأنيقة والرسمية وفساتين السهرة بعناية واهتمام بالتفاصيل."
+  };
+  const defaultsEn={
+    storyEyebrow:"Our Story • Since 2019",
+    storyTitle:"The Story of Espoza Fashion",
+    storyText:"Espoza Fashion began in 2019 with a genuine passion for style and a vision to offer distinctive pieces that bring together quality and refined design. Over time, our collection grew, along with the trust of our customers. We continue to offer elegant dresses, coordinated sets and thoughtfully selected pieces, with care given to every detail.",
+    storyTag:"Hundreds of messages every day • Trust renewed with every order • Espoza Fashion",
+    footerStoryTitle:"Where the Espoza Story Began",
+    footerStoryText:"Espoza Fashion began in 2019 with a genuine passion for style and a vision to offer distinctive pieces that bring together quality and refined design. As our collection grew, so did our customers’ trust. Today, we continue to offer elegant everyday, formal and evening dresses and coordinated sets, chosen with care and attention to every detail."
+  };
   const storyFields=[["storyEyebrow","s_story_eyebrow"],["storyTitle","s_story_title"],["storyText","s_story_text"],["storyTag","s_story_tag"],["footerStoryTitle","s_footer_story_title"],["footerStoryText","s_footer_story_text"]];
-  for(const [key,id] of storyFields){$(id+"_ar").value=ar[key]??"";$(id+"_en").value=en[key]??"";}
+  for(const [key,id] of storyFields){
+    $(id+"_ar").value=ar[key]??defaultsAr[key];
+    const englishValue=en[key];
+    $(id+"_en").value=(key==="footerStoryText"&&/[؀-ۿ]/.test(String(englishValue||"")))?defaultsEn[key]:(englishValue??defaultsEn[key]);
+  }
 }
 $("saveSettingsBtn").addEventListener("click", async ()=>{
   const btn = $("saveSettingsBtn"); btn.disabled=true;
