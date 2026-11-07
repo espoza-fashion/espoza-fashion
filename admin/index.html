@@ -829,7 +829,7 @@ function renderProducts(){
       </div>
       <div class="pcard-body">
         <div class="pcard-name">${esc(p.name||"—")}</div>
-        <div class="pcard-meta">${esc(p.category==="sets"?"طقم":"فستان")} ${p.sku?" · "+esc(p.sku):""}</div>
+        <div class="pcard-meta">${esc((p.category_ids||[]).map(id=>categoryRows.find(c=>c.id===id)?.name_ar).filter(Boolean).join("، ")||p.category||"—")} ${p.sku?" · "+esc(p.sku):""}</div>
         <div><span class="pcard-price">₪${money(p.price)}</span>${p.old_price?`<span class="pcard-old">₪${money(p.old_price)}</span>`:""}</div>
         <div class="pcard-actions">
           <button class="btn sm" style="flex:1" onclick="openProductModal('${p.id}')">تعديل</button>
@@ -1085,11 +1085,14 @@ async function saveProduct(id){
       oldChildren={sizes:oldSizes.data||[],colors:oldColors.data||[],images:oldImages.data||[]};
     }
 
+    const selectedCategoryIds=[...document.querySelectorAll(".pf-category-choice:checked")].map(el=>el.value);
+    if(!selectedCategoryIds.length)throw new Error("اختر قسمًا واحدًا على الأقل للمنتج.");
+    const selectedPrimaryCategory=categoryRows.find(c=>c.id===selectedCategoryIds[0]);
     const payload = {
       name: $("pf_name").value.trim(),
       name_en: $("pf_name_en").value.trim() || null,
       sku: $("pf_sku").value.trim() || null,
-      category: $("pf_category").value,
+      category: selectedPrimaryCategory?.slug || "dresses",
       price: Number($("pf_price").value||0),
       old_price: $("pf_old_price").value ? Number($("pf_old_price").value) : null,
       description: $("pf_description").value.trim() || null,
@@ -1112,6 +1115,14 @@ async function saveProduct(id){
       createdNew = true;
     }
 
+    // Persist selected storefront sections through the existing many-to-many relation.
+    const existingCategoryLinks=await sb.from("product_categories").select("category_id").eq("product_id",productId);
+    if(existingCategoryLinks.error)throw existingCategoryLinks.error;
+    const existingIds=(existingCategoryLinks.data||[]).map(row=>row.category_id);
+    const addIds=selectedCategoryIds.filter(categoryId=>!existingIds.includes(categoryId));
+    const removeIds=existingIds.filter(categoryId=>!selectedCategoryIds.includes(categoryId));
+    if(addIds.length){const linkResult=await sb.from("product_categories").insert(addIds.map(category_id=>({product_id:productId,category_id})));if(linkResult.error)throw linkResult.error;}
+    if(removeIds.length){const unlinkResult=await sb.from("product_categories").delete().eq("product_id",productId).in("category_id",removeIds);if(unlinkResult.error)throw unlinkResult.error;}
     // Preserve existing child IDs/metadata; write additions before removing explicitly removed values.
     await syncProductChildren("product_sizes",productId,"size",st.sizes,oldChildren?.sizes||[]);
     await syncProductColors(productId,st.colors,oldChildren?.colors||[]);
