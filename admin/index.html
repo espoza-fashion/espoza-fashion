@@ -846,8 +846,9 @@ function openProductModal(id){
   const imgs = id ? productImages.filter(i=>String(i.product_id)===String(id)).map(i=>i.image_url) : [];
   const sizes = id ? productSizes.filter(s=>String(s.product_id)===String(id)).map(s=>s.size) : [];
   const colors = id ? productColors.filter(c=>String(c.product_id)===String(id)).map(c=>({name:c.name||"",name_en:c.name_en||""})) : [];
+  const selectedCategoryIds = id ? (p?.category_ids||[]) : (categoryRows.find(c=>c.slug==="dresses")?[categoryRows.find(c=>c.slug==="dresses").id]:[]);
 
-  const state = { images: imgs.slice(), sizes: sizes.slice(), colors: colors.slice() };
+  const state = { images: imgs.slice(), sizes: sizes.slice(), colors: colors.slice(), categoryIds:selectedCategoryIds.slice() };
 
   const html = `
   <div class="overlay" id="productOverlay">
@@ -859,13 +860,12 @@ function openProductModal(id){
       <div class="modal-body">
         <div class="field"><label>اسم المنتج بالعربية</label><input class="text-input" id="pf_name" value="${esc(p?.name||"")}"></div>
         <div class="field"><label>اسم المنتج بالإنجليزية</label><input class="text-input" id="pf_name_en" value="${esc(p?.name_en||"")}" dir="ltr" placeholder="Product name in English"></div>
-        <div class="field-row">
-          <div class="field"><label>رمز المنتج (SKU)</label><input class="text-input" id="pf_sku" value="${esc(p?.sku||"")}"></div>
-          <div class="field"><label>الفئة</label>
-            <select class="select-input" id="pf_category">
-              <option value="dresses" ${p?.category==="dresses"||!p?"selected":""}>فساتين</option>
-              <option value="sets" ${p?.category==="sets"?"selected":""}>أطقم</option>
-            </select>
+        <div class="field"><label>رمز المنتج (SKU)</label><input class="text-input" id="pf_sku" value="${esc(p?.sku||"")}"></div>
+        <div class="field">
+          <label>الأقسام التي يظهر فيها المنتج</label>
+          <div class="hint">اختر قسمًا واحدًا أو أكثر. المنتج المفعّل يظهر تلقائيًا في «الكل».</div>
+          <div id="pf_category_choices" class="settings-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:10px">
+            ${(categoryRows||[]).filter(c=>c.active&&c.slug!=="offers").map(c=>`<label class="toggle-row" style="margin:0;padding:10px;border:1px solid var(--line);border-radius:10px"><span class="t-label">${esc(c.name_ar||c.slug)}</span><input type="checkbox" class="pf-category-choice" value="${esc(c.id)}" ${selectedCategoryIds.includes(c.id)?"checked":""}></label>`).join("")||`<span class="hint">أضف الأقسام أولًا من إدارة الأقسام.</span>`}
           </div>
         </div>
         <div class="field-row">
