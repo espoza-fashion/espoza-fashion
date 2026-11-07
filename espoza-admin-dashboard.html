@@ -770,7 +770,8 @@ function openProductModal(id){
         <button class="modal-close" onclick="closeModal()">×</button>
       </div>
       <div class="modal-body">
-        <div class="field"><label>اسم المنتج</label><input class="text-input" id="pf_name" value="${esc(p?.name||"")}"></div>
+        <div class="field"><label>اسم المنتج بالعربية</label><input class="text-input" id="pf_name" value="${esc(p?.name||"")}"></div>
+        <div class="field"><label>اسم المنتج بالإنجليزية</label><input class="text-input" id="pf_name_en" value="${esc(p?.name_en||"")}" dir="ltr" placeholder="Product name in English"></div>
         <div class="field-row">
           <div class="field"><label>رمز المنتج (SKU)</label><input class="text-input" id="pf_sku" value="${esc(p?.sku||"")}"></div>
           <div class="field"><label>الفئة</label>
@@ -784,7 +785,8 @@ function openProductModal(id){
           <div class="field"><label>السعر (₪)</label><input class="text-input" type="number" id="pf_price" value="${p?.price??""}"></div>
           <div class="field"><label>السعر قبل الخصم (اختياري)</label><input class="text-input" type="number" id="pf_old_price" value="${p?.old_price??""}"></div>
         </div>
-        <div class="field"><label>الوصف</label><textarea class="text-input" id="pf_description" rows="3">${esc(p?.description||"")}</textarea></div>
+        <div class="field"><label>الوصف بالعربية</label><textarea class="text-input" id="pf_description" rows="3">${esc(p?.description||"")}</textarea></div>
+        <div class="field"><label>الوصف بالإنجليزية</label><textarea class="text-input" id="pf_description_en" rows="3" dir="ltr" placeholder="Product description in English">${esc(p?.description_en||"")}</textarea></div>
 
         <div class="field">
           <label>المقاسات</label>
@@ -966,11 +968,13 @@ async function saveProduct(id){
 
     const payload = {
       name: $("pf_name").value.trim(),
+      name_en: $("pf_name_en").value.trim() || null,
       sku: $("pf_sku").value.trim() || null,
       category: $("pf_category").value,
       price: Number($("pf_price").value||0),
       old_price: $("pf_old_price").value ? Number($("pf_old_price").value) : null,
       description: $("pf_description").value.trim() || null,
+      description_en: $("pf_description_en").value.trim() || null,
       active: $("pf_active").checked,
       featured: $("pf_offer").checked,
       stock: $("pf_available").checked ? (Number(existing?.stock)>0 ? existing.stock : null) : 0,
