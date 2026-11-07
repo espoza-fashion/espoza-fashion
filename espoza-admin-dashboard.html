@@ -1128,7 +1128,8 @@ function openSlideModal(id){
       <div class="modal-head"><div class="modal-title">${s?"تعديل الشريحة":"شريحة جديدة"}</div><button class="modal-close" onclick="closeModal()">×</button></div>
       <div class="modal-body">
         <div class="field"><label>رابط الصورة</label><input class="text-input" id="sf_image" value="${esc(s?.image_url||"")}" placeholder="https://..."></div>
-        <input type="file" id="sf_image_file" accept="image/*">
+        <div class="media-upload-box"><strong>ارفع صورة جديدة</strong><input type="file" id="sf_image_file" accept="image/jpeg,image/png,image/webp"><span class="media-upload-note">JPG أو PNG أو WebP · الحد الأقصى 8MB</span></div>
+        <img id="sf_preview" class="media-preview ${s?.image_url?"visible":""}" src="${esc(s?.image_url||"")}" alt="معاينة صورة السلايدر">
         <div class="field"><label>العنوان</label><input class="text-input" id="sf_title" value="${esc(s?.title||"")}"></div>
         <div class="field"><label>العنوان الفرعي</label><input class="text-input" id="sf_subtitle" value="${esc(s?.subtitle||"")}"></div>
         <div class="field-row">
@@ -1143,6 +1144,7 @@ function openSlideModal(id){
   </div>`;
   $("modalRoot").innerHTML = html;
   $("sf_save").addEventListener("click",()=>saveSlide(id));
+  $("sf_image").addEventListener("input",()=>{const preview=$("sf_preview");preview.src=$("sf_image").value.trim();preview.classList.toggle("visible",!!$("sf_image").value.trim());});
   $("sf_image_file").addEventListener("change", async (e)=>{
     const file=e.target.files[0];if(!file)return;
     try{
@@ -1153,6 +1155,7 @@ function openSlideModal(id){
       const {error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:false,contentType:file.type});
       if(error)throw error;
       $("sf_image").value=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+      $("sf_preview").src=$("sf_image").value;$("sf_preview").classList.add("visible");
       toast("تم رفع الصورة بنجاح");
     }catch(error){console.error(error);toast(friendlyError(error),"err");}
   });}
@@ -1295,13 +1298,15 @@ function openFeedbackModal(id){
  const row=feedbackRows.find(x=>x.id===id);
  $("modalRoot").innerHTML=`<div class="overlay"><div class="modal"><div class="modal-head"><div class="modal-title">${row?"تعديل تقييم":"إضافة تقييم"}</div><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body">
  <div class="field"><label for="ff_image">رابط الصورة</label><input class="text-input" id="ff_image" value="${esc(row?.image_url||"")}"></div>
- <input id="ff_file" type="file" accept="image/jpeg,image/png,image/webp">
+ <div class="media-upload-box"><strong>ارفع صورة Feedback</strong><input id="ff_file" type="file" accept="image/jpeg,image/png,image/webp"><span class="media-upload-note">JPG أو PNG أو WebP · الحد الأقصى 8MB</span></div>
+ <img id="ff_preview" class="media-preview ${row?.image_url?"visible":""}" src="${esc(row?.image_url||"")}" alt="معاينة صورة التقييم">
  <div class="field"><label for="ff_title">العنوان</label><input class="text-input" id="ff_title" value="${esc(row?.title||"")}"></div>
  <div class="field"><label for="ff_alt">وصف الصورة</label><input class="text-input" id="ff_alt" value="${esc(row?.alt_text||"")}"></div>
  <div class="field"><label for="ff_sort">الترتيب</label><input class="text-input" type="number" id="ff_sort" value="${Number(row?.sort_order)||0}"></div>
  <label><input type="checkbox" id="ff_active" ${row?.active!==false?"checked":""}> إظهار التقييم</label>
  </div><div class="modal-foot"><button class="btn primary" id="ff_save">حفظ</button></div></div></div>`;
  const save=$("ff_save"),fileInput=$("ff_file");
+ $("ff_image").addEventListener("input",()=>{const preview=$("ff_preview");preview.src=$("ff_image").value.trim();preview.classList.toggle("visible",!!$("ff_image").value.trim());});
  fileInput.addEventListener("change",async()=>{
   const file=fileInput.files[0];if(!file)return;save.disabled=true;
   try{
@@ -1312,6 +1317,7 @@ function openFeedbackModal(id){
    const {error}=await sb.storage.from(STORAGE_BUCKET).upload(path,file,{upsert:false,contentType:file.type});
    if(error)throw error;
    $("ff_image").value=sb.storage.from(STORAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+   $("ff_preview").src=$("ff_image").value;$("ff_preview").classList.add("visible");
   }catch(error){toast(friendlyError(error),"err");}finally{save.disabled=false;}
  });
  save.addEventListener("click",async()=>{
