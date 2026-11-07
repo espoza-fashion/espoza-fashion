@@ -387,7 +387,26 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
         </div>
 
         <div class="panel">
-          <div class="panel-title" style="margin-bottom:16px">حسابات التواصل الاجتماعي</div>
+          <div class="panel-title" style="margin-bottom:16px">قصة بداية Espoza Fashion — المحتوى بالعربية والإنجليزية</div>
+          <div class="settings-grid">
+            <div class="field"><label>العنوان الصغير بالعربية</label><input class="text-input" id="s_story_eyebrow_ar"></div>
+            <div class="field"><label>العنوان الصغير بالإنجليزية</label><input class="text-input" id="s_story_eyebrow_en" dir="ltr"></div>
+            <div class="field"><label>عنوان القصة بالعربية</label><input class="text-input" id="s_story_title_ar"></div>
+            <div class="field"><label>عنوان القصة بالإنجليزية</label><input class="text-input" id="s_story_title_en" dir="ltr"></div>
+            <div class="field"><label>نص القصة بالعربية</label><textarea class="text-input" id="s_story_text_ar" rows="5"></textarea></div>
+            <div class="field"><label>نص القصة بالإنجليزية</label><textarea class="text-input" id="s_story_text_en" rows="5" dir="ltr"></textarea></div>
+            <div class="field"><label>الخاتمة أسفل القصة بالعربية</label><input class="text-input" id="s_story_tag_ar"></div>
+            <div class="field"><label>الخاتمة أسفل القصة بالإنجليزية</label><input class="text-input" id="s_story_tag_en" dir="ltr"></div>
+            <div class="field"><label>عنوان قصة المتجر في التذييل بالعربية</label><input class="text-input" id="s_footer_story_title_ar"></div>
+            <div class="field"><label>عنوان قصة المتجر في التذييل بالإنجليزية</label><input class="text-input" id="s_footer_story_title_en" dir="ltr"></div>
+            <div class="field"><label>نص قصة المتجر في التذييل بالعربية</label><textarea class="text-input" id="s_footer_story_text_ar" rows="4"></textarea></div>
+            <div class="field"><label>نص قصة المتجر في التذييل بالإنجليزية</label><textarea class="text-input" id="s_footer_story_text_en" rows="4" dir="ltr"></textarea></div>
+          </div>
+          <div class="hint">يتم حفظ النصوص في إعدادات المحتوى التي يقرأها الموقع حسب اللغة المختارة.</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title" style="margin-bottom:16px">حسابات التواصل الاجتماعي وروابط المتجر</div>
           <div class="settings-grid">
             <div class="field"><label>فيسبوك (رابط أو معرّف)</label><input class="text-input" id="s_facebook"></div>
             <div class="field"><label>عدد متابعي فيسبوك</label><input class="text-input" type="number" id="s_facebook_followers"></div>
@@ -758,7 +777,7 @@ function openProductModal(id){
   const p = id ? products.find(x=>String(x.id)===String(id)) : null;
   const imgs = id ? productImages.filter(i=>String(i.product_id)===String(id)).map(i=>i.image_url) : [];
   const sizes = id ? productSizes.filter(s=>String(s.product_id)===String(id)).map(s=>s.size) : [];
-  const colors = id ? productColors.filter(c=>String(c.product_id)===String(id)).map(c=>c.name) : [];
+  const colors = id ? productColors.filter(c=>String(c.product_id)===String(id)).map(c=>({name:c.name||"",name_en:c.name_en||""})) : [];
 
   const state = { images: imgs.slice(), sizes: sizes.slice(), colors: colors.slice() };
 
@@ -798,12 +817,14 @@ function openProductModal(id){
         </div>
 
         <div class="field">
-          <label>الألوان</label>
-          <div style="display:flex;gap:8px">
-            <input class="text-input" id="pf_color_input" placeholder="اكتب اسم لون واضغط إضافة">
-            <button class="btn sm" type="button" onclick="modalAddChip('colors')">إضافة</button>
+          <label>الألوان — الاسم بالعربية والإنجليزية</label>
+          <div class="field-row">
+            <input class="text-input" id="pf_color_input" placeholder="اسم اللون بالعربية">
+            <input class="text-input" id="pf_color_en_input" dir="ltr" placeholder="Color name in English">
           </div>
+          <button class="btn sm" type="button" onclick="modalAddChip('colors')">إضافة اللون</button>
           <div class="chip-input-list" id="pf_colors_list"></div>
+          <div class="hint">مثال: خمري / Burgundy. سيظهر الاسم حسب لغة الموقع.</div>
         </div>
 
         <div class="field">
@@ -841,14 +862,22 @@ function closeModal(){ $("modalRoot").innerHTML=""; }
 function renderModalChips(){
   const st = window._pfState;
   $("pf_sizes_list").innerHTML = st.sizes.map((s,i)=>`<span class="chip">${esc(s)}<button onclick="modalRemoveChip('sizes',${i})">×</button></span>`).join("") || `<span class="hint">لا توجد مقاسات بعد</span>`;
-  $("pf_colors_list").innerHTML = st.colors.map((c,i)=>`<span class="chip">${esc(c)}<button onclick="modalRemoveChip('colors',${i})">×</button></span>`).join("") || `<span class="hint">لا توجد ألوان بعد</span>`;
+  $("pf_colors_list").innerHTML = st.colors.map((c,i)=>`<span class="chip">${esc(c.name)} ${c.name_en?`<small dir="ltr">/${esc(c.name_en)}</small>`:""}<button onclick="modalRemoveChip('colors',${i})">×</button></span>`).join("") || `<span class="hint">لا توجد ألوان بعد</span>`;
 }
 function modalAddChip(kind){
-  const inputId = kind==="sizes" ? "pf_size_input" : "pf_color_input";
-  const val = ($(inputId).value||"").trim();
+  if(kind==="colors"){
+    const name=($("pf_color_input").value||"").trim();
+    const name_en=($("pf_color_en_input").value||"").trim();
+    if(!name){toast("اسم اللون بالعربية مطلوب","err");return;}
+    if(window._pfState.colors.some(c=>c.name.toLowerCase()===name.toLowerCase())){toast("هذا اللون مضاف مسبقًا","err");return;}
+    window._pfState.colors.push({name,name_en});
+    $("pf_color_input").value="";$("pf_color_en_input").value="";
+    renderModalChips();return;
+  }
+  const val = ($("pf_size_input").value||"").trim();
   if(!val) return;
-  window._pfState[kind].push(val);
-  $(inputId).value="";
+  window._pfState.sizes.push(val);
+  $("pf_size_input").value="";
   renderModalChips();
 }
 function modalRemoveChip(kind,idx){
@@ -942,6 +971,28 @@ async function syncProductChildren(table,productId,key,values,previous){
   }
 }
 
+async function syncProductColors(productId,values,previous){
+  const wanted=values.map(v=>({name:String(v.name||"").trim(),name_en:String(v.name_en||"").trim()})).filter(v=>v.name);
+  const retained=new Set();
+  for(const [sort_order,value] of wanted.entries()){
+    const old=previous.find(row=>String(row.name||"").trim()===value.name&&!retained.has(row.id));
+    if(old){
+      retained.add(old.id);
+      if(String(old.name_en||"")!==value.name_en||Number(old.sort_order)!==sort_order){
+        const result=await sb.from("product_colors").update({name_en:value.name_en||null,sort_order}).eq("id",old.id).eq("product_id",productId).select("id").single();
+        if(result.error)throw result.error;
+      }
+    }else{
+      const result=await sb.from("product_colors").insert({product_id:productId,name:value.name,name_en:value.name_en||null,sort_order});
+      if(result.error)throw result.error;
+    }
+  }
+  for(const old of previous){
+    if(retained.has(old.id))continue;
+    const result=await sb.from("product_colors").delete().eq("id",old.id).eq("product_id",productId);
+    if(result.error)throw result.error;
+  }
+}
 async function saveProduct(id){
   const btn = $("pf_save");
   btn.disabled = true;
@@ -995,7 +1046,7 @@ async function saveProduct(id){
 
     // Preserve existing child IDs/metadata; write additions before removing explicitly removed values.
     await syncProductChildren("product_sizes",productId,"size",st.sizes,oldChildren?.sizes||[]);
-    await syncProductChildren("product_colors",productId,"name",st.colors,oldChildren?.colors||[]);
+    await syncProductColors(productId,st.colors,oldChildren?.colors||[]);
     await syncProductChildren("product_images",productId,"image_url",st.images,oldChildren?.images||[]);
 
     toast(id?"تم تحديث المنتج":"تم إضافة المنتج");
@@ -1244,6 +1295,10 @@ function renderSettingsForm(){
   $("s_west_bank_delivery").value = d.west_bank_delivery ?? "";
   $("s_jerusalem_delivery").value = d.jerusalem_delivery ?? "";
   $("s_inside_delivery").value = d.inside_delivery ?? "";
+  const ar=d.site_content_ar&&typeof d.site_content_ar==="object"?d.site_content_ar:{};
+  const en=d.site_content_en&&typeof d.site_content_en==="object"?d.site_content_en:{};
+  const storyFields=[["storyEyebrow","s_story_eyebrow"],["storyTitle","s_story_title"],["storyText","s_story_text"],["storyTag","s_story_tag"],["footerStoryTitle","s_footer_story_title"],["footerStoryText","s_footer_story_text"]];
+  for(const [key,id] of storyFields){$(id+"_ar").value=ar[key]??"";$(id+"_en").value=en[key]??"";}
 }
 $("saveSettingsBtn").addEventListener("click", async ()=>{
   const btn = $("saveSettingsBtn"); btn.disabled=true;
@@ -1263,6 +1318,12 @@ $("saveSettingsBtn").addEventListener("click", async ()=>{
       jerusalem_delivery: Number($("s_jerusalem_delivery").value||0),
       inside_delivery: Number($("s_inside_delivery").value||0)
     };
+    const site_content_ar={...(storeSettings?.site_content_ar||{})};
+    const site_content_en={...(storeSettings?.site_content_en||{})};
+    const storyFields=[["storyEyebrow","s_story_eyebrow"],["storyTitle","s_story_title"],["storyText","s_story_text"],["storyTag","s_story_tag"],["footerStoryTitle","s_footer_story_title"],["footerStoryText","s_footer_story_text"]];
+    for(const [key,id] of storyFields){site_content_ar[key]=$(id+"_ar").value.trim();site_content_en[key]=$(id+"_en").value.trim();}
+    settings.site_content_ar=site_content_ar;
+    settings.site_content_en=site_content_en;
     for(const [key,value] of Object.entries(settings)){
       const {error}=await sb.from("store_settings").upsert({key,value},{onConflict:"key"});
       if(error) throw error;
