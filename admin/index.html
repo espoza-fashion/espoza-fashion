@@ -681,13 +681,24 @@ async function loadStoreSettings(){
 function renderDashboard(){
   const totalOrders = orders.length;
   const newOrders = orders.filter(o=>(o.status||"new")==="new").length;
-  const revenue = orders.filter(o=>o.status==="completed").reduce((s,o)=>s+Number(o.total||0),0);
+  const completed = orders.filter(o=>o.status==="completed");
+  const revenue = completed.reduce((s,o)=>s+Number(o.total||0),0);
+  const startToday = new Date(); startToday.setHours(0,0,0,0);
+  const startMonth = new Date(startToday.getFullYear(),startToday.getMonth(),1);
+  const todayRevenue = completed.filter(o=>new Date(o.created_at)>=startToday).reduce((s,o)=>s+Number(o.total||0),0);
+  const monthRevenue = completed.filter(o=>new Date(o.created_at)>=startMonth).reduce((s,o)=>s+Number(o.total||0),0);
+  const averageOrder = completed.length?revenue/completed.length:0;
   const activeProducts = products.filter(p=>p.is_active!==false).length;
+  const registeredAccounts = authAccounts.length || customerProfiles.length;
 
   $("statCards").innerHTML = `
     <div class="stat-card"><div class="stat-label">إجمالي الطلبات</div><div class="stat-value">${totalOrders}</div><div class="stat-note">منذ إنشاء المتجر</div></div>
     <div class="stat-card"><div class="stat-label">طلبات جديدة</div><div class="stat-value">${newOrders}</div><div class="stat-note">بانتظار المتابعة</div></div>
     <div class="stat-card"><div class="stat-label">إجمالي المبيعات</div><div class="stat-value">₪${money(revenue)}</div><div class="stat-note">الطلبات المكتملة فقط</div></div>
+    <div class="stat-card"><div class="stat-label">مبيعات اليوم</div><div class="stat-value">₪${money(todayRevenue)}</div><div class="stat-note">الطلبات المكتملة اليوم</div></div>
+    <div class="stat-card"><div class="stat-label">مبيعات هذا الشهر</div><div class="stat-value">₪${money(monthRevenue)}</div><div class="stat-note">الطلبات المكتملة هذا الشهر</div></div>
+    <div class="stat-card"><div class="stat-label">متوسط قيمة الطلب</div><div class="stat-value">₪${money(averageOrder)}</div><div class="stat-note">للطلبات المكتملة</div></div>
+    <div class="stat-card"><div class="stat-label">حسابات الزبائن</div><div class="stat-value">${registeredAccounts}</div><div class="stat-note">الحسابات المسجلة</div></div>
     <div class="stat-card"><div class="stat-label">المنتجات النشطة</div><div class="stat-value">${activeProducts}</div><div class="stat-note">من أصل ${products.length} منتج</div></div>
   `;
 
