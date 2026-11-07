@@ -9290,15 +9290,30 @@ try{
 const customerDb=getCustomerSupabase();
 const profileForOrder=await ensureCustomerProfile();
 if(profileForOrder)customerProfile=profileForOrder;
+const cartProductNames=[...new Set(cart.map(item=>String(item.name||"").trim()).filter(Boolean))];
+const productLookup=await customerDb.from("products")
+.select("id,name,category,price,active,stock,product_sizes(size),product_colors(name,name_en)")
+.in("name",cartProductNames)
+.eq("active",true);
+if(productLookup.error)throw productLookup.error;
+const databaseProducts=productLookup.data||[];
 const orderItems=cart.map(item=>{
-const matchedProduct=products.find(p=>
-String(p.id)===String(item.productId) ||
-(item.dbId&&String(p.dbId||"")===String(item.dbId)) ||
-String(p.name||"").trim()===String(item.name||"").trim()
-);
-const productId=matchedProduct?.dbId||item.dbId||null;
-if(!productId)throw new Error("تعذر ربط أحد المنتجات بكتالوج المتجر. حدّث الصفحة وافتح المنتج من جديد ثم أعد إضافته للسلة.");
-return {product_id:productId,category:item.category||cartItemCategory(item)||"",name:item.name,price:Number(item.price||0),size:item.size||"",color:item.color||"",qty:Number(item.qty||1),image:item.image||""};
+const dbProduct=databaseProducts.find(p=>String(p.name||"").trim()===String(item.name||"").trim());
+if(!dbProduct)throw new Error("لم نعثر على المنتج في كتالوج المتجر. افتح المنتج من جديد وأعد إضافته للسلة.");
+const productId=dbProduct.id;
+if(!productId)throw new Error("تعذر ربط المنتج بمعرّفه في قاعدة البيانات. أعد تحميل المتجر وحاول مجددًا.");
+if(Number(item.price)!==Number(dbProduct.price))throw new Error("تغيّر سعر أحد المنتجات. حدّث السلة قبل إرسال الطلب.");
+const availableColors=dbProduct.product_colors||[];
+const matchedColor=availableColors.find(c=>c.name===item.color||c.name_en===item.color||c.name===item.color_db||c.name_en===item.color_db);
+let orderColor=matchedColor?.name||(availableColors.length===1?availableColors[0].name:String(item.color_db||item.color||""));
+if(availableColors.length&&!availableColors.some(c=>c.name===orderColor))throw new Error("اختاري لونًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.");
+const availableSizes=(dbProduct.product_sizes||[]).map(x=>String(x.size));
+let orderSize=String(item.size||"");
+if(availableSizes.length&&!availableSizes.includes(orderSize)){
+if(availableSizes.length===1)orderSize=availableSizes[0];
+else throw new Error("اختاري مقاسًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.");
+}
+return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,price:Number(dbProduct.price),size:orderSize,color:orderColor,qty:Number(item.qty||1),image:item.image||""};
 });
 const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.from("orders").insert(orderPayload);
