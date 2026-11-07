@@ -328,7 +328,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
         <div class="panel">
           <div class="panel-head"><h3>السلات المتروكة</h3><button class="btn" id="refreshCartsBtn">تحديث السلات</button></div>
           <p style="padding:0 20px">سلات الحسابات المسجّلة فقط؛ سلات الزائرات محفوظة في أجهزتهن. تُعد السلة غير نشطة بعد ساعة من آخر تعديل، وهذا لا يؤكد مغادرة الزبونة. لا تُرسل أي رسائل تلقائيًا.</p>
-          <div class="panel-head"><input class="search-input" id="cartSearch" placeholder="بحث بالاسم أو البريد أو الهاتف"><select id="cartAgeFilter" class="status-select"><option value="1">غير نشطة منذ ساعة</option><option value="24">منذ 24 ساعة</option><option value="72">منذ 3 أيام</option><option value="0">كل السلات غير الفارغة</option></select></div>
+          <div class="panel-head"><input class="search-input" id="cartSearch" placeholder="بحث بالاسم أو البريد أو الهاتف"><select id="cartAgeFilter" class="status-select"><option value="0" selected>كل السلات غير الفارغة</option><option value="1">غير نشطة منذ ساعة</option><option value="24">منذ 24 ساعة</option><option value="72">منذ 3 أيام</option></select></div>
           <p id="cartSummary" style="padding:0 20px" role="status"></p>
           <div class="table-wrap"><table><thead><tr><th>الزبونة والتواصل</th><th>محتويات السلة</th><th>قيمة تقريبية دون توصيل</th><th>آخر تعديل</th><th>الحالة</th></tr></thead><tbody id="cartsBody"></tbody></table></div>
         </div>
