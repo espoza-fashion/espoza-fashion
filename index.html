@@ -10493,9 +10493,10 @@ if(!images.length) return;
 
 images.forEach((img,index)=>{
 
-  img.loading="eager";
+  /* Feedback gallery is below the fold: never compete with first-screen assets. */
+  img.loading="lazy";
   img.decoding="async";
-  img.fetchPriority=index<8 ? "high" : "auto";
+  img.fetchPriority="low";
 
   /* منع تأخير الصورة بسبب أبعاد غير معروفة */
   if(!img.getAttribute("width")){
@@ -10512,26 +10513,7 @@ images.forEach((img,index)=>{
 
 /* تحميل أول مجموعة فورًا، ثم إعطاء المتصفح فرصة لتحميل البقية */
 function preloadFeedbackImages(){
-
-const images=[
-  ...document.querySelectorAll("#feedbackShowcaseTrack img")
-];
-
-images.slice(0,8).forEach(img=>{
-
-const src=img.currentSrc || img.src;
-
-if(!src || src.includes("placehold.co")) return;
-
-const link=document.createElement("link");
-link.rel="preload";
-link.as="image";
-link.href=src;
-link.fetchPriority="high";
-
-document.head.appendChild(link);
-
-});
+  /* Deliberately do not preload below-the-fold customer gallery images. */
 
 }
 
