@@ -1,4 +1,4 @@
-const CACHE_NAME = "espoza-shell-v5";
+const CACHE_NAME = "espoza-shell-v6";
 
 self.addEventListener("install", event => {
   self.skipWaiting();
@@ -17,6 +17,11 @@ self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET" || request.mode !== "navigate") return;
   event.respondWith((async () => {
+    const isAdminPage = new URL(request.url).pathname.includes("/admin");
+    if (isAdminPage) {
+      try { return await fetch(request, { cache: "no-store" }); }
+      catch (error) { return new Response("لوحة الإدارة تحتاج اتصالًا بالإنترنت. أعد تحميل الصفحة.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } }); }
+    }
     const cache = await caches.open(CACHE_NAME);
     const cached = await cache.match(request);
     const network = fetch(request).then(response => {
