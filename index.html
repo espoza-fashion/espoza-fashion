@@ -6520,7 +6520,7 @@ const db=getCustomerSupabase();
 const [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]=await Promise.all([
 db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
-db.from("sliders").select("id,image_url,title,title_ar,title_en,subtitle,subtitle_ar,subtitle_en,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
+db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
 db.from("categories").select("id,slug,name_ar,name_en,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
 db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
