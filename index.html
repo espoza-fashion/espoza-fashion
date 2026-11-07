@@ -7655,12 +7655,7 @@ observer.observe(box);
 
 function goCategory(category){
 
-const allowed=[
-"all",
-"dresses",
-"sets",
-"offers"
-];
+const allowed=["all",...(Array.isArray(adminCategories)?adminCategories.map(item=>String(item.slug||"").replace(/^winter_sets$/,"winter-sets")):["dresses","sets","winter-sets","offers"])];
 
 
 currentCategory=
