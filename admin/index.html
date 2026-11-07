@@ -793,16 +793,13 @@ async function updateOrderStatus(id,status){
 
 /* ===================== Products ===================== */
 function categoriesInUse(){
-  const set = new Set(products.map(p=>p.category).filter(Boolean));
-  set.add("dresses"); set.add("sets");
-  return ["all",...set];
+  return ["all",...(categoryRows||[]).filter(c=>c.active&&c.slug!=="offers").map(c=>c.slug)];
 }
 function renderProductFilters(){
   const cats = categoriesInUse();
-  const labels = {all:"الكل", dresses:"فساتين", sets:"أطقم"};
-  $("productFilters").innerHTML = cats.map(c=>`
-    <button class="chip-filter ${productCatFilter===c?"active":""}" data-cat="${esc(c)}">${esc(labels[c]||c)}</button>
-  `).join("");
+  const labels = {all:"الكل"};
+  (categoryRows||[]).forEach(c=>{labels[c.slug]=c.name_ar||c.slug;});
+  $("productFilters").innerHTML = cats.map(c=>`<button class="chip-filter ${productCatFilter===c?"active":""}" data-cat="${esc(c)}">${esc(labels[c]||c)}</button>`).join("");
   $("productFilters").querySelectorAll(".chip-filter").forEach(b=>{
     b.addEventListener("click",()=>{productCatFilter=b.dataset.cat; renderProducts();});
   });
@@ -816,7 +813,10 @@ function renderProducts(){
   renderProductFilters();
   const q = ($("productSearch").value||"").trim().toLowerCase();
   let list = products.slice();
-  if(productCatFilter!=="all") list = list.filter(p=>p.category===productCatFilter);
+  if(productCatFilter!=="all"){
+    const category=categoryRows.find(c=>c.slug===productCatFilter);
+    list=list.filter(p=>(p.category_ids||[]).includes(category?.id)||p.category===productCatFilter||(productCatFilter==="winter_sets"&&p.category==="winter-sets"));
+  }
   if(q) list = list.filter(p=> String(p.name||"").toLowerCase().includes(q) || String(p.sku||"").toLowerCase().includes(q));
 
   $("productGrid").innerHTML = list.length ? list.map(p=>`
