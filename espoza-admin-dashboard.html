@@ -253,7 +253,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
 </head>
 <body>
 
-<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" autocomplete="username" required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form><button type="button" class="btn" onclick="resetAdminPassword()">نسيت كلمة المرور؟</button></div></div><div class="shell" inert>
+<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" value="ywsfjrt84@gmail.com" autocomplete="username" readonly required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form><button type="button" class="btn" onclick="resetAdminPassword()">نسيت كلمة المرور؟</button></div></div><div class="shell" inert>
 
   <aside class="sidebar" id="sidebar">
     <div class="brand">
@@ -1278,6 +1278,7 @@ $("saveSettingsBtn").addEventListener("click", async ()=>{
 async function verifyAdminSession(){
   const {data,error}=await sb.auth.getSession(); if(error) throw error;
   const session=data?.session||null; if(!session) return false;
+  if(String(session.user?.email||"").trim().toLowerCase()!==ADMIN_EMAIL){await sb.auth.signOut();return false;}
   const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",session.user.id).maybeSingle();
   if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();return false;}
   adminAuthSession=session; return true;
@@ -1290,9 +1291,10 @@ function setLoginLocked(seconds){
 }
 $("adminLoginForm").addEventListener("submit",async e=>{
   e.preventDefault(); if(Date.now()<loginLockedUntil)return;
-  const email=$("adminEmail").value.trim(), password=$("adminPassword").value, btn=$("adminLoginBtn"); btn.disabled=true; $("adminLoginError").textContent="";
+  const email=$("adminEmail").value.trim().toLowerCase(), password=$("adminPassword").value, btn=$("adminLoginBtn"); btn.disabled=true; $("adminLoginError").textContent="";
   try{
-    const {data,error}=await sb.auth.signInWithPassword({email,password}); if(error) throw error;
+    if(email!==ADMIN_EMAIL) throw new Error("not_admin_email");
+    const {data,error}=await sb.auth.signInWithPassword({email:ADMIN_EMAIL,password}); if(error) throw error;
     const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",data.user.id).maybeSingle();
     if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();throw new Error("not_admin");}
     adminAuthSession=data.session; loginAttempts=0; hideAuthGate(); await loadAll();
@@ -1306,13 +1308,13 @@ $("logoutBtn").addEventListener("click",async()=>{
  orders=[];products=[];productImages=[];productSizes=[];productColors=[];
  closeModal();renderOrders();renderProducts();renderDashboard();
 });
+const ADMIN_EMAIL="ywsfjrt84@gmail.com";
 async function resetAdminPassword(){
- const email=$("adminEmail").value.trim(),msg=$("adminLoginError");
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="أدخلي بريدًا إلكترونيًا صحيحًا.";return;}
+ const msg=$("adminLoginError");
  try{
-  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:"https://espoza-fashion.github.io/espoza-fashion/"});
+  const {error}=await sb.auth.resetPasswordForEmail(ADMIN_EMAIL,{redirectTo:"https://espoza-fashion.github.io/espoza-fashion/"});
   if(error)throw error;
-  msg.textContent="إذا كان البريد مسجّلًا، ستصلك رسالة الاستعادة. بعد تغيير كلمة المرور ارجعي إلى لوحة الأدمن.";
+  msg.textContent="إذا كان البريد مسجّلًا، ستصلك رسالة الاستعادة على بريد المدير المصرّح به.";
  }catch(error){msg.textContent="تعذّر طلب رسالة الاستعادة: "+error.message;}
 }
 async function initAdminAuth(){
