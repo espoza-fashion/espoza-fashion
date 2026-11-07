@@ -1,17 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#b9985a"/>
-      <stop offset="0.48" stop-color="#faf7f2"/>
-      <stop offset="1" stop-color="#b9985a"/>
-    </linearGradient>
-    <radialGradient id="bg" cx="50%" cy="42%" r="78%">
-      <stop offset="0" stop-color="#70283f"/>
-      <stop offset="1" stop-color="#641f34"/>
-    </radialGradient>
-  </defs>
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-  <text x="256" y="388" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="420" font-weight="400" fill="url(#metal)">E</text>
-  <path d="M82 218 C145 281 207 286 270 250 C330 216 380 216 433 246 C374 201 321 198 264 228 C194 264 138 254 82 218Z" fill="url(#metal)"/>
-  <path d="M82 231 C146 302 208 315 274 278 C337 243 384 251 435 286 C379 234 323 226 267 257 C198 295 139 274 82 231Z" fill="url(#metal)"/>
+  <rect width="512" height="512" fill="#641f34"/>
+  <circle cx="256" cy="256" r="228" fill="none" stroke="#b9985a" stroke-width="5"/>
+  <text x="256" y="350" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="330" font-weight="400" fill="#b9985a">E</text>
+  <circle cx="92" cy="256" r="8" fill="#b9985a"/>
+  <circle cx="420" cy="256" r="8" fill="#b9985a"/>
 </svg>
