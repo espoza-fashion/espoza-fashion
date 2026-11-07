@@ -793,7 +793,7 @@ async function updateOrderStatus(id,status){
 
 /* ===================== Products ===================== */
 function categoriesInUse(){
-  return ["all",...(categoryRows||[]).filter(c=>c.active&&c.slug!=="offers").map(c=>c.slug)];
+  return ["all",...(categoryRows||[]).filter(c=>c.active).map(c=>c.slug)];
 }
 function renderProductFilters(){
   const cats = categoriesInUse();
@@ -813,7 +813,8 @@ function renderProducts(){
   renderProductFilters();
   const q = ($("productSearch").value||"").trim().toLowerCase();
   let list = products.slice();
-  if(productCatFilter!=="all"){
+  if(productCatFilter==="offers")list=list.filter(p=>p.is_offer);
+  else if(productCatFilter!=="all"){
     const category=categoryRows.find(c=>c.slug===productCatFilter);
     list=list.filter(p=>(p.category_ids||[]).includes(category?.id)||p.category===productCatFilter||(productCatFilter==="winter_sets"&&p.category==="winter-sets"));
   }
@@ -908,7 +909,7 @@ function openProductModal(id){
         </div>
 
         <div class="toggle-row"><div class="t-label">متوفر للطلب</div><label class="switch"><input type="checkbox" id="pf_available" ${p?.is_available!==false?"checked":""}><span class="slider-tgl"></span></label></div>
-        <div class="toggle-row"><div class="t-label">عرض خاص</div><label class="switch"><input type="checkbox" id="pf_offer" ${p?.is_offer?"checked":""}><span class="slider-tgl"></span></label></div>
+        <div class="toggle-row"><div class="t-label">إظهار في قسم العروضات</div><label class="switch"><input type="checkbox" id="pf_offer" ${p?.is_offer?"checked":""}><span class="slider-tgl"></span></label></div>
         <div class="toggle-row"><div class="t-label">مفعّل وظاهر في المتجر</div><label class="switch"><input type="checkbox" id="pf_active" ${p?.is_active!==false?"checked":""}><span class="slider-tgl"></span></label></div>
       </div>
       <div class="modal-foot">
