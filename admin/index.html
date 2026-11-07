@@ -299,7 +299,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
       </div>
     </div>
 
-    <nav class="mobile-admin-nav" id="mobileAdminNav" aria-label="أقسام لوحة التحكم" style="display:none">
+    <nav class="mobile-admin-nav" id="mobileAdminNav" aria-label="أقسام لوحة التحكم" style="display:flex">
       <button class="nav-btn active" data-page="dashboard">نظرة عامة</button>
       <button class="nav-btn" data-page="orders">الطلبات</button>
       <button class="nav-btn" data-page="products">المنتجات</button>
@@ -558,7 +558,7 @@ function fmtDate(d){
 document.querySelectorAll(".nav-btn").forEach(btn=>{
   btn.addEventListener("click",()=>goPage(btn.dataset.page));
 });
-if(window.matchMedia("(max-width: 900px)").matches){ $("mobileAdminNav").style.display="flex"; }
+
 function goPage(page){
   currentPage=page;
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.page===page));
