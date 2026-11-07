@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#641f34">
 <title>Espoza Fashion</title>
 <meta name="description" content="Espoza Fashion - فساتين وأطقم نسائية أنيقة">
+<link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./icons/espoza-app-icon.svg">
 <link rel="apple-touch-icon" href="./icons/espoza-app-icon.svg">
 
@@ -4335,7 +4336,7 @@ id="toast">
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
@@ -10423,6 +10424,27 @@ error
 
 init();
 
+/* Supabase must never block first paint. If its CDN arrives late, hydrate remote
+   catalogue/settings after the static storefront is already visible. */
+(function retrySupabaseBoot(){
+  if(window.supabase && typeof window.supabase.createClient==="function"){
+    refreshSupabaseProducts().catch(error=>console.warn("Late product refresh failed:",error));
+    loadAdminStoreData().catch(error=>console.warn("Late store settings refresh failed:",error));
+    return;
+  }
+  let attempts=0;
+  const timer=window.setInterval(()=>{
+    attempts++;
+    if(window.supabase && typeof window.supabase.createClient==="function"){
+      window.clearInterval(timer);
+      refreshSupabaseProducts().catch(error=>console.warn("Late product refresh failed:",error));
+      loadAdminStoreData().catch(error=>console.warn("Late store settings refresh failed:",error));
+    }else if(attempts>=40){
+      window.clearInterval(timer);
+      console.warn("Supabase CDN unavailable; showing built-in storefront content.");
+    }
+  },250);
+})();
 
 /* Feedback arrow: draw the existing arrow when the feedback section appears */
 function setupFeedbackArrowDraw(){
@@ -10857,6 +10879,14 @@ async function sendEspozaAssistant(event){
     }
   });
 })();
+</script>
+<script>
+/* Update the app shell without caching HTML into a stale blank screen. */
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(error=>console.warn("App update service worker unavailable:",error));
+  },{once:true});
+}
 </script>
 </body>
 </html>
