@@ -10,7 +10,7 @@
   {slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets"}
  ];
  let panel,overlay,opened=false;
- const english=()=>window.lang==="en";
+ const english=()=>document.documentElement.lang==="en";
  const label=(ar,en)=>english()?en:ar;
  function makeButton(cls,icon,ar,en,action){
   const b=document.createElement("button");b.type="button";b.className=cls;
@@ -19,9 +19,11 @@
   b.append(i,t);b.addEventListener("click",action);return b;
  }
  function categories(){
-  const src=Array.isArray(window.adminCategories)&&window.adminCategories.length?window.adminCategories:fallbackCats;
-  const seen=new Set();
-  return src.filter(x=>x&&x.active!==false).map(x=>({slug:normalizeSlug(x.slug),name_ar:String(x.name_ar||x.name||x.slug||""),name_en:String(x.name_en||x.name||x.slug||"")})).filter(x=>x.slug&&x.slug!=="all"&&!seen.has(x.slug)&&seen.add(x.slug));
+  const wrap=document.getElementById("categories");
+  if(!wrap)return [];
+  return Array.from(wrap.querySelectorAll("button[data-cat]"))
+   .filter(b=>b.dataset.cat&&b.dataset.cat!=="all")
+   .map(b=>({slug:normalizeSlug(b.dataset.cat),label:b.textContent.trim()}));
  }
  function close(){
   if(!panel)return;
@@ -48,9 +50,11 @@
   account.addEventListener("click",()=>{close();if(typeof window.openCustomerAccount==="function")window.openCustomerAccount();});
   body.append(account);
   const title=document.createElement("div");title.className="esp-side-section-title";title.textContent=label("تسوّقي حسب القسم","SHOP BY CATEGORY");body.append(title);
-  body.append(makeButton("esp-side-link"+((window.currentCategory||"all")==="all"?" is-active":""),"✧","جميع المنتجات","All Products",()=>chooseCategory("all")));
+  const activeCategory=body.ownerDocument.querySelector("#categories .cat.active")?.dataset.cat||"all";
+  body.append(makeButton("esp-side-link"+(activeCategory==="all"?" is-active":""),"✧",label("جميع المنتجات","All Products"),label("جميع المنتجات","All Products"),()=>chooseCategory("all")));
   categories().forEach(cat=>{
-   const b=makeButton("esp-side-link"+(normalizeSlug(window.currentCategory)===cat.slug?" is-active":""),"◇",cat.name_ar,cat.name_en,()=>chooseCategory(cat.slug));
+   const active=activeCategory===cat.slug;
+   const b=makeButton("esp-side-link"+(active?" is-active":""),"◇",cat.label,cat.label,()=>chooseCategory(cat.slug));
    b.dataset.category=cat.slug;body.append(b);
   });
   const more=document.createElement("div");more.className="esp-side-section-title";more.textContent=label("روابط سريعة","QUICK LINKS");body.append(more);
