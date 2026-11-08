@@ -1,25 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
-<title id="title">Espoza Fashion luxury monogram</title>
-<defs>
-  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#e7d19a"/>
-    <stop offset=".48" stop-color="#b9985a"/>
-    <stop offset="1" stop-color="#f0dcae"/>
-  </linearGradient>
-</defs>
+<title id="title">Espoza Fashion E monogram</title>
 <rect width="512" height="512" rx="92" fill="#641f34"/>
-<path d="M256 34 C292 72 350 82 405 95 L405 244 C405 345 339 418 256 463 C173 418 107 345 107 244 L107 95 C162 82 220 72 256 34Z" fill="none" stroke="url(#gold)" stroke-width="3.5"/>
-<path d="M256 52 C289 83 340 94 386 105 L386 242 C386 329 330 391 256 435 C182 391 126 329 126 242 L126 105 C172 94 223 83 256 52Z" fill="none" stroke="#b9985a" stroke-opacity=".55" stroke-width="1.2"/>
-<path d="M256 83 C242 103 226 111 207 115 C227 120 243 133 256 153 C269 133 285 120 305 115 C286 111 270 103 256 83Z" fill="none" stroke="url(#gold)" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M256 94 L256 116 M246 108 L256 119 L266 108" fill="none" stroke="url(#gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M158 188 C177 157 194 151 211 158 C193 165 183 180 180 198 C198 183 214 180 229 188 C208 191 197 203 191 220" fill="none" stroke="#b9985a" stroke-width="2.2" stroke-linecap="round"/>
-<path d="M354 188 C335 157 318 151 301 158 C319 165 329 180 332 198 C314 183 298 180 283 188 C304 191 315 203 321 220" fill="none" stroke="#b9985a" stroke-width="2.2" stroke-linecap="round"/>
-<text x="256" y="316" text-anchor="middle" font-family="Bodoni 72, Didot, Georgia, 'Times New Roman', serif" font-size="226" font-style="italic" font-weight="400" fill="url(#gold)" stroke="#e8d29d" stroke-opacity=".35" stroke-width="1">E</text>
-<path d="M167 340 C193 365 218 375 256 375 C294 375 319 365 345 340" fill="none" stroke="url(#gold)" stroke-width="2.2" stroke-linecap="round"/>
-<path d="M194 358 C179 380 164 386 147 382 C164 373 170 361 171 348 M318 358 C333 380 348 386 365 382 C348 373 342 361 341 348" fill="none" stroke="#b9985a" stroke-width="2" stroke-linecap="round"/>
-<path d="M256 362 L263 373 L256 384 L249 373Z" fill="url(#gold)"/>
-<text x="256" y="414" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" letter-spacing="6" fill="#ead7ad">ESPOZA</text>
-<text x="256" y="438" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" letter-spacing="5.5" fill="#b9985a">F A S H I O N</text>
-<circle cx="146" cy="255" r="3.5" fill="#e7d19a"/><circle cx="366" cy="255" r="3.5" fill="#e7d19a"/>
-<path d="M142 248 l4 -9 4 9 M362 248 l4 -9 4 9" fill="none" stroke="#b9985a" stroke-width="1.5"/>
+<text x="256" y="376" text-anchor="middle" font-family="'Bodoni 72', Didot, 'Times New Roman', Georgia, serif" font-size="390" font-style="italic" font-weight="400" fill="#d7bd83">E</text>
 </svg>
