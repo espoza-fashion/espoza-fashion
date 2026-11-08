@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "Espoza Fashion",
+  "name": "Espoza Fashion – Customer App",
   "short_name": "Espoza",
   "description": "Espoza Fashion — منذ 2019",
   "lang": "ar",
@@ -9,8 +9,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#641f34",
-  "theme_color": "#641f34",
+  "background_color": "#FBF9F5",
+  "theme_color": "#641F34",
   "icons": [
     {
       "src": "./icons/espoza-app-icon.svg",
