@@ -13,13 +13,13 @@
   "theme_color": "#641f34",
   "icons": [
     {
-      "src": "./icons/espoza-app-icon.svg",
+      "src": "./icons/espoza-luxe-emblem.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "./icons/espoza-app-icon.svg",
+      "src": "./icons/espoza-luxe-emblem.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
