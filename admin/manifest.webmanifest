@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "Espoza Fashion Admin",
+  "short_name": "Espoza Admin",
+  "description": "Espoza Fashion — لوحة الإدارة",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#431321",
+  "theme_color": "#431321",
+  "icons": [
+    {
+      "src": "./icons/admin-emblem.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/admin-emblem.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
