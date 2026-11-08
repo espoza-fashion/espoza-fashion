@@ -1,40 +1,32 @@
-const CACHE_NAME = "espoza-shell-v10";
-
-self.addEventListener("install", event => {
-  self.skipWaiting();
-});
-
+/* Espoza customer PWA: online-first documents, offline fallback only. */
+const CACHE_NAME = "espoza-shell-v11";
+const OFFLINE_HTML = '<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#641F34"><title>Espoza Fashion</title><body style="font-family:Arial,sans-serif;background:#FBF9F5;color:#641F34;text-align:center;padding:15vh 24px"><h2>تعذّر الاتصال بالمتجر</h2><p>تحققي من اتصال الإنترنت ثم أعيدي المحاولة.</p><button onclick="location.reload()" style="padding:12px 24px;border:0;border-radius:24px;background:#641F34;color:white">إعادة المحاولة</button></body></html>';
+self.addEventListener("install", event => { self.skipWaiting(); });
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
     await Promise.all(keys.filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME).map(key => caches.delete(key)));
+    if (self.registration.navigationPreload) await self.registration.navigationPreload.enable();
     await self.clients.claim();
   })());
 });
-
-/* Return cached HTML immediately on repeat launches; refresh it in background. */
 self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET" || request.mode !== "navigate") return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || url.pathname.includes("/admin")) return;
   event.respondWith((async () => {
-    const isAdminPage = new URL(request.url).pathname.includes("/admin");
-    if (isAdminPage) {
-      try { return await fetch(request, { cache: "no-store" }); }
-      catch (error) { return new Response("لوحة الإدارة تحتاج اتصالًا بالإنترنت. أعد تحميل الصفحة.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } }); }
-    }
     const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
-    const network = fetch(request).then(response => {
-      if (response && response.ok) cache.put(request, response.clone()).catch(() => {});
+    try {
+      const response = await (event.preloadResponse || Promise.resolve(null)) || await fetch(request, { cache: "no-cache" });
+      if (response.ok && response.type === "basic" && !response.headers.has("set-cookie")) {
+        await cache.put(request, response.clone());
+      }
       return response;
-    });
-    if (cached) {
-      network.catch(() => {});
-      return cached;
-    }
-    try { return await network; }
-    catch (error) {
-      return new Response('<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#641f34"><title>Espoza Fashion</title><body style="font-family:Arial,sans-serif;background:#faf7f2;color:#641f34;text-align:center;padding:15vh 24px"><h2>تعذّر الاتصال بالمتجر</h2><p>تحققي من اتصال الإنترنت ثم أعيدي المحاولة.</p><button onclick="location.reload()" style="padding:12px 24px;border:0;border-radius:24px;background:#641f34;color:white">إعادة المحاولة</button></body></html>', { headers: { "Content-Type": "text/html; charset=utf-8" }, status: 503 });
+    } catch (_) {
+      return await cache.match(request) || new Response(OFFLINE_HTML, {
+        status: 503, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" }
+      });
     }
   })());
 });
