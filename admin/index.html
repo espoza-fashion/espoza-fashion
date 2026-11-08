@@ -1042,25 +1042,54 @@ async function syncProductChildren(table,productId,key,values,previous){
 }
 
 async function syncProductColors(productId,values,previous){
+  // Normalize and validate the complete desired color list before touching stored rows.
   const wanted=values.map(v=>({name:String(v.name||"").trim(),name_en:String(v.name_en||"").trim()})).filter(v=>v.name);
+  const seen=new Set();
+  for(const color of wanted){
+    const key=color.name.toLocaleLowerCase();
+    if(seen.has(key))throw new Error("يوجد لون مكرر: "+color.name);
+    seen.add(key);
+  }
+
   const retained=new Set();
   for(const [sort_order,value] of wanted.entries()){
-    const old=previous.find(row=>String(row.name||"").trim()===value.name&&!retained.has(row.id));
+    const old=previous.find(row=>String(row.name||"").trim().toLocaleLowerCase()===value.name.toLocaleLowerCase()&&!retained.has(row.id));
     if(old){
       retained.add(old.id);
-      if(String(old.name_en||"")!==value.name_en||Number(old.sort_order)!==sort_order){
-        const result=await sb.from("product_colors").update({name_en:value.name_en||null,sort_order}).eq("id",old.id).eq("product_id",productId).select("id").single();
-        if(result.error)throw result.error;
+      if(String(old.name||"").trim()!==value.name||String(old.name_en||"")!==value.name_en||Number(old.sort_order)!==sort_order){
+        const result=await sb.from("product_colors")
+          .update({name:value.name,name_en:value.name_en||null,sort_order})
+          .eq("id",old.id).eq("product_id",productId)
+          .select("id").maybeSingle();
+        if(result.error)throw new Error("تعذر تحديث اللون «"+value.name+"»: "+result.error.message);
+        if(!result.data?.id)throw new Error("لم يتم تأكيد تحديث اللون «"+value.name+"» في قاعدة البيانات.");
       }
     }else{
-      const result=await sb.from("product_colors").insert({product_id:productId,name:value.name,name_en:value.name_en||null,sort_order});
-      if(result.error)throw result.error;
+      const result=await sb.from("product_colors")
+        .insert({product_id:productId,name:value.name,name_en:value.name_en||null,sort_order})
+        .select("id,product_id,name").single();
+      if(result.error)throw new Error("تعذر إضافة اللون «"+value.name+"»: "+result.error.message);
+      if(!result.data?.id)throw new Error("لم يتم تأكيد حفظ اللون «"+value.name+"» في قاعدة البيانات.");
     }
   }
+
+  // Remove only colors explicitly removed in the editor, after additions/updates succeeded.
   for(const old of previous){
     if(retained.has(old.id))continue;
-    const result=await sb.from("product_colors").delete().eq("id",old.id).eq("product_id",productId);
-    if(result.error)throw result.error;
+    const result=await sb.from("product_colors")
+      .delete().eq("id",old.id).eq("product_id",productId)
+      .select("id");
+    if(result.error)throw new Error("تعذر حذف اللون القديم «"+(old.name||"")+"»: "+result.error.message);
+  }
+
+  // Read-after-write verification prevents the admin UI from reporting a false success.
+  const check=await sb.from("product_colors").select("name,name_en,sort_order")
+    .eq("product_id",productId).order("sort_order",{ascending:true});
+  if(check.error)throw new Error("تم إرسال الألوان لكن تعذر التحقق من حفظها: "+check.error.message);
+  const saved=(check.data||[]).map(row=>String(row.name||"").trim().toLocaleLowerCase()).sort();
+  const expected=wanted.map(row=>row.name.toLocaleLowerCase()).sort();
+  if(saved.length!==expected.length||saved.some((name,index)=>name!==expected[index])){
+    throw new Error("فشل التحقق من الألوان بعد الحفظ. أعد المحاولة، ولم يتم تأكيد اكتمال حفظ قائمة الألوان.");
   }
 }
 async function saveProduct(id){
