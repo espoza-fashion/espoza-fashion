@@ -6602,7 +6602,9 @@ function productColorDisplayName(value){
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
 const colorRows=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0));
-const colors=colorRows.map(x=>(lang==="en"?(x.name_en||x.name||""):(x.name||""))).filter(Boolean);
+/* Keep the Arabic/database color as the stable internal value.
+   The visible label is translated only when rendering the color chips. */
+const colors=colorRows.map(x=>String(x.name||x.name_en||"")).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
 return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",categorySlugs:Array.isArray(p.category_slugs)?p.category_slugs:[],price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],colorsData:colorRows.map(x=>({name:String(x.name||""),name_en:String(x.name_en||"")})),sizeChart:p.size_chart||null};
@@ -8110,18 +8112,6 @@ revealObserver.observe(el)
    تفاصيل المنتج
    ========================================== */
 
-function applyProductColorLanguage(){
-  products.forEach(product=>{
-    if(!Array.isArray(product.colorsData))return;
-    const previousColors=Array.isArray(product.colors)?product.colors:[];
-    const selectedIndex=currentProduct===product?previousColors.indexOf(currentColor):-1;
-    const localized=product.colorsData.map(color=>lang==="en"?(color.name_en||color.name):(color.name||color.name_en)).filter(Boolean);
-    product.colors=[...new Set(localized)];
-    product.images=(product.images||[]).map((img,index)=>({...img,color:localized[index]||""}));
-    if(currentProduct===product&&selectedIndex>=0)currentColor=product.colors[selectedIndex]||product.colors[0]||"";
-  });
-}
-
 function openProduct(id){
 
 currentProduct=
@@ -8288,9 +8278,10 @@ $("colorSection")
 $("detailColors")
 .innerHTML=
 currentProduct.colors
-.map(
-color=>
-`
+.map(color=>{
+const colorData=(currentProduct.colorsData||[]).find(item=>item.name===color||item.name_en===color);
+const colorLabel=lang==="en"?(colorData?.name_en||colorData?.name||color):(colorData?.name||colorData?.name_en||color);
+return `
 <button
 class="chip clickable ${
 color===currentColor
@@ -8301,10 +8292,10 @@ color===currentColor
 }"
 type="button"
 onclick="selectColor('${esc(color)}')">
-${esc(color)}
+${esc(colorLabel)}
 </button>
-`
-)
+`;
+})
 .join("");
 
 
@@ -10017,8 +10008,6 @@ renderCartModal();
 
 updateCartBadge();
 
-
-applyProductColorLanguage();
 
 if(
 currentProduct
