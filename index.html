@@ -6384,7 +6384,7 @@ async function submitCustomerAuth(){
  const msg=$("customerAuthMsg"),submit=$("customerAuthSubmit");
  if(submit?.disabled)return;
  if(customerAuthMode!=="recovery"&&!email){msg.textContent="اكتبي البريد الإلكتروني أولًا.";return;}
- if(customerAuthMode!=="recovery"&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ if(customerAuthMode!=="recovery"&&!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
  if(!password||(customerAuthMode!=="login"&&password.length<8)){msg.textContent="كلمة السر لازم تكون 8 أحرف على الأقل.";return;}
  msg.textContent=customerAuthMode==="signup"?"جارٍ إنشاء حسابك وإرسال رابط التأكيد…":"جارٍ تسجيل الدخول…";
  if(submit)submit.disabled=true;
@@ -6427,7 +6427,7 @@ async function submitCustomerAuth(){
 async function resendCustomerConfirmation(){
  const email=$("customerEmail").value.trim().toLowerCase(),msg=$("customerAuthMsg"),button=$("customerResendConfirmation");
  if(button.disabled)return;
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
  button.disabled=true;
  try{
   const {error}=await getCustomerSupabase().auth.resend({type:"signup",email,options:{emailRedirectTo:customerRedirectUrl()}});
@@ -6440,7 +6440,7 @@ async function requestCustomerLogin(){return submitCustomerAuth();}
 async function resetCustomerPassword(){
  const email=$("customerEmail").value.trim().toLowerCase(),msg=$("customerAuthMsg");
  if(!email){msg.textContent="اكتبي بريدك الإلكتروني أولًا، ثم اضغطي نسيت كلمة السر.";return;}
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
  msg.textContent="جارٍ إرسال رابط إعادة تعيين كلمة السر…";
  try{
   const result=await getCustomerSupabase().auth.resetPasswordForEmail(email,{redirectTo:customerRedirectUrl()});
