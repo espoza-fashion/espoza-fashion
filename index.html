@@ -6698,9 +6698,15 @@ await refreshSupabaseProducts();
 /* Keep the customer catalogue synced with Admin/Supabase while the page
    remains open. No design or existing product data is changed. */
 if(!window.__espozaProductRefreshTimer){
-window.__espozaProductRefreshTimer=setInterval(refreshSupabaseProducts,60000);
+const refreshStorefrontData=()=>{
+refreshSupabaseProducts();
+if(typeof loadAdminStoreData==="function"){
+loadAdminStoreData().catch(error=>console.warn("Store content refresh failed:",error));
+}
+};
+window.__espozaProductRefreshTimer=setInterval(refreshStorefrontData,60000);
 document.addEventListener("visibilitychange",()=>{
-if(!document.hidden)refreshSupabaseProducts();
+if(!document.hidden)refreshStorefrontData();
 });
 }
 }
@@ -10863,7 +10869,7 @@ async function sendEspozaAssistant(event){
   if (!("supabase" in window) || typeof getCustomerSupabase !== "function") return;
   let refreshTimer = null;
   const pendingRefreshKinds = new Set();
-  const productTables = ["products","product_sizes","product_colors","product_images"];
+  const productTables = ["products","product_sizes","product_colors","product_images","product_categories"];
   const contentTables = ["categories","site_sections","coupons","sliders","feedback","store_settings","delivery_areas"];
   const db = getCustomerSupabase();
   const scheduleRefresh = (kind) => {
