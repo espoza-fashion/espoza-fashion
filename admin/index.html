@@ -263,7 +263,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
 </head>
 <body>
 
-<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" autocomplete="username" placeholder="name@example.com" required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form><button type="button" class="btn" id="adminForgotPasswordBtn" onclick="resetAdminPassword()">نسيت كلمة المرور؟</button><section id="adminRecoveryPanel" hidden><h2 style="margin:18px 0 8px;font-size:20px">تعيين كلمة مرور جديدة</h2><p style="font-size:13px;color:var(--muted)">أدخل كلمة مرور جديدة لحساب مدير Espoza Fashion.</p><form id="adminRecoveryForm"><label for="adminNewPassword">كلمة المرور الجديدة</label><input id="adminNewPassword" type="password" minlength="8" autocomplete="new-password" required><label for="adminConfirmPassword">تأكيد كلمة المرور</label><input id="adminConfirmPassword" type="password" minlength="8" autocomplete="new-password" required><button class="btn primary" id="adminRecoveryBtn" type="submit">حفظ كلمة المرور</button><div class="auth-error" id="adminRecoveryError"></div></form></section></div></div><div class="shell" inert>
+<div id="authGate"><div class="auth-card"><div style="font-size:11px;letter-spacing:2px;color:var(--gold);font-weight:800">ESPOZA FASHION</div><h1>لوحة التحكم</h1><p>الدخول محمي بحساب Supabase المصرّح له فقط. لا يمكن فتح بيانات المتجر أو تعديلها بدون جلسة موثّقة وصلاحية مدير.</p><form id="adminLoginForm" autocomplete="on"><label for="adminEmail">البريد الإلكتروني</label><input id="adminEmail" type="email" value="ywsfjrt84@gmail.com" autocomplete="username" readonly required><label for="adminPassword">كلمة المرور</label><input id="adminPassword" type="password" autocomplete="current-password" required><button class="btn primary" id="adminLoginBtn" type="submit">دخول آمن</button><div class="auth-error" id="adminLoginError"></div><div class="auth-lock" id="adminLoginLock"></div></form><button type="button" class="btn" id="adminForgotPasswordBtn" onclick="resetAdminPassword()">نسيت كلمة المرور؟</button><section id="adminRecoveryPanel" hidden><h2 style="margin:18px 0 8px;font-size:20px">تعيين كلمة مرور جديدة</h2><p style="font-size:13px;color:var(--muted)">أدخل كلمة مرور جديدة لحساب مدير Espoza Fashion.</p><form id="adminRecoveryForm"><label for="adminNewPassword">كلمة المرور الجديدة</label><input id="adminNewPassword" type="password" minlength="8" autocomplete="new-password" required><label for="adminConfirmPassword">تأكيد كلمة المرور</label><input id="adminConfirmPassword" type="password" minlength="8" autocomplete="new-password" required><button class="btn primary" id="adminRecoveryBtn" type="submit">حفظ كلمة المرور</button><div class="auth-error" id="adminRecoveryError"></div></form></section></div></div><div class="shell" inert>
 
   <aside class="sidebar" id="sidebar">
     <div class="brand">
@@ -1538,9 +1538,11 @@ $("addSectionBtn").addEventListener("click",()=>editSiteSection());
 $("mediaFolderFilter").addEventListener("change",renderMedia);
 
 /* ===================== Authentication / Security Gate ===================== */
+const ADMIN_EMAIL="ywsfjrt84@gmail.com";
 async function verifyAdminSession(){
   const {data,error}=await sb.auth.getSession(); if(error) throw error;
   const session=data?.session||null; if(!session) return false;
+  if(String(session.user?.email||"").trim().toLowerCase()!==ADMIN_EMAIL){await sb.auth.signOut();return false;}
   const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",session.user.id).maybeSingle();
   if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();return false;}
   adminAuthSession=session; return true;
@@ -1555,8 +1557,8 @@ $("adminLoginForm").addEventListener("submit",async e=>{
   e.preventDefault(); if(Date.now()<loginLockedUntil)return;
   const email=$("adminEmail").value.trim().toLowerCase(), password=$("adminPassword").value, btn=$("adminLoginBtn"); btn.disabled=true; $("adminLoginError").textContent="";
   try{
-    if(!email || !/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)) throw new Error("invalid_email");
-    const {data,error}=await sb.auth.signInWithPassword({email,password}); if(error) throw error;
+    if(email!==ADMIN_EMAIL) throw new Error("not_admin_email");
+    const {data,error}=await sb.auth.signInWithPassword({email:ADMIN_EMAIL,password}); if(error) throw error;
     const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",data.user.id).maybeSingle();
     if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();throw new Error("not_admin");}
     adminAuthSession=data.session; loginAttempts=0; hideAuthGate(); await loadAll();
@@ -1585,7 +1587,7 @@ function showAdminLogin(){
 async function resetAdminPassword(){
  const msg=$("adminLoginError");
  const email=$("adminEmail").value.trim().toLowerCase();
- if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="أدخل بريدًا إلكترونيًا صالحًا أولًا.";return;}
+ if(email!==ADMIN_EMAIL){msg.textContent="استعادة كلمة المرور متاحة لبريد الإدارة المعتمد فقط.";return;}
  try{
   const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
   if(error)throw error;
@@ -1604,6 +1606,7 @@ $("adminRecoveryForm").addEventListener("submit",async e=>{
   if(sessionError)throw sessionError;
   const recoveryUser=sessionData?.session?.user;
   if(!recoveryUser)throw new Error("انتهت صلاحية رابط الاستعادة. اطلب رابطًا جديدًا.");
+  if(String(recoveryUser.email||"").trim().toLowerCase()!==ADMIN_EMAIL)throw new Error("رابط الاستعادة لا يخص بريد الإدارة المعتمد.");
   const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",recoveryUser.id).maybeSingle();
   if(adminError)throw adminError;
   if(!adminRow){await sb.auth.signOut();throw new Error("هذا الحساب غير مصرح له كمدير.");}
