@@ -44,8 +44,8 @@ test('signup rejects malformed local-part ending in a dot before contacting auth
 });
 test('admin authentication has no fixed provider email and requires database admin membership',()=>{
  assert.doesNotMatch(admin,/ADMIN_EMAIL|readonly required/);
- assert.match(admin,/signInWithPassword\\(\\{email,password\\}\\)/);
- assert.match(admin,/from\\("admin_users"\\)\\.select\\("user_id"\\)/);
+ assert.match(admin,/signInWithPassword\(\{email,password\}\)/);
+ assert.match(admin,/from\("admin_users"\)\.select\("user_id"\)/);
 });
 test('resend uses signup confirmation and configured redirect',async()=>{
  let payload;const c=context(shop,['resendCustomerConfirmation'],{getCustomerSupabase:()=>({auth:{resend:async data=>{payload=data;return {};}}}),customerRedirectUrl:()=> 'https://espoza-fashion.github.io/espoza-fashion/'});
