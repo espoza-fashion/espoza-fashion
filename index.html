@@ -10885,6 +10885,9 @@ async function sendEspozaAssistant(event){
       if (kinds.has("content")) {
         if (typeof loadAdminStoreData === "function") jobs.push(loadAdminStoreData());
       }
+      if (kinds.has("orders") && customerProfile && typeof loadCustomerOrders === "function") {
+        jobs.push(loadCustomerOrders());
+      }
       await Promise.allSettled(jobs);
     }, 350);
   };
@@ -10895,6 +10898,8 @@ async function sendEspozaAssistant(event){
   for (const table of contentTables) {
     channel = channel.on("postgres_changes", { event: "*", schema: "public", table }, () => scheduleRefresh("content"));
   }
+  // Keep the signed-in customer's order history current when Admin changes an order.
+  channel = channel.on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => scheduleRefresh("orders"));
   window.__espozaRealtimeChannel = channel.subscribe((status) => {
     if (status === "SUBSCRIBED") {
       console.info("Espoza live store synchronization connected.");
