@@ -10899,10 +10899,23 @@ async function sendEspozaAssistant(event){
 })();
 </script>
 <script>
-/* Update the app shell without caching HTML into a stale blank screen. */
+/* Keep the installed customer app aligned with the published storefront. */
 if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(error=>console.warn("App update service worker unavailable:",error));
+  let refreshingForUpdate=false;
+  const hadController=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(!hadController || refreshingForUpdate)return;
+    refreshingForUpdate=true;
+    window.location.reload();
+  });
+  window.addEventListener("load",async()=>{
+    try{
+      const registration=await navigator.serviceWorker.register("./sw.js",{scope:"./"});
+      await registration.update();
+      if(registration.waiting)registration.waiting.postMessage({type:"SKIP_WAITING"});
+    }catch(error){
+      console.warn("App update service worker unavailable:",error);
+    }
   },{once:true});
 }
 </script>
