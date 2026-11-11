@@ -1428,7 +1428,7 @@ $("adminLoginForm").addEventListener("submit",async e=>{
   e.preventDefault(); if(Date.now()<loginLockedUntil)return;
   const email=$("adminEmail").value.trim().toLowerCase(), password=$("adminPassword").value, btn=$("adminLoginBtn"); btn.disabled=true; $("adminLoginError").textContent="";
   try{
-    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("invalid_email");
+    if(!email || !/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)) throw new Error("invalid_email");
     const {data,error}=await sb.auth.signInWithPassword({email,password}); if(error) throw error;
     const {data:adminRow,error:adminError}=await sb.from("admin_users").select("user_id").eq("user_id",data.user.id).maybeSingle();
     if(adminError) throw adminError; if(!adminRow){await sb.auth.signOut();throw new Error("not_admin");}
@@ -1458,7 +1458,7 @@ function showAdminLogin(){
 async function resetAdminPassword(){
  const msg=$("adminLoginError");
  const email=$("adminEmail").value.trim().toLowerCase();
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="أدخل بريدًا إلكترونيًا صالحًا أولًا.";return;}
+ if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="أدخل بريدًا إلكترونيًا صالحًا أولًا.";return;}
  try{
   const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
   if(error)throw error;
