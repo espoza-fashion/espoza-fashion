@@ -42,10 +42,14 @@ test('signup rejects malformed local-part ending in a dot before contacting auth
  const c=context(shop,['submitCustomerAuth'],{customerAuthMode:'signup',getCustomerSupabase:()=>{throw Error('should not call');}});
  c.$('customerEmail').value='person.@cloud.com';c.$('customerPassword').value='test-password';await c.submitCustomerAuth();assert.match(c.$('customerAuthMsg').textContent,/تحقّقي/);
 });
-test('admin authentication has no fixed provider email and requires database admin membership',()=>{
- assert.doesNotMatch(admin,/ADMIN_EMAIL|readonly required/);
- assert.match(admin,/signInWithPassword\(\{email,password\}\)/);
+test('admin authentication is restricted to the configured Gmail and database admin membership',()=>{
+ assert.match(admin,/const ADMIN_EMAIL="ywsfjrt84@gmail\.com"/);
+ assert.match(admin,/value="ywsfjrt84@gmail\.com"/);
+ assert.match(admin,/signInWithPassword\(\{email:ADMIN_EMAIL,password\}\)/);
  assert.match(admin,/from\("admin_users"\)\.select\("user_id"\)/);
+});
+test('customer frontend does not restrict valid email domains to a provider allowlist',()=>{
+ assert.doesNotMatch(shop,/gmail\.com|hotmail\.com|outlook\.com|icloud\.com|yahoo\.com/);
 });
 test('resend uses signup confirmation and configured redirect',async()=>{
  let payload;const c=context(shop,['resendCustomerConfirmation'],{getCustomerSupabase:()=>({auth:{resend:async data=>{payload=data;return {};}}}),customerRedirectUrl:()=> 'https://espoza-fashion.github.io/espoza-fashion/'});
