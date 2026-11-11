@@ -31,6 +31,22 @@ test('signup validates email before contacting auth',async()=>{
  const c=context(shop,['submitCustomerAuth'],{customerAuthMode:'signup',getCustomerSupabase:()=>{throw Error('should not call');}});
  c.$('customerEmail').value='invalid';c.$('customerPassword').value='test-password';await c.submitCustomerAuth();assert.match(c.$('customerAuthMsg').textContent,/تحقّقي/);
 });
+test('signup accepts valid email addresses from different providers without domain allowlists',async()=>{
+ const accepted=[];
+ const emails=['name+shop@gmail.com','buyer@hotmail.com','customer@icloud.com','client@yahoo.co.uk','team@fashion-company.com'];
+ const c=context(shop,['submitCustomerAuth'],{customerAuthMode:'signup',customerRedirectUrl:()=> 'https://espoza-fashion.github.io/espoza-fashion/',getCustomerSupabase:()=>({auth:{signUp:async({email})=>{accepted.push(email);return {data:{session:null}};}}})});
+ for(const email of emails){c.$('customerEmail').value=email;c.$('customerPassword').value='test-password';await c.submitCustomerAuth();assert.match(c.$('customerAuthMsg').textContent,/تم إنشاء الحساب/);}
+ assert.deepEqual(accepted,emails);
+});
+test('signup rejects malformed local-part ending in a dot before contacting auth',async()=>{
+ const c=context(shop,['submitCustomerAuth'],{customerAuthMode:'signup',getCustomerSupabase:()=>{throw Error('should not call');}});
+ c.$('customerEmail').value='person.@cloud.com';c.$('customerPassword').value='test-password';await c.submitCustomerAuth();assert.match(c.$('customerAuthMsg').textContent,/تحقّقي/);
+});
+test('admin authentication has no fixed provider email and requires database admin membership',()=>{
+ assert.doesNotMatch(admin,/ADMIN_EMAIL|readonly required/);
+ assert.match(admin,/signInWithPassword\\(\\{email,password\\}\\)/);
+ assert.match(admin,/from\\("admin_users"\\)\\.select\\("user_id"\\)/);
+});
 test('resend uses signup confirmation and configured redirect',async()=>{
  let payload;const c=context(shop,['resendCustomerConfirmation'],{getCustomerSupabase:()=>({auth:{resend:async data=>{payload=data;return {};}}}),customerRedirectUrl:()=> 'https://espoza-fashion.github.io/espoza-fashion/'});
  c.$('customerEmail').value=' TEST@EXAMPLE.COM ';await c.resendCustomerConfirmation();assert.equal(payload.type,'signup');assert.equal(payload.email,'test@example.com');assert.ok(payload.options.emailRedirectTo.endsWith('/espoza-fashion/'));assert.equal(c.$('customerResendConfirmation').disabled,false);
