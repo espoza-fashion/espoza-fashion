@@ -9428,7 +9428,7 @@ const discount=offer?.discount||0;
 const discountRow=$("orderDiscountRow");
 if(discountRow)discountRow.classList.toggle("hidden",discount<=0);
 if(discount>0){
-$("orderDiscountLabel").textContent="عرض تلقائي ("+offer.label+")";
+$("orderDiscountLabel").textContent=t().discountLabel+" ("+offer.label+")";
 $("orderDiscountValue").textContent="−₪"+money(discount);
 }
 $("itemPrice").textContent=`₪${money(subtotal)}`;
@@ -9454,7 +9454,7 @@ const key=cartModelKey(item);
 modelCounts.set(key,(modelCounts.get(key)||0)+Math.max(0,Number(item.qty)||0));
 }
 if([...modelCounts.values()].some(count=>count>4)){
-alert("في السلة أكثر من 4 قطع من نفس الموديل. عدّل الكميات قبل إرسال الطلب.");
+alert(t().cartLimit);
 return;
 }
 const name=$("customerName")
@@ -10233,6 +10233,7 @@ x.footerContactTitle;
 $("footerLinksTitle")
 .textContent=
 x.footerLinksTitle;
+if($("footerLinksNote"))$("footerLinksNote").textContent=x.footerLinksNote;
 if($("wishlistBtnLabel"))$("wishlistBtnLabel").textContent=t().favorites;
 if($("quickFavoritesLabel"))$("quickFavoritesLabel").textContent=t().favorites;
 if($("quickWishesLabel"))$("quickWishesLabel").textContent=t().wishList;
