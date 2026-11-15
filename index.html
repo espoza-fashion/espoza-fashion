@@ -8326,7 +8326,8 @@ error
    ========================================== */
 
 function marqueeDividerHTML(index=0){
-const groups=[
+const groupsByLanguage={
+ar:[
 ["بدأنا من 2019","شغفنا بالأناقة مستمر","Espoza Fashion"],
 ["Espoza Fashion","خيارك للتألق","إطلالتك تبدأ من هنا"],
 ["أجود الأقمشة","أسعار تفضيلية","جودة نلاحظها من أول لمسة"],
@@ -8335,10 +8336,32 @@ const groups=[
 ["منذ 2019 ونحن نكبر معكم","ثقة نعتز بها","اختياراتك تصنع الفرق"],
 ["أناقة يومية بلمسة فاخرة","ألوان وقصّات راقية","لأنك تستحقين الأجمل"],
 ["تسوقي بثقة مع Espoza Fashion","قطع مختارة بعناية","تألقي في كل وقت"]
-];
+],
+en:[
+["Since 2019","Our passion for elegance continues","Espoza Fashion"],
+["Espoza Fashion","Your choice to shine","Your look starts here"],
+["Quality fabrics","Special prices","Quality you can feel"],
+["Details made for your style","Elegant cuts","A distinctive look for every occasion"],
+["Every piece has a story","Choose what feels like you","Elegance, your way"],
+["Growing with you since 2019","Your trust means everything","Your choices make the difference"],
+["Everyday elegance with a luxury touch","Refined colors and silhouettes","Because you deserve the best"],
+["Shop with confidence at Espoza Fashion","Carefully selected pieces","Shine at every moment"]
+],
+he:[
+["מאז 2019","התשוקה שלנו לאלגנטיות ממשיכה","Espoza Fashion"],
+["Espoza Fashion","הבחירה שלך לזרוח","הסטייל שלך מתחיל כאן"],
+["בדים איכותיים","מחירים מיוחדים","איכות שמרגישים"],
+["פרטים שמשלימים את המראה שלך","גזרות אלגנטיות","מראה ייחודי לכל אירוע"],
+["לכל פריט יש סיפור","בחרי את מה שמתאים לך","אלגנטיות בדרך שלך"],
+["צומחים יחד איתך מאז 2019","האמון שלך חשוב לנו","הבחירות שלך עושות את ההבדל"],
+["אלגנטיות יומיומית בנגיעה יוקרתית","צבעים וגזרות מעודנים","כי מגיע לך הטוב ביותר"],
+["קנייה בראש שקט ב-Espoza Fashion","פריטים שנבחרו בקפידה","תזרחי בכל רגע"]
+]
+};
+const groups=groupsByLanguage[lang]||groupsByLanguage.ar;
 const selected=groups[Math.abs(Number(index)||0)%groups.length];
-const html=selected.map(x=>`<span>${esc(x)}</span>`).join("");
-return `<div class="marquee-divider" style="grid-column:1/-1"><div class="marquee-track" aria-label="${esc(selected.join(" — "))}"><div class="marquee-copy">${html}</div><div class="marquee-copy" aria-hidden="true">${html}</div></div></div>`;
+const html=selected.map(x=>`<span lang="${lang}" dir="${lang==="en"?"ltr":"rtl"}">${esc(x)}</span>`).join("");
+return `<div class="marquee-divider" style="grid-column:1/-1"><div class="marquee-track" aria-label="${esc(selected.join(" — "))}" lang="${lang}" dir="ltr"><div class="marquee-copy">${html}</div><div class="marquee-copy" aria-hidden="true">${html}</div></div></div>`;
 }
 
 
