@@ -10283,11 +10283,12 @@ const uiText=[
 ["productImageHint","imageViewerHint"],["productImageRights","imageViewerRights"],["cartCouponLabel","couponLabel"],["cartCouponApply","couponApply"],["cartSubtotalLabel","cartSubtotal"]
 ];
 uiText.forEach(([id,key])=>{const el=$(id);if(el)el.textContent=x[key]||"";});
+document.querySelectorAll(".modal .close-btn, .modal [data-close-modal]").forEach(el=>el.setAttribute("aria-label",x.close));
 if($("customerPassword"))$("customerPassword").placeholder=x.passwordHint;
 if($("cartCouponCode"))$("cartCouponCode").placeholder=x.couponPlaceholder;
 if($("customerAddress"))$("customerAddress").placeholder=x.addressPlaceholder;
 if($("cartCouponRemove"))$("cartCouponRemove").setAttribute("aria-label",x.couponRemove);
-if($("customerAuthSubmit"))$("customerAuthSubmit").textContent=customerAuthMode==="signup"?x.signup:customerAuthMode==="recovery"?(lang==="he"?"שמירת הסיסמה החדשה":lang==="en"?"Save new password":"حفظ كلمة السر الجديدة"):x.login;
+if($("customerAuthSubmit"))$("customerAuthSubmit").textContent=customerAuthMode==="signup"?x.signupSubmit:customerAuthMode==="recovery"?x.recoverySubmit:x.login;
 if($("floatingCartBtn"))$("floatingCartBtn").setAttribute("aria-label",x.cart);
 
 if(typeof applyAssistantLanguage==="function")applyAssistantLanguage();
@@ -11129,7 +11130,7 @@ function renderElyraRecommendedProducts(products){
   const price=document.createElement("div");price.className="espoza-assistant-product-price";price.textContent=t().priceLabel+": "+String(product.price??"—")+" ₪";
   if(product.old_price&&Number(product.old_price)>Number(product.price)){const old=document.createElement("span");old.className="espoza-assistant-product-old-price";old.textContent=String(product.old_price)+" ₪";price.appendChild(old);}
   info.appendChild(price);
-  if(product.description){const desc=document.createElement("div");desc.className="espoza-assistant-product-detail";desc.textContent=String(lang==="he"?(product.description_he||t().desc):lang==="en"?(product.description_en||t().desc):(product.description||t().desc));info.appendChild(desc);}
+  if(product.description_he||product.description_en||product.description){const desc=document.createElement("div");desc.className="espoza-assistant-product-detail";desc.textContent=String(lang==="he"?(product.description_he||t().desc):lang==="en"?(product.description_en||t().desc):(product.description||t().desc));info.appendChild(desc);}
   const colors=Array.isArray(product.colors)?product.colors:[];
   if(colors.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";const label=document.createElement("strong");label.textContent=t().colorsLabel+": ";line.appendChild(label);const chips=document.createElement("span");chips.className="espoza-assistant-product-colors";
    colors.forEach((color)=>{const chip=document.createElement("span");chip.className="espoza-assistant-product-color";if(color.hex&&/^#[0-9a-f]{3,8}$/i.test(String(color.hex))){const swatch=document.createElement("i");swatch.className="espoza-assistant-product-swatch";swatch.style.backgroundColor=String(color.hex);chip.appendChild(swatch);}chip.appendChild(document.createTextNode(lang==="he"?(color.name_he||productColorDisplayName(color.name)):lang==="en"?(color.name_en||productColorDisplayName(color.name)):String(color.name||"")));chips.appendChild(chip);});
