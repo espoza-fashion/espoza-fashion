@@ -5520,6 +5520,29 @@ sizeChartTitle:"מדריך מידות",sizeChartBust:"היקף חזה",sizeChart
 };
 
 
+
+Object.assign(TEXT.ar,{
+favorites:"المفضلة",wishList:"قائمة الأمنيات",reviews:"آراء الزبائن",quickPolicies:"سياسة المتجر",cartOrder:"السلة والطلب",splashTag:"خيارك للتألق",quickLinks:"روابط سريعة",
+wishlistTitle:"المفضلة",wishlistSubtitle:"القطع التي حفظتها",wishlistEmpty:"المفضلة فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.",
+wishTitle:"✨ أمنيتك القادمة مع Espoza Fashion؟",wishIntro:"أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍",wishPlaceholder:"اكتبي أمنيتك هنا...",wishSubmit:"إرسال الأمنية",wishPublic:"عام 🌍 - الكل بيشوفها",wishPrivate:"خاص 🔒 - بتوصلني أنا بس",
+wishEmpty:"لسه ما في أمنيات. كوني أول من يشارك أمنيتك ✨",wishUnavailable:"قائمة الأمنيات غير متاحة مؤقتًا.",wishPlease:"اكتبي أمنيتك أولاً 🤍",wishPrivateSent:"تم إرسال أمنيتك بشكل خاص للمتجر ✨",wishPublicSent:"تمت إضافة أمنيتك للجميع ✨",wishError:"ما قدرنا نضيف الأمنية حاليًا، حاولي مرة ثانية.",
+footerContactNote:"للطلب والاستفسار، تواصلي معنا مباشرة أو اختاري منصتك المفضلة.",sizeGuide:"دليل المقاسات",sizeGuideNote:"القياسات بالسنتيمتر ما لم يُذكر غير ذلك.",
+assistantLauncher:"✦ تحدثي مع إيلارا",assistantSubtitle:"مساعدتك الذكية",assistantWelcome:"مرحبًا! أنا إيلارا ✨ أساعدك في التسوق واختيار المنتجات والإجابة عن أسئلتك. أعتمد في معلومات المتجر على البيانات المؤكدة فقط.",
+assistantQuickSets:"🛍️ شو عندكم أطقم؟",assistantQuickDresses:"👗 الفساتين المتوفرة",assistantQuickSizes:"📏 المقاسات المتوفرة",assistantQuickDelivery:"🚚 تكلفة التوصيل",assistantPlaceholder:"اكتبي سؤالك...",assistantSend:"إرسال",assistantFoot:"إيلارا · معلومات المتجر حسب البيانات المتاحة.",assistantTyping:"إيلارا تفكر وتُحلّل",assistantOffline:"الاتصال بالإنترنت مقطوع. حاولي بعد عودة الاتصال.",assistantError:"إيلارا غير متاحة للحظة. حاولي مرة ثانية أو تواصلي مع المتجر عبر واتساب.",assistantTimeout:"استغرق الرد وقتًا طويلًا. حاولي مرة أخرى.",
+priceLabel:"السعر",colorsLabel:"الألوان",sizesLabel:"المقاسات",close:"إغلاق",cartLimit:"الحد الأقصى 4 قطع من نفس الموديل، مع احتساب جميع الألوان والمقاسات."
+});
+Object.assign(TEXT.en,{
+favorites:"Favorites",wishList:"Wish List",reviews:"Customer Reviews",quickPolicies:"Store Policies",cartOrder:"Cart & Order",splashTag:"Your Style, Your Shine",quickLinks:"Quick Links",
+wishlistTitle:"Favorites",wishlistSubtitle:"Pieces you saved",wishlistEmpty:"You haven't saved any pieces yet. Tap ♡ on a product to add it here.",
+wishTitle:"✨ What is your next wish from Espoza Fashion?",wishIntro:"Tell us what piece you wish we offered — your idea could become our next addition 🤍",wishPlaceholder:"Write your wish here...",wishSubmit:"Share your wish",wishPublic:"Public 🌍 — Everyone can see it",wishPrivate:"Private 🔒 — Only the store can see",
+wishEmpty:"No wishes yet. Be the first to share yours ✨",wishUnavailable:"Wishes are temporarily unavailable.",wishPlease:"Please write your wish first.",wishPrivateSent:"Your private wish was sent to the store ✨",wishPublicSent:"Your wish was shared with everyone ✨",wishError:"We couldn't add the wish right now. Please try again.",
+footerContactNote:"For orders and questions, contact us directly or choose your preferred platform.",sizeGuide:"Size guide",sizeGuideNote:"Measurements are in centimeters unless noted otherwise.",
+assistantLauncher:"✦ Chat with ELYRA AI",assistantSubtitle:"Your intelligent companion",assistantWelcome:"Hello! I'm ELYRA ✨ I can help you shop, choose products and answer questions. Store information is based on confirmed details only.",
+assistantQuickSets:"🛍️ Which sets are available?",assistantQuickDresses:"👗 Show available dresses",assistantQuickSizes:"📏 Which sizes are available?",assistantQuickDelivery:"🚚 How much is delivery?",assistantPlaceholder:"Type your question...",assistantSend:"Send",assistantFoot:"ELYRA AI · Store information is shown according to available data.",assistantTyping:"ELYRA is thinking",assistantOffline:"You're offline. Please try again when your connection returns.",assistantError:"ELYRA is temporarily unavailable. Please try again or contact the store on WhatsApp.",assistantTimeout:"The response is taking longer than expected. Please try again.",
+priceLabel:"Price",colorsLabel:"Colors",sizesLabel:"Sizes",close:"Close",cartLimit:"The limit is 4 pieces of the same model across all colors and sizes."
+});
+
+
 const t=
 ()=>
 TEXT[lang];
@@ -8394,7 +8417,7 @@ ${money(currentProduct.oldPrice)} ₪
 
 $("detailDescription")
 .textContent=
-(lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description||currentProduct.description_en||""))
+(lang==="he" ? (currentProduct.description_he || currentProduct.description_en || currentProduct.description || "") : (lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description||currentProduct.description_en||"")))
 ||
 t().desc;
 
@@ -8520,15 +8543,16 @@ t().unavailable;
 }
 
 
+function translateSizeChartHeader(value){const key=String(value||"").trim().toLowerCase();const map={"المقاس":"מידה","القياس":"מידה","size":"מידה","الصدر":"היקף חזה","محيط الصدر":"היקף חזה","bust":"היקף חזה","chest":"היקף חזה","الخصر":"היקף מותניים","محيط الخصر":"היקף מותניים","waist":"היקף מותניים","الأرداف":"היקף ירכיים","الورك":"היקף ירכיים","hips":"היקף ירכיים","الطول":"אורך","length":"אורך"};return map[key]||value;}
 function openSizeGuide(){
-if(!currentProduct||!currentProduct.sizeChart)return;
-const chart=currentProduct.sizeChart;
+if(!currentProduct||!(currentProduct.sizeChartHe||currentProduct.sizeChart))return;
+const chart=lang==="he"?(currentProduct.sizeChartHe||currentProduct.sizeChart):currentProduct.sizeChart;
 const headers=Array.isArray(chart.headers)?chart.headers:[];
 const rows=Array.isArray(chart.rows)?chart.rows:[];
 if(headers.length<2||!rows.length)return;
 $("sizeGuideTitle").textContent=t().sizeGuide;
 $("sizeGuideNote").textContent=lang==="en"?"Measurements are in centimeters unless noted otherwise.":"القياسات بالسنتيمتر ما لم يُذكر غير ذلك.";
-$("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+$("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(lang==="he"?translateSizeChartHeader(h):h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
 $("sizeGuideModal").classList.add("open");
 document.body.style.overflow="hidden";
 }
@@ -9013,7 +9037,7 @@ ${esc(productDisplayName(item))}
 ${
 item.color
 ?
-esc(item.color)+" • "
+esc(productColorDisplayName(item.color))+" • "
 :
 ""
 }${esc(item.size)}
@@ -9071,10 +9095,10 @@ if(subtotalRow)subtotalRow.classList.toggle("hidden",discount<=0);
 if(discountRow)discountRow.classList.toggle("hidden",discount<=0);
 if(discount>0){
 $("cartSubtotalValue").textContent=`₪${money(cartSubtotal())}`;
-$("cartDiscountLabel").textContent="عرض تلقائي ("+offer.label+")";
+$("cartDiscountLabel").textContent=t().discountLabel+" ("+offer.label+")";
 $("cartDiscountValue").textContent="−₪"+money(discount);
 }
-$("cartTotalLabel").textContent=discount>0?"المجموع بعد الخصم":t().total;
+$("cartTotalLabel").textContent=discount>0?t().totalAfterDiscount:t().total;
 $("cartTotal").textContent=`₪${money(Math.max(0,cartSubtotal()-discount))}`;
 
 
@@ -9089,7 +9113,7 @@ function changeCartQty(idx,delta){
 const item=cart[idx];
 if(!item)return;
 if(delta>0&&cartModelQuantity(cartModelKey(item))+delta>4){
-alert("الحد الأقصى 4 قطع من نفس الموديل، مع احتساب جميع الألوان والمقاسات.");
+alert(t().cartLimit);
 return;
 }
 item.qty=Math.max(1,Number(item.qty||1)+delta);
@@ -9150,7 +9174,7 @@ item=>
 <span>
 ${esc(productDisplayName(item))}
 ${
-item.color
+productColorDisplayName(item.color)
 ||
 item.size
 ?
@@ -10099,7 +10123,7 @@ if($("footerContactNote"))$("footerContactNote").textContent=t().footerContactNo
 if($("wishlistBtn"))$("wishlistBtn").setAttribute("aria-label",t().favorites);
 if($("wishForm"))$("wishForm").setAttribute("aria-label",t().wishTitle);
 if($("customerNotes"))$("customerNotes").setAttribute("dir",t().dir);
-applyAssistantLanguage();
+if(typeof applyAssistantLanguage==="function")applyAssistantLanguage();
 
 $("policiesBtn")
 .textContent=
@@ -10950,7 +10974,7 @@ function renderElyraRecommendedProducts(products){
  box.appendChild(group);box.scrollTop=box.scrollHeight;
 }
 function setElyraTyping(bubble){
- bubble.textContent="إيليرا تفكّر وتحلّل";
+ bubble.textContent=t().assistantTyping;
  bubble.setAttribute("aria-label",t().assistantTyping);
  let dots=0;
  const timer=window.setInterval(()=>{if(!bubble.isConnected){window.clearInterval(timer);return;}dots=(dots+1)%4;bubble.textContent=t().assistantTyping+".".repeat(dots);},450);
@@ -10992,6 +11016,7 @@ async function sendEspozaAssistant(event){
  }
  finally{clearTimeout(timeout);stopTyping();button.disabled=false;input.focus();}
 }
+applyAssistantLanguage();
 </script>
 <script>
 /* Live synchronization: all public storefront data stays in Supabase.
