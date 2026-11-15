@@ -6885,6 +6885,7 @@ applyLanguage();
 function productColorDisplayName(value){
  const raw=String(value||"").trim();if(!raw)return "";
  const key=raw.replace(/[ًٌٍَُِّْ]/g,"").replace(/\s+/g," ").trim().toLowerCase();
+ const match=(Array.isArray(products)?products:[]).flatMap(p=>Array.isArray(p.colorsData)?p.colorsData:[]).find(c=>String(c.name||"").trim()===raw||String(c.name_en||"").trim().toLowerCase()===key||String(c.name_he||"").trim().toLowerCase()===key);
  const names={
  "أبيض":"White","ابيض":"White","white":"White","أسود":"Black","اسود":"Black","black":"Black",
  "أحمر":"Red","احمر":"Red","red":"Red","أخضر":"Green","اخضر":"Green","green":"Green",
@@ -6918,12 +6919,11 @@ function productColorDisplayName(value){
  "وردي فاتح":"ורוד בהיר","light pink":"ורוד בהיר","أخضر فاتح":"ירוק בהיר","light green":"ירוק בהיר",
  "أخضر غامق":"ירוק כהה","dark green":"ירוק כהה","أزرق فاتح":"כחול בהיר","light blue":"כחול בהיר",
  "بني فاتح":"חום בהיר","light brown":"חום בהיר","بني غامق":"חום כהה","dark brown":"חום כהה",
- "أصفر":"צהוב","yellow":"צהוב","برتقالي":"כתום","orange":"כתום","ليلكي":"לילך","lilac":"לילך",
+ "أصفر":"צהוב","yellow":"צהוב","برتقالي":"כתום","orange":"כתום","ليلكי":"לילך","lilac":"לילך",
  "لافندر":"לבנדר","lavender":"לבנדר","موكا":"מוקה","mocha":"מוקה"
  };
- const dbColor=(Array.isArray(products)?products:[]).flatMap(p=>Array.isArray(p.colorsData)?p.colorsData:[]).find(c=>String(c.name||"").trim()===raw||String(c.name_en||"").trim()===raw);
- if(lang==="he")return dbColor?.name_he||namesHe[key]||raw;
- if(lang==="en")return dbColor?.name_en||names[key]||(/^[\\x00-\\x7F]*$/.test(raw)?raw:"Color");
+ if(lang==="he")return match?.name_he||namesHe[key]||raw;
+ if(lang==="en")return match?.name_en||names[key]||(/^[\x00-\x7F]*$/.test(raw)?raw:"Color");
  return raw;
 }
 function dynamicProductToView(p,index){
@@ -10607,10 +10607,16 @@ function localizeDynamicText(value,known={}){
 function productDisplayName(product){
  if(!product)return "";
  const raw=String(product.name||"").trim();
- const explicitEn=String(product.name_en||product.nameEn||product.english_name||PRODUCT_EN_NAMES[raw]||"").trim();
+ const source=(Array.isArray(products)?products:[]).find(p=>
+  (product.dbId&&String(p.dbId||p.id)===String(product.dbId))||
+  (product.productId&&String(p.dbId||p.id)===String(product.productId))||
+  (product.id&&String(p.id)===String(product.id))||
+  (raw&&String(p.name||"").trim()===raw)
+ );
+ const explicitEn=String(product.name_en||product.nameEn||product.english_name||source?.name_en||PRODUCT_EN_NAMES[raw]||"").trim();
+ const explicitHe=String(product.name_he||product.nameHe||source?.name_he||"").trim();
  if(lang==="ar")return raw||explicitEn;
  if(lang==="he"){
-  const explicitHe=String(product.name_he||product.nameHe||"").trim();
   if(explicitHe)return explicitHe;
   if(explicitEn){
    if(/\s+Dress$/i.test(explicitEn))return "שמלת "+explicitEn.replace(/\s+Dress$/i,"");
