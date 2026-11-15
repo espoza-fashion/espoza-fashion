@@ -5676,6 +5676,33 @@ profileNameRequired:"יש להזין שם.",profileSaveError:"לא ניתן לש
 });
 
 
+
+Object.assign(TEXT.ar,{
+addFavorite:"إضافة إلى المفضلة",removeFavorite:"إزالة من المفضلة",discountLabel:"الخصم",totalAfterDiscount:"المجموع بعد الخصم",
+couponCodeRequired:"اكتبي كود الخصم أولًا.",couponInvalid:"الكود غير صحيح أو العرض غير فعال.",couponFirstOrder:"هذا العرض لأول طلب ويتطلب تسجيل الدخول بحساب لم يسبق له الطلب.",
+couponConditions:"الكود صحيح، لكن شروط العرض غير متحققة في السلة الحالية.",couponBest:"الكود صالح، لكن احتسبنا أفضل خصم واحد متاح دون جمع العروض.",couponVerified:"تم التحقق من الكود، وسيُحتسب الخصم عند تأكيد الطلب.",couponError:"تعذّر التحقق من الكود الآن. حاولي مرة أخرى.",couponRemoved:"تمت إزالة كود الخصم.",
+orderProductMissing:"لم نعثر على المنتج في كتالوج المتجر. افتحي المنتج من جديد وأعيدي إضافته للسلة.",orderProductIdMissing:"تعذر ربط المنتج بمعرّفه في قاعدة البيانات. أعيدي تحميل المتجر وحاولي مجددًا.",
+orderPriceChanged:"تغيّر سعر أحد المنتجات. حدّثي السلة قبل إرسال الطلب.",orderColorUnavailable:"اختاري لونًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.",orderSizeUnavailable:"اختاري مقاسًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.",
+cartSyncError:"تم حفظ الطلب، لكن تعذر تحديث السلة المحفوظة. يرجى إعادة المحاولة عند عودة الاتصال."
+});
+Object.assign(TEXT.en,{
+addFavorite:"Add to favorites",removeFavorite:"Remove from favorites",discountLabel:"Discount",totalAfterDiscount:"Total after discount",
+couponCodeRequired:"Please enter a discount code first.",couponInvalid:"This code is invalid or the offer is inactive.",couponFirstOrder:"This offer is for first orders only. Sign in with an account that has no previous orders.",
+couponConditions:"The code is valid, but the current cart does not meet the offer conditions.",couponBest:"The code is valid, but we've applied the single best available discount instead of stacking offers.",couponVerified:"The code is verified. The discount will be applied when you confirm the order.",couponError:"We couldn't verify the code right now. Please try again.",couponRemoved:"The discount code was removed.",
+orderProductMissing:"We couldn't find this product in the store catalog. Reopen the product and add it to your cart again.",orderProductIdMissing:"We couldn't link the product to its database ID. Reload the store and try again.",
+orderPriceChanged:"A product price has changed. Refresh your cart before placing the order.",orderColorUnavailable:"Please select an available color for this product again.",orderSizeUnavailable:"Please select an available size for this product again.",
+cartSyncError:"Your order was saved, but the saved cart couldn't be updated. Please try again when your connection returns."
+});
+Object.assign(TEXT.he,{
+addFavorite:"הוספה למועדפים",removeFavorite:"הסרה מהמועדפים",discountLabel:"הנחה",totalAfterDiscount:"סה״כ לאחר ההנחה",
+couponCodeRequired:"נא להזין קוד הנחה תחילה.",couponInvalid:"הקוד אינו תקין או שהמבצע אינו פעיל.",couponFirstOrder:"המבצע מיועד להזמנה ראשונה בלבד. יש להתחבר לחשבון ללא הזמנות קודמות.",
+couponConditions:"הקוד תקין, אך הסל הנוכחי אינו עומד בתנאי המבצע.",couponBest:"הקוד תקין, אך הוחלה ההנחה הטובה ביותר בלבד ולא ניתן לצרף מבצעים.",couponVerified:"הקוד אומת. ההנחה תחושב בעת אישור ההזמנה.",couponError:"לא ניתן לאמת את הקוד כרגע. נסי שוב.",couponRemoved:"קוד ההנחה הוסר.",
+orderProductMissing:"לא מצאנו את הפריט בקטלוג החנות. פתחי את הפריט מחדש והוסיפי אותו לסל.",orderProductIdMissing:"לא ניתן לקשר את הפריט למזהה שלו במסד הנתונים. רענני את החנות ונסי שוב.",
+orderPriceChanged:"מחיר אחד הפריטים השתנה. רענני את הסל לפני שליחת ההזמנה.",orderColorUnavailable:"בחרי מחדש צבע שזמין עבור הפריט הזה.",orderSizeUnavailable:"בחרי מחדש מידה שזמינה עבור הפריט הזה.",
+cartSyncError:"ההזמנה נשמרה, אך לא ניתן לעדכן את הסל השמור. נסי שוב כשהחיבור יתחדש."
+});
+
+
 const t=
 ()=>
 TEXT[lang];
@@ -6762,9 +6789,10 @@ async function loadCustomerOrders(){
  const labels=t().orderStatuses||{};
  box.innerHTML=orders.map(order=>{
   const items=Array.isArray(order.items)?order.items.map(item=>{
-   const name=productDisplayName({name:item.name||item.product_name||"",name_en:item.name_en||"",name_he:item.name_he||""});
+   const savedProduct=products.find(p=>String(p.name||"")===String(item.name||item.product_name||""));
+   const name=productDisplayName({name:item.name||item.product_name||"",name_en:item.name_en||savedProduct?.name_en||"",name_he:item.name_he||savedProduct?.name_he||""});
    return esc(name)+" × "+Math.max(1,Number(item.qty)||1);
-  }).join(lang==="he"?"، ":"، "):"";
+  }).join(lang==="he"||lang==="en"?", ":"، "):"";
   const date=order.created_at?new Date(order.created_at).toLocaleDateString(lang==="he"?"he-IL":lang==="en"?"en-US":"ar-PS",{year:"numeric",month:"short",day:"numeric"}):"";
   return '<article class="customer-order-card" style="border:1px solid var(--line);border-radius:14px;padding:13px;margin:9px 0;background:#fff"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(t().orderPrefix)+' #'+esc(String(order.id).slice(0,8))+'</b><span class="muted">'+esc(date)+'</span></div><p style="margin:8px 0">'+esc(labels[order.status]||order.status||"")+'</p><p style="margin:0 0 8px;font-size:13px;line-height:1.7">'+items+'</p><b>'+esc(t().orderTotal)+': ₪'+money(order.total)+'</b></article>';
  }).join("");
@@ -8940,47 +8968,36 @@ return best;
 }
 
 async function applyCartCoupon(){
-const input=$("cartCouponCode"),message=$("cartCouponMessage");
-const code=String(input?.value||"").trim().toUpperCase();
-if(!code){appliedManualCoupon=null;if(message)message.textContent="اكتبي كود الخصم أولًا.";renderCartModal();return;}
-try{
- const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/validate-coupon",{
-  method:"POST",
-  headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
-  body:JSON.stringify({code,turnstileToken:await getEspozaTurnstileToken("coupon")})
- });
- const data=await response.json();
- if(!response.ok)throw new Error(data.error||"تعذّر التحقق من الكود.");
- const coupon=data.coupon;
- if(!coupon){appliedManualCoupon=null;if(message)message.textContent="الكود غير صحيح أو العرض غير فعال.";renderCartModal();return;}
- if(coupon.first_order_only&&customerHasPreviousOrders!==false){
-  appliedManualCoupon=null;
-  if(message)message.textContent="هذا العرض لأول طلب ويتطلب تسجيل الدخول بحساب لم يسبق له الطلب.";
-  renderCartModal();return;
+ const input=$("cartCouponCode"),message=$("cartCouponMessage");
+ const code=String(input?.value||"").trim().toUpperCase();
+ if(!code){appliedManualCoupon=null;if(message)message.textContent=t().couponCodeRequired;renderCartModal();return;}
+ try{
+  const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/validate-coupon",{
+   method:"POST",headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
+   body:JSON.stringify({code,turnstileToken:await getEspozaTurnstileToken("coupon")})
+  });
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||t().couponError);
+  const coupon=data.coupon;
+  if(!coupon){appliedManualCoupon=null;if(message)message.textContent=t().couponInvalid;renderCartModal();return;}
+  if(coupon.first_order_only&&customerHasPreviousOrders!==false){appliedManualCoupon=null;if(message)message.textContent=t().couponFirstOrder;renderCartModal();return;}
+  const candidate=calculateOfferDiscount(coupon);
+  if(!candidate){appliedManualCoupon=null;if(message)message.textContent=t().couponConditions;renderCartModal();return;}
+  appliedManualCoupon=coupon;
+  const best=getAutomaticOffer();
+  if(message)message.textContent=best?.id!==coupon.id&&best?.discount>candidate.discount?t().couponBest:t().couponVerified;
+  renderCartModal();
+ }catch(error){
+  appliedManualCoupon=null;if(message)message.textContent=t().couponError;
+  console.warn("Coupon validation failed:",error);renderCartModal();
  }
- const candidate=calculateOfferDiscount(coupon);
- if(!candidate){
-  appliedManualCoupon=null;
-  if(message)message.textContent="الكود صحيح، لكن شروط العرض غير متحققة في السلة الحالية.";
-  renderCartModal();return;
- }
- appliedManualCoupon=coupon;
- const best=getAutomaticOffer();
- if(message)message.textContent=best?.id!==coupon.id&&best?.discount>candidate.discount?"الكود صالح، لكن احتسبنا أفضل خصم واحد متاح دون جمع العروض.":"تم التحقق من الكود، وسيُحتسب الخصم عند تأكيد الطلب.";
- renderCartModal();
-}catch(error){
- appliedManualCoupon=null;
- if(message)message.textContent="تعذّر التحقق من الكود الآن. حاولي مرة أخرى.";
- console.warn("Coupon validation failed:",error);
- renderCartModal();
-}
 }
 
 function clearCartCoupon(){
 appliedManualCoupon=null;
 const input=$("cartCouponCode"),message=$("cartCouponMessage");
 if(input)input.value="";
-if(message)message.textContent="تمت إزالة كود الخصم.";
+if(message)message.textContent=t().couponRemoved;
 renderCartModal();
 }
 
@@ -9310,7 +9327,7 @@ item.size
 ?
 `(${esc(
 [
-item.color,
+productColorDisplayName(item.color),
 item.size
 ]
 .filter(Boolean)
@@ -9530,6 +9547,7 @@ const discountedSubtotal=Math.max(0,itemsTotal-discount);
 const grandTotal=discountedSubtotal+delivery.price;
 const offerAr=discount>0?"\n🎁 العرض "+offer.label+": خصم ₪"+money(discount):"";
 const offerEn=discount>0?"\n🎁 Offer "+offer.label+": −₪"+money(discount):"";
+const offerHe=discount>0?"\n🎁 מבצע "+offer.label+": הנחה של ₪"+money(discount):"";
 
 
 const linesAr=
@@ -9561,7 +9579,7 @@ const linesHe=cart.map(item=>`👗 ${productDisplayName(item)}\n   מידה: ${i
 
 /* رسالة واتساب */
 
-const message=lang==="ar"?`مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}\n💳 الدفع عند الاستلام`:lang==="he"?`שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesHe}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}\n💳 תשלום במזומן בעת המסירה`:`Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}\n💳 Cash on Delivery`;
+const message=lang==="ar"?`مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}\n💳 الدفع عند الاستلام`:lang==="he"?`שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesHe}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}${offerHe}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}\n💳 תשלום במזומן בעת המסירה`:`Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}\n💳 Cash on Delivery`;
 
 
 const whatsappUrl=`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
@@ -9584,19 +9602,19 @@ if(productLookup.error)throw productLookup.error;
 const databaseProducts=productLookup.data||[];
 const orderItems=cart.map(item=>{
 const dbProduct=databaseProducts.find(p=>String(p.name||"").trim()===String(item.name||"").trim());
-if(!dbProduct)throw new Error("لم نعثر على المنتج في كتالوج المتجر. افتح المنتج من جديد وأعد إضافته للسلة.");
+if(!dbProduct)throw new Error(t().orderProductMissing);
 const productId=dbProduct.id;
-if(!productId)throw new Error("تعذر ربط المنتج بمعرّفه في قاعدة البيانات. أعد تحميل المتجر وحاول مجددًا.");
-if(Number(item.price)!==Number(dbProduct.price))throw new Error("تغيّر سعر أحد المنتجات. حدّث السلة قبل إرسال الطلب.");
+if(!productId)throw new Error(t().orderProductIdMissing);
+if(Number(item.price)!==Number(dbProduct.price))throw new Error(t().orderPriceChanged);
 const availableColors=dbProduct.product_colors||[];
 const matchedColor=availableColors.find(c=>c.name===item.color||c.name_en===item.color||c.name===item.color_db||c.name_en===item.color_db);
 let orderColor=matchedColor?.name||(availableColors.length===1?availableColors[0].name:String(item.color_db||item.color||""));
-if(availableColors.length&&!availableColors.some(c=>c.name===orderColor))throw new Error("اختاري لونًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.");
+if(availableColors.length&&!availableColors.some(c=>c.name===orderColor))throw new Error(t().orderColorUnavailable);
 const availableSizes=(dbProduct.product_sizes||[]).map(x=>String(x.size));
 let orderSize=String(item.size||"");
 if(availableSizes.length&&!availableSizes.includes(orderSize)){
 if(availableSizes.length===1)orderSize=availableSizes[0];
-else throw new Error("اختاري مقاسًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.");
+else throw new Error(t().orderSizeUnavailable);
 }
 return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,name_en:dbProduct.name_en||item.name_en||"",name_he:dbProduct.name_he||item.name_he||"",price:Number(dbProduct.price),size:orderSize,color:orderColor,color_en:matchedColor?.name_en||item.color_en||"",color_he:matchedColor?.name_he||item.color_he||"",qty:Number(item.qty||1),image:item.image||""};
 });
@@ -9624,7 +9642,7 @@ if(couponInput)couponInput.value="";
 if(couponMessage)couponMessage.textContent="";
 saveCart();
 clearTimeout(window.__espozaCartSyncTimer);
-try{await syncCustomerCart();}catch(_){toast("تم حفظ الطلب، لكن تعذر تحديث السلة المحفوظة. يرجى إعادة المحاولة عند عودة الاتصال.");}
+try{await syncCustomerCart();}catch(_){toast(t().cartSyncError);}
 updateCartBadge();
 
 closeModal(
