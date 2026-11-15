@@ -3375,6 +3375,31 @@ footer{
 .espoza-assistant-product-swatch{width:11px;height:11px;border-radius:50%;border:1px solid #ccc;display:inline-block}
 @media(max-width:430px){#espozaAssistantWidget{left:10px;bottom:12px}#espozaAssistantLauncher{padding:10px 13px;font-size:12px}#espozaAssistantPanel{bottom:60px;width:calc(100vw - 20px);height:min(540px,calc(100dvh - 92px));border-radius:21px}.espoza-assistant-products{max-width:100%}.espoza-assistant-product-card{gap:8px;padding:8px}.espoza-assistant-product-card img{flex-basis:88px;width:88px;height:112px;max-height:112px}}
 @media(prefers-reduced-motion:reduce){#espozaAssistantMessages{scroll-behavior:auto}.espoza-assistant-bubble,#espozaAssistantPanel{animation:none!important}}
+
+/* Elara chat: refined storefront styling */
+#espozaAssistantPanel{width:min(392px,calc(100vw - 28px));height:min(590px,calc(100dvh - 104px));border:1px solid rgba(185,152,90,.32);border-radius:24px;background:#fbf9f5;box-shadow:0 28px 80px rgba(48,16,29,.30);isolation:isolate}
+.espoza-assistant-head{min-height:76px;padding:15px 17px;background:radial-gradient(circle at 10% 0%,rgba(185,152,90,.22),transparent 40%),linear-gradient(125deg,#35101e,#641f34 72%,#7b354a)}
+.elyra-avatar{width:42px;height:42px;flex:0 0 42px;border:1px solid rgba(232,207,159,.75);border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#c7a96a,#8f6c37);color:#fff;font-family:Georgia,serif;font-size:23px;box-shadow:0 5px 16px rgba(0,0,0,.16)}
+.elyra-head-copy{flex:1;min-width:0}
+.elyra-head-copy b{font-family:Georgia,"Times New Roman",serif;letter-spacing:.6px;font-size:15px}
+.elyra-online{display:inline-flex;align-items:center;gap:6px;margin-top:5px;color:#f1dfe4;font-size:10px}
+.elyra-online i{width:6px;height:6px;border-radius:50%;background:#9bd3a7;box-shadow:0 0 0 3px rgba(155,211,167,.13)}
+#espozaAssistantMessages{padding:17px 14px 14px;background:linear-gradient(180deg,#fbf9f5,#f7f1ee);gap:12px}
+.espoza-assistant-bubble{max-width:88%;padding:11px 14px;border-radius:17px;font-size:13px;line-height:1.85;box-shadow:0 3px 12px rgba(56,22,34,.045)}
+.espoza-assistant-bubble.assistant{border:1px solid #eee3e1;border-bottom-inline-start-radius:5px;background:rgba(255,255,255,.96)}
+.espoza-assistant-bubble.user{border:1px solid #6d2b40;border-bottom-inline-end-radius:5px;background:linear-gradient(135deg,#6b263e,#431321);box-shadow:0 5px 14px rgba(67,19,33,.13)}
+.espoza-assistant-quick-wrap{gap:8px;padding:2px 1px}
+.espoza-assistant-quick-wrap button{padding:8px 11px;border-radius:13px;border-color:#e6d5d3;background:#fff;color:#5c2035;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.espoza-assistant-quick-wrap button:hover{transform:translateY(-1px);border-color:#b9985a;background:#fffdf9}
+#espozaAssistantForm{padding:12px;border-top:1px solid #eee3e1;background:rgba(255,255,255,.97);align-items:center}
+#espozaAssistantInput{min-height:44px;border-radius:14px;background:#fbf9f5;border-color:#e9dcda;padding:10px 13px}
+#espozaAssistantSend{min-width:64px;min-height:44px;border-radius:14px;background:linear-gradient(135deg,#641f34,#431321);box-shadow:0 5px 13px rgba(67,19,33,.16);cursor:pointer;transition:transform .18s ease,opacity .18s ease}
+#espozaAssistantSend:not(:disabled):active{transform:scale(.97)}
+.espoza-assistant-foot{padding:2px 12px 11px;background:#fff;color:#988b8b;letter-spacing:.1px}
+.espoza-assistant-product-card{border-radius:16px;border-color:#e9dedc;box-shadow:0 7px 20px rgba(45,16,26,.07)}
+.espoza-assistant-product-card img{background:#f4eeea}
+@media(max-width:430px){#espozaAssistantPanel{width:calc(100vw - 20px);height:min(570px,calc(100dvh - 90px));border-radius:21px}#espozaAssistantMessages{padding:14px 11px}.espoza-assistant-bubble{max-width:92%}}
+@media(prefers-reduced-motion:reduce){.espoza-assistant-quick-wrap button,#espozaAssistantSend{transition:none}}
 </style>
 <link rel="stylesheet" href="./customer-sidebar.css?v=1">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
@@ -5501,15 +5526,15 @@ favorites:"מועדפים",wishList:"רשימת משאלות",reviews:"חוות 
 quickPolicies:"מדיניות החנות",cartOrder:"סל והזמנה",quickLinks:"קישורים מהירים",
 splashTag:"הסגנון שלך, הזוהר שלך",close:"סגירה",
 sizeGuide:"מדריך מידות",sizeGuideNote:"המידות בסנטימטרים, אלא אם צוין אחרת.",
-assistantLauncher:"✦ שיחה עם ELYRA AI",
+assistantLauncher:"✦ שיחה עם ELARA AI",
 assistantSubtitle:"העוזרת האישית שלך",
-assistantWelcome:"שלום! אני ELYRA ✨ אשמח לעזור לך לבחור פריטים, לבדוק מידות, צבעים ומחירים, ולענות על שאלות. לגבי פרטי החנות אסתמך רק על מידע מאומת.",
+assistantWelcome:"שלום! אני ELARA ✨ אשמח לעזור לך לבחור פריטים, לבדוק מידות, צבעים ומחירים, ולענות על שאלות. לגבי פרטי החנות אסתמך רק על מידע מאומת.",
 assistantQuickSets:"🛍️ אילו חליפות זמינות?",assistantQuickDresses:"👗 הציגי לי שמלות זמינות",
 assistantQuickSizes:"📏 אילו מידות זמינות?",assistantQuickDelivery:"🚚 כמה עולה המשלוח?",
 assistantPlaceholder:"כתבי את שאלתך...",assistantSend:"שליחה",
-assistantFoot:"ELYRA AI · פרטי החנות מוצגים לפי המידע הזמין.",
-assistantTyping:"ELYRA חושבת ומנתחת",assistantOffline:"אין חיבור לאינטרנט. נסי שוב כשהחיבור יתחדש.",
-assistantError:"ELYRA אינה זמינה כרגע. נסי שוב או פני לחנות בוואטסאפ.",
+assistantFoot:"ELARA AI · פרטי החנות מוצגים לפי המידע הזמין.",
+assistantTyping:"ELARA חושבת ומנתחת",assistantOffline:"אין חיבור לאינטרנט. נסי שוב כשהחיבור יתחדש.",
+assistantError:"ELARA אינה זמינה כרגע. נסי שוב או פני לחנות בוואטסאפ.",
 assistantTimeout:"התגובה מתעכבת. נסי שוב.",
 priceLabel:"מחיר",colorsLabel:"צבעים",sizesLabel:"מידות",
 discountLabel:"מבצע אוטומטי",totalAfterDiscount:"סה״כ לאחר ההנחה",
@@ -5537,8 +5562,8 @@ wishlistTitle:"Favorites",wishlistSubtitle:"Pieces you saved",wishlistEmpty:"You
 wishTitle:"✨ What is your next wish from Espoza Fashion?",wishIntro:"Tell us what piece you wish we offered — your idea could become our next addition 🤍",wishPlaceholder:"Write your wish here...",wishSubmit:"Share your wish",wishPublic:"Public 🌍 — Everyone can see it",wishPrivate:"Private 🔒 — Only the store can see",
 wishEmpty:"No wishes yet. Be the first to share yours ✨",wishUnavailable:"Wishes are temporarily unavailable.",wishPlease:"Please write your wish first.",wishPrivateSent:"Your private wish was sent to the store ✨",wishPublicSent:"Your wish was shared with everyone ✨",wishError:"We couldn't add the wish right now. Please try again.",
 footerContactNote:"For orders and questions, contact us directly or choose your preferred platform.",sizeGuide:"Size guide",sizeGuideNote:"Measurements are in centimeters unless noted otherwise.",
-assistantLauncher:"✦ Chat with ELYRA AI",assistantSubtitle:"Your intelligent companion",assistantWelcome:"Hello! I'm ELYRA ✨ I can help you shop, choose products and answer questions. Store information is based on confirmed details only.",
-assistantQuickSets:"🛍️ Which sets are available?",assistantQuickDresses:"👗 Show available dresses",assistantQuickSizes:"📏 Which sizes are available?",assistantQuickDelivery:"🚚 How much is delivery?",assistantPlaceholder:"Type your question...",assistantSend:"Send",assistantFoot:"ELYRA AI · Store information is shown according to available data.",assistantTyping:"ELYRA is thinking",assistantOffline:"You're offline. Please try again when your connection returns.",assistantError:"ELYRA is temporarily unavailable. Please try again or contact the store on WhatsApp.",assistantTimeout:"The response is taking longer than expected. Please try again.",
+assistantLauncher:"✦ Chat with ELARA AI",assistantSubtitle:"Your intelligent companion",assistantWelcome:"Hello! I'm ELARA ✨ I can help you shop, choose products and answer questions. Store information is based on confirmed details only.",
+assistantQuickSets:"🛍️ Which sets are available?",assistantQuickDresses:"👗 Show available dresses",assistantQuickSizes:"📏 Which sizes are available?",assistantQuickDelivery:"🚚 How much is delivery?",assistantPlaceholder:"Type your question...",assistantSend:"Send",assistantFoot:"ELARA AI · Store information is shown according to available data.",assistantTyping:"ELARA is thinking",assistantOffline:"You're offline. Please try again when your connection returns.",assistantError:"ELARA is temporarily unavailable. Please try again or contact the store on WhatsApp.",assistantTimeout:"The response is taking longer than expected. Please try again.",
 priceLabel:"Price",colorsLabel:"Colors",sizesLabel:"Sizes",close:"Close",cartLimit:"The limit is 4 pieces of the same model across all colors and sizes."
 });
 
@@ -8045,7 +8070,7 @@ grid.innerHTML=list.map(p=>{
 const image=p.images&&p.images[0]?p.images[0].url:PLACEHOLDER;
 return `
 <article class="product-card">
-<button class="heart-btn active" type="button" aria-label="إزالة من المفضلة" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
+<button class="heart-btn active" type="button" aria-label="${esc(t().removeFavorite||t().remove)}" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
 <div class="product-img" onclick="openProduct('${esc(p.id)}')">
 <img src="${esc(image)}" alt="${esc(productDisplayName(p))}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
 ${p.offer?'<span class="offer-badge">'+esc(t().offer)+'</span>':''}
@@ -8117,7 +8142,7 @@ marqueeDividerHTML(Math.floor(i/GROUP_SIZE)-1)
 <button
 class="heart-btn"
 type="button"
-aria-label="إضافة إلى المفضلة"
+aria-label="${esc(t().addFavorite)}"
 onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">
 ${isWishlistedProduct(p) ? "♥" : "♡"}
 </button>
@@ -8453,7 +8478,7 @@ ${money(currentProduct.oldPrice)} ₪
 
 $("detailDescription")
 .textContent=
-(lang==="he" ? (currentProduct.description_he || currentProduct.description_en || currentProduct.description || "") : (lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description||currentProduct.description_en||"")))
+(lang==="he" ? (currentProduct.description_he || currentProduct.description_en || currentProduct.description || "") : (lang==="he" ? (currentProduct.description_he||currentProduct.description_en||currentProduct.description||"") : lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description||currentProduct.description_en||"")))
 ||
 t().desc;
 
@@ -10898,9 +10923,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 
   /* Keep the site's copyright notice explicit without changing product data. */
   const copyright=document.querySelector(".copyright");
-  if(copyright && !copyright.textContent.includes("جميع الحقوق محفوظة")){
-    copyright.textContent=lang==="en"?"© 2026 Espoza Fashion. All Rights Reserved.":"© 2026 Espoza Fashion. جميع الحقوق محفوظة.";
-  }
+  if(copyright){copyright.textContent=lang==="he"?"© 2026 Espoza Fashion. כל הזכויות שמורות.":lang==="en"?"© 2026 Espoza Fashion. All Rights Reserved.":"© 2026 Espoza Fashion. جميع الحقوق محفوظة."; }
 })();
 </script>
 
@@ -10908,22 +10931,22 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 
 <div id="espozaTurnstile" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:300px;min-height:65px;z-index:99999;background:transparent;padding:4px;visibility:hidden"></div>
 <div id="espozaAssistantWidget" dir="rtl" lang="ar">
-  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false"><span class="elyra-launcher-mark">✦</span><span id="espozaAssistantLauncherText">✦ تحدثي مع ELYRA AI</span></button>
-  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="ELYRA AI" aria-modal="false">
+  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false"><span class="elyra-launcher-mark">✦</span><span id="espozaAssistantLauncherText">✦ تحدثي مع ELARA AI</span></button>
+  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="ELARA AI" aria-modal="false">
     <div class="espoza-assistant-head">
       <div class="elyra-avatar" aria-hidden="true">E</div>
-      <div class="elyra-head-copy"><b>ELYRA AI</b><small id="espozaAssistantSubtitle">مساعدتك الذكية</small><span class="elyra-online"><i></i><span id="elyraOnlineText">متاحة الآن</span></span></div>
+      <div class="elyra-head-copy"><b>ELARA AI</b><small id="espozaAssistantSubtitle">مساعدتك الذكية</small><span class="elyra-online"><i></i><span id="elyraOnlineText">متاحة الآن</span></span></div>
       <button class="elyra-close" type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
     </div>
     <div id="espozaAssistantMessages" aria-live="polite" aria-relevant="additions text">
-      <div id="espozaAssistantWelcome" class="espoza-assistant-bubble assistant" dir="auto">مرحبًا! أنا ELYRA ✨ أساعدك في التسوق واختيار المنتجات والإجابة عن أسئلتك.</div>
+      <div id="espozaAssistantWelcome" class="espoza-assistant-bubble assistant" dir="auto">مرحبًا! أنا ELARA ✨ أساعدك في التسوق واختيار المنتجات والإجابة عن أسئلتك.</div>
       <div id="espozaAssistantQuickQuestions" class="espoza-assistant-quick-wrap" aria-label="أسئلة سريعة"><button id="elyraQuickSets" type="button">🛍️ شو عندكم أطقم؟</button><button id="elyraQuickDresses" type="button">👗 الفساتين المتوفرة</button><button id="elyraQuickSizes" type="button">📏 المقاسات المتوفرة</button><button id="elyraQuickDelivery" type="button">🚚 تكلفة التوصيل</button></div>
     </div>
     <form id="espozaAssistantForm" onsubmit="sendEspozaAssistant(event)">
       <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="اكتبي سؤالك..." aria-label="سؤالك" dir="auto">
       <button id="espozaAssistantSend" type="submit">إرسال</button>
     </form>
-    <div id="espozaAssistantFoot" class="espoza-assistant-foot">ELYRA AI · معلومات المتجر حسب البيانات المتاحة.</div>
+    <div id="espozaAssistantFoot" class="espoza-assistant-foot">ELARA AI · معلومات المتجر حسب البيانات المتاحة.</div>
   </section>
 </div>
 <script id="espoza-assistant-widget-script">
@@ -10994,17 +11017,17 @@ function renderElyraRecommendedProducts(products){
   const image=images.find((item)=>item&&item.url);
   if(image){try{const url=new URL(String(image.url),window.location.href);if(url.protocol==="https:"||url.protocol==="http:"){const img=document.createElement("img");img.src=url.href;img.alt=String(image.alt||product.name||"صورة المنتج");img.loading="lazy";card.appendChild(img);}}catch(_){}}
   const info=document.createElement("div");info.className="espoza-assistant-product-info";
-  const name=document.createElement("div");name.className="espoza-assistant-product-name";name.textContent=String(product.name||product.name_he||product.name_en||t().product);info.appendChild(name);
+  const name=document.createElement("div");name.className="espoza-assistant-product-name";name.textContent=productDisplayName(product)||t().product;info.appendChild(name);
   const price=document.createElement("div");price.className="espoza-assistant-product-price";price.textContent=t().priceLabel+": "+String(product.price??"—")+" ₪";
   if(product.old_price&&Number(product.old_price)>Number(product.price)){const old=document.createElement("span");old.className="espoza-assistant-product-old-price";old.textContent=String(product.old_price)+" ₪";price.appendChild(old);}
   info.appendChild(price);
-  if(product.description){const desc=document.createElement("div");desc.className="espoza-assistant-product-detail";desc.textContent=String(product.description);info.appendChild(desc);}
+  if(product.description){const desc=document.createElement("div");desc.className="espoza-assistant-product-detail";desc.textContent=String(lang==="he"?(product.description_he||product.description_en||product.description):lang==="en"?(product.description_en||product.description):product.description);info.appendChild(desc);}
   const colors=Array.isArray(product.colors)?product.colors:[];
   if(colors.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";const label=document.createElement("strong");label.textContent=t().colorsLabel+": ";line.appendChild(label);const chips=document.createElement("span");chips.className="espoza-assistant-product-colors";
-   colors.forEach((color)=>{const chip=document.createElement("span");chip.className="espoza-assistant-product-color";if(color.hex&&/^#[0-9a-f]{3,8}$/i.test(String(color.hex))){const swatch=document.createElement("i");swatch.className="espoza-assistant-product-swatch";swatch.style.backgroundColor=String(color.hex);chip.appendChild(swatch);}chip.appendChild(document.createTextNode(String(color.name||"")));chips.appendChild(chip);});
+   colors.forEach((color)=>{const chip=document.createElement("span");chip.className="espoza-assistant-product-color";if(color.hex&&/^#[0-9a-f]{3,8}$/i.test(String(color.hex))){const swatch=document.createElement("i");swatch.className="espoza-assistant-product-swatch";swatch.style.backgroundColor=String(color.hex);chip.appendChild(swatch);}chip.appendChild(document.createTextNode(lang==="he"?(color.name_he||productColorDisplayName(color.name)):lang==="en"?(color.name_en||productColorDisplayName(color.name)):String(color.name||"")));chips.appendChild(chip);});
    line.appendChild(chips);info.appendChild(line);}
   const sizes=Array.isArray(product.sizes)?product.sizes.filter(Boolean):[];
-  if(sizes.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";line.textContent=t().sizesLabel+": "+sizes.join("، ");info.appendChild(line);}
+  if(sizes.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";line.textContent=t().sizesLabel+": "+sizes.join(lang==="he"?", ":"، ");info.appendChild(line);}
   card.appendChild(info);group.appendChild(card);
  });
  box.appendChild(group);box.scrollTop=box.scrollHeight;
@@ -11041,7 +11064,7 @@ async function sendEspozaAssistant(event){
   const data=await response.json();
   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
   stopTyping();
-  pending.textContent=(data.mode==="faq"?"إيليرا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n":"")+data.answer;
+  pending.textContent=(data.mode==="faq"?"إيلارا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n":"")+data.answer;
   if(Array.isArray(data.products)&&data.products.length)renderElyraRecommendedProducts(data.products);
   espozaAssistantHistory.push({role:"user",content:message},{role:"assistant",content:data.answer});
   if(espozaAssistantHistory.length>12)espozaAssistantHistory.splice(0,espozaAssistantHistory.length-12);
