@@ -3194,8 +3194,11 @@ footer{
 .public-wishes-head{text-align:center;max-width:760px;margin:0 auto 20px}
 .public-wishes-head h2{font-family:"Playfair Display","Cairo",serif;color:var(--wine);font-size:clamp(27px,4vw,40px);margin:0 0 7px}
 .public-wishes-head p{color:var(--muted);font-size:13px;line-height:1.9;margin:0}
-.wish-form{display:flex;gap:9px;max-width:820px;margin:18px auto 22px}
-.wish-input{flex:1;min-height:48px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:11px 14px;outline:none;resize:none}
+.wish-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;max-width:820px;margin:18px auto 22px}
+.wish-visibility{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.wish-visibility label{display:inline-flex;align-items:center;gap:7px;color:var(--dark);font-size:12px;font-weight:700;cursor:pointer}
+.wish-visibility input{accent-color:var(--wine);width:16px;height:16px;margin:0}
+.wish-input{width:100%;min-width:0;min-height:48px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:11px 14px;outline:none;resize:none}
 .wish-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(185,152,90,.12)}
 .wish-submit{border:0;border-radius:14px;background:var(--wine);color:#fff;padding:0 20px;font-weight:800;white-space:nowrap}
 .public-wishes-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -3210,7 +3213,7 @@ footer{
 .footer-links a,.footer-links button{justify-content:space-between!important;gap:12px!important}
 .footer-links a::after,.footer-links button::after{content:"›";color:var(--gold);font-size:18px;line-height:1;transition:transform .25s ease}
 .footer-links a:hover::after,.footer-links button:hover::after{transform:translateX(-3px)}
-@media(max-width:800px){.public-wishes-list{grid-template-columns:1fr 1fr}.wish-form{flex-direction:column}.wish-submit{min-height:46px}}
+@media(max-width:800px){.public-wishes-list{grid-template-columns:1fr 1fr}.wish-form{grid-template-columns:1fr}.wish-submit{min-height:46px}}
 @media(max-width:560px){.wish-btn-label{display:none}.public-wishes-section{padding-inline:10px}.public-wishes-card{padding:20px 14px;border-radius:20px}.public-wishes-list{grid-template-columns:1fr}.floating-cart{right:12px;bottom:14px;padding:11px 13px}}
 </style>
 <style id="espoza-final-motion-fixes">
@@ -3715,6 +3718,10 @@ id="featuresTrack">
 <p id="publicWishesIntro">أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍</p>
 </div>
 <form class="wish-form" id="wishForm">
+<div class="wish-visibility" role="group" aria-label="خصوصية الأمنية">
+<label><input type="radio" name="wishVisibility" value="public" checked> <span id="wishPublicLabel">عام 🌍 - الكل بيشوفها</span></label>
+<label><input type="radio" name="wishVisibility" value="private"> <span id="wishPrivateLabel">خاص 🔒 - بتوصلني أنا بس</span></label>
+</div>
 <textarea class="wish-input" id="wishInput" maxlength="240" rows="1" placeholder="اكتبي أمنيتك هنا..."></textarea>
 <button class="wish-submit" id="wishSubmit" type="submit">إرسال الأمنية</button>
 </form>
@@ -9681,11 +9688,17 @@ async function loadPublicWishes(){
   }
 }
 
+function formWishVisibility(){
+  const selected=document.querySelector('input[name="wishVisibility"]:checked');
+  return selected&&selected.value==="private"?"private":"public";
+}
+
 async function submitPublicWish(event){
   event.preventDefault();
   const input=$("wishInput"), button=$("wishSubmit");
   if(!input||!button)return;
   const wish=String(input.value||"").trim();
+  const visibility=formWishVisibility();
   if(wish.length<2){
     toast(lang==="en"?"Please write your wish first.":"اكتبي أمنيتك أولاً 🤍");
     input.focus();
@@ -9699,7 +9712,7 @@ async function submitPublicWish(event){
     // Primary path: Supabase JS client.
     try{
       const db=getCustomerSupabase();
-      const result=await db.from("wish_requests").insert({wish_text:wish});
+      const result=await db.from("wish_requests").insert({wish_text:wish,is_public:visibility==="public"});
       if(!result.error) saved=true;
       else clientError=result.error;
     }catch(error){
@@ -9717,7 +9730,7 @@ async function submitPublicWish(event){
           "Content-Type":"application/json",
           "Prefer":"return=minimal"
         },
-        body:JSON.stringify({wish_text:wish})
+        body:JSON.stringify({wish_text:wish,is_public:visibility==="public"})
       });
       if(!response.ok){
         let details="";
@@ -9731,7 +9744,7 @@ async function submitPublicWish(event){
 
     if(!saved)throw clientError||new Error("Wish was not saved");
     input.value="";
-    toast(lang==="en"?"Your wish was shared with everyone ✨":"تمت إضافة أمنيتك للجميع ✨");
+    toast(visibility==="private"?(lang==="en"?"Your private wish was sent to the store ✨":"تم إرسال أمنيتك بشكل خاص للمتجر ✨"):(lang==="en"?"Your wish was shared with everyone ✨":"تمت إضافة أمنيتك للجميع ✨"));
     await loadPublicWishes();
   }catch(error){
     console.warn("Public wish submit failed:",error);
@@ -9991,6 +10004,8 @@ if($("publicWishesTitle"))$("publicWishesTitle").textContent=lang==="en"?"✨ Wh
 if($("publicWishesIntro"))$("publicWishesIntro").textContent=lang==="en"?"Tell us what piece you wish we offered — your idea could become our next addition 🤍":"أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍";
 if($("wishInput"))$("wishInput").placeholder=lang==="en"?"Write your wish here...":"اكتبي أمنيتك هنا...";
 if($("wishSubmit"))$("wishSubmit").textContent=lang==="en"?"Share your wish":"إرسال الأمنية";
+if($("wishPublicLabel"))$("wishPublicLabel").textContent=lang==="en"?"Public 🌍 - Everyone can see it":"عام 🌍 - الكل بيشوفها";
+if($("wishPrivateLabel"))$("wishPrivateLabel").textContent=lang==="en"?"Private 🔒 - Only the store can see it":"خاص 🔒 - بتوصلني أنا بس";
 if($("floatingCartLabel"))$("floatingCartLabel").textContent=lang==="en"?"Cart":"السلة";
 
 $("policiesBtn")
