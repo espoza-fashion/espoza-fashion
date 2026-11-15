@@ -7195,12 +7195,12 @@ if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(ta
 
 function deliveryList(){
 if(Array.isArray(adminDeliveryAreas) && adminDeliveryAreas.length){
-return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="he"?(row.area_name_he||row.area_name_en||row.area_name_ar||row.area_name||""):lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),price:Number(row.price||0)}));
+return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="he"?(row.area_name_he||row.area_name_en||row.area_name_ar||row.area_name||""):lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),name_ar:row.area_name_ar||row.area_name||"",name_en:row.area_name_en||"",name_he:row.area_name_he||"",price:Number(row.price||0)}));
 }
 return[
-{key:"westbank",name:t().westbank,price:Number(store.delivery.westbank||0)},
-{key:"jerusalem",name:t().jerusalem,price:Number(store.delivery.jerusalem||0)},
-{key:"inside",name:t().inside,price:Number(store.delivery.inside||0)}
+{key:"westbank",name:t().westbank,name_ar:"الضفة الغربية",name_en:"West Bank",name_he:"הגדה המערבית",price:Number(store.delivery.westbank||0)},
+{key:"jerusalem",name:t().jerusalem,name_ar:"القدس",name_en:"Jerusalem",name_he:"ירושלים",price:Number(store.delivery.jerusalem||0)},
+{key:"inside",name:t().inside,name_ar:"الداخل (48)",name_en:"Inside (48)",name_he:"אזורי 48",price:Number(store.delivery.inside||0)}
 ];
 }
 
@@ -7229,7 +7229,7 @@ d=>
 `
 <option
 value="${esc(d.key)}"
-data-price="${d.price}">
+data-price="${d.price}" data-name-ar="${esc(d.name_ar||d.name)}" data-name-en="${esc(d.name_en||d.name)}" data-name-he="${esc(d.name_he||d.name)}">
 ${esc(d.name)} — ₪${money(d.price)}
 </option>
 `
@@ -9070,6 +9070,12 @@ currentProduct.dbId||null,
 name:
 currentProduct.name,
 
+name_en:
+currentProduct.name_en||PRODUCT_EN_NAMES[currentProduct.name]||"",
+
+name_he:
+currentProduct.name_he||"",
+
 category:
 currentProduct.category||"",
 
@@ -9089,6 +9095,10 @@ PLACEHOLDER,
 size,
 
 color,
+
+color_en:productColorDisplayName(color),
+
+color_he:(currentProduct.colorsData||[]).find(c=>c.name===color)?.name_he||productColorDisplayName(color),
 
 qty
 
@@ -9384,11 +9394,11 @@ return{
 
 name:
 text
-.replace(
-/\s*—\s*₪.*$/,
-""
-)
+.replace(/\s*—\s*₪.*$/,"")
 .trim(),
+name_ar:option.dataset.nameAr||text.replace(/\s*—\s*₪.*$/,"").trim(),
+name_en:option.dataset.nameEn||text.replace(/\s*—\s*₪.*$/,"").trim(),
+name_he:option.dataset.nameHe||text.replace(/\s*—\s*₪.*$/,"").trim(),
 
 price:
 Number(
@@ -9540,17 +9550,18 @@ cart
 .map(
 item=>
 `👗 ${productDisplayName(item)}
-   Size: ${item.size}${item.color?`
-   Color: ${item.color}`:""}
+   Size: ${item.size}${item.color?`\n   Color: ${item.color}`:""}
    Qty: ${item.qty}
    Price: ₪${money(item.price*item.qty)}`
 )
 .join("\n\n");
 
+const linesHe=cart.map(item=>`👗 ${productDisplayName(item)}\n   מידה: ${item.size}${item.color?`\n   צבע: ${item.color_he||productColorDisplayName(item.color)}`:""}\n   כמות: ${item.qty}\n   מחיר: ₪${money(item.price*item.qty)}`).join("\n\n");
+
 
 /* رسالة واتساب */
 
-const message=lang==="ar"?`مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}\n💳 الدفع عند الاستلام`:lang==="he"?`שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesEn}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}\n💳 תשלום במזומן בעת המסירה`:`Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}\n💳 Cash on Delivery`;
+const message=lang==="ar"?`مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}\n💳 الدفع عند الاستلام`:lang==="he"?`שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesHe}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}\n💳 תשלום במזומן בעת המסירה`:`Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}\n💳 Cash on Delivery`;
 
 
 const whatsappUrl=`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
@@ -9566,7 +9577,7 @@ const profileForOrder=await ensureCustomerProfile();
 if(profileForOrder)customerProfile=profileForOrder;
 const cartProductNames=[...new Set(cart.map(item=>String(item.name||"").trim()).filter(Boolean))];
 const productLookup=await customerDb.from("products")
-.select("id,name,category,price,active,stock,product_sizes(size),product_colors(name,name_en)")
+.select("id,name,name_en,name_he,category,price,active,stock,product_sizes(size),product_colors(name,name_en,name_he)")
 .in("name",cartProductNames)
 .eq("active",true);
 if(productLookup.error)throw productLookup.error;
@@ -9587,9 +9598,9 @@ if(availableSizes.length&&!availableSizes.includes(orderSize)){
 if(availableSizes.length===1)orderSize=availableSizes[0];
 else throw new Error("اختاري مقاسًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.");
 }
-return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,price:Number(dbProduct.price),size:orderSize,color:orderColor,qty:Number(item.qty||1),image:item.image||""};
+return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,name_en:dbProduct.name_en||item.name_en||"",name_he:dbProduct.name_he||item.name_he||"",price:Number(dbProduct.price),size:orderSize,color:orderColor,color_en:matchedColor?.name_en||item.color_en||"",color_he:matchedColor?.name_he||item.color_he||"",qty:Number(item.qty||1),image:item.image||""};
 });
-const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
+const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name_ar||delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.from("orders").insert(orderPayload);
 if(saved.error)throw saved.error;
 if(profileForOrder)customerHasPreviousOrders=true;
