@@ -7691,7 +7691,9 @@ aria-label="Espoza Fashion customer feedback">
 <img
 src="${esc(url)}"
 alt="Espoza Fashion — Customer Feedback"
-loading="lazy"
+loading="${index<8?'eager':'lazy'}"
+decoding="async"
+fetchpriority="${index<4?'high':'auto'}"
 onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
 
 </div>
@@ -7716,9 +7718,9 @@ if(
 return;
 
 
-const sourceFeedback=(Array.isArray(adminFeedback))
-?adminFeedback.map(x=>x.image_url).filter(Boolean)
-:FEEDBACK_IMAGES;
+const liveFeedback=(Array.isArray(adminFeedback)?adminFeedback:[])
+.map(x=>x&&x.image_url).filter(Boolean);
+const sourceFeedback=liveFeedback.length?liveFeedback:FEEDBACK_IMAGES;
 const doubled=[
 ...sourceFeedback,
 ...sourceFeedback
@@ -10886,10 +10888,10 @@ if(!images.length) return;
 
 images.forEach((img,index)=>{
 
-  /* Feedback gallery is below the fold: never compete with first-screen assets. */
-  img.loading="lazy";
+  /* Show the first four real feedback screenshots immediately; defer the rest. */
+  img.loading=index<8?"eager":"lazy";
   img.decoding="async";
-  img.fetchPriority="low";
+  img.fetchPriority=index<4?"high":"auto";
 
   /* منع تأخير الصورة بسبب أبعاد غير معروفة */
   if(!img.getAttribute("width")){
@@ -10906,8 +10908,19 @@ images.forEach((img,index)=>{
 
 /* تحميل أول مجموعة فورًا، ثم إعطاء المتصفح فرصة لتحميل البقية */
 function preloadFeedbackImages(){
-  /* Deliberately do not preload below-the-fold customer gallery images. */
-
+  const track=document.getElementById("feedbackShowcaseTrack");
+  if(!track)return;
+  const urls=[...track.querySelectorAll("img")].slice(0,4)
+    .map(img=>img.currentSrc||img.src).filter(Boolean);
+  urls.forEach(url=>{
+    if(document.querySelector('link[rel="preload"][as="image"][href="'+CSS.escape(url)+'"]'))return;
+    const link=document.createElement("link");
+    link.rel="preload";
+    link.as="image";
+    link.href=url;
+    link.fetchPriority="high";
+    document.head.appendChild(link);
+  });
 }
 
 function setupFeedbackImageSpeed(){
