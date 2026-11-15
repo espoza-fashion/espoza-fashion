@@ -3328,45 +3328,78 @@ footer{
 }
 </style>
 <style id="espoza-assistant-widget-style">
-#espozaAssistantWidget{position:fixed;left:16px;bottom:18px;z-index:1200;font-family:"Cairo",Arial,sans-serif}
-#espozaAssistantLauncher{border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:13px 17px;background:linear-gradient(135deg,#641f34,#431321);color:#fff;font-weight:800;box-shadow:0 12px 32px rgba(67,19,33,.28);cursor:pointer;display:flex;align-items:center;gap:8px}
-#espozaAssistantPanel{position:absolute;left:0;bottom:64px;width:min(370px,calc(100vw - 28px));height:min(520px,calc(100dvh - 110px));background:#fbf9f5;border:1px solid #eadfe1;border-radius:20px;overflow:hidden;box-shadow:0 22px 65px rgba(45,16,26,.24);display:flex;flex-direction:column}
+#espozaAssistantWidget{position:fixed;left:18px;bottom:20px;z-index:1200;font-family:"Cairo",Arial,sans-serif;direction:inherit}
+#espozaAssistantLauncher{border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:12px 18px 12px 20px;background:linear-gradient(135deg,#7a2d45 0%,#431321 75%);color:#fff;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:9px;box-shadow:0 12px 30px rgba(67,19,33,.25),inset 0 1px 0 rgba(255,255,255,.16);transition:transform .25s ease,box-shadow .25s ease}
+#espozaAssistantLauncher:hover{transform:translateY(-3px);box-shadow:0 17px 38px rgba(67,19,33,.3)}
+.elyra-launcher-mark{width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.14);color:#e6c78b;font-size:17px}
+#espozaAssistantPanel{position:absolute;left:0;bottom:68px;width:min(390px,calc(100vw - 30px));height:min(570px,calc(100dvh - 108px));background:linear-gradient(180deg,#fffdfa 0%,#faf7f2 100%);border:1px solid rgba(185,152,90,.35);border-radius:24px;overflow:hidden;box-shadow:0 28px 80px rgba(45,16,26,.28),0 3px 12px rgba(45,16,26,.08);display:flex;flex-direction:column;transform-origin:bottom left;animation:elyraPanelIn .28s cubic-bezier(.2,.8,.2,1) both}
 #espozaAssistantPanel.hidden{display:none!important}
-.espoza-assistant-head{background:linear-gradient(120deg,#431321,#641f34);color:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.espoza-assistant-head b{display:block;font-size:15px}
-.espoza-assistant-head small{display:block;color:#f1dfe4;font-size:11px;margin-top:3px}
-.espoza-assistant-head button{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:50%;width:32px;height:32px;font-size:22px;line-height:1}
-#espozaAssistantMessages{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
-.espoza-assistant-quick-wrap{display:flex;flex-wrap:wrap;gap:7px;max-width:100%;align-self:flex-start}
-.espoza-assistant-quick-wrap button{border:1px solid #e4cfd5;background:#fffaf8;color:#641f34;border-radius:999px;padding:7px 10px;font:700 11px Cairo,Arial,sans-serif;cursor:pointer;box-shadow:0 2px 7px rgba(67,19,33,.05)}
-.espoza-assistant-quick-wrap button:active{background:#f1e3e6}
-.espoza-assistant-bubble{max-width:90%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
-.espoza-assistant-bubble.assistant{align-self:flex-start;background:#fff;border:1px solid #eadfe1;color:#32151f;border-bottom-right-radius:4px}
-.espoza-assistant-bubble.user{align-self:flex-end;background:#641f34;color:#fff;border-bottom-left-radius:4px}
-#espozaAssistantForm{display:flex;gap:8px;padding:10px;border-top:1px solid #eadfe1;background:#fff}
-#espozaAssistantInput{flex:1;min-width:0;border:1px solid #eadfe1;border-radius:12px;padding:10px 12px;outline:none;font:inherit;font-size:13px}
-#espozaAssistantInput:focus{border-color:#b9985a;box-shadow:0 0 0 3px rgba(185,152,90,.13)}
-#espozaAssistantSend{border:0;border-radius:12px;padding:0 14px;background:#641f34;color:#fff;font-weight:800}
-#espozaAssistantSend:disabled{opacity:.55;cursor:wait}
-.espoza-assistant-foot{padding:0 12px 9px;color:#85777c;font-size:10px;text-align:center;background:#fff}
-@media(max-width:430px){#espozaAssistantWidget{left:10px;bottom:12px}#espozaAssistantLauncher{padding:11px 14px;font-size:12px}#espozaAssistantPanel{bottom:58px;width:calc(100vw - 20px);height:min(500px,calc(100dvh - 95px))}}
-@media(prefers-reduced-motion:reduce){#espozaAssistantMessages{scroll-behavior:auto}}
-
+@keyframes elyraPanelIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.espoza-assistant-head{background:linear-gradient(125deg,#35101e 0%,#641f34 70%,#7b3448 100%);color:#fff;padding:16px 17px;display:flex;align-items:center;gap:12px;position:relative}
+.espoza-assistant-head:after{content:"";position:absolute;inset:auto 0 0;height:1px;background:linear-gradient(90deg,transparent,#d4b16c,transparent)}
+.elyra-avatar{flex:0 0 43px;width:43px;height:43px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(230,199,139,.7);background:linear-gradient(145deg,#9b6b46,#5b2638);color:#fff;font:700 21px "Playfair Display",serif;box-shadow:0 3px 12px rgba(0,0,0,.16)}
+.elyra-head-copy{min-width:0;flex:1}
+.espoza-assistant-head b{display:block;font-size:15px;letter-spacing:.7px}
+.espoza-assistant-head small{display:block;color:#f1dfe4;font-size:11px;margin-top:2px}
+.elyra-online{display:inline-flex;align-items:center;gap:5px;color:#e8d6c1;font-size:10px;margin-top:4px}
+.elyra-online i{width:6px;height:6px;border-radius:50%;background:#80c99a;box-shadow:0 0 0 3px rgba(128,201,154,.13)}
+.espoza-assistant-head .elyra-close{border:1px solid rgba(255,255,255,.23);background:rgba(255,255,255,.08);color:#fff;border-radius:50%;width:33px;height:33px;font-size:22px;line-height:1;cursor:pointer;transition:background .2s}
+.espoza-assistant-head .elyra-close:hover{background:rgba(255,255,255,.18)}
+#espozaAssistantMessages{flex:1;overflow:auto;padding:17px 15px 18px;display:flex;flex-direction:column;gap:11px;scroll-behavior:smooth;background:radial-gradient(ellipse at 10% 0%,rgba(185,152,90,.07),transparent 45%)}
+#espozaAssistantMessages::-webkit-scrollbar{width:5px}
+#espozaAssistantMessages::-webkit-scrollbar-thumb{background:#ddcbd0;border-radius:8px}
+.espoza-assistant-quick-wrap{display:flex;flex-wrap:wrap;gap:7px;max-width:100%;align-self:flex-start;margin-top:2px}
+.espoza-assistant-quick-wrap button{border:1px solid #e6d5d9;background:rgba(255,255,255,.92);color:#641f34;border-radius:999px;padding:7px 11px;font:700 11px Cairo,Arial,sans-serif;cursor:pointer;box-shadow:0 2px 7px rgba(67,19,33,.035);transition:border-color .2s,background .2s,transform .2s}
+.espoza-assistant-quick-wrap button:hover{border-color:#b9985a;background:#fffaf2;transform:translateY(-1px)}
+.espoza-assistant-bubble{max-width:88%;padding:11px 14px;border-radius:17px;font-size:13px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 3px 12px rgba(45,16,26,.035);animation:elyraBubbleIn .2s ease both}
+@keyframes elyraBubbleIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.espoza-assistant-bubble.assistant{align-self:flex-start;background:#fff;border:1px solid #eee4e5;color:#32151f;border-bottom-inline-start-radius:5px}
+.espoza-assistant-bubble.user{align-self:flex-end;background:linear-gradient(135deg,#70283f,#4a1728);color:#fff;border:1px solid rgba(255,255,255,.12);border-bottom-inline-end-radius:5px}
+#espozaAssistantForm{display:flex;gap:8px;padding:12px 13px;border-top:1px solid #eee3e5;background:rgba(255,255,255,.96);align-items:center}
+#espozaAssistantInput{flex:1;min-width:0;border:1px solid #e7dadd;border-radius:14px;padding:11px 13px;outline:none;background:#fcfaf8;font:inherit;font-size:13px;transition:border-color .2s,box-shadow .2s}
+#espozaAssistantInput:focus{border-color:#b9985a;box-shadow:0 0 0 3px rgba(185,152,90,.13);background:#fff}
+#espozaAssistantSend{border:0;border-radius:13px;padding:0 17px;min-height:42px;background:linear-gradient(135deg,#70283f,#431321);color:#fff;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(67,19,33,.15);transition:transform .2s}
+#espozaAssistantSend:hover{transform:translateY(-1px)}
+#espozaAssistantSend:disabled{opacity:.55;cursor:wait;transform:none}
+.espoza-assistant-foot{padding:0 12px 10px;color:#8b7b80;font-size:10px;text-align:center;background:#fff}
 .espoza-assistant-products{display:flex;flex-direction:column;gap:12px;width:100%;max-width:96%;align-self:flex-start}
-.espoza-assistant-product-card{display:flex;flex-direction:row;align-items:stretch;gap:10px;width:100%;background:#fff;border:1px solid #eadfe1;border-radius:14px;overflow:hidden;box-shadow:0 5px 16px rgba(45,16,26,.07);color:#32151f;padding:9px;box-sizing:border-box}
-.espoza-assistant-product-card img{display:block;flex:0 0 104px;width:104px;height:128px;max-height:128px;object-fit:contain;object-position:center;background:#f8f5f2;border-radius:10px}
+.espoza-assistant-product-card{display:flex;flex-direction:row;align-items:stretch;gap:10px;width:100%;background:#fff;border:1px solid #eadfe1;border-radius:16px;overflow:hidden;box-shadow:0 5px 16px rgba(45,16,26,.07);color:#32151f;padding:9px;box-sizing:border-box}
+.espoza-assistant-product-card img{display:block;flex:0 0 104px;width:104px;height:128px;max-height:128px;object-fit:contain;object-position:center;background:#f8f5f2;border-radius:11px}
 .espoza-assistant-product-info{flex:1;min-width:0;padding:3px 2px;display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
-.espoza-assistant-product-name{font-size:13px;font-weight:800;color:#431321}
-.espoza-assistant-product-price{font-size:13px;font-weight:800;color:#641f34}
-.espoza-assistant-product-detail{font-size:10.5px}
-@media(max-width:430px){.espoza-assistant-products{max-width:100%}.espoza-assistant-product-card{gap:8px;padding:8px}.espoza-assistant-product-card img{flex-basis:88px;width:88px;height:112px;max-height:112px}.espoza-assistant-product-info{font-size:10px}.espoza-assistant-product-name{font-size:12px}}
 .espoza-assistant-product-name{font-size:14px;font-weight:800;color:#431321}
-.espoza-assistant-product-price{font-size:14px;font-weight:800;color:#641f34}
+.espoza-assistant-product-price{font-size:13px;font-weight:800;color:#641f34}
 .espoza-assistant-product-old-price{text-decoration:line-through;color:#8d8185;font-weight:400;margin-inline-start:6px;font-size:11px}
-.espoza-assistant-product-detail{color:#55464b}
+.espoza-assistant-product-detail{font-size:10.5px;color:#55464b}
 .espoza-assistant-product-colors{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .espoza-assistant-product-color{display:inline-flex;align-items:center;gap:4px;background:#fbf9f5;border:1px solid #eee5e7;border-radius:20px;padding:3px 8px}
 .espoza-assistant-product-swatch{width:11px;height:11px;border-radius:50%;border:1px solid #ccc;display:inline-block}
+@media(max-width:430px){#espozaAssistantWidget{left:10px;bottom:12px}#espozaAssistantLauncher{padding:10px 13px;font-size:12px}#espozaAssistantPanel{bottom:60px;width:calc(100vw - 20px);height:min(540px,calc(100dvh - 92px));border-radius:21px}.espoza-assistant-products{max-width:100%}.espoza-assistant-product-card{gap:8px;padding:8px}.espoza-assistant-product-card img{flex-basis:88px;width:88px;height:112px;max-height:112px}}
+@media(prefers-reduced-motion:reduce){#espozaAssistantMessages{scroll-behavior:auto}.espoza-assistant-bubble,#espozaAssistantPanel{animation:none!important}}
+
+/* Elara chat: refined storefront styling */
+#espozaAssistantPanel{width:min(392px,calc(100vw - 28px));height:min(590px,calc(100dvh - 104px));border:1px solid rgba(185,152,90,.32);border-radius:24px;background:#fbf9f5;box-shadow:0 28px 80px rgba(48,16,29,.30);isolation:isolate}
+.espoza-assistant-head{min-height:76px;padding:15px 17px;background:radial-gradient(circle at 10% 0%,rgba(185,152,90,.22),transparent 40%),linear-gradient(125deg,#35101e,#641f34 72%,#7b354a)}
+.elyra-avatar{width:42px;height:42px;flex:0 0 42px;border:1px solid rgba(232,207,159,.75);border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#c7a96a,#8f6c37);color:#fff;font-family:Georgia,serif;font-size:23px;box-shadow:0 5px 16px rgba(0,0,0,.16)}
+.elyra-head-copy{flex:1;min-width:0}
+.elyra-head-copy b{font-family:Georgia,"Times New Roman",serif;letter-spacing:.6px;font-size:15px}
+.elyra-online{display:inline-flex;align-items:center;gap:6px;margin-top:5px;color:#f1dfe4;font-size:10px}
+.elyra-online i{width:6px;height:6px;border-radius:50%;background:#9bd3a7;box-shadow:0 0 0 3px rgba(155,211,167,.13)}
+#espozaAssistantMessages{padding:17px 14px 14px;background:linear-gradient(180deg,#fbf9f5,#f7f1ee);gap:12px}
+.espoza-assistant-bubble{max-width:88%;padding:11px 14px;border-radius:17px;font-size:13px;line-height:1.85;box-shadow:0 3px 12px rgba(56,22,34,.045)}
+.espoza-assistant-bubble.assistant{border:1px solid #eee3e1;border-bottom-inline-start-radius:5px;background:rgba(255,255,255,.96)}
+.espoza-assistant-bubble.user{border:1px solid #6d2b40;border-bottom-inline-end-radius:5px;background:linear-gradient(135deg,#6b263e,#431321);box-shadow:0 5px 14px rgba(67,19,33,.13)}
+.espoza-assistant-quick-wrap{gap:8px;padding:2px 1px}
+.espoza-assistant-quick-wrap button{padding:8px 11px;border-radius:13px;border-color:#e6d5d3;background:#fff;color:#5c2035;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.espoza-assistant-quick-wrap button:hover{transform:translateY(-1px);border-color:#b9985a;background:#fffdf9}
+#espozaAssistantForm{padding:12px;border-top:1px solid #eee3e1;background:rgba(255,255,255,.97);align-items:center}
+#espozaAssistantInput{min-height:44px;border-radius:14px;background:#fbf9f5;border-color:#e9dcda;padding:10px 13px}
+#espozaAssistantSend{min-width:64px;min-height:44px;border-radius:14px;background:linear-gradient(135deg,#641f34,#431321);box-shadow:0 5px 13px rgba(67,19,33,.16);cursor:pointer;transition:transform .18s ease,opacity .18s ease}
+#espozaAssistantSend:not(:disabled):active{transform:scale(.97)}
+.espoza-assistant-foot{padding:2px 12px 11px;background:#fff;color:#988b8b;letter-spacing:.1px}
+.espoza-assistant-product-card{border-radius:16px;border-color:#e9dedc;box-shadow:0 7px 20px rgba(45,16,26,.07)}
+.espoza-assistant-product-card img{background:#f4eeea}
+@media(max-width:430px){#espozaAssistantPanel{width:calc(100vw - 20px);height:min(570px,calc(100dvh - 90px));border-radius:21px}#espozaAssistantMessages{padding:14px 11px}.espoza-assistant-bubble{max-width:92%}}
+@media(prefers-reduced-motion:reduce){.espoza-assistant-quick-wrap button,#espozaAssistantSend{transition:none}}
 </style>
 <link rel="stylesheet" href="./customer-sidebar.css?v=1">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
@@ -3431,7 +3464,7 @@ type="button"
 onclick="openCartModal()"
 aria-label="السلة">
 <span class="cart-btn-icon">🛍️</span>
-<span class="cart-btn-label">السلة</span>
+<span class="cart-btn-label" id="cartBtnLabel">السلة</span>
 <span class="cart-badge" id="cartCount">0</span>
 </button>
 
@@ -3767,7 +3800,7 @@ FASHION
 
 <h3 id="footerContactTitle">Contact Us</h3>
 
-<p class="footer-contact-note">
+<p class="footer-contact-note" id="footerContactNote">
 للطلب والاستفسار، تواصلي معنا مباشرة أو اختاري منصتك المفضلة.
 </p>
 
@@ -3806,16 +3839,16 @@ FASHION
 
 <h3 id="footerLinksTitle">روابط سريعة</h3>
 
-<p class="footer-links-note">
+<p class="footer-links-note" id="footerLinksNote">
 كل ما تحتاجينه في مكان واحد.
 </p>
 
 <div class="footer-links">
 <a href="#shop" id="footerShop">التشكيلة</a>
-<a href="#wishlistSection">المفضلة</a>
-<a href="#publicWishesSection">قائمة الأمنيات</a>
-<a href="#feedback">آراء الزبائن</a>
-<a href="#story">قصة Espoza</a>
+<a href="#wishlistSection" id="footerFavoritesLink">المفضلة</a>
+<a href="#publicWishesSection" id="footerWishesLink">قائمة الأمنيات</a>
+<a href="#feedback" id="footerFeedbackLink">آراء الزبائن</a>
+<a href="#story" id="footerStoryLink">قصة Espoza</a>
 <button type="button" id="policiesBtn" onclick="openModal('policiesModal')">سياستنا</button>
 </div>
 
@@ -4012,22 +4045,22 @@ onclick="addCurrentToCart()">
 <div class="modal" id="customerMenuModal">
   <div class="modal-box" style="width:min(390px,100%);padding:24px">
     <button class="close-btn" type="button" onclick="closeModal('customerMenuModal')" aria-label="إغلاق">×</button>
-    <h2 style="margin:8px 0 18px">القائمة</h2>
-    <button class="order-btn" type="button" style="width:100%;margin:8px 0" onclick="openCustomerAccount()">حسابي · دخول أو إنشاء حساب</button>
-    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');scrollToWishlist()">المفضلة</button>
-    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');openCartModal()">السلة</button>
-    <p class="muted" style="font-size:13px;line-height:1.8;margin-bottom:0">سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.</p>
+    <h2 id="customerMenuTitle" style="margin:8px 0 18px">القائمة</h2>
+    <button class="order-btn" type="button" style="width:100%;margin:8px 0" onclick="openCustomerAccount()" id="customerMenuAccount">حسابي · دخول أو إنشاء حساب</button>
+    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');scrollToWishlist()" id="customerMenuFavorites">المفضلة</button>
+    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');openCartModal()" id="customerMenuCart">السلة</button>
+    <p id="customerMenuNote" class="muted" style="font-size:13px;line-height:1.8;margin-bottom:0">سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.</p>
   </div>
 </div>
 
 <div class="modal" id="customerAccountModal">
   <div class="modal-box order-box" style="width:min(600px,100%);padding:24px">
     <button class="close-btn" type="button" onclick="closeModal('customerAccountModal')" aria-label="إغلاق">×</button>
-    <h2 style="margin:8px 0 6px">حسابي في Espoza</h2>
-    <p class="muted" style="margin:0 0 18px">أنشئي حسابك أو ادخلي لمتابعة طلباتك. نقبل عناوين البريد من مختلف المزوّدين مثل Gmail وiCloud وOutlook وHotmail وأي نطاق بريد صالح.</p>
+    <h2 id="customerAccountTitle" style="margin:8px 0 6px">حسابي في Espoza</h2>
+    <p id="customerAccountIntro" class="muted" style="margin:0 0 18px">أنشئي حسابك أو ادخلي لمتابعة طلباتك. نقبل عناوين البريد من مختلف المزوّدين مثل Gmail وiCloud وOutlook وHotmail وأي نطاق بريد صالح.</p>
     <div id="customerAccountLoggedOut">
-      <div class="field"><label for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com" required></div>
-      <div class="field"><label for="customerPassword">كلمة السر</label><input id="customerPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8 أحرف على الأقل" required></div>
+      <div class="field"><label id="customerEmailLabel" for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com" required></div>
+      <div class="field"><label id="customerPasswordLabel" for="customerPassword">كلمة السر</label><input id="customerPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8 أحرف على الأقل" required></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
         <button id="customerLoginMode" class="order-btn" type="button" onclick="setCustomerAuthMode('login')">تسجيل الدخول</button>
         <button id="customerSignupMode" class="btn ghost" type="button" onclick="setCustomerAuthMode('signup')">إنشاء حساب جديد</button>
@@ -4039,13 +4072,13 @@ onclick="addCurrentToCart()">
     </div>
     <div id="customerAccountLoggedIn" class="hidden">
       <p id="customerAccountEmail" class="muted"></p>
-      <div class="field"><label for="customerProfileName">الاسم</label><input id="customerProfileName" autocomplete="name"></div>
-      <div class="field"><label for="customerProfilePhone">رقم الهاتف / واتساب</label><input id="customerProfilePhone" autocomplete="tel"></div>
-      <div class="field"><label for="customerProfileAddress">العنوان المفضّل</label><input id="customerProfileAddress" autocomplete="street-address"></div>
-      <button class="btn gold" type="button" onclick="saveCustomerProfile()">حفظ بياناتي</button>
-      <h3 style="margin:22px 0 10px">طلباتي السابقة</h3>
-      <div id="customerOrders"><p class="muted">جارٍ تحميل الطلبات…</p></div>
-      <button class="btn ghost" type="button" style="margin-top:14px" onclick="customerLogout()">تسجيل الخروج</button>
+      <div class="field"><label id="customerProfileNameLabel" for="customerProfileName">الاسم</label><input id="customerProfileName" autocomplete="name"></div>
+      <div class="field"><label id="customerProfilePhoneLabel" for="customerProfilePhone">رقم الهاتف / واتساب</label><input id="customerProfilePhone" autocomplete="tel"></div>
+      <div class="field"><label id="customerProfileAddressLabel" for="customerProfileAddress">العنوان المفضّل</label><input id="customerProfileAddress" autocomplete="street-address"></div>
+      <button id="customerProfileSave" class="btn gold" type="button" onclick="saveCustomerProfile()">حفظ بياناتي</button>
+      <h3 id="customerOrdersTitle" style="margin:22px 0 10px">طلباتي السابقة</h3>
+      <div id="customerOrders"><p class="muted" id="customerOrdersLoading">جارٍ تحميل الطلبات…</p></div>
+      <button id="customerLogout" class="btn ghost" type="button" style="margin-top:14px" onclick="customerLogout()">تسجيل الخروج</button>
     </div>  </div>
 </div>
 
@@ -4056,8 +4089,8 @@ onclick="addCurrentToCart()">
     <img id="productImageViewerImg" src="" alt="">
     <div class="product-image-watermark" aria-hidden="true">ESPOZA FASHION • © ALL RIGHTS RESERVED</div>
   </div>
-  <div class="product-image-rights">© Espoza Fashion — جميع الحقوق محفوظة</div>
-  <div class="product-image-hint">كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير</div>
+  <div class="product-image-rights" id="productImageRights">© Espoza Fashion — جميع الحقوق محفوظة</div>
+  <div class="product-image-hint" id="productImageHint">كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير</div>
 </div>
 
 <!-- FEEDBACK IMAGE VIEW -->
@@ -4118,15 +4151,15 @@ style="color:var(--wine);margin:4px 0 18px">
 </div>
 
 <div id="cartCouponBox" style="margin:12px 0;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff">
- <label for="cartCouponCode" style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">كود الخصم (اختياري)</label>
- <div style="display:flex;gap:7px;align-items:center"><input id="cartCouponCode" type="text" autocomplete="off" placeholder="أدخلي كود الخصم" style="min-width:0;flex:1"><button type="button" class="chip clickable" onclick="applyCartCoupon()">تطبيق</button><button type="button" class="chip clickable" onclick="clearCartCoupon()" aria-label="إزالة الكود">×</button></div>
+ <label id="cartCouponLabel" for="cartCouponCode" style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">كود الخصم (اختياري)</label>
+ <div style="display:flex;gap:7px;align-items:center"><input id="cartCouponCode" type="text" autocomplete="off" placeholder="أدخلي كود الخصم" style="min-width:0;flex:1"><button type="button" class="chip clickable" onclick="applyCartCoupon()" id="cartCouponApply">تطبيق</button><button type="button" class="chip clickable" onclick="clearCartCoupon()" aria-label="إزالة الكود" id="cartCouponRemove">×</button></div>
  <p id="cartCouponMessage" class="muted" role="status" style="font-size:12px;line-height:1.6;margin:7px 0 0"></p>
 </div>
 
 <div class="total-box">
 
 <div class="total-line hidden" id="cartSubtotalRow">
-<span>مجموع المنتجات</span>
+<span id="cartSubtotalLabel">مجموع المنتجات</span>
 <b id="cartSubtotalValue">₪0</b>
 </div>
 
@@ -4600,7 +4633,7 @@ let featuresIndex=0;
 
 let featuresTimer=null;
 
-let lang=localStorage.getItem("espoza_lang")==="en"?"en":"ar";
+let lang=["ar","en","he"].includes(localStorage.getItem("espoza_lang"))?localStorage.getItem("espoza_lang"):"ar";
 
 let typewriterTimer=null;
 
@@ -5052,7 +5085,7 @@ en:{
 
 dir:"ltr",
 
-langBtn:"AR",
+langBtn:"HE",
 
 top:"Welcome to Espoza Fashion",
 
@@ -5401,6 +5434,273 @@ storyTag:
 }
 
 };
+
+
+
+/* Hebrew storefront copy. Arabic and English dictionaries above remain untouched. */
+TEXT.he={
+...TEXT.en,
+dir:"rtl",langBtn:"AR",
+top:"ברוכים הבאים ל‑Espoza Fashion",
+wa:"וואטסאפ",
+introTitle:"האלגנטיות שלך מתחילה כאן",
+introText:"גלי את קולקציית השמלות והחליפות האלגנטיות שלנו במגוון מידות, והזמיני בקלות את הפריט שאהבת.",
+followers:"עוקבים ברשתות החברתיות שלנו",
+models:"דגמים זמינים",
+orders:"להזמנות וליצירת קשר",
+search:"חפשי דגם...",
+searchPhrase:"מה את מחפשת?",
+cats:{all:"הכול",dresses:"שמלות",sets:"חליפות",winter_sets:"חליפות חורף",offers:"מבצעים"},
+collection:"הקולקציה שלנו",piece:"פריטים",
+socialTitle:"עקבי אחרינו",socialText:"הדגמים, הקולקציות והמבצעים החדשים ביותר",
+follower:"עוקבים",shop:"הקולקציה",colors:"צבעים",sizes:"מידות",
+order:"הזמיני עכשיו",unavailable:"אזל מהמלאי",offer:"מבצע מיוחד",
+noProducts:"לא נמצאו פריטים בקטגוריה הזו.",
+desc:"עיצוב אלגנטי מבית Espoza Fashion.",
+orderHeading:"השלמת ההזמנה",product:"פריט",color:"צבע",size:"מידה",
+name:"שם מלא",phone:"מספר טלפון",delivery:"אזור משלוח",address:"כתובת מלאה",
+notes:"הערות נוספות",optional:"לא חובה",itemPrice:"סכום הפריטים",
+deliveryPrice:"משלוח",total:"סה״כ",send:"שליחת ההזמנה בוואטסאפ",
+fill:"נא למלא שם, מספר טלפון וכתובת.",waMissing:"מספר הוואטסאפ של החנות עדיין לא הוגדר.",
+saved:"ההזמנה נשמרה. וואטסאפ ייפתח כעת.",
+waOnly:"ההזמנה לא נשמרה במערכת. הסל נשמר; שלחי את ההודעה בוואטסאפ להשלמת ההזמנה.",
+accordingImage:"כפי שמופיע בתמונה",accordingAvailable:"לפי הזמינות",
+westbank:"הגדה המערבית",jerusalem:"ירושלים",inside:"אזורי 48",
+rights:"כל הזכויות שמורות",newCollection:"קולקציה חדשה",explore:"לצפייה",
+marqueeText:"ESPOZA FASHION • האלגנטיות שלך מתחילה כאן • קולקציה חדשה • אופנת נשים •",
+feat1Icon:"🚚",feat1Title:"משלוח מהיר",feat1Text:"משלוח מהיר בתוך 2–3 ימים",
+feat2Icon:"🔍",feat2Title:"בדיקה בעת המסירה",feat2Text:"בדקי את הפריט לפני קבלת ההזמנה והתשלום",
+feat3Icon:"🛡️",feat3Title:"אמינות וביטחון",feat3Text:"קנייה בטוחה ושמירה על פרטיות הנתונים שלך",
+feat4Icon:"✨",feat4Title:"איכות מוקפדת",feat4Text:"אנו בוחרים עבורך בדים איכותיים ותשומת לב לכל פרט",
+feat5Icon:"❤️",feat5Title:"מאז 2019",feat5Text:"יותר מ‑7,750 לקוחות",
+feat6Icon:"💗",feat6Title:"עוזרים לך לבחור",feat6Text:"כתבי לנו ונעזור לך לבחור את הדגם והמידה המתאימים",
+feat7Icon:"👗",feat7Title:"עיצובים עדכניים ואלגנטיים",feat7Text:"דגמים שנבחרו בקפידה ומשלבים אלגנטיות וסגנון מודרני",
+feat8Icon:"🎧",feat8Title:"שירות ותמיכה",feat8Text:"אנחנו כאן לפני ההזמנה ואחריה לכל שאלה",
+featuresTagline:"🛍️ קני בביטחון עם Espoza Fashion 💖",
+policies:"מדיניות החנות",
+policyItems:[
+["01","החלפות","ניתן לבקש החלפה בתוך 24 שעות מקבלת ההזמנה, בתנאי שהפריט נשאר במצבו המקורי, לא נעשה בו שימוש והתוויות מחוברות אליו."],
+["02","בדיקה בעת המסירה","אפשר לבדוק את הפריט בעת המסירה ולוודא שהמידה והפרטים מתאימים לפני התשלום."],
+["03","דמי משלוח","הגדה המערבית: 20 ₪, ירושלים: 30 ₪, ואזורי 48: 70 ₪."],
+["04","זמן אספקה","ההזמנה מגיעה בדרך כלל בתוך 2–3 ימי עבודה, בהתאם לאזור המשלוח."],
+["05","ביטול הזמנה","ניתן לבטל את ההזמנה ללא תשלום לפני יציאת המשלוח מאיתנו."],
+["06","החזרות","לא ניתן להחזיר מוצרים, למעט במקרה של פגם ייצור ברור בפריט."],
+["07","פרטיות","אנו משתמשים בשם, במספר הטלפון ובכתובת שלך לצורך טיפול בהזמנה ומשלוחה בלבד, ושומרים על פרטיות המידע."],
+["08","תשלום ויצירת קשר","התשלום מתבצע במזומן בעת המסירה בלבד. לשאלות, החלפה או ביטול, אפשר לפנות אלינו ישירות בוואטסאפ."]
+],
+policyWhatsApp:"יצירת קשר בוואטסאפ",
+qty:"כמות",addToCart:"הוספה לסל",addedToCart:"הפריט נוסף לסל",
+cart:"סל הקניות",cartEmpty:"סל הקניות שלך ריק כרגע",checkoutBtn:"המשך להזמנה",
+cod:"תשלום בעת המסירה",footerSince:"ESPOZA FASHION — מאז 2019",
+footerCredit:"Designed & Created by Yousef Ajra",
+feedbackTitle:"מה הלקוחות שלנו אומרות",feedbackCounterLabel:"חוות דעת אמיתיות מהלקוחות שלנו",
+feedbackDaily:"מאות הודעות מדי יום",feedbackSwipeHint:"החליקי כדי לראות עוד",
+footerStoryTitle:"איך התחיל הסיפור של Espoza?",
+footerStoryText:"Espoza Fashion נוסדה בשנת 2019 מתוך אהבה אמיתית לאופנה ורצון להציע פריטים מיוחדים המשלבים איכות ועיצוב מוקפד. עם השנים הקולקציה התרחבה, וכך גם האמון של הלקוחות שלנו. אנו ממשיכים להציע שמלות, חליפות ופריטים אלגנטיים שנבחרו בקפידה, תוך תשומת לב לכל פרט.",
+footerContactTitle:"צרי קשר",footerLinksTitle:"קישורים מהירים",
+returnPolicyTitle:"מדיניות החזרות",returnPolicyText:"לא ניתן להחזיר מוצרים, למעט במקרה של פגם ייצור ברור בפריט.",
+exchangePolicyTitle:"מדיניות החלפות",exchangePolicyText:"ניתן לבצע החלפה בתוך 24 שעות מקבלת ההזמנה, בתנאי שהפריט במצבו המקורי, לא נעשה בו שימוש ולא ניזוק.",
+notReceivedPolicyTitle:"אי איסוף הזמנה",notReceivedPolicyText:"אם ההזמנה לא נאספה והוחזרה אלינו, אנו שומרים לעצמנו את הזכות לסרב להזמנות עתידיות במקרה של אי איסוף חוזר.",
+paymentPolicyTitle:"תשלום",paymentPolicyText:"תשלום במזומן בעת המסירה (COD).",
+customerCountCaption:"10,000 לקוחות בחרו ב‑Espoza Fashion",
+customerCountSubcaption:"האמון מתחדש עם כל הזמנה",
+storyEyebrow:"הסיפור שלנו • מאז 2019",storyTitle:"הסיפור של Espoza Fashion",
+storyText:"Espoza Fashion החלה בשנת 2019 מתוך תשוקה אמיתית לאלגנטיות ורצון להציע פריטים ייחודיים המשלבים איכות ועיצוב מוקפד. עם הזמן הקולקציה גדלה יחד עם אמון הלקוחות שלנו. אנו ממשיכים להציע שמלות, חליפות ופריטים אלגנטיים שנבחרו בקפידה, עם תשומת לב לכל פרט.",
+storyTag:"מאות הודעות מדי יום • אמון שמתחדש בכל הזמנה • Espoza Fashion",
+wishlistTitle:"המועדפים שלי",wishlistSubtitle:"הפריטים ששמרת",
+wishlistEmpty:"עדיין לא שמרת פריטים במועדפים. לחצי על ♡ בכל פריט כדי לשמור אותו.",
+addFavorite:"הוספה למועדפים",removeFavorite:"הסרה מהמועדפים",
+wishTitle:"✨ מה המשאלה הבאה שלך מ‑Espoza Fashion?",
+wishIntro:"ספרי לנו איזה פריט היית רוצה שנציע — אולי הרעיון שלך יהיה התוספת הבאה לקולקציה שלנו 🤍",
+wishPlaceholder:"כתבי כאן את המשאלה שלך...",
+wishSubmit:"שליחת המשאלה",
+wishPublic:"ציבורי 🌍 — כולם יכולים לראות",
+wishPrivate:"פרטי 🔒 — רק החנות יכולה לראות",
+wishEmpty:"עדיין אין משאלות. תהיי הראשונה לשתף ✨",
+wishUnavailable:"רשימת המשאלות אינה זמינה כרגע.",
+wishPlease:"כתבי את המשאלה שלך תחילה 🤍",
+wishPrivateSent:"המשאלה הפרטית שלך נשלחה לחנות ✨",
+wishPublicSent:"המשאלה שלך שותפה עם כולם ✨",
+wishError:"לא הצלחנו להוסיף את המשאלה כרגע. נסי שוב.",
+favorites:"מועדפים",wishList:"רשימת משאלות",reviews:"חוות דעת לקוחות",
+quickPolicies:"מדיניות החנות",cartOrder:"סל והזמנה",quickLinks:"קישורים מהירים",
+splashTag:"הסגנון שלך, הזוהר שלך",close:"סגירה",
+sizeGuide:"מדריך מידות",sizeGuideNote:"המידות בסנטימטרים, אלא אם צוין אחרת.",
+assistantLauncher:"שיחה עם ELARA AI",
+assistantSubtitle:"העוזרת האישית שלך",
+assistantWelcome:"שלום! אני ELARA ✨ אשמח לעזור לך לבחור פריטים, לבדוק מידות, צבעים ומחירים, ולענות על שאלות. לגבי פרטי החנות אסתמך רק על מידע מאומת.",
+assistantQuickSets:"🛍️ אילו חליפות זמינות?",assistantQuickDresses:"👗 הציגי לי שמלות זמינות",
+assistantQuickSizes:"📏 אילו מידות זמינות?",assistantQuickDelivery:"🚚 כמה עולה המשלוח?",
+assistantPlaceholder:"כתבי את שאלתך...",assistantSend:"שליחה",
+assistantFoot:"ELARA AI · פרטי החנות מוצגים לפי המידע הזמין.",
+assistantTyping:"ELARA חושבת ומנתחת",assistantOffline:"אין חיבור לאינטרנט. נסי שוב כשהחיבור יתחדש.",
+assistantError:"ELARA אינה זמינה כרגע. נסי שוב או פני לחנות בוואטסאפ.",
+assistantTimeout:"התגובה מתעכבת. נסי שוב.",
+priceLabel:"מחיר",colorsLabel:"צבעים",sizesLabel:"מידות",
+discountLabel:"מבצע אוטומטי",totalAfterDiscount:"סה״כ לאחר ההנחה",
+remove:"הסרה",closeModal:"סגירה",emptySearch:"לא נמצאו תוצאות",
+footerContactNote:"להזמנות ולשאלות, אפשר לפנות אלינו ישירות או לבחור את הפלטפורמה המועדפת עלייך.",
+cartLimit:"המגבלה היא עד 4 פריטים מאותו דגם, בכל הצבעים והמידות.",
+sizeChartTitle:"מדריך מידות",sizeChartBust:"היקף חזה",sizeChartWaist:"היקף מותניים",sizeChartHip:"היקף ירכיים",sizeChartLength:"אורך",
+};
+
+
+
+Object.assign(TEXT.ar,{
+favorites:"المفضلة",wishList:"قائمة الأمنيات",reviews:"آراء الزبائن",quickPolicies:"سياسة المتجر",cartOrder:"السلة والطلب",splashTag:"خيارك للتألق",quickLinks:"روابط سريعة",
+wishlistTitle:"المفضلة",wishlistSubtitle:"القطع التي حفظتها",wishlistEmpty:"المفضلة فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.",
+wishTitle:"✨ أمنيتك القادمة مع Espoza Fashion؟",wishIntro:"أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍",wishPlaceholder:"اكتبي أمنيتك هنا...",wishSubmit:"إرسال الأمنية",wishPublic:"عام 🌍 - الكل بيشوفها",wishPrivate:"خاص 🔒 - بتوصلني أنا بس",
+wishEmpty:"لسه ما في أمنيات. كوني أول من يشارك أمنيتك ✨",wishUnavailable:"قائمة الأمنيات غير متاحة مؤقتًا.",wishPlease:"اكتبي أمنيتك أولاً 🤍",wishPrivateSent:"تم إرسال أمنيتك بشكل خاص للمتجر ✨",wishPublicSent:"تمت إضافة أمنيتك للجميع ✨",wishError:"ما قدرنا نضيف الأمنية حاليًا، حاولي مرة ثانية.",
+footerContactNote:"للطلب والاستفسار، تواصلي معنا مباشرة أو اختاري منصتك المفضلة.",sizeGuide:"دليل المقاسات",sizeGuideNote:"القياسات بالسنتيمتر ما لم يُذكر غير ذلك.",
+assistantLauncher:"تحدثي مع إيلارا",assistantSubtitle:"مساعدتك الذكية",assistantWelcome:"مرحبًا! أنا إيلارا ✨ أساعدك في التسوق واختيار المنتجات والإجابة عن أسئلتك. أعتمد في معلومات المتجر على البيانات المؤكدة فقط.",
+assistantQuickSets:"🛍️ شو عندكم أطقم؟",assistantQuickDresses:"👗 الفساتين المتوفرة",assistantQuickSizes:"📏 المقاسات المتوفرة",assistantQuickDelivery:"🚚 تكلفة التوصيل",assistantPlaceholder:"اكتبي سؤالك...",assistantSend:"إرسال",assistantFoot:"إيلارا · معلومات المتجر حسب البيانات المتاحة.",assistantTyping:"إيلارا تفكر وتُحلّل",assistantOffline:"الاتصال بالإنترنت مقطوع. حاولي بعد عودة الاتصال.",assistantError:"إيلارا غير متاحة للحظة. حاولي مرة ثانية أو تواصلي مع المتجر عبر واتساب.",assistantTimeout:"استغرق الرد وقتًا طويلًا. حاولي مرة أخرى.",
+priceLabel:"السعر",colorsLabel:"الألوان",sizesLabel:"المقاسات",close:"إغلاق",cartLimit:"الحد الأقصى 4 قطع من نفس الموديل، مع احتساب جميع الألوان والمقاسات."
+});
+Object.assign(TEXT.en,{
+favorites:"Favorites",wishList:"Wish List",reviews:"Customer Reviews",quickPolicies:"Store Policies",cartOrder:"Cart & Order",splashTag:"Your Style, Your Shine",quickLinks:"Quick Links",
+wishlistTitle:"Favorites",wishlistSubtitle:"Pieces you saved",wishlistEmpty:"You haven't saved any pieces yet. Tap ♡ on a product to add it here.",
+wishTitle:"✨ What is your next wish from Espoza Fashion?",wishIntro:"Tell us what piece you wish we offered — your idea could become our next addition 🤍",wishPlaceholder:"Write your wish here...",wishSubmit:"Share your wish",wishPublic:"Public 🌍 — Everyone can see it",wishPrivate:"Private 🔒 — Only the store can see",
+wishEmpty:"No wishes yet. Be the first to share yours ✨",wishUnavailable:"Wishes are temporarily unavailable.",wishPlease:"Please write your wish first.",wishPrivateSent:"Your private wish was sent to the store ✨",wishPublicSent:"Your wish was shared with everyone ✨",wishError:"We couldn't add the wish right now. Please try again.",
+footerContactNote:"For orders and questions, contact us directly or choose your preferred platform.",sizeGuide:"Size guide",sizeGuideNote:"Measurements are in centimeters unless noted otherwise.",
+assistantLauncher:"Chat with ELARA AI",assistantSubtitle:"Your intelligent companion",assistantWelcome:"Hello! I'm ELARA ✨ I can help you shop, choose products and answer questions. Store information is based on confirmed details only.",
+assistantQuickSets:"🛍️ Which sets are available?",assistantQuickDresses:"👗 Show available dresses",assistantQuickSizes:"📏 Which sizes are available?",assistantQuickDelivery:"🚚 How much is delivery?",assistantPlaceholder:"Type your question...",assistantSend:"Send",assistantFoot:"ELARA AI · Store information is shown according to available data.",assistantTyping:"ELARA is thinking",assistantOffline:"You're offline. Please try again when your connection returns.",assistantError:"ELARA is temporarily unavailable. Please try again or contact the store on WhatsApp.",assistantTimeout:"The response is taking longer than expected. Please try again.",
+priceLabel:"Price",colorsLabel:"Colors",sizesLabel:"Sizes",close:"Close",cartLimit:"The limit is 4 pieces of the same model across all colors and sizes."
+});
+
+
+
+Object.assign(TEXT.ar,{
+menuTitle:"القائمة",menuAccount:"حسابي · دخول أو إنشاء حساب",menuFavorites:"المفضلة",menuCart:"السلة",menuNote:"سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.",
+accountTitle:"حسابي في Espoza",accountIntro:"أنشئي حسابك أو ادخلي لمتابعة طلباتك. نقبل عناوين البريد من مختلف المزوّدين مثل Gmail وiCloud وOutlook وHotmail وأي نطاق بريد صالح.",
+emailLabel:"البريد الإلكتروني",passwordLabel:"كلمة السر",passwordHint:"8 أحرف على الأقل",login:"تسجيل الدخول",signup:"إنشاء حساب جديد",forgotPassword:"نسيت كلمة السر؟",resendConfirmation:"إعادة إرسال رسالة تأكيد البريد",
+profileName:"الاسم",profilePhone:"رقم الهاتف / واتساب",profileAddress:"العنوان المفضّل",saveProfile:"حفظ بياناتي",previousOrders:"طلباتي السابقة",loadingOrders:"جارٍ تحميل الطلبات…",logout:"تسجيل الخروج",noOrders:"لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.",
+orderPrefix:"طلب",orderTotal:"الإجمالي",orderStatuses:{new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"تم التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"},
+footerFavorites:"المفضلة",footerWishes:"قائمة الأمنيات",footerFeedback:"آراء الزبائن",footerStoryLink:"قصة Espoza",footerPolicies:"سياستنا",footerLinksNote:"كل ما تحتاجينه في مكان واحد.",
+imageViewerHint:"كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير",imageViewerRights:"© Espoza Fashion — جميع الحقوق محفوظة",
+couponLabel:"كود الخصم (اختياري)",couponPlaceholder:"أدخلي كود الخصم",couponApply:"تطبيق",couponRemove:"إزالة الكود",cartSubtotal:"مجموع المنتجات",discountLabel:"الخصم",discountApplied:"تم تطبيق الخصم",
+addressPlaceholder:"المدينة / البلدة / الحي / الشارع"
+});
+Object.assign(TEXT.en,{
+menuTitle:"Menu",menuAccount:"My Account · Sign in or Create Account",menuFavorites:"Favorites",menuCart:"Cart",menuNote:"Sign in with your email to track orders and save your details for next time.",
+accountTitle:"My Espoza Account",accountIntro:"Create an account or sign in to track your orders. We accept valid email addresses from Gmail, iCloud, Outlook, Hotmail and other providers.",
+emailLabel:"Email address",passwordLabel:"Password",passwordHint:"At least 8 characters",login:"Sign in",signup:"Create account",forgotPassword:"Forgot password?",resendConfirmation:"Resend email confirmation",
+profileName:"Name",profilePhone:"Phone / WhatsApp",profileAddress:"Preferred address",saveProfile:"Save my details",previousOrders:"Previous orders",loadingOrders:"Loading orders…",logout:"Sign out",noOrders:"There are no orders linked to your account yet. You can place an order and pay on delivery as usual.",
+orderPrefix:"Order",orderTotal:"Total",orderStatuses:{new:"Under review",confirmed:"Confirmed",processing:"Preparing",shipped:"Shipped",completed:"Completed",cancelled:"Cancelled"},
+footerFavorites:"Favorites",footerWishes:"Wish List",footerFeedback:"Customer Reviews",footerStoryLink:"Our Story",footerPolicies:"Our Policies",footerLinksNote:"Everything you need in one place.",
+imageViewerHint:"Pinch or double-tap to zoom • Drag the image after zooming",imageViewerRights:"© Espoza Fashion — All rights reserved",
+couponLabel:"Discount code (optional)",couponPlaceholder:"Enter discount code",couponApply:"Apply",couponRemove:"Remove code",cartSubtotal:"Items subtotal",discountLabel:"Discount",discountApplied:"Discount applied",
+addressPlaceholder:"City / town / neighborhood / street"
+});
+Object.assign(TEXT.he,{
+menuTitle:"תפריט",menuAccount:"החשבון שלי · כניסה או יצירת חשבון",menuFavorites:"מועדפים",menuCart:"סל הקניות",menuNote:"התחברי באמצעות כתובת הדוא״ל שלך כדי לעקוב אחר ההזמנות ולשמור את פרטייך לפעם הבאה.",
+accountTitle:"החשבון שלי ב‑Espoza",accountIntro:"צרי חשבון או התחברי כדי לעקוב אחר ההזמנות שלך. אנו מקבלים כתובות דוא״ל תקינות מכל הספקים, כולל Gmail, iCloud, Outlook ו‑Hotmail.",
+emailLabel:"כתובת דוא״ל",passwordLabel:"סיסמה",passwordHint:"לפחות 8 תווים",login:"כניסה",signup:"יצירת חשבון חדש",forgotPassword:"שכחת את הסיסמה?",resendConfirmation:"שליחה חוזרת של הודעת אימות",
+profileName:"שם",profilePhone:"טלפון / וואטסאפ",profileAddress:"כתובת מועדפת",saveProfile:"שמירת הפרטים שלי",previousOrders:"ההזמנות הקודמות שלי",loadingOrders:"ההזמנות נטענות…",logout:"התנתקות",noOrders:"עדיין אין הזמנות המשויכות לחשבונך. אפשר לבצע הזמנה ולשלם בעת המסירה כרגיל.",
+orderPrefix:"הזמנה",orderTotal:"סה״כ",orderStatuses:{new:"ממתינה לבדיקה",confirmed:"אושרה",processing:"בהכנה",shipped:"נשלחה",completed:"הושלמה",cancelled:"בוטלה"},
+footerFavorites:"מועדפים",footerWishes:"רשימת משאלות",footerFeedback:"חוות דעת לקוחות",footerStoryLink:"הסיפור שלנו",footerPolicies:"המדיניות שלנו",footerLinksNote:"כל מה שאת צריכה במקום אחד.",
+imageViewerHint:"צבטי בשתי אצבעות או הקישי פעמיים להגדלה • גררי את התמונה לאחר ההגדלה",imageViewerRights:"© Espoza Fashion — כל הזכויות שמורות",
+couponLabel:"קוד הנחה (לא חובה)",couponPlaceholder:"הזיני קוד הנחה",couponApply:"החלה",couponRemove:"הסרת הקוד",cartSubtotal:"סכום הפריטים",discountLabel:"הנחה",discountApplied:"ההנחה הוחלה",
+addressPlaceholder:"עיר / יישוב / שכונה / רחוב"
+});
+
+
+
+Object.assign(TEXT.ar,{
+menuTitle:"القائمة",menuAccount:"حسابي · دخول أو إنشاء حساب",menuFavorites:"المفضلة",menuCart:"السلة",menuNote:"سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.",
+accountTitle:"حسابي في Espoza",accountIntro:"أنشئي حسابك أو ادخلي لمتابعة طلباتك. نقبل عناوين البريد من مختلف المزوّدين مثل Gmail وiCloud وOutlook وHotmail وأي نطاق بريد صالح.",
+emailLabel:"البريد الإلكتروني",passwordLabel:"كلمة السر",passwordHint:"8 أحرف على الأقل",login:"تسجيل الدخول",signup:"إنشاء حساب جديد",forgotPassword:"نسيت كلمة السر؟",resendConfirmation:"إعادة إرسال رسالة تأكيد البريد",
+profileName:"الاسم",profilePhone:"رقم الهاتف / واتساب",profileAddress:"العنوان المفضّل",saveProfile:"حفظ بياناتي",previousOrders:"طلباتي السابقة",loadingOrders:"جارٍ تحميل الطلبات…",logout:"تسجيل الخروج",noOrders:"لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.",
+orderPrefix:"طلب",orderTotal:"الإجمالي",orderStatuses:{new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"قيد التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"},
+footerFavorites:"المفضلة",footerWishes:"قائمة الأمنيات",footerFeedback:"آراء الزبائن",footerStoryLink:"قصة Espoza",footerPolicies:"سياستنا",footerLinksNote:"كل ما تحتاجينه في مكان واحد.",
+imageViewerHint:"كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير",imageViewerRights:"© Espoza Fashion — جميع الحقوق محفوظة",
+couponLabel:"كود الخصم (اختياري)",couponPlaceholder:"أدخلي كود الخصم",couponApply:"تطبيق",couponRemove:"إزالة الكود",cartSubtotal:"مجموع المنتجات",discountApplied:"تم تطبيق الخصم",addressPlaceholder:"المدينة / البلدة / الحي / الشارع"
+});
+Object.assign(TEXT.en,{
+menuTitle:"Menu",menuAccount:"My Account · Sign in or Create Account",menuFavorites:"Favorites",menuCart:"Cart",menuNote:"Sign in with your email to track orders and save your details for next time.",
+accountTitle:"My Espoza Account",accountIntro:"Create an account or sign in to track your orders. We accept valid email addresses from Gmail, iCloud, Outlook, Hotmail and other providers.",
+emailLabel:"Email address",passwordLabel:"Password",passwordHint:"At least 8 characters",login:"Sign in",signup:"Create account",forgotPassword:"Forgot password?",resendConfirmation:"Resend email confirmation",
+profileName:"Name",profilePhone:"Phone / WhatsApp",profileAddress:"Preferred address",saveProfile:"Save my details",previousOrders:"Previous orders",loadingOrders:"Loading orders…",logout:"Sign out",noOrders:"There are no orders linked to your account yet. You can place an order and pay on delivery as usual.",
+orderPrefix:"Order",orderTotal:"Total",orderStatuses:{new:"Under review",confirmed:"Confirmed",processing:"Preparing",shipped:"Shipped",completed:"Completed",cancelled:"Cancelled"},
+footerFavorites:"Favorites",footerWishes:"Wish List",footerFeedback:"Customer Reviews",footerStoryLink:"Our Story",footerPolicies:"Our Policies",footerLinksNote:"Everything you need in one place.",
+imageViewerHint:"Pinch or double-tap to zoom • Drag the image after zooming",imageViewerRights:"© Espoza Fashion — All rights reserved",
+couponLabel:"Discount code (optional)",couponPlaceholder:"Enter discount code",couponApply:"Apply",couponRemove:"Remove code",cartSubtotal:"Items subtotal",discountApplied:"Discount applied",addressPlaceholder:"City / town / neighborhood / street"
+});
+Object.assign(TEXT.he,{
+menuTitle:"תפריט",menuAccount:"החשבון שלי · כניסה או יצירת חשבון",menuFavorites:"מועדפים",menuCart:"סל הקניות",menuNote:"התחברי באמצעות כתובת הדוא״ל שלך כדי לעקוב אחר ההזמנות ולשמור את פרטייך לפעם הבאה.",
+accountTitle:"החשבון שלי ב‑Espoza",accountIntro:"צרי חשבון או התחברי כדי לעקוב אחר ההזמנות שלך. אנו מקבלים כתובות דוא״ל תקינות מכל הספקים, כולל Gmail, iCloud, Outlook ו‑Hotmail.",
+emailLabel:"כתובת דוא״ל",passwordLabel:"סיסמה",passwordHint:"לפחות 8 תווים",login:"כניסה",signup:"יצירת חשבון חדש",forgotPassword:"שכחת את הסיסמה?",resendConfirmation:"שליחה חוזרת של הודעת אימות",
+profileName:"שם",profilePhone:"טלפון / וואטסאפ",profileAddress:"כתובת מועדפת",saveProfile:"שמירת הפרטים שלי",previousOrders:"ההזמנות הקודמות שלי",loadingOrders:"ההזמנות נטענות…",logout:"התנתקות",noOrders:"עדיין אין הזמנות המשויכות לחשבונך. אפשר לבצע הזמנה ולשלם בעת המסירה כרגיל.",
+orderPrefix:"הזמנה",orderTotal:"סה״כ",orderStatuses:{new:"ממתינה לבדיקה",confirmed:"אושרה",processing:"בהכנה",shipped:"נשלחה",completed:"הושלמה",cancelled:"בוטלה"},
+footerFavorites:"מועדפים",footerWishes:"רשימת משאלות",footerFeedback:"חוות דעת לקוחות",footerStoryLink:"הסיפור שלנו",footerPolicies:"המדיניות שלנו",footerLinksNote:"כל מה שאת צריכה במקום אחד.",
+imageViewerHint:"צבטי בשתי אצבעות או הקישי פעמיים להגדלה • גררי את התמונה לאחר ההגדלה",imageViewerRights:"© Espoza Fashion — כל הזכויות שמורות",
+couponLabel:"קוד הנחה (לא חובה)",couponPlaceholder:"הזיני קוד הנחה",couponApply:"החלה",couponRemove:"הסרת הקוד",cartSubtotal:"סכום הפריטים",discountApplied:"ההנחה הוחלה",addressPlaceholder:"עיר / יישוב / שכונה / רחוב"
+});
+
+
+
+Object.assign(TEXT.ar,{
+signupSubmit:"إنشاء حساب وإرسال رابط التأكيد",recoverySubmit:"حفظ كلمة السر الجديدة",newPassword:"اكتبي كلمة السر الجديدة",
+authEmailRequired:"اكتبي البريد الإلكتروني أولًا.",authEmailInvalid:"تحقّقي من البريد الإلكتروني.",authPasswordShort:"كلمة السر لازم تكون 8 أحرف على الأقل.",
+authSignupLoading:"جارٍ إنشاء حسابك وإرسال رابط التأكيد…",authLoginLoading:"جارٍ تسجيل الدخول…",authPasswordUpdated:"تم تغيير كلمة السر بنجاح. يمكنكِ الآن تسجيل الدخول بها.",
+authAccountCreated:"تم إنشاء حسابك وتسجيل دخولك بنجاح.",authConfirmEmail:"تم إنشاء الحساب. افتحي رسالة التأكيد التي أرسلناها إلى بريدك، ثم ارجعي إلى الموقع وسجّلي الدخول بالإيميل وكلمة السر التي اخترتيها.",
+authLoginSuccess:"تم تسجيل الدخول بنجاح.",authConfirmFirst:"لازم تأكدي بريدك أولًا. افتحي رسالة التأكيد ثم جرّبي تسجيل الدخول.",
+authInvalidCredentials:"الإيميل أو كلمة السر غير صحيحة. إذا ما عندك حساب، اختاري «إنشاء حساب جديد».",authAlreadyRegistered:"هذا البريد مسجّل من قبل. اختاري «تسجيل الدخول» أو «نسيت كلمة السر؟».",
+authWeakPassword:"اختاري كلمة سر أقوى، 8 أحرف على الأقل.",authRedirectError:"رابط تأكيد البريد غير مسموح. تحقّقي من إعدادات روابط إعادة التوجيه.",authGenericError:"تعذّر إكمال العملية. حاولي مرة ثانية.",
+authResendSent:"تم طلب إعادة إرسال التأكيد. افحصي الوارد والبريد غير المرغوب فيه.",authResendError:"تعذّر طلب رسالة التأكيد. حاولي لاحقًا.",
+authResetLoading:"جارٍ إرسال رابط إعادة تعيين كلمة السر…",authResetSent:"إذا كان البريد مسجّلًا، رح توصلك رسالة فيها رابط آمن لإعادة تعيين كلمة السر.",authResetError:"تعذّر إرسال رسالة الاستعادة حاليًا. حاولي مرة ثانية.",
+profileNameRequired:"الاسم مطلوب.",profileSaveError:"تعذّر حفظ البيانات.",profileSaved:"تم حفظ بيانات حسابك.",logoutError:"تعذّر تسجيل الخروج.",logoutSuccess:"تم تسجيل الخروج."
+});
+Object.assign(TEXT.en,{
+signupSubmit:"Create account and send confirmation link",recoverySubmit:"Save new password",newPassword:"Enter your new password",
+authEmailRequired:"Please enter your email address first.",authEmailInvalid:"Please check your email address.",authPasswordShort:"Password must be at least 8 characters.",
+authSignupLoading:"Creating your account and sending a confirmation link…",authLoginLoading:"Signing in…",authPasswordUpdated:"Your password has been changed. You can now sign in with it.",
+authAccountCreated:"Your account was created and you are signed in.",authConfirmEmail:"Your account was created. Open the confirmation email we sent, then return and sign in with your email and password.",
+authLoginSuccess:"You have signed in successfully.",authConfirmFirst:"Please confirm your email first, then try signing in.",
+authInvalidCredentials:"The email or password is incorrect. If you don't have an account, choose Create account.",authAlreadyRegistered:"This email is already registered. Choose Sign in or Forgot password.",
+authWeakPassword:"Choose a stronger password with at least 8 characters.",authRedirectError:"The confirmation redirect is not allowed. Check the redirect URL settings.",authGenericError:"We couldn't complete this action. Please try again.",
+authResendSent:"A new confirmation email has been requested. Check your inbox and spam folder.",authResendError:"We couldn't resend the confirmation email. Please try again later.",
+authResetLoading:"Sending a password reset link…",authResetSent:"If this email is registered, you'll receive a secure password reset link.",authResetError:"We couldn't send the reset email right now. Please try again.",
+profileNameRequired:"Name is required.",profileSaveError:"We couldn't save your details.",profileSaved:"Your account details have been saved.",logoutError:"Sign out failed.",logoutSuccess:"You have signed out."
+});
+Object.assign(TEXT.he,{
+signupSubmit:"יצירת חשבון ושליחת קישור אימות",recoverySubmit:"שמירת הסיסמה החדשה",newPassword:"הזיני את הסיסמה החדשה",
+authEmailRequired:"נא להזין כתובת דוא״ל תחילה.",authEmailInvalid:"נא לבדוק את כתובת הדוא״ל.",authPasswordShort:"הסיסמה חייבת להכיל לפחות 8 תווים.",
+authSignupLoading:"החשבון נוצר ונשלח קישור אימות…",authLoginLoading:"מתבצעת כניסה…",authPasswordUpdated:"הסיסמה עודכנה בהצלחה. כעת אפשר להתחבר באמצעותה.",
+authAccountCreated:"החשבון נוצר והתחברת בהצלחה.",authConfirmEmail:"החשבון נוצר. פתחי את הודעת האימות שנשלחה לדוא״ל שלך, ולאחר מכן חזרי לאתר והתחברי.",
+authLoginSuccess:"התחברת בהצלחה.",authConfirmFirst:"יש לאמת את כתובת הדוא״ל תחילה. פתחי את הודעת האימות ונסי שוב.",
+authInvalidCredentials:"כתובת הדוא״ל או הסיסמה שגויות. אם עדיין אין לך חשבון, בחרי ביצירת חשבון חדש.",authAlreadyRegistered:"כתובת הדוא״ל הזו כבר רשומה. בחרי בכניסה או באיפוס סיסמה.",
+authWeakPassword:"בחרי סיסמה חזקה יותר, באורך של 8 תווים לפחות.",authRedirectError:"קישור האימות אינו מורשה. בדקי את הגדרות כתובות ההפניה.",authGenericError:"לא ניתן להשלים את הפעולה כרגע. נסי שוב.",
+authResendSent:"נשלחה בקשה לשליחת הודעת אימות נוספת. בדקי גם בתיקיית הספאם.",authResendError:"לא ניתן לשלוח שוב את הודעת האימות. נסי מאוחר יותר.",
+authResetLoading:"נשלח קישור לאיפוס הסיסמה…",authResetSent:"אם כתובת הדוא״ל רשומה, תקבלי קישור מאובטח לאיפוס הסיסמה.",authResetError:"לא ניתן לשלוח את הודעת האיפוס כרגע. נסי שוב.",
+profileNameRequired:"יש להזין שם.",profileSaveError:"לא ניתן לשמור את הפרטים.",profileSaved:"פרטי החשבון נשמרו.",logoutError:"ההתנתקות נכשלה.",logoutSuccess:"התנתקת בהצלחה."
+});
+
+
+
+Object.assign(TEXT.ar,{
+addFavorite:"إضافة إلى المفضلة",removeFavorite:"إزالة من المفضلة",discountLabel:"الخصم",totalAfterDiscount:"المجموع بعد الخصم",
+couponCodeRequired:"اكتبي كود الخصم أولًا.",couponInvalid:"الكود غير صحيح أو العرض غير فعال.",couponFirstOrder:"هذا العرض لأول طلب ويتطلب تسجيل الدخول بحساب لم يسبق له الطلب.",
+couponConditions:"الكود صحيح، لكن شروط العرض غير متحققة في السلة الحالية.",couponBest:"الكود صالح، لكن احتسبنا أفضل خصم واحد متاح دون جمع العروض.",couponVerified:"تم التحقق من الكود، وسيُحتسب الخصم عند تأكيد الطلب.",couponError:"تعذّر التحقق من الكود الآن. حاولي مرة أخرى.",couponRemoved:"تمت إزالة كود الخصم.",
+orderProductMissing:"لم نعثر على المنتج في كتالوج المتجر. افتحي المنتج من جديد وأعيدي إضافته للسلة.",orderProductIdMissing:"تعذر ربط المنتج بمعرّفه في قاعدة البيانات. أعيدي تحميل المتجر وحاولي مجددًا.",
+orderPriceChanged:"تغيّر سعر أحد المنتجات. حدّثي السلة قبل إرسال الطلب.",orderColorUnavailable:"اختاري لونًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.",orderSizeUnavailable:"اختاري مقاسًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.",
+cartSyncError:"تم حفظ الطلب، لكن تعذر تحديث السلة المحفوظة. يرجى إعادة المحاولة عند عودة الاتصال."
+});
+Object.assign(TEXT.en,{
+addFavorite:"Add to favorites",removeFavorite:"Remove from favorites",discountLabel:"Discount",totalAfterDiscount:"Total after discount",
+couponCodeRequired:"Please enter a discount code first.",couponInvalid:"This code is invalid or the offer is inactive.",couponFirstOrder:"This offer is for first orders only. Sign in with an account that has no previous orders.",
+couponConditions:"The code is valid, but the current cart does not meet the offer conditions.",couponBest:"The code is valid, but we've applied the single best available discount instead of stacking offers.",couponVerified:"The code is verified. The discount will be applied when you confirm the order.",couponError:"We couldn't verify the code right now. Please try again.",couponRemoved:"The discount code was removed.",
+orderProductMissing:"We couldn't find this product in the store catalog. Reopen the product and add it to your cart again.",orderProductIdMissing:"We couldn't link the product to its database ID. Reload the store and try again.",
+orderPriceChanged:"A product price has changed. Refresh your cart before placing the order.",orderColorUnavailable:"Please select an available color for this product again.",orderSizeUnavailable:"Please select an available size for this product again.",
+cartSyncError:"Your order was saved, but the saved cart couldn't be updated. Please try again when your connection returns."
+});
+Object.assign(TEXT.he,{
+addFavorite:"הוספה למועדפים",removeFavorite:"הסרה מהמועדפים",discountLabel:"הנחה",totalAfterDiscount:"סה״כ לאחר ההנחה",
+couponCodeRequired:"נא להזין קוד הנחה תחילה.",couponInvalid:"הקוד אינו תקין או שהמבצע אינו פעיל.",couponFirstOrder:"המבצע מיועד להזמנה ראשונה בלבד. יש להתחבר לחשבון ללא הזמנות קודמות.",
+couponConditions:"הקוד תקין, אך הסל הנוכחי אינו עומד בתנאי המבצע.",couponBest:"הקוד תקין, אך הוחלה ההנחה הטובה ביותר בלבד ולא ניתן לצרף מבצעים.",couponVerified:"הקוד אומת. ההנחה תחושב בעת אישור ההזמנה.",couponError:"לא ניתן לאמת את הקוד כרגע. נסי שוב.",couponRemoved:"קוד ההנחה הוסר.",
+orderProductMissing:"לא מצאנו את הפריט בקטלוג החנות. פתחי את הפריט מחדש והוסיפי אותו לסל.",orderProductIdMissing:"לא ניתן לקשר את הפריט למזהה שלו במסד הנתונים. רענני את החנות ונסי שוב.",
+orderPriceChanged:"מחיר אחד הפריטים השתנה. רענני את הסל לפני שליחת ההזמנה.",orderColorUnavailable:"בחרי מחדש צבע שזמין עבור הפריט הזה.",orderSizeUnavailable:"בחרי מחדש מידה שזמינה עבור הפריט הזה.",
+cartSyncError:"ההזמנה נשמרה, אך לא ניתן לעדכן את הסל השמור. נסי שוב כשהחיבור יתחדש."
+});
 
 
 const t=
@@ -6392,13 +6692,13 @@ function setCustomerAuthMode(mode){
  const login=$("customerLoginMode"),signup=$("customerSignupMode"),submit=$("customerAuthSubmit"),password=$("customerPassword");
  if(login)login.style.display=customerAuthMode==="recovery"?"none":"";
  if(signup)signup.style.display=customerAuthMode==="recovery"?"none":"";
- if(submit)submit.textContent=customerAuthMode==="signup"?"إنشاء حساب وإرسال رابط التأكيد":customerAuthMode==="recovery"?"حفظ كلمة السر الجديدة":"تسجيل الدخول";
+ if(submit)submit.textContent=customerAuthMode==="signup"?t().signupSubmit:customerAuthMode==="recovery"?t().recoverySubmit:t().login;
  const recovery=customerAuthMode==="recovery";
  $("customerEmail").closest(".field").classList.toggle("hidden",recovery);
  $("customerResetPassword").classList.toggle("hidden",recovery);
  $("customerResendConfirmation").classList.toggle("hidden",recovery);
  if(recovery){$("customerAccountLoggedOut").classList.remove("hidden");$("customerAccountLoggedIn").classList.add("hidden");}
- if(password){password.autocomplete=customerAuthMode==="signup"||customerAuthMode==="recovery"?"new-password":"current-password";password.placeholder=customerAuthMode==="recovery"?"اكتبي كلمة السر الجديدة":"8 أحرف على الأقل";}
+ if(password){password.autocomplete=customerAuthMode==="signup"||customerAuthMode==="recovery"?"new-password":"current-password";password.placeholder=customerAuthMode==="recovery"?t().newPassword:t().passwordHint;}
  const msg=$("customerAuthMsg");if(msg)msg.textContent="";
 }
 function customerRedirectUrl(){
@@ -6410,70 +6710,57 @@ async function submitCustomerAuth(){
  const password=$("customerPassword").value;
  const msg=$("customerAuthMsg"),submit=$("customerAuthSubmit");
  if(submit?.disabled)return;
- if(customerAuthMode!=="recovery"&&!email){msg.textContent="اكتبي البريد الإلكتروني أولًا.";return;}
- if(customerAuthMode!=="recovery"&&!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
- if(!password||(customerAuthMode!=="login"&&password.length<8)){msg.textContent="كلمة السر لازم تكون 8 أحرف على الأقل.";return;}
- msg.textContent=customerAuthMode==="signup"?"جارٍ إنشاء حسابك وإرسال رابط التأكيد…":"جارٍ تسجيل الدخول…";
+ if(customerAuthMode!=="recovery"&&!email){msg.textContent=t().authEmailRequired;return;}
+ if(customerAuthMode!=="recovery"&&!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent=t().authEmailInvalid;return;}
+ if(!password||(customerAuthMode!=="login"&&password.length<8)){msg.textContent=t().authPasswordShort;return;}
+ msg.textContent=customerAuthMode==="signup"?t().authSignupLoading:customerAuthMode==="recovery"?t().recoverySubmit:t().authLoginLoading;
  if(submit)submit.disabled=true;
  try{
-  const db=getCustomerSupabase();
-  let result;
+  const db=getCustomerSupabase();let result;
   if(customerAuthMode==="recovery"){
-   result=await db.auth.updateUser({password});
-   if(result.error)throw result.error;
-   const signedOut=await db.auth.signOut();
-   if(signedOut.error)throw signedOut.error;
-   setCustomerAuthMode("login");
-   $("customerPassword").value="";
-   msg.textContent="تم تغيير كلمة السر بنجاح. يمكنكِ الآن تسجيل الدخول بها.";
+   result=await db.auth.updateUser({password});if(result.error)throw result.error;
+   const signedOut=await db.auth.signOut();if(signedOut.error)throw signedOut.error;
+   setCustomerAuthMode("login");$("customerPassword").value="";msg.textContent=t().authPasswordUpdated;
   }else if(customerAuthMode==="signup"){
    result=await db.auth.signUp({email,password,options:{emailRedirectTo:customerRedirectUrl(),data:{account_type:"customer"}}});
    if(result.error)throw result.error;
-   if(result.data?.session){
-    msg.textContent="تم إنشاء حسابك وتسجيل دخولك بنجاح.";
-    await refreshCustomerAccount();
-   }else{
-    msg.textContent="تم إنشاء الحساب. افتحي رسالة التأكيد التي أرسلناها إلى بريدك، ثم ارجعي إلى الموقع وسجّلي الدخول بالإيميل وكلمة السر التي اخترتيها.";
-   }
+   if(result.data?.session){msg.textContent=t().authAccountCreated;await refreshCustomerAccount();}
+   else msg.textContent=t().authConfirmEmail;
   }else{
-   result=await db.auth.signInWithPassword({email,password});
-   if(result.error)throw result.error;
-   msg.textContent="تم تسجيل الدخول بنجاح.";
-   await refreshCustomerAccount();
+   result=await db.auth.signInWithPassword({email,password});if(result.error)throw result.error;
+   msg.textContent=t().authLoginSuccess;await refreshCustomerAccount();
   }
  }catch(error){
   const detail=String(error?.message||"");
-  if(/email not confirmed/i.test(detail))msg.textContent="لازم تأكدي بريدك أولًا. افتحي رسالة التأكيد ثم جرّبي تسجيل الدخول.";
-  else if(/invalid login credentials/i.test(detail))msg.textContent="الإيميل أو كلمة السر غير صحيحة. إذا ما عندك حساب، اختاري «إنشاء حساب جديد».";
-  else if(/already registered|user already registered/i.test(detail))msg.textContent="هذا البريد مسجّل من قبل. اختاري «تسجيل الدخول» أو «نسيت كلمة السر؟».";
-  else if(/password.*weak|weak password/i.test(detail))msg.textContent="اختاري كلمة سر أقوى، 8 أحرف على الأقل.";
-  else if(/redirect/i.test(detail))msg.textContent="رابط تأكيد البريد غير مسموح. أضيفي https://espoza-fashion.github.io/espoza-fashion/ إلى Supabase Authentication > URL Configuration > Redirect URLs.";
-  else msg.textContent=detail||"تعذّر إكمال العملية. حاولي مرة ثانية.";
+  if(/email not confirmed/i.test(detail))msg.textContent=t().authConfirmFirst;
+  else if(/invalid login credentials/i.test(detail))msg.textContent=t().authInvalidCredentials;
+  else if(/already registered|user already registered/i.test(detail))msg.textContent=t().authAlreadyRegistered;
+  else if(/password.*weak|weak password/i.test(detail))msg.textContent=t().authWeakPassword;
+  else if(/redirect/i.test(detail))msg.textContent=t().authRedirectError;
+  else msg.textContent=detail||t().authGenericError;
  }finally{if(submit)submit.disabled=false;}
 }
 async function resendCustomerConfirmation(){
  const email=$("customerEmail").value.trim().toLowerCase(),msg=$("customerAuthMsg"),button=$("customerResendConfirmation");
  if(button.disabled)return;
- if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
+ if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent=t().authEmailInvalid;return;}
  button.disabled=true;
  try{
   const {error}=await getCustomerSupabase().auth.resend({type:"signup",email,options:{emailRedirectTo:customerRedirectUrl()}});
-  if(error)throw error;
-  msg.textContent="تم طلب إعادة إرسال التأكيد. افحصي الوارد والبريد غير المرغوب فيه.";
- }catch(error){msg.textContent="تعذّر طلب رسالة التأكيد. "+(error.message||"حاولي لاحقًا.");}
+  if(error)throw error;msg.textContent=t().authResendSent;
+ }catch(error){msg.textContent=t().authResendError;}
  finally{button.disabled=false;}
 }
 async function requestCustomerLogin(){return submitCustomerAuth();}
 async function resetCustomerPassword(){
  const email=$("customerEmail").value.trim().toLowerCase(),msg=$("customerAuthMsg");
- if(!email){msg.textContent="اكتبي بريدك الإلكتروني أولًا، ثم اضغطي نسيت كلمة السر.";return;}
- if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent="تحقّقي من البريد الإلكتروني.";return;}
- msg.textContent="جارٍ إرسال رابط إعادة تعيين كلمة السر…";
+ if(!email){msg.textContent=t().authEmailRequired;return;}
+ if(!/^(?!.*\.\.)[^\s@.](?:[^\s@]*[^\s@.])?@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email)){msg.textContent=t().authEmailInvalid;return;}
+ msg.textContent=t().authResetLoading;
  try{
   const result=await getCustomerSupabase().auth.resetPasswordForEmail(email,{redirectTo:customerRedirectUrl()});
-  if(result.error)throw result.error;
-  msg.textContent="إذا كان البريد مسجّلًا، رح توصلك رسالة فيها رابط آمن لإعادة تعيين كلمة السر.";
- }catch(error){msg.textContent="تعذّر إرسال رسالة الاستعادة حاليًا. حاولي مرة ثانية.";}
+  if(result.error)throw result.error;msg.textContent=t().authResetSent;
+ }catch(error){msg.textContent=t().authResetError;}
 }
 
 async function saveCustomerProfile(){
@@ -6481,41 +6768,42 @@ if(!customerProfile)return;
 const name=$("customerProfileName").value.trim();
 const phone=$("customerProfilePhone").value.trim();
 const address=$("customerProfileAddress").value.trim();
-if(!name){toast("الاسم مطلوب.");return;}
+if(!name){toast(t().profileNameRequired);return;}
 const db=getCustomerSupabase();
 const result=await db.from("customers").update({name,phone:phone||null,address:address||null,email:customerProfile.email||null,updated_at:new Date().toISOString()}).eq("id",customerProfile.id).select("*").single();
-if(result.error){toast("تعذّر حفظ البيانات: "+result.error.message);return;}
+if(result.error){toast(t().profileSaveError);return;}
 customerProfile=result.data;
-toast("تم حفظ بيانات حسابك.");
+toast(t().profileSaved);
 }
 
 async function loadCustomerOrders(){
-const box=$("customerOrders");
-if(!box||!customerProfile)return;
-box.innerHTML='<p class="muted">جارٍ تحميل الطلبات…</p>';
-const db=getCustomerSupabase();
-const result=await db.from("orders").select("id,created_at,status,items,subtotal,delivery_fee,total,notes").eq("customer_id",customerProfile.id).order("created_at",{ascending:false}).limit(20);
-if(result.error)throw result.error;
-const orders=result.data||[];
-customerHasPreviousOrders=orders.some(order=>order.status!=="cancelled");
-if($("cartModal")?.classList.contains("open"))renderCartModal();
-if($("orderModal")?.classList.contains("open"))updateOrderTotal();
-if(!orders.length){box.innerHTML='<p class="muted">لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.</p>';return;}
-const labels={new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"قيد التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"};
-box.innerHTML=orders.map(order=>{
- const items=Array.isArray(order.items)?order.items.map(item=>esc(item.name||item.product_name||"منتج")+" × "+Math.max(1,Number(item.qty)||1)).join("، "):"";
- const date=order.created_at?new Date(order.created_at).toLocaleDateString(lang==="en"?"en-US":"ar-PS",{year:"numeric",month:"short",day:"numeric"}):"";
- return '<div style="border:1px solid var(--line);border-radius:14px;padding:13px;margin:9px 0;background:#fff"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>طلب #'+esc(String(order.id).slice(0,8))+'</b><span class="muted">'+esc(date)+'</span></div><p style="margin:8px 0">'+esc(labels[order.status]||order.status||"قيد المراجعة")+'</p><p style="margin:0 0 8px;font-size:13px;line-height:1.7">'+items+'</p><b>الإجمالي: ₪'+money(order.total)+'</b></div>';
-}).join("");
+ const box=$("customerOrders");if(!box||!customerProfile)return;
+ box.innerHTML='<p class="muted">'+esc(t().loadingOrders)+'</p>';
+ const db=getCustomerSupabase();
+ const result=await db.from("orders").select("id,created_at,status,items,subtotal,delivery_fee,total,notes").eq("customer_id",customerProfile.id).order("created_at",{ascending:false}).limit(20);
+ if(result.error)throw result.error;
+ const orders=result.data||[];customerHasPreviousOrders=orders.some(order=>order.status!=="cancelled");
+ if($("cartModal")?.classList.contains("open"))renderCartModal();
+ if($("orderModal")?.classList.contains("open"))updateOrderTotal();
+ if(!orders.length){box.innerHTML='<p class="muted">'+esc(t().noOrders)+'</p>';return;}
+ const labels=t().orderStatuses||{};
+ box.innerHTML=orders.map(order=>{
+  const items=Array.isArray(order.items)?order.items.map(item=>{
+   const savedProduct=products.find(p=>String(p.name||"")===String(item.name||item.product_name||""));
+   const name=productDisplayName({name:item.name||item.product_name||"",name_en:item.name_en||savedProduct?.name_en||"",name_he:item.name_he||savedProduct?.name_he||""});
+   return esc(name)+" × "+Math.max(1,Number(item.qty)||1);
+  }).join(lang==="he"||lang==="en"?", ":"، "):"";
+  const date=order.created_at?new Date(order.created_at).toLocaleDateString(lang==="he"?"he-IL":lang==="en"?"en-US":"ar-PS",{year:"numeric",month:"short",day:"numeric"}):"";
+  return '<article class="customer-order-card" style="border:1px solid var(--line);border-radius:14px;padding:13px;margin:9px 0;background:#fff"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(t().orderPrefix)+' #'+esc(String(order.id).slice(0,8))+'</b><span class="muted">'+esc(date)+'</span></div><p style="margin:8px 0">'+esc(labels[order.status]||order.status||"")+'</p><p style="margin:0 0 8px;font-size:13px;line-height:1.7">'+items+'</p><b>'+esc(t().orderTotal)+': ₪'+money(order.total)+'</b></article>';
+ }).join("");
 }
-
 async function customerLogout(){
 const db=getCustomerSupabase();
 const result=await db.auth.signOut();
-if(result.error){toast("تعذّر تسجيل الخروج.");return;}
+if(result.error){toast(t().logoutError);return;}
 customerProfile=null;
 await refreshCustomerAccount();
-toast("تم تسجيل الخروج.");
+toast(t().logoutSuccess);
 }
 
 function normalizeAdminSettingValue(value,fallback=""){
@@ -6548,12 +6836,12 @@ style.textContent="@media(min-width:1001px){.products-grid{grid-template-columns
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
 const [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]=await Promise.all([
-db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
+db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","welcome_he","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","site_content_he","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
-db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
+db.from("sliders").select("id,image_url,title,title_ar,title_en,title_he,subtitle,subtitle_ar,subtitle_en,subtitle_he,button_text_ar,button_text_en,button_text_he,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
-db.from("categories").select("id,slug,name_ar,name_en,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
-db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
+db.from("categories").select("id,slug,name_ar,name_en,name_he,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
+db.from("site_sections").select("id,section_key,title_ar,title_en,title_he,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
 ]);
 for(const result of [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]){
 if(result.error)console.warn("Store section could not refresh:",result.error);
@@ -6574,9 +6862,10 @@ if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settin
 }
 if(settings.site_content_ar && typeof settings.site_content_ar==="object")Object.assign(TEXT.ar,settings.site_content_ar);
 if(settings.site_content_en && typeof settings.site_content_en==="object")Object.assign(TEXT.en,settings.site_content_en);
+if(settings.site_content_he && typeof settings.site_content_he==="object")Object.assign(TEXT.he,settings.site_content_he);
 applyThemeFromAdmin(settings);
 if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
-if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",subtitle:lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",button_link:row.link_url||"all",button_text:t().explore}));
+if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="he"?(row.title_he||row.title_en||row.title||""):lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",title_he:row.title_he||"",subtitle:lang==="he"?(row.subtitle_he||row.subtitle_en||row.subtitle||""):lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",subtitle_he:row.subtitle_he||"",button_link:row.link_url||"all",button_text:lang==="he"?(row.button_text_he||t().explore):lang==="en"?(row.button_text_en||t().explore):(row.button_text_ar||t().explore)}));
 if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
 if(!categoryResult.error)adminCategories=categoryResult.data||[];
 if(!sectionResult.error)adminSiteSections=sectionResult.data||[];
@@ -6594,38 +6883,48 @@ renderFeedback();
 applyLanguage();
 }
 function productColorDisplayName(value){
- const raw=String(value||"").trim();
- if(!raw)return "";
+ const raw=String(value||"").trim();if(!raw)return "";
  const key=raw.replace(/[ًٌٍَُِّْ]/g,"").replace(/\s+/g," ").trim().toLowerCase();
+ const match=(Array.isArray(products)?products:[]).flatMap(p=>Array.isArray(p.colorsData)?p.colorsData:[]).find(c=>String(c.name||"").trim()===raw||String(c.name_en||"").trim().toLowerCase()===key||String(c.name_he||"").trim().toLowerCase()===key);
  const names={
- "أبيض":"White","ابيض":"White","white":"White",
- "أسود":"Black","اسود":"Black","black":"Black",
- "أحمر":"Red","احمر":"Red","red":"Red",
- "أخضر":"Green","اخضر":"Green","green":"Green",
- "أخضر زمردي":"Emerald Green","اخضر زمردي":"Emerald Green",
- "أزرق":"Blue","ازرق":"Blue","blue":"Blue",
- "أزرق ملكي":"Royal Blue","ازرق ملكي":"Royal Blue",
- "أزرق بترولي":"Petrol Blue","ازرق بترولي":"Petrol Blue",
- "أزرق غامق":"Dark Blue","ازرق غامق":"Dark Blue",
- "أزرق نيلي":"Indigo Blue","ازرق نيلي":"Indigo Blue",
- "كحلي":"Navy Blue","navy":"Navy Blue",
- "بنفسجي":"Purple","purple":"Purple","بنفسجي داكن":"Dark Purple",
- "بيج":"Beige","beige":"Beige","بني":"Brown","brown":"Brown",
- "رمادي":"Gray","gray":"Gray","رمادي أزرق":"Blue Gray","رمادي ازرق":"Blue Gray",
- "رمادي فحمي":"Charcoal Gray","زهري":"Pink","وردي":"Pink","pink":"Pink",
- "زهري موف":"Dusty Mauve","عنابي":"Burgundy","خمري":"Wine Red",
- "البوردوا":"Bordeaux","ذهبي":"Gold","gold":"Gold",
- "زيتي":"Olive","زيتي غامق":"Dark Olive","موف":"Mauve",
- "سكري":"Ivory","عاجي":"Ivory","كريمي":"Cream","كريمي فاتح":"Light Cream",
- "سماوي":"Sky Blue","تركواز":"Turquoise","فيروزي":"Turquoise",
- "نبيتي":"Burgundy","رصاصي":"Gray","فضي":"Silver","فضي":"Silver",
- "وردي فاتح":"Light Pink","زهري فاتح":"Light Pink","أخضر فاتح":"Light Green",
- "أخضر غامق":"Dark Green","أزرق فاتح":"Light Blue","بني فاتح":"Light Brown",
- "بني غامق":"Dark Brown","أصفر":"Yellow","اصفر":"Yellow","برتقالي":"Orange",
- "ليلكي":"Lilac","لافندر":"Lavender"
+ "أبيض":"White","ابيض":"White","white":"White","أسود":"Black","اسود":"Black","black":"Black",
+ "أحمر":"Red","احمر":"Red","red":"Red","أخضر":"Green","اخضر":"Green","green":"Green",
+ "أخضر زمردي":"Emerald Green","اخضر زمردي":"Emerald Green","أزرق":"Blue","ازرق":"Blue","blue":"Blue",
+ "أزرق ملكي":"Royal Blue","ازرق ملكي":"Royal Blue","أزرق بترولي":"Petrol Blue","ازرق بترولي":"Petrol Blue",
+ "أزرق غامق":"Dark Blue","ازرق غامق":"Dark Blue","أزرق نيلي":"Indigo Blue","ازرق نيلي":"Indigo Blue",
+ "كحلي":"Navy Blue","navy":"Navy Blue","بنفسجي":"Purple","purple":"Purple","بنفسجي داكن":"Dark Purple",
+ "بيج":"Beige","beige":"Beige","بني":"Brown","brown":"Brown","رمادي":"Gray","gray":"Gray",
+ "رمادي أزرق":"Blue Gray","رمادي ازرق":"Blue Gray","رمادي فحمي":"Charcoal Gray","زهري":"Pink","وردي":"Pink","pink":"Pink",
+ "زهري موف":"Dusty Mauve","عنابي":"Burgundy","خمري":"Wine Red","البوردوا":"Bordeaux","ذهبي":"Gold","gold":"Gold",
+ "زيتي":"Olive","زيتي غامق":"Dark Olive","موف":"Mauve","سكري":"Ivory","عاجي":"Ivory","كريمي":"Cream",
+ "كريمي فاتح":"Light Cream","سماوي":"Sky Blue","تركواز":"Turquoise","فيروزي":"Turquoise","نبيتي":"Burgundy",
+ "رصاصي":"Gray","فضي":"Silver","وردي فاتح":"Light Pink","زهري فاتح":"Light Pink","أخضر فاتح":"Light Green",
+ "أخضر غامق":"Dark Green","أزرق فاتح":"Light Blue","بني فاتح":"Light Brown","بني غامق":"Dark Brown",
+ "أصفر":"Yellow","اصفر":"Yellow","برتقالي":"Orange","ليلكي":"Lilac","لافندر":"Lavender"
  };
- if(lang!=="en")return raw;
- return names[key]||(/^[\x00-\x7F]*$/.test(raw)?raw:"Color");
+ const namesHe={
+ "أبيض":"לבן","ابيض":"לבן","white":"לבן","أسود":"שחור","اسود":"שחור","black":"שחור",
+ "أحمر":"אדום","احمر":"אדום","red":"אדום","أخضر":"ירוק","اخضر":"ירוק","green":"ירוק",
+ "أخضر زمردي":"ירוק אמרלד","اخضر زمردי":"ירוק אמרלד","emerald green":"ירוק אמרלד",
+ "أزرق":"כחול","ازرق":"כחול","blue":"כחול","أزرق ملكي":"כחול רויאל","royal blue":"כחול רויאל",
+ "أزرق بترولي":"כחול פטרול","petrol blue":"כחול פטרול","أزرق غامق":"כחול כהה","dark blue":"כחול כהה",
+ "أزرق نيلي":"כחול אינדיגו","indigo blue":"כחול אינדיגו","كحلي":"כחול נייבי","navy":"כחול נייבי",
+ "بنفسجي":"סגול","purple":"סגול","بنفسجي داكن":"סגול כהה","dark purple":"סגול כהה",
+ "بيج":"בז׳","beige":"בז׳","بني":"חום","brown":"חום","رمادي":"אפור","gray":"אפור",
+ "رمادي فحمي":"אפור פחם","charcoal gray":"אפור פחם","زهري":"ורוד","وردي":"ורוד","pink":"ורוד",
+ "زهري موف":"ורוד מעושן","mauve pink":"ורוד מעושן","عنابي":"בורדו","خمري":"בורדו","wine red":"בורדו",
+ "البوردوا":"בורדו","bordeaux":"בורדו","ذهبي":"זהב","gold":"זהב","زيتي":"זית","olive":"זית",
+ "موف":"סגלגל","mauve":"סגלגל","سكري":"שנהב","ivory":"שנהב","عاجي":"שנהב","كريمي":"שמנת","cream":"שמנת",
+ "سماوي":"תכלת","sky blue":"תכלת","تركواز":"טורקיז","turquoise":"טורקיז","فضي":"כסף","silver":"כסף",
+ "وردي فاتح":"ורוד בהיר","light pink":"ורוד בהיר","أخضر فاتح":"ירוק בהיר","light green":"ירוק בהיר",
+ "أخضر غامق":"ירוק כהה","dark green":"ירוק כהה","أزرق فاتح":"כחול בהיר","light blue":"כחול בהיר",
+ "بني فاتح":"חום בהיר","light brown":"חום בהיר","بني غامق":"חום כהה","dark brown":"חום כהה",
+ "أصفر":"צהוב","yellow":"צהוב","برتقالي":"כתום","orange":"כתום","ليلكي":"לילך","ليلكي":"לילך","lilac":"לילך",
+ "لافندر":"לבנדר","lavender":"לבנדר","موكا":"מוקה","mocha":"מוקה"
+ };
+ if(lang==="he")return match?.name_he||namesHe[key]||raw;
+ if(lang==="en")return match?.name_en||names[key]||(/^[\x00-\x7F]*$/.test(raw)?raw:"Color");
+ return raw;
 }
 function dynamicProductToView(p,index){
 const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
@@ -6635,13 +6934,13 @@ const colorRows=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||
 const colors=colorRows.map(x=>String(x.name||x.name_en||"")).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",categorySlugs:Array.isArray(p.category_slugs)?p.category_slugs:[],price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],colorsData:colorRows.map(x=>({name:String(x.name||""),name_en:String(x.name_en||"")})),sizeChart:p.size_chart||null};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",name_he:p.name_he||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",description_he:p.description_he||"",category:p.category||"dresses",categorySlugs:Array.isArray(p.category_slugs)?p.category_slugs:[],price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],colorsData:colorRows.map(x=>({name:String(x.name||""),name_en:String(x.name_en||""),name_he:String(x.name_he||"")})),sizeChart:p.size_chart||null,sizeChartHe:p.size_chart_he||null};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
 
 const result=await db.from("products")
-.select("id,name,name_en,sku,category,price,old_price,description,description_en,size_chart,stock,active,featured,sort_order,created_at")
+.select("id,name,name_en,name_he,sku,category,price,old_price,description,description_en,description_he,size_chart,size_chart_he,stock,active,featured,sort_order,created_at")
 .eq("active",true)
 .order("sort_order",{ascending:true})
 .order("created_at",{ascending:false});
@@ -6658,7 +6957,7 @@ db.from("product_sizes").select("*").in("product_id",ids).order("sort_order",{as
 db.from("product_colors").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
 db.from("product_images").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
 db.from("product_categories").select("product_id,category_id").in("product_id",ids),
-db.from("categories").select("id,slug").eq("active",true)
+db.from("categories").select("id,slug,name_ar,name_en,name_he").eq("active",true)
 ]);
 
 const childData=(settled)=>{
@@ -6886,8 +7185,8 @@ $("footerSince").textContent=t().footerSince;
 function renderCustomerCategories(){
 const wrap=$("categories");
 if(!wrap)return;
-const base=[{slug:"all",name_ar:"الكل",name_en:"All"}];
-const defaults=[{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets"},{slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets"},{slug:"offers",name_ar:"العروضات",name_en:"Offers"}];
+const base=[{slug:"all",name_ar:"الكل",name_en:"All",name_he:"הכול"}];
+const defaults=[{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses",name_he:"שמלות"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets",name_he:"חליפות"},{slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets",name_he:"חליפות חורף"},{slug:"offers",name_ar:"العروضات",name_en:"Offers",name_he:"מבצעים"}];
 const englishNames={all:"All",dresses:"Dresses",sets:"Sets","winter-sets":"Winter Sets",offers:"Offers"};
 const source=Array.isArray(adminCategories)&&adminCategories.length?adminCategories:defaults;
 const unique=new Map();
@@ -6896,14 +7195,15 @@ source.forEach(item=>{
  const rawSlug=String(item.slug||"").trim();
  const arName=String(item.name_ar||"").trim();
  const enName=String(item.name_en||"").trim();
+ const heName=String(item.name_he||"").trim();
  const slug=rawSlug==="winter_sets"?"winter-sets":rawSlug;
  if(!slug||slug==="all"||unique.has(slug))return;
  const fallback=defaults.find(x=>x.slug===slug)||{};
- unique.set(slug,{slug,name_ar:arName||fallback.name_ar||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug),name_en:enName||fallback.name_en||englishNames[slug]||humanizeEnglish(slug)});
+ unique.set(slug,{slug,name_ar:arName||fallback.name_ar||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug),name_en:enName||fallback.name_en||englishNames[slug]||humanizeEnglish(slug),name_he:heName||fallback.name_he||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug)});
 });
 if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
 const cats=base.concat([...unique.values()]);
-wrap.innerHTML=cats.map(item=>{const label=lang==="en"?item.name_en:item.name_ar;return "<button class=\"cat "+(item.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(item.slug)+"\">"+esc(label)+"</button>";}).join("");
+wrap.innerHTML=cats.map(item=>{const label=lang==="he"?(item.name_he||item.name_en||item.name_ar):lang==="en"?item.name_en:item.name_ar;return "<button class=\"cat "+(item.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(item.slug)+"\">"+esc(label)+"</button>";}).join("");
 wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
 }
 function applyAdminSiteSections(){
@@ -6914,7 +7214,7 @@ const id=cfg.element_id||section.section_key;
 const el=$(id);
 if(!el)return;
 el.classList.toggle("hidden",section.visible===false);
-const text=lang==="en"?(cfg.text_en??section.title_en??humanizeEnglish(section.section_key||"")):(cfg.text_ar??section.title_ar??"");
+const text=lang==="he"?(cfg.text_he??section.title_he??cfg.text_en??section.title_en??""):lang==="en"?(cfg.text_en??section.title_en??humanizeEnglish(section.section_key||"")):(cfg.text_ar??section.title_ar??"");
 if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(target||el).textContent=String(text);}
 });
 }
@@ -6924,12 +7224,12 @@ if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(ta
 
 function deliveryList(){
 if(Array.isArray(adminDeliveryAreas) && adminDeliveryAreas.length){
-return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),price:Number(row.price||0)}));
+return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="he"?(row.area_name_he||row.area_name_en||row.area_name_ar||row.area_name||""):lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),name_ar:row.area_name_ar||row.area_name||"",name_en:row.area_name_en||"",name_he:row.area_name_he||"",price:Number(row.price||0)}));
 }
 return[
-{key:"westbank",name:t().westbank,price:Number(store.delivery.westbank||0)},
-{key:"jerusalem",name:t().jerusalem,price:Number(store.delivery.jerusalem||0)},
-{key:"inside",name:t().inside,price:Number(store.delivery.inside||0)}
+{key:"westbank",name:t().westbank,name_ar:"الضفة الغربية",name_en:"West Bank",name_he:"הגדה המערבית",price:Number(store.delivery.westbank||0)},
+{key:"jerusalem",name:t().jerusalem,name_ar:"القدس",name_en:"Jerusalem",name_he:"ירושלים",price:Number(store.delivery.jerusalem||0)},
+{key:"inside",name:t().inside,name_ar:"الداخل (48)",name_en:"Inside (48)",name_he:"אזורי 48",price:Number(store.delivery.inside||0)}
 ];
 }
 
@@ -6958,7 +7258,7 @@ d=>
 `
 <option
 value="${esc(d.key)}"
-data-price="${d.price}">
+data-price="${d.price}" data-name-ar="${esc(d.name_ar||d.name)}" data-name-en="${esc(d.name_en||d.name)}" data-name-he="${esc(d.name_he||d.name)}">
 ${esc(d.name)} — ₪${money(d.price)}
 </option>
 `
@@ -7853,12 +8153,12 @@ const badge=$("wishlistCount"); if(badge)badge.textContent=count;
 const quick=$("quickWishlistCount"); if(quick)quick.textContent=count;
 const grid=$("wishlistGrid"); if(!grid)return;
 const list=products.filter(isWishlistedProduct);
-if(!list.length){grid.innerHTML='<div class="wishlist-empty">المفضلة فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.</div>';return;}
+if(!list.length){grid.innerHTML='<div class="wishlist-empty">' + esc(t().wishlistEmpty) + '</div>';return;}
 grid.innerHTML=list.map(p=>{
 const image=p.images&&p.images[0]?p.images[0].url:PLACEHOLDER;
 return `
 <article class="product-card">
-<button class="heart-btn active" type="button" aria-label="إزالة من المفضلة" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
+<button class="heart-btn active" type="button" aria-label="${esc(t().removeFavorite||t().remove)}" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
 <div class="product-img" onclick="openProduct('${esc(p.id)}')">
 <img src="${esc(image)}" alt="${esc(productDisplayName(p))}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
 ${p.offer?'<span class="offer-badge">'+esc(t().offer)+'</span>':''}
@@ -7930,7 +8230,7 @@ marqueeDividerHTML(Math.floor(i/GROUP_SIZE)-1)
 <button
 class="heart-btn"
 type="button"
-aria-label="إضافة إلى المفضلة"
+aria-label="${esc(t().addFavorite)}"
 onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">
 ${isWishlistedProduct(p) ? "♥" : "♡"}
 </button>
@@ -8266,7 +8566,7 @@ ${money(currentProduct.oldPrice)} ₪
 
 $("detailDescription")
 .textContent=
-(lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description||currentProduct.description_en||""))
+(lang==="he" ? (currentProduct.description_he || t().desc) : lang==="en" ? (currentProduct.description_en || t().desc) : (currentProduct.description || t().desc))
 ||
 t().desc;
 
@@ -8314,7 +8614,7 @@ $("detailColors")
 currentProduct.colors
 .map(color=>{
 const colorData=(currentProduct.colorsData||[]).find(item=>item.name===color||item.name_en===color);
-const colorLabel=lang==="en"?(colorData?.name_en||colorData?.name||color):(colorData?.name||colorData?.name_en||color);
+const colorLabel=lang==="he"?(colorData?.name_he||productColorDisplayName(color)):(lang==="en"?(colorData?.name_en||colorData?.name||color):(colorData?.name||colorData?.name_en||color));
 return `
 <button
 class="chip clickable ${
@@ -8364,8 +8664,8 @@ ${esc(size)}
 
 
 const sizeGuideBtn=$("sizeGuideBtn");
-const sizeChart=currentProduct.sizeChart;
-if(sizeGuideBtn){const valid=!!(sizeChart&&Array.isArray(sizeChart.headers)&&sizeChart.headers.length>1&&Array.isArray(sizeChart.rows)&&sizeChart.rows.length);sizeGuideBtn.style.display=valid?"inline-flex":"none";sizeGuideBtn.textContent=lang==="en"?"Size guide":"دليل المقاسات";}
+const sizeChart=lang==="he"?(currentProduct.sizeChartHe||currentProduct.sizeChart):currentProduct.sizeChart;
+if(sizeGuideBtn){const valid=!!(sizeChart&&Array.isArray(sizeChart.headers)&&sizeChart.headers.length>1&&Array.isArray(sizeChart.rows)&&sizeChart.rows.length);sizeGuideBtn.style.display=valid?"inline-flex":"none";sizeGuideBtn.textContent=t().sizeGuide;}
 
 $("qtyValue")
 .textContent=
@@ -8392,15 +8692,16 @@ t().unavailable;
 }
 
 
+function translateSizeChartHeader(value){const key=String(value||"").trim().toLowerCase();const map={"المقاس":"מידה","القياس":"מידה","size":"מידה","الصدر":"היקף חזה","محيط الصدر":"היקף חזה","bust":"היקף חזה","chest":"היקף חזה","الخصر":"היקף מותניים","محيط الخصر":"היקף מותניים","waist":"היקף מותניים","الأرداف":"היקף ירכיים","الورك":"היקף ירכיים","hips":"היקף ירכיים","الطول":"אורך","length":"אורך"};return map[key]||value;}
 function openSizeGuide(){
-if(!currentProduct||!currentProduct.sizeChart)return;
-const chart=currentProduct.sizeChart;
+if(!currentProduct||!(currentProduct.sizeChartHe||currentProduct.sizeChart))return;
+const chart=lang==="he"?(currentProduct.sizeChartHe||currentProduct.sizeChart):currentProduct.sizeChart;
 const headers=Array.isArray(chart.headers)?chart.headers:[];
 const rows=Array.isArray(chart.rows)?chart.rows:[];
 if(headers.length<2||!rows.length)return;
-$("sizeGuideTitle").textContent=lang==="en"?"Size guide":"دليل المقاسات";
-$("sizeGuideNote").textContent=lang==="en"?"Measurements are in centimeters unless noted otherwise.":"القياسات بالسنتيمتر ما لم يُذكر غير ذلك.";
-$("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+$("sizeGuideTitle").textContent=t().sizeGuide;
+$("sizeGuideNote").textContent=t().sizeGuideNote;
+$("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(lang==="he"?translateSizeChartHeader(h):h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
 $("sizeGuideModal").classList.add("open");
 document.body.style.overflow="hidden";
 }
@@ -8668,47 +8969,36 @@ return best;
 }
 
 async function applyCartCoupon(){
-const input=$("cartCouponCode"),message=$("cartCouponMessage");
-const code=String(input?.value||"").trim().toUpperCase();
-if(!code){appliedManualCoupon=null;if(message)message.textContent="اكتبي كود الخصم أولًا.";renderCartModal();return;}
-try{
- const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/validate-coupon",{
-  method:"POST",
-  headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
-  body:JSON.stringify({code,turnstileToken:await getEspozaTurnstileToken("coupon")})
- });
- const data=await response.json();
- if(!response.ok)throw new Error(data.error||"تعذّر التحقق من الكود.");
- const coupon=data.coupon;
- if(!coupon){appliedManualCoupon=null;if(message)message.textContent="الكود غير صحيح أو العرض غير فعال.";renderCartModal();return;}
- if(coupon.first_order_only&&customerHasPreviousOrders!==false){
-  appliedManualCoupon=null;
-  if(message)message.textContent="هذا العرض لأول طلب ويتطلب تسجيل الدخول بحساب لم يسبق له الطلب.";
-  renderCartModal();return;
+ const input=$("cartCouponCode"),message=$("cartCouponMessage");
+ const code=String(input?.value||"").trim().toUpperCase();
+ if(!code){appliedManualCoupon=null;if(message)message.textContent=t().couponCodeRequired;renderCartModal();return;}
+ try{
+  const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/validate-coupon",{
+   method:"POST",headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
+   body:JSON.stringify({code,turnstileToken:await getEspozaTurnstileToken("coupon")})
+  });
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||t().couponError);
+  const coupon=data.coupon;
+  if(!coupon){appliedManualCoupon=null;if(message)message.textContent=t().couponInvalid;renderCartModal();return;}
+  if(coupon.first_order_only&&customerHasPreviousOrders!==false){appliedManualCoupon=null;if(message)message.textContent=t().couponFirstOrder;renderCartModal();return;}
+  const candidate=calculateOfferDiscount(coupon);
+  if(!candidate){appliedManualCoupon=null;if(message)message.textContent=t().couponConditions;renderCartModal();return;}
+  appliedManualCoupon=coupon;
+  const best=getAutomaticOffer();
+  if(message)message.textContent=best?.id!==coupon.id&&best?.discount>candidate.discount?t().couponBest:t().couponVerified;
+  renderCartModal();
+ }catch(error){
+  appliedManualCoupon=null;if(message)message.textContent=t().couponError;
+  console.warn("Coupon validation failed:",error);renderCartModal();
  }
- const candidate=calculateOfferDiscount(coupon);
- if(!candidate){
-  appliedManualCoupon=null;
-  if(message)message.textContent="الكود صحيح، لكن شروط العرض غير متحققة في السلة الحالية.";
-  renderCartModal();return;
- }
- appliedManualCoupon=coupon;
- const best=getAutomaticOffer();
- if(message)message.textContent=best?.id!==coupon.id&&best?.discount>candidate.discount?"الكود صالح، لكن احتسبنا أفضل خصم واحد متاح دون جمع العروض.":"تم التحقق من الكود، وسيُحتسب الخصم عند تأكيد الطلب.";
- renderCartModal();
-}catch(error){
- appliedManualCoupon=null;
- if(message)message.textContent="تعذّر التحقق من الكود الآن. حاولي مرة أخرى.";
- console.warn("Coupon validation failed:",error);
- renderCartModal();
-}
 }
 
 function clearCartCoupon(){
 appliedManualCoupon=null;
 const input=$("cartCouponCode"),message=$("cartCouponMessage");
 if(input)input.value="";
-if(message)message.textContent="تمت إزالة كود الخصم.";
+if(message)message.textContent=t().couponRemoved;
 renderCartModal();
 }
 
@@ -8798,6 +9088,12 @@ currentProduct.dbId||null,
 name:
 currentProduct.name,
 
+name_en:
+currentProduct.name_en||PRODUCT_EN_NAMES[currentProduct.name]||"",
+
+name_he:
+currentProduct.name_he||"",
+
 category:
 currentProduct.category||"",
 
@@ -8817,6 +9113,10 @@ PLACEHOLDER,
 size,
 
 color,
+
+color_en:productColorDisplayName(color),
+
+color_he:(currentProduct.colorsData||[]).find(c=>c.name===color)?.name_he||productColorDisplayName(color),
 
 qty
 
@@ -8885,7 +9185,7 @@ ${esc(productDisplayName(item))}
 ${
 item.color
 ?
-esc(item.color)+" • "
+esc(productColorDisplayName(item.color))+" • "
 :
 ""
 }${esc(item.size)}
@@ -8943,10 +9243,10 @@ if(subtotalRow)subtotalRow.classList.toggle("hidden",discount<=0);
 if(discountRow)discountRow.classList.toggle("hidden",discount<=0);
 if(discount>0){
 $("cartSubtotalValue").textContent=`₪${money(cartSubtotal())}`;
-$("cartDiscountLabel").textContent="عرض تلقائي ("+offer.label+")";
+$("cartDiscountLabel").textContent=t().discountLabel+" ("+offer.label+")";
 $("cartDiscountValue").textContent="−₪"+money(discount);
 }
-$("cartTotalLabel").textContent=discount>0?"المجموع بعد الخصم":t().total;
+$("cartTotalLabel").textContent=discount>0?t().totalAfterDiscount:t().total;
 $("cartTotal").textContent=`₪${money(Math.max(0,cartSubtotal()-discount))}`;
 
 
@@ -8961,7 +9261,7 @@ function changeCartQty(idx,delta){
 const item=cart[idx];
 if(!item)return;
 if(delta>0&&cartModelQuantity(cartModelKey(item))+delta>4){
-alert("الحد الأقصى 4 قطع من نفس الموديل، مع احتساب جميع الألوان والمقاسات.");
+alert(t().cartLimit);
 return;
 }
 item.qty=Math.max(1,Number(item.qty||1)+delta);
@@ -9022,13 +9322,13 @@ item=>
 <span>
 ${esc(productDisplayName(item))}
 ${
-item.color
+productColorDisplayName(item.color)
 ||
 item.size
 ?
 `(${esc(
 [
-item.color,
+productColorDisplayName(item.color),
 item.size
 ]
 .filter(Boolean)
@@ -9112,11 +9412,11 @@ return{
 
 name:
 text
-.replace(
-/\s*—\s*₪.*$/,
-""
-)
+.replace(/\s*—\s*₪.*$/,"")
 .trim(),
+name_ar:option.dataset.nameAr||text.replace(/\s*—\s*₪.*$/,"").trim(),
+name_en:option.dataset.nameEn||text.replace(/\s*—\s*₪.*$/,"").trim(),
+name_he:option.dataset.nameHe||text.replace(/\s*—\s*₪.*$/,"").trim(),
 
 price:
 Number(
@@ -9146,7 +9446,7 @@ const discount=offer?.discount||0;
 const discountRow=$("orderDiscountRow");
 if(discountRow)discountRow.classList.toggle("hidden",discount<=0);
 if(discount>0){
-$("orderDiscountLabel").textContent="عرض تلقائي ("+offer.label+")";
+$("orderDiscountLabel").textContent=t().discountLabel+" ("+offer.label+")";
 $("orderDiscountValue").textContent="−₪"+money(discount);
 }
 $("itemPrice").textContent=`₪${money(subtotal)}`;
@@ -9172,7 +9472,7 @@ const key=cartModelKey(item);
 modelCounts.set(key,(modelCounts.get(key)||0)+Math.max(0,Number(item.qty)||0));
 }
 if([...modelCounts.values()].some(count=>count>4)){
-alert("في السلة أكثر من 4 قطع من نفس الموديل. عدّل الكميات قبل إرسال الطلب.");
+alert(t().cartLimit);
 return;
 }
 const name=$("customerName")
@@ -9248,6 +9548,7 @@ const discountedSubtotal=Math.max(0,itemsTotal-discount);
 const grandTotal=discountedSubtotal+delivery.price;
 const offerAr=discount>0?"\n🎁 العرض "+offer.label+": خصم ₪"+money(discount):"";
 const offerEn=discount>0?"\n🎁 Offer "+offer.label+": −₪"+money(discount):"";
+const offerHe=discount>0?"\n🎁 מבצע "+offer.label+": הנחה של ₪"+money(discount):"";
 
 
 const linesAr=
@@ -9268,57 +9569,18 @@ cart
 .map(
 item=>
 `👗 ${productDisplayName(item)}
-   Size: ${item.size}${item.color?`
-   Color: ${item.color}`:""}
+   Size: ${item.size}${item.color?`\n   Color: ${item.color}`:""}
    Qty: ${item.qty}
    Price: ₪${money(item.price*item.qty)}`
 )
 .join("\n\n");
 
+const linesHe=cart.map(item=>`👗 ${productDisplayName(item)}\n   מידה: ${item.size}${item.color?`\n   צבע: ${item.color_he||productColorDisplayName(item.color)}`:""}\n   כמות: ${item.qty}\n   מחיר: ₪${money(item.price*item.qty)}`).join("\n\n");
+
 
 /* رسالة واتساب */
 
-const message=
-
-lang==="ar"
-
-?
-
-`مرحبًا ${store.name} ❤️
-
-أرغب بطلب:
-
-${linesAr}
-
-👤 الاسم: ${name}
-📱 الهاتف: ${phone}
-📍 منطقة التوصيل: ${delivery.name}
-🏠 العنوان: ${address}${notes?`
-📝 ملاحظات: ${notes}`:""}
-
-💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}
-🚚 التوصيل: ₪${money(delivery.price)}
-💵 الإجمالي النهائي: ₪${money(grandTotal)}
-💳 الدفع عند الاستلام`
-
-:
-
-`Hello ${store.name} ❤️
-
-I would like to order:
-
-${linesEn}
-
-👤 Name: ${name}
-📱 Phone: ${phone}
-📍 Delivery area: ${delivery.name}
-🏠 Address: ${address}${notes?`
-📝 Notes: ${notes}`:""}
-
-💰 Items total: ₪${money(itemsTotal)}${offerEn}
-🚚 Delivery: ₪${money(delivery.price)}
-💵 Grand total: ₪${money(grandTotal)}
-💳 Cash on Delivery`;
+const message=lang==="ar"?`مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}\n💳 الدفع عند الاستلام`:lang==="he"?`שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesHe}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}${offerHe}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}\n💳 תשלום במזומן בעת המסירה`:`Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}\n💳 Cash on Delivery`;
 
 
 const whatsappUrl=`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
@@ -9334,30 +9596,30 @@ const profileForOrder=await ensureCustomerProfile();
 if(profileForOrder)customerProfile=profileForOrder;
 const cartProductNames=[...new Set(cart.map(item=>String(item.name||"").trim()).filter(Boolean))];
 const productLookup=await customerDb.from("products")
-.select("id,name,category,price,active,stock,product_sizes(size),product_colors(name,name_en)")
+.select("id,name,name_en,name_he,category,price,active,stock,product_sizes(size),product_colors(name,name_en,name_he)")
 .in("name",cartProductNames)
 .eq("active",true);
 if(productLookup.error)throw productLookup.error;
 const databaseProducts=productLookup.data||[];
 const orderItems=cart.map(item=>{
 const dbProduct=databaseProducts.find(p=>String(p.name||"").trim()===String(item.name||"").trim());
-if(!dbProduct)throw new Error("لم نعثر على المنتج في كتالوج المتجر. افتح المنتج من جديد وأعد إضافته للسلة.");
+if(!dbProduct)throw new Error(t().orderProductMissing);
 const productId=dbProduct.id;
-if(!productId)throw new Error("تعذر ربط المنتج بمعرّفه في قاعدة البيانات. أعد تحميل المتجر وحاول مجددًا.");
-if(Number(item.price)!==Number(dbProduct.price))throw new Error("تغيّر سعر أحد المنتجات. حدّث السلة قبل إرسال الطلب.");
+if(!productId)throw new Error(t().orderProductIdMissing);
+if(Number(item.price)!==Number(dbProduct.price))throw new Error(t().orderPriceChanged);
 const availableColors=dbProduct.product_colors||[];
 const matchedColor=availableColors.find(c=>c.name===item.color||c.name_en===item.color||c.name===item.color_db||c.name_en===item.color_db);
 let orderColor=matchedColor?.name||(availableColors.length===1?availableColors[0].name:String(item.color_db||item.color||""));
-if(availableColors.length&&!availableColors.some(c=>c.name===orderColor))throw new Error("اختاري لونًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.");
+if(availableColors.length&&!availableColors.some(c=>c.name===orderColor))throw new Error(t().orderColorUnavailable);
 const availableSizes=(dbProduct.product_sizes||[]).map(x=>String(x.size));
 let orderSize=String(item.size||"");
 if(availableSizes.length&&!availableSizes.includes(orderSize)){
 if(availableSizes.length===1)orderSize=availableSizes[0];
-else throw new Error("اختاري مقاسًا متاحًا لهذا المنتج من جديد قبل إرسال الطلب.");
+else throw new Error(t().orderSizeUnavailable);
 }
-return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,price:Number(dbProduct.price),size:orderSize,color:orderColor,qty:Number(item.qty||1),image:item.image||""};
+return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,name_en:dbProduct.name_en||item.name_en||"",name_he:dbProduct.name_he||item.name_he||"",price:Number(dbProduct.price),size:orderSize,color:orderColor,color_en:matchedColor?.name_en||item.color_en||"",color_he:matchedColor?.name_he||item.color_he||"",qty:Number(item.qty||1),image:item.image||""};
 });
-const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
+const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name_ar||delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.from("orders").insert(orderPayload);
 if(saved.error)throw saved.error;
 if(profileForOrder)customerHasPreviousOrders=true;
@@ -9381,7 +9643,7 @@ if(couponInput)couponInput.value="";
 if(couponMessage)couponMessage.textContent="";
 saveCart();
 clearTimeout(window.__espozaCartSyncTimer);
-try{await syncCustomerCart();}catch(_){toast("تم حفظ الطلب، لكن تعذر تحديث السلة المحفوظة. يرجى إعادة المحاولة عند عودة الاتصال.");}
+try{await syncCustomerCart();}catch(_){toast(t().cartSyncError);}
 updateCartBadge();
 
 closeModal(
@@ -9636,7 +9898,7 @@ function renderPublicWishes(rows=[]){
   const list=$("publicWishesList");
   if(!list)return;
   if(!rows.length){
-    list.innerHTML='<div class="public-wishes-empty">'+(lang==="en"?"No wishes yet. Be the first to share yours ✨":"لسه ما في أمنيات. كوني أول من يشارك أمنيتك ✨")+'</div>';
+    list.innerHTML='<div class="public-wishes-empty">'+esc(t().wishEmpty)+'</div>';
     return;
   }
   list.innerHTML=rows.map(row=>'<article class="public-wish"><span class="public-wish-text">'+esc(String(row.wish_text||""))+'</span></article>').join("");
@@ -9682,7 +9944,7 @@ async function loadPublicWishes(){
   }catch(error){
     console.warn("Public wishes load failed:",error);
     const list=$("publicWishesList");
-    if(list)list.innerHTML='<div class="public-wishes-empty">'+(lang==="en"?"Wishes are temporarily unavailable.":"قائمة الأمنيات غير متاحة مؤقتًا.")+'</div>';
+    if(list)list.innerHTML='<div class="public-wishes-empty">'+t().wishUnavailable+'</div>';
   }finally{
     publicWishesLoading=false;
   }
@@ -9700,7 +9962,7 @@ async function submitPublicWish(event){
   const wish=String(input.value||"").trim();
   const visibility=formWishVisibility();
   if(wish.length<2){
-    toast(lang==="en"?"Please write your wish first.":"اكتبي أمنيتك أولاً 🤍");
+    toast(t().wishPlease);
     input.focus();
     return;
   }
@@ -9744,11 +10006,11 @@ async function submitPublicWish(event){
 
     if(!saved)throw clientError||new Error("Wish was not saved");
     input.value="";
-    toast(visibility==="private"?(lang==="en"?"Your private wish was sent to the store ✨":"تم إرسال أمنيتك بشكل خاص للمتجر ✨"):(lang==="en"?"Your wish was shared with everyone ✨":"تمت إضافة أمنيتك للجميع ✨"));
+    toast(visibility==="private"?t().wishPrivateSent:t().wishPublicSent);
     await loadPublicWishes();
   }catch(error){
     console.warn("Public wish submit failed:",error);
-    toast(lang==="en"?"We couldn't add the wish right now.":"ما قدرنا نضيف الأمنية حاليًا، حاولي مرة ثانية.");
+    toast(t().wishError);
   }finally{
     button.disabled=false;
   }
@@ -9805,15 +10067,17 @@ $("feedbackShowcaseTrack");
 if(feedbackTrack){
 feedbackTrack.style.setProperty(
 "animation-name",
-lang==="ar" ? "feedbackShowcaseScrollRTL" : "feedbackShowcaseScroll",
+lang!=="en" ? "feedbackShowcaseScrollRTL" : "feedbackShowcaseScroll",
 "important"
 );
 feedbackTrack.style.setProperty("animation-play-state","running","important");
 }
 
 $("langBtn")
-.textContent=
-x.langBtn;
+.textContent=lang==="ar"?"EN":lang==="en"?"HE":"AR";
+if($("cartBtnLabel"))$("cartBtnLabel").textContent=t().cart;
+if($("cartBtn"))$("cartBtn").setAttribute("aria-label",t().cart);
+if($("menuBtn")){$("menuBtn").setAttribute("aria-label",t().menuTitle);$("menuBtn").setAttribute("title",t().menuTitle);}
 
 
 $("topNote")
@@ -9990,23 +10254,48 @@ x.footerContactTitle;
 $("footerLinksTitle")
 .textContent=
 x.footerLinksTitle;
-if($("wishlistBtnLabel"))$("wishlistBtnLabel").textContent=lang==="en"?"Favorites":"المفضلة";
-if($("quickFavoritesLabel"))$("quickFavoritesLabel").textContent=lang==="en"?"Favorites":"المفضلة";
-if($("quickWishesLabel"))$("quickWishesLabel").textContent=lang==="en"?"Wish List":"قائمة الأمنيات";
-if($("quickFeedbackLabel"))$("quickFeedbackLabel").textContent=lang==="en"?"Customer Reviews":"آراء الزبائن";
-if($("quickPoliciesLabel"))$("quickPoliciesLabel").textContent=lang==="en"?"Store Policies":"سياسة الشركة";
-if($("quickCartLabel"))$("quickCartLabel").textContent=lang==="en"?"Cart & Order":"السلة والطلب";
-if($("splashTag"))$("splashTag").textContent=lang==="en"?"Your Style, Your Shine":"خيارك للتألق";
-if($("quickLinks"))$("quickLinks").setAttribute("aria-label",lang==="en"?"Quick Links":"روابط سريعة");
-if($("favoritesTitle"))$("favoritesTitle").textContent=lang==="en"?"Favorites":"المفضلة";
-if($("favoritesSubtitle"))$("favoritesSubtitle").textContent=lang==="en"?"Pieces you saved":"القطع التي حفظتها";
-if($("publicWishesTitle"))$("publicWishesTitle").textContent=lang==="en"?"✨ What is your next wish from Espoza Fashion?":"✨ أمنيتك القادمة مع Espoza Fashion؟";
-if($("publicWishesIntro"))$("publicWishesIntro").textContent=lang==="en"?"Tell us what piece you wish we offered — your idea could become our next addition 🤍":"أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍";
-if($("wishInput"))$("wishInput").placeholder=lang==="en"?"Write your wish here...":"اكتبي أمنيتك هنا...";
-if($("wishSubmit"))$("wishSubmit").textContent=lang==="en"?"Share your wish":"إرسال الأمنية";
-if($("wishPublicLabel"))$("wishPublicLabel").textContent=lang==="en"?"Public 🌍 - Everyone can see it":"عام 🌍 - الكل بيشوفها";
-if($("wishPrivateLabel"))$("wishPrivateLabel").textContent=lang==="en"?"Private 🔒 - Only the store can see it":"خاص 🔒 - بتوصلني أنا بس";
-if($("floatingCartLabel"))$("floatingCartLabel").textContent=lang==="en"?"Cart":"السلة";
+if($("footerLinksNote"))$("footerLinksNote").textContent=x.footerLinksNote;
+if($("wishlistBtnLabel"))$("wishlistBtnLabel").textContent=t().favorites;
+if($("quickFavoritesLabel"))$("quickFavoritesLabel").textContent=t().favorites;
+if($("quickWishesLabel"))$("quickWishesLabel").textContent=t().wishList;
+if($("quickFeedbackLabel"))$("quickFeedbackLabel").textContent=t().reviews;
+if($("quickPoliciesLabel"))$("quickPoliciesLabel").textContent=t().quickPolicies;
+if($("quickCartLabel"))$("quickCartLabel").textContent=t().cartOrder;
+if($("splashTag"))$("splashTag").textContent=t().splashTag;
+if($("quickLinks"))$("quickLinks").setAttribute("aria-label",t().quickLinks);
+if($("favoritesTitle"))$("favoritesTitle").textContent=t().wishlistTitle;
+if($("favoritesSubtitle"))$("favoritesSubtitle").textContent=t().wishlistSubtitle;
+if($("publicWishesTitle"))$("publicWishesTitle").textContent=t().wishTitle;
+if($("publicWishesIntro"))$("publicWishesIntro").textContent=t().wishIntro;
+if($("wishInput"))$("wishInput").placeholder=t().wishPlaceholder;
+if($("wishSubmit"))$("wishSubmit").textContent=t().wishSubmit;
+if($("wishPublicLabel"))$("wishPublicLabel").textContent=t().wishPublic;
+if($("wishPrivateLabel"))$("wishPrivateLabel").textContent=t().wishPrivate;
+if($("floatingCartLabel"))$("floatingCartLabel").textContent=t().cart;
+if($("footerContactNote"))$("footerContactNote").textContent=t().footerContactNote;
+if($("wishlistBtn"))$("wishlistBtn").setAttribute("aria-label",t().favorites);
+if($("wishForm"))$("wishForm").setAttribute("aria-label",t().wishTitle);
+if($("customerNotes"))$("customerNotes").setAttribute("dir",t().dir);
+
+const uiText=[
+["customerMenuTitle","menuTitle"],["customerMenuAccount","menuAccount"],["customerMenuFavorites","menuFavorites"],["customerMenuCart","menuCart"],["customerMenuNote","menuNote"],
+["customerAccountTitle","accountTitle"],["customerAccountIntro","accountIntro"],["customerEmailLabel","emailLabel"],["customerPasswordLabel","passwordLabel"],
+["customerLoginMode","login"],["customerSignupMode","signup"],["customerResetPassword","forgotPassword"],["customerResendConfirmation","resendConfirmation"],
+["customerProfileNameLabel","profileName"],["customerProfilePhoneLabel","profilePhone"],["customerProfileAddressLabel","profileAddress"],["customerProfileSave","saveProfile"],
+["customerOrdersTitle","previousOrders"],["customerOrdersLoading","loadingOrders"],["customerLogout","logout"],
+["footerFavoritesLink","footerFavorites"],["footerWishesLink","footerWishes"],["footerFeedbackLink","footerFeedback"],["footerStoryLink","footerStoryLink"],["footerLinksNote","footerLinksNote"],
+["productImageHint","imageViewerHint"],["productImageRights","imageViewerRights"],["cartCouponLabel","couponLabel"],["cartCouponApply","couponApply"],["cartSubtotalLabel","cartSubtotal"]
+];
+uiText.forEach(([id,key])=>{const el=$(id);if(el)el.textContent=x[key]||"";});
+document.querySelectorAll(".modal .close-btn, .modal [data-close-modal]").forEach(el=>el.setAttribute("aria-label",x.close));
+if($("customerPassword"))$("customerPassword").placeholder=x.passwordHint;
+if($("cartCouponCode"))$("cartCouponCode").placeholder=x.couponPlaceholder;
+if($("customerAddress"))$("customerAddress").placeholder=x.addressPlaceholder;
+if($("cartCouponRemove"))$("cartCouponRemove").setAttribute("aria-label",x.couponRemove);
+if($("customerAuthSubmit"))$("customerAuthSubmit").textContent=customerAuthMode==="signup"?x.signupSubmit:customerAuthMode==="recovery"?x.recoverySubmit:x.login;
+if($("floatingCartBtn"))$("floatingCartBtn").setAttribute("aria-label",x.cart);
+
+if(typeof applyAssistantLanguage==="function")applyAssistantLanguage();
 
 $("policiesBtn")
 .textContent=
@@ -10066,6 +10355,7 @@ updateWishlistUI();
 renderDeliveryOptions();
 
 renderSlider();
+if(publicWishesLoaded)loadPublicWishes();
 
 }
 
@@ -10178,7 +10468,7 @@ observer.observe(box);
 
 function setupEvents(){
 
-$("langBtn").addEventListener("click",()=>{lang=lang==="ar"?"en":"ar";localStorage.setItem("espoza_lang",lang);applyLanguage();refreshAllCounters();ensureModalCloseButtons();});
+$("langBtn").addEventListener("click",()=>{lang=lang==="ar"?"en":lang==="en"?"he":"ar";localStorage.setItem("espoza_lang",lang);applyLanguage();refreshAllCounters();ensureModalCloseButtons();});
 
 
 $("searchInput")
@@ -10314,18 +10604,34 @@ function localizeDynamicText(value,known={}){
  const raw=String(value||"").trim();if(!raw)return "";
  if(lang==="ar")return raw;
  if(known[raw])return known[raw];
- return /[\u0600-\u06FF]/.test(raw)?"":raw;
+ if(/[\u0590-\u05FF]/.test(raw))return raw;
+ return raw;
 }
 function productDisplayName(product){
  if(!product)return "";
  const raw=String(product.name||"").trim();
- if(lang==="ar")return raw||String(product.name_en||product.nameEn||product.english_name||"");
- const explicit=String(product.name_en||product.nameEn||product.english_name||"").trim();
- if(explicit)return explicit;
- if(PRODUCT_EN_NAMES[raw])return PRODUCT_EN_NAMES[raw];
+ const source=(Array.isArray(products)?products:[]).find(p=>
+  (product.dbId&&String(p.dbId||p.id)===String(product.dbId))||
+  (product.productId&&String(p.dbId||p.id)===String(product.productId))||
+  (product.id&&String(p.id)===String(product.id))||
+  (raw&&String(p.name||"").trim()===raw)
+ );
+ const explicitEn=String(product.name_en||product.nameEn||product.english_name||source?.name_en||PRODUCT_EN_NAMES[raw]||"").trim();
+ const explicitHe=String(product.name_he||product.nameHe||source?.name_he||"").trim();
+ if(lang==="ar")return raw||explicitEn;
+ if(lang==="he"){
+  if(explicitHe)return explicitHe;
+  if(explicitEn){
+   if(/\s+Dress$/i.test(explicitEn))return "שמלת "+explicitEn.replace(/\s+Dress$/i,"");
+   if(/\s+Set$/i.test(explicitEn))return "חליפת "+explicitEn.replace(/\s+Set$/i,"");
+   return explicitEn;
+  }
+  return raw;
+ }
+ if(explicitEn)return explicitEn;
  const clean=raw.replace(/^فستان\s+/,"").replace(/^طقم\s+/,"");
  const prefix=/^فستان\s+/.test(raw)?"Dress ":/^طقم\s+/.test(raw)?"Set ":"";
- return prefix?(prefix.trim()):"Product";
+ return prefix?(prefix+clean):"Product";
 }
 
 /* Keep every modal easy to leave: visible X + backdrop + Escape,
@@ -10339,7 +10645,7 @@ function ensureModalCloseButtons(){
       close=document.createElement("button");
       close.type="button";
       close.className="close-btn modal-close-fallback";
-      close.setAttribute("aria-label",lang==="en"?"Close":"إغلاق");
+      close.setAttribute("aria-label",t().close||"Close");
       close.textContent="×";
       close.addEventListener("click",()=>closeModal(modal.id));
       box.prepend(close);
@@ -10735,35 +11041,64 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 
   /* Keep the site's copyright notice explicit without changing product data. */
   const copyright=document.querySelector(".copyright");
-  if(copyright && !copyright.textContent.includes("جميع الحقوق محفوظة")){
-    copyright.textContent=lang==="en"?"© 2026 Espoza Fashion. All Rights Reserved.":"© 2026 Espoza Fashion. جميع الحقوق محفوظة.";
-  }
+  if(copyright){copyright.textContent="© 2019–"+new Date().getFullYear()+" Espoza Fashion — "+t().rights;}
 })();
 </script>
 
 
 
 <div id="espozaTurnstile" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:300px;min-height:65px;z-index:99999;background:transparent;padding:4px;visibility:hidden"></div>
-<div id="espozaAssistantWidget" dir="rtl">
-  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">✦ Chat with ELYRA AI</button>
-  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="Espoza Assistant">
+<div id="espozaAssistantWidget" dir="rtl" lang="ar">
+  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false"><span class="elyra-launcher-mark">✦</span><span id="espozaAssistantLauncherText">تحدثي مع ELARA AI</span></button>
+  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="ELARA AI" aria-modal="false">
     <div class="espoza-assistant-head">
-      <div><b>ELYRA AI</b><small>Your intelligent companion</small></div>
-      <button type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
+      <div class="elyra-avatar" aria-hidden="true">E</div>
+      <div class="elyra-head-copy"><b>ELARA AI</b><small id="espozaAssistantSubtitle">مساعدتك الذكية</small><span class="elyra-online"><i></i><span id="elyraOnlineText">متاحة الآن</span></span></div>
+      <button class="elyra-close" type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
     </div>
-    <div id="espozaAssistantMessages" aria-live="polite">
-      <div class="espoza-assistant-bubble assistant">Hello! I’m ELYRA ✨ I can help with shopping, general questions, writing, translation and ideas. For store information, I’ll use confirmed details only.</div>
-      <div id="espozaAssistantQuickQuestions" class="espoza-assistant-quick-wrap" aria-label="أسئلة سريعة"><button type="button" onclick='sendEspozaQuickQuestion("شو عندكم أطقم؟")'>🛍️ شو عندكم أطقم؟</button><button type="button" onclick='sendEspozaQuickQuestion("بدي أشوف الفساتين المتوفرة")'>👗 الفساتين المتوفرة</button><button type="button" onclick='sendEspozaQuickQuestion("شو المقاسات المتوفرة؟")'>📏 المقاسات المتوفرة</button><button type="button" onclick='sendEspozaQuickQuestion("كم تكلفة التوصيل؟")'>🚚 تكلفة التوصيل</button></div>
+    <div id="espozaAssistantMessages" aria-live="polite" aria-relevant="additions text">
+      <div id="espozaAssistantWelcome" class="espoza-assistant-bubble assistant" dir="auto">مرحبًا! أنا ELARA ✨ أساعدك في التسوق واختيار المنتجات والإجابة عن أسئلتك.</div>
+      <div id="espozaAssistantQuickQuestions" class="espoza-assistant-quick-wrap" aria-label="أسئلة سريعة"><button id="elyraQuickSets" type="button">🛍️ شو عندكم أطقم؟</button><button id="elyraQuickDresses" type="button">👗 الفساتين المتوفرة</button><button id="elyraQuickSizes" type="button">📏 المقاسات المتوفرة</button><button id="elyraQuickDelivery" type="button">🚚 تكلفة التوصيل</button></div>
     </div>
     <form id="espozaAssistantForm" onsubmit="sendEspozaAssistant(event)">
-      <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="Type your question..." aria-label="Your question">
-      <button id="espozaAssistantSend" type="submit">Send</button>
+      <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="اكتبي سؤالك..." aria-label="سؤالك" dir="auto">
+      <button id="espozaAssistantSend" type="submit">إرسال</button>
     </form>
-    <div class="espoza-assistant-foot">ELYRA AI · Store information is shown according to available data.</div>
+    <div id="espozaAssistantFoot" class="espoza-assistant-foot">ELARA AI · معلومات المتجر حسب البيانات المتاحة.</div>
   </section>
 </div>
 <script id="espoza-assistant-widget-script">
 const espozaAssistantHistory=[];
+function applyAssistantLanguage(){
+ const x=t();
+ const widget=document.getElementById("espozaAssistantWidget");
+ if(widget){widget.dir=x.dir;widget.lang=lang;}
+ const set=(id,value)=>{const el=document.getElementById(id);if(el&&value!=null)el.textContent=value;};
+ set("espozaAssistantLauncherText",x.assistantLauncher);
+ set("espozaAssistantSubtitle",x.assistantSubtitle);
+ set("espozaAssistantWelcome",x.assistantWelcome);
+ set("elyraOnlineText",lang==="he"?"זמינה כעת":lang==="en"?"Online now":"متاحة الآن");
+ set("elyraQuickSets",x.assistantQuickSets);
+ set("elyraQuickDresses",x.assistantQuickDresses);
+ set("elyraQuickSizes",x.assistantQuickSizes);
+ set("elyraQuickDelivery",x.assistantQuickDelivery);
+ set("espozaAssistantInput",null);
+ const input=document.getElementById("espozaAssistantInput");
+ if(input){input.placeholder=x.assistantPlaceholder;input.setAttribute("aria-label",x.assistantPlaceholder);input.dir="auto";}
+ set("espozaAssistantSend",x.assistantSend);
+ set("espozaAssistantFoot",x.assistantFoot);
+ const close=document.querySelector("#espozaAssistantPanel .elyra-close");
+ if(close)close.setAttribute("aria-label",x.close);
+ const panel=document.getElementById("espozaAssistantPanel");if(panel)panel.setAttribute("aria-label",lang==="he"?"ELARA AI — עוזרת קניות":lang==="en"?"ELARA AI shopping assistant":"إيلارا — مساعدة التسوق");
+ const quick=document.getElementById("espozaAssistantQuickQuestions");
+ if(quick){
+  const bind=(id,message)=>{const button=document.getElementById(id);if(button)button.onclick=()=>sendEspozaQuickQuestion(message);};
+  bind("elyraQuickSets",lang==="he"?"אילו חליפות זמינות?":lang==="en"?"What sets are available?":"شو عندكم أطقم؟");
+  bind("elyraQuickDresses",lang==="he"?"הציגי לי שמלות זמינות":lang==="en"?"Show me available dresses":"بدي أشوف الفساتين المتوفرة");
+  bind("elyraQuickSizes",lang==="he"?"אילו מידות זמינות?":lang==="en"?"Which sizes are available?":"شو المقاسات المتوفرة؟");
+  bind("elyraQuickDelivery",lang==="he"?"כמה עולה המשלוח?":lang==="en"?"How much is delivery?":"كم تكلفة التوصيل؟");
+ }
+}
 function toggleEspozaAssistant(force){
  const panel=document.getElementById("espozaAssistantPanel");
  const launcher=document.getElementById("espozaAssistantLauncher");
@@ -10786,6 +11121,7 @@ function addEspozaAssistantBubble(role,text){
  const bubble=document.createElement("div");
  bubble.className="espoza-assistant-bubble "+(role==="user"?"user":"assistant");
  bubble.textContent=String(text||"");
+ bubble.dir="auto";
  box.appendChild(bubble);
  box.scrollTop=box.scrollHeight;
  return bubble;
@@ -10800,26 +11136,26 @@ function renderElyraRecommendedProducts(products){
   const image=images.find((item)=>item&&item.url);
   if(image){try{const url=new URL(String(image.url),window.location.href);if(url.protocol==="https:"||url.protocol==="http:"){const img=document.createElement("img");img.src=url.href;img.alt=String(image.alt||product.name||"صورة المنتج");img.loading="lazy";card.appendChild(img);}}catch(_){}}
   const info=document.createElement("div");info.className="espoza-assistant-product-info";
-  const name=document.createElement("div");name.className="espoza-assistant-product-name";name.textContent=String(product.name||product.name_en||"منتج من المتجر");info.appendChild(name);
-  const price=document.createElement("div");price.className="espoza-assistant-product-price";price.textContent="السعر: "+String(product.price??"—")+" ₪";
+  const name=document.createElement("div");name.className="espoza-assistant-product-name";name.textContent=productDisplayName(product)||t().product;info.appendChild(name);
+  const price=document.createElement("div");price.className="espoza-assistant-product-price";price.textContent=t().priceLabel+": "+String(product.price??"—")+" ₪";
   if(product.old_price&&Number(product.old_price)>Number(product.price)){const old=document.createElement("span");old.className="espoza-assistant-product-old-price";old.textContent=String(product.old_price)+" ₪";price.appendChild(old);}
   info.appendChild(price);
-  if(product.description){const desc=document.createElement("div");desc.className="espoza-assistant-product-detail";desc.textContent=String(product.description);info.appendChild(desc);}
+  if(product.description_he||product.description_en||product.description){const desc=document.createElement("div");desc.className="espoza-assistant-product-detail";desc.textContent=String(lang==="he"?(product.description_he||t().desc):lang==="en"?(product.description_en||t().desc):(product.description||t().desc));info.appendChild(desc);}
   const colors=Array.isArray(product.colors)?product.colors:[];
-  if(colors.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";const label=document.createElement("strong");label.textContent="الألوان: ";line.appendChild(label);const chips=document.createElement("span");chips.className="espoza-assistant-product-colors";
-   colors.forEach((color)=>{const chip=document.createElement("span");chip.className="espoza-assistant-product-color";if(color.hex&&/^#[0-9a-f]{3,8}$/i.test(String(color.hex))){const swatch=document.createElement("i");swatch.className="espoza-assistant-product-swatch";swatch.style.backgroundColor=String(color.hex);chip.appendChild(swatch);}chip.appendChild(document.createTextNode(String(color.name||"")));chips.appendChild(chip);});
+  if(colors.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";const label=document.createElement("strong");label.textContent=t().colorsLabel+": ";line.appendChild(label);const chips=document.createElement("span");chips.className="espoza-assistant-product-colors";
+   colors.forEach((color)=>{const chip=document.createElement("span");chip.className="espoza-assistant-product-color";if(color.hex&&/^#[0-9a-f]{3,8}$/i.test(String(color.hex))){const swatch=document.createElement("i");swatch.className="espoza-assistant-product-swatch";swatch.style.backgroundColor=String(color.hex);chip.appendChild(swatch);}chip.appendChild(document.createTextNode(lang==="he"?(color.name_he||productColorDisplayName(color.name)):lang==="en"?(color.name_en||productColorDisplayName(color.name)):String(color.name||"")));chips.appendChild(chip);});
    line.appendChild(chips);info.appendChild(line);}
   const sizes=Array.isArray(product.sizes)?product.sizes.filter(Boolean):[];
-  if(sizes.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";line.textContent="المقاسات: "+sizes.join("، ");info.appendChild(line);}
+  if(sizes.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";line.textContent=t().sizesLabel+": "+sizes.join(lang==="he"?", ":"، ");info.appendChild(line);}
   card.appendChild(info);group.appendChild(card);
  });
  box.appendChild(group);box.scrollTop=box.scrollHeight;
 }
 function setElyraTyping(bubble){
- bubble.textContent="إيليرا تفكّر وتحلّل";
- bubble.setAttribute("aria-label","إيليرا تفكّر وتحلّل");
+ bubble.textContent=t().assistantTyping;
+ bubble.setAttribute("aria-label",t().assistantTyping);
  let dots=0;
- const timer=window.setInterval(()=>{if(!bubble.isConnected){window.clearInterval(timer);return;}dots=(dots+1)%4;bubble.textContent="إيليرا تفكّر وتحلّل"+".".repeat(dots);},450);
+ const timer=window.setInterval(()=>{if(!bubble.isConnected){window.clearInterval(timer);return;}dots=(dots+1)%4;bubble.textContent=t().assistantTyping+".".repeat(dots);},450);
  return ()=>window.clearInterval(timer);
 }
 async function sendEspozaAssistant(event){
@@ -10828,7 +11164,7 @@ async function sendEspozaAssistant(event){
  const button=document.getElementById("espozaAssistantSend");
  const message=input.value.trim();
  if(!message||button.disabled)return;
- if(!navigator.onLine){addEspozaAssistantBubble("assistant","الاتصال بالإنترنت مقطوع. حاولي بعد عودة الاتصال.");return;}
+ if(!navigator.onLine){addEspozaAssistantBubble("assistant",t().assistantOffline);return;}
  addEspozaAssistantBubble("user",message);
  const history=espozaAssistantHistory.slice(-6);
  input.value="";
@@ -10842,22 +11178,23 @@ async function sendEspozaAssistant(event){
    method:"POST",
    signal:controller.signal,
    headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
-   body:JSON.stringify({message,history,turnstileToken:await getEspozaTurnstileToken("elyra")})
+   body:JSON.stringify({message,history,language:lang,turnstileToken:await getEspozaTurnstileToken("elyra")})
   });
   const data=await response.json();
   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
   stopTyping();
-  pending.textContent=(data.mode==="faq"?"إيليرا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n":"")+data.answer;
+  pending.textContent=(data.mode==="faq"?(lang==="he"?"ELARA פועלת כעת במצב מידע של החנות בלבד; שירות הבינה המלאכותית הכללי אינו זמין.\n\n":lang==="en"?"Elara is currently in store-information mode only; general AI is temporarily unavailable.\n\n":"إيلارا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n"):"")+data.answer;
   if(Array.isArray(data.products)&&data.products.length)renderElyraRecommendedProducts(data.products);
   espozaAssistantHistory.push({role:"user",content:message},{role:"assistant",content:data.answer});
   if(espozaAssistantHistory.length>12)espozaAssistantHistory.splice(0,espozaAssistantHistory.length-12);
  }catch(error){
   stopTyping();
-  pending.textContent=error.name==="AbortError"?"استغرق الرد وقتًا طويلًا. حاولي مرة أخرى.":"إيليرا مش متاحة للحظة. جرّب مرة ثانية، أو تواصل مع المتجر عبر واتساب.";
+  pending.textContent=error.name==="AbortError"?t().assistantTimeout:t().assistantError;
   input.value=message;
  }
  finally{clearTimeout(timeout);stopTyping();button.disabled=false;input.focus();}
 }
+applyAssistantLanguage();
 </script>
 <script>
 /* Live synchronization: all public storefront data stays in Supabase.

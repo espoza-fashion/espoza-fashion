@@ -1,0 +1,1 @@
+update public.products set description_he = 'עיצוב אלגנטי מבית Espoza Fashion.' where description_he is null;
