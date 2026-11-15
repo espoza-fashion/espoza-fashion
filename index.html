@@ -3464,7 +3464,7 @@ type="button"
 onclick="openCartModal()"
 aria-label="السلة">
 <span class="cart-btn-icon">🛍️</span>
-<span class="cart-btn-label">السلة</span>
+<span class="cart-btn-label" id="cartBtnLabel">السلة</span>
 <span class="cart-badge" id="cartCount">0</span>
 </button>
 
@@ -10075,6 +10075,9 @@ feedbackTrack.style.setProperty("animation-play-state","running","important");
 
 $("langBtn")
 .textContent=lang==="ar"?"EN":lang==="en"?"HE":"AR";
+if($("cartBtnLabel"))$("cartBtnLabel").textContent=t().cart;
+if($("cartBtn"))$("cartBtn").setAttribute("aria-label",t().cart);
+if($("menuBtn")){$("menuBtn").setAttribute("aria-label",t().menuTitle);$("menuBtn").setAttribute("title",t().menuTitle);}
 
 
 $("topNote")
