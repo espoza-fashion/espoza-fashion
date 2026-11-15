@@ -10706,118 +10706,161 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 })();
 </script>
 
-<style id="espoza-chat-widget-style">
-  #espoza-chat-bubble{position:fixed;bottom:20px;left:20px;z-index:9999;width:60px;height:60px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);border:0}
-  #espoza-chat-window{position:fixed;bottom:90px;left:20px;z-index:9999;width:320px;max-width:90vw;height:440px;max-height:70vh;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden;font-family:Tahoma,sans-serif;direction:rtl}
-  #espoza-chat-window.open{display:flex}
-  #espoza-chat-header{background:#111;color:#fff;padding:12px 16px;font-weight:bold;font-size:15px}
-  #espoza-chat-messages{flex:1;overflow-y:auto;padding:10px;background:#faf8f6}
-  .espoza-msg{margin:6px 0;padding:8px 12px;border-radius:12px;max-width:85%;font-size:13.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
-  .espoza-msg.user{background:#111;color:#fff;margin-right:0;margin-left:auto}
-  .espoza-msg.bot{background:#eee;color:#111}
-  .espoza-product-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:8px;margin-top:6px;color:#111}
-  .espoza-product-card img{width:100%;border-radius:8px;display:block;margin-bottom:6px}
-  #espoza-chat-input-row{display:flex;border-top:1px solid #eee}
-  #espoza-chat-input{flex:1;min-width:0;border:0;padding:10px;font-size:13.5px;outline:none}
-  #espoza-chat-send{border:0;background:#111;color:#fff;padding:0 16px;cursor:pointer}
-  #espoza-chat-send:disabled{opacity:.6;cursor:wait}
+<style id="espoza-assistant-style">
+#espozaChatLauncher,#espozaChatPanel{display:none!important}
+#espozaChatLauncher{position:fixed;left:20px;bottom:24px;z-index:80;border:0;border-radius:999px;background:#641f34;color:#fff;box-shadow:0 10px 30px rgba(45,15,28,.25);padding:13px 17px;font-weight:800;display:flex;align-items:center;gap:9px}
+#espozaChatPanel{position:fixed;left:20px;bottom:82px;width:min(370px,calc(100vw - 28px));height:min(520px,calc(100dvh - 120px));z-index:81;background:#fff;border:1px solid #eadfe2;border-radius:22px;box-shadow:0 20px 60px rgba(45,15,28,.22);display:none;overflow:hidden;direction:rtl}
+#espozaChatPanel.open{display:flex;flex-direction:column}
+#espozaChatHead{background:#641f34;color:#fff;padding:15px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+#espozaChatHead small{display:block;opacity:.82;font-size:11px;margin-top:4px}
+#espozaChatClose{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:10px;width:34px;height:34px;font-size:21px}
+#espozaChatMessages{padding:14px;overflow:auto;flex:1;background:#fbf9f5;display:flex;flex-direction:column;gap:10px}
+.espozaChatMsg{max-width:90%;padding:10px 12px;border-radius:15px;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.espozaChatMsg.bot{align-self:flex-start;background:#fff;border:1px solid #eee3e5;color:#35272d;border-bottom-right-radius:5px}
+.espozaChatMsg.user{align-self:flex-end;background:#641f34;color:#fff;border-bottom-left-radius:5px}
+#espozaChatQuick{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 10px;background:#fbf9f5}
+#espozaChatQuick button{border:1px solid #e4d5d9;border-radius:999px;background:#fff;color:#641f34;padding:7px 10px;font-size:11px}
+#espozaChatForm{display:flex;gap:8px;padding:12px;border-top:1px solid #eee4e6;background:#fff}
+#espozaChatInput{flex:1;min-width:0;border:1px solid #e5d9dc;border-radius:13px;padding:11px;font-size:13px;outline:none}
+#espozaChatSend{border:0;border-radius:12px;background:#b9985a;color:#21160e;font-weight:800;padding:0 14px}
+@media(max-width:480px){#espozaChatLauncher{left:12px;bottom:14px;padding:12px 14px}#espozaChatPanel{left:8px;bottom:72px;width:calc(100vw - 16px);height:min(500px,calc(100dvh - 95px))}}
+@media(prefers-reduced-motion:no-preference){#espozaChatPanel{animation:espozaChatIn .18s ease-out}@keyframes espozaChatIn{from{transform:translateY(8px);opacity:.7}to{transform:translateY(0);opacity:1}}}
 </style>
-<button id="espoza-chat-bubble" type="button" aria-label="افتح مساعد Espoza" aria-controls="espoza-chat-window" aria-expanded="false">💬</button>
-<div id="espoza-chat-window" role="dialog" aria-label="مساعد Espoza Fashion">
-  <div id="espoza-chat-header">مساعد Espoza Fashion 👗</div>
-  <div id="espoza-chat-messages" aria-live="polite"></div>
-  <div id="espoza-chat-input-row">
-    <input id="espoza-chat-input" type="text" maxlength="1000" autocomplete="off" placeholder="اسأل عن فستان، مقاس، لون..." aria-label="اكتب سؤالك">
-    <button id="espoza-chat-send" type="button">إرسال</button>
-  </div>
-</div>
-<script id="espoza-chat-widget-script">
+<button id="espozaChatLauncher" type="button" aria-label="مساعد Espoza" aria-expanded="false"><span aria-hidden="true">✦</span><span id="espozaChatLauncherText">اسألي Espoza</span></button>
+<section id="espozaChatPanel" role="dialog" aria-label="مساعد Espoza" aria-modal="false">
+ <div id="espozaChatHead"><div><strong>مساعد Espoza</strong><small>مساعدة فورية من معلومات المتجر</small></div><button id="espozaChatClose" type="button" aria-label="إغلاق">×</button></div>
+ <div id="espozaChatMessages" aria-live="polite"></div>
+ <div id="espozaChatQuick"><button type="button" data-chat="التوصيل">التوصيل</button><button type="button" data-chat="الاستبدال والإرجاع">الاستبدال</button><button type="button" data-chat="كيف أعرف المقاس؟">المقاسات</button><button type="button" data-chat="أريد أحدث العروض">العروض</button><button type="button" id="espozaChatWhatsApp">واتساب</button></div>
+ <form id="espozaChatForm"><input id="espozaChatInput" autocomplete="off" placeholder="اكتبي سؤالك هنا…" aria-label="اكتبي سؤالك"><button id="espozaChatSend" type="submit">إرسال</button></form>
+</section>
+<script id="espoza-assistant-script">
 (function(){
-  "use strict";
-  const SUPABASE_FUNCTION_URL="https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/chat-assistant";
-  const SUPABASE_ANON_KEY="sb_publishable_ur00aFQQv5SvMdGbv2G9Zg_fBpXEUlX";
-  const bubble=document.getElementById("espoza-chat-bubble");
-  const win=document.getElementById("espoza-chat-window");
-  const messagesEl=document.getElementById("espoza-chat-messages");
-  const input=document.getElementById("espoza-chat-input");
-  const sendBtn=document.getElementById("espoza-chat-send");
-  if(!bubble||!win||!messagesEl||!input||!sendBtn)return;
-  let sessionId="";
-  try{
-    sessionId=localStorage.getItem("espoza_chat_session")||"";
-    if(!sessionId){
-      sessionId=window.crypto&&typeof window.crypto.randomUUID==="function"?window.crypto.randomUUID():("espoza-"+Date.now()+"-"+Math.random().toString(36).slice(2));
-      localStorage.setItem("espoza_chat_session",sessionId);
-    }
-  }catch(_){sessionId="espoza-"+Date.now()+"-"+Math.random().toString(36).slice(2);}
-  bubble.addEventListener("click",function(){
-    const open=!win.classList.contains("open");
-    win.classList.toggle("open",open);
-    bubble.setAttribute("aria-expanded",String(open));
-    if(open)setTimeout(()=>input.focus(),40);
-  });
-  function addMessage(text,who){
-    const div=document.createElement("div");
-    div.className="espoza-msg "+who;
-    div.textContent=String(text||"");
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop=messagesEl.scrollHeight;
-    return div;
+ const launcher=document.getElementById("espozaChatLauncher"),panel=document.getElementById("espozaChatPanel"),close=document.getElementById("espozaChatClose"),messages=document.getElementById("espozaChatMessages"),form=document.getElementById("espozaChatForm"),input=document.getElementById("espozaChatInput");
+ if(!launcher||!panel||!messages||!form||!input)return;
+ const norm=value=>String(value||"").toLocaleLowerCase().normalize("NFKD").replace(/[\u064B-\u065F\u0670]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[^\p{L}\p{N}\s]/gu," ").replace(/\s+/g," ").trim();
+ const add=(text,who)=>{const div=document.createElement("div");div.className="espozaChatMsg "+who;div.textContent=text;messages.appendChild(div);messages.scrollTop=messages.scrollHeight;};
+ const syncLabels=()=>{const english=lang==="en";document.getElementById("espozaChatLauncherText").textContent=english?"Ask Espoza":"اسألي Espoza";document.querySelector("#espozaChatHead strong").textContent=english?"Espoza Assistant":"مساعد Espoza";document.querySelector("#espozaChatHead small").textContent=english?"Answers from store information":"مساعدة من معلومات المتجر";document.getElementById("espozaChatClose").setAttribute("aria-label",english?"Close":"إغلاق");document.getElementById("espozaChatInput").placeholder=english?"Ask your question…":"اكتبي سؤالك هنا…";document.getElementById("espozaChatSend").textContent=english?"Send":"إرسال";document.getElementById("espozaChatWhatsApp").textContent=english?"WhatsApp":"واتساب";const quick=[...document.querySelectorAll("#espozaChatQuick button[data-chat]")];const labels=english?[["Delivery","delivery"],["Returns","exchange and return policy"],["Sizes","size guide"],["Offers","latest offers"]]:[["التوصيل","التوصيل"],["الاستبدال","الاستبدال والإرجاع"],["المقاسات","كيف أعرف المقاس؟"],["العروض","أريد أحدث العروض"]];quick.forEach((button,i)=>{if(labels[i]){button.textContent=labels[i][0];button.setAttribute("data-chat",labels[i][1]);}});};
+ const open=()=>{syncLabels();panel.classList.add("open");launcher.setAttribute("aria-expanded","true");if(!messages.children.length)add(lang==="en"?"Hi! I can help with products, prices, sizes, delivery and store policies.":"أهلًا فيكِ ❤️ بقدر أساعدك بمعلومات المنتجات والأسعار والمقاسات والتوصيل وسياسة المتجر. شو حابة تعرفي؟","bot");setTimeout(()=>input.focus(),50);};
+ const shut=()=>{panel.classList.remove("open");launcher.setAttribute("aria-expanded","false");};
+ launcher.addEventListener("click",()=>panel.classList.contains("open")?shut():open());close.addEventListener("click",shut);
+ const findProducts=query=>{const q=norm(query);return (Array.isArray(products)?products:[]).filter(p=>{const name=norm((p.name||"")+" "+(p.name_en||"")+" "+(p.sku||""));return name&&q.split(" ").filter(w=>w.length>1).some(w=>name.includes(w));}).slice(0,4);};
+ const moneyText=n=>"₪"+Number(n||0).toLocaleString("en-US",{maximumFractionDigits:2});
+ const answer=query=>{
+  const q=norm(query),english=lang==="en";
+  const found=findProducts(query);
+  if(/توصيل|شحن|delivery|shipping|كم يوم|متى يوصل/.test(q)){
+   const list=typeof deliveryList==="function"?deliveryList():[];
+   const detail=list.length?list.map(x=>x.name+": "+moneyText(x.price)).join("، "):"حسب منطقة التوصيل المختارة عند إتمام الطلب";
+   return (english?"Delivery fees: ":"رسوم التوصيل: ")+detail+(english?". Estimated delivery time: ":". مدة التوصيل: ")+(store.deliveryTime||"2–3 أيام")+".";
   }
-  function addProducts(products){
-    products.forEach(function(p){
-      const card=document.createElement("div");
-      card.className="espoza-product-card";
-      const images=Array.isArray(p.images)?p.images:[];
-      const img=images.find(i=>i&&i.is_primary)||images[0];
-      if(img&&img.url){
-        const image=document.createElement("img");
-        image.src=String(img.url);
-        image.alt=String(p.name_ar||"صورة المنتج");
-        image.loading="lazy";
-        card.appendChild(image);
-      }
-      const name=document.createElement("strong");
-      name.textContent=String(p.name_ar||p.name||"");
-      card.appendChild(name);
-      const price=document.createElement("div");
-      price.textContent="السعر: "+String(p.price??"—")+" ₪";
-      card.appendChild(price);
-      const sizes=(Array.isArray(p.sizes)?p.sizes:[]).filter(s=>s&&s.available).map(s=>s.size).filter(Boolean);
-      const colors=(Array.isArray(p.colors)?p.colors:[]).map(c=>c&&c.color_name_ar).filter(Boolean);
-      if(sizes.length){const line=document.createElement("div");line.textContent="المقاسات: "+sizes.join("، ");card.appendChild(line);}
-      if(colors.length){const line=document.createElement("div");line.textContent="الألوان: "+colors.join("، ");card.appendChild(line);}
-      messagesEl.appendChild(card);
-    });
-    messagesEl.scrollTop=messagesEl.scrollHeight;
+  if(/استبدال|ارجاع|إرجاع|ترجيع|exchange|return|refund/.test(q))return english?"Our exchange and return policy: "+String(store.exchangePolicy||"Please contact customer service before placing the order."):"سياسة الاستبدال والإرجاع: "+String(store.exchangePolicy||"تواصلي معنا قبل تأكيد الطلب للاستفسار عن السياسة.");
+  if(/مقاس|مقاسات|size|قياس|صدر|خصر|طول/.test(q)){
+   const p=found[0]||(typeof currentProduct!=="undefined"?currentProduct:null);
+   if(p&&p.sizeChart&&Array.isArray(p.sizeChart.headers)&&p.sizeChart.rows?.length)return (english?"Size guide for ":"دليل مقاسات ")+(p.name||"المنتج")+":\n"+[p.sizeChart.headers,...p.sizeChart.rows].map(row=>row.join(" | ")).join("\n");
+   if(p&&p.sizes?.length)return (english?"Available sizes for ":"المقاسات المتوفرة في ")+(p.name||"هذا الموديل")+": "+p.sizes.join("، ")+". "+(english?"Open the product and tap Size guide if shown.":"افتحي المنتج واضغطي «دليل المقاسات» إذا كان ظاهرًا.");
+   return english?"Tell me the product name so I can check its available sizes.":"اكتبي اسم الموديل اللي بدك إياه عشان أتحقق من المقاسات المتوفرة إله.";
   }
-  async function sendMessage(){
-    const message=input.value.trim();
-    if(!message||sendBtn.disabled)return;
-    addMessage(message,"user");
-    input.value="";
-    sendBtn.disabled=true;
-    const loading=addMessage("جارٍ الرد...","bot");
-    try{
-      const response=await fetch(SUPABASE_FUNCTION_URL,{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Authorization":"Bearer "+SUPABASE_ANON_KEY},
-        body:JSON.stringify({message:message,sessionId:sessionId})
-      });
-      let data={};
-      try{data=await response.json();}catch(_){}
-      if(!response.ok)throw new Error(data.error||("HTTP "+response.status));
-      loading.textContent=data.reply||"صار في خلل، جرب كمان مرة.";
-      if(Array.isArray(data.products)&&data.products.length)addProducts(data.products);
-    }catch(error){
-      loading.textContent="تعذر الاتصال بالمساعد. تأكد من الإنترنت وجرب كمان مرة.";
-      console.warn("Espoza chat request failed:",error);
-    }finally{sendBtn.disabled=false;input.focus();}
+  if(/عرض|خصم|عروض|offer|discount|sale/.test(q)){
+   const offers=(Array.isArray(activeAutomaticOffers)?activeAutomaticOffers:[]).filter(o=>o.active&&(!o.first_order_only||customerHasPreviousOrders===false));
+   if(offers.length)return (english?"Available offers: ":"العروض المتاحة: ")+offers.map(o=>o.code+": "+(o.discount_type==="percent"?o.discount_value+"%":"₪"+o.discount_value)+(english?" off":" خصم")).join(english?", ": "، ")+". "+(english?"Applicable offers are applied automatically when their conditions are met.":"العروض التلقائية تنطبق لما تتحقق شروطها.");
+   return english?"No automatic offer is currently available. Check the Offers category for discounted items.":"ما في عرض تلقائي متاح حاليًا، لكن بتقدري تشوفي فئة «العروضات» بالمتجر.";
   }
-  sendBtn.addEventListener("click",sendMessage);
-  input.addEventListener("keydown",function(event){if(event.key==="Enter"){event.preventDefault();sendMessage();}});
-  addMessage("أهلًا فيكِ ❤️ اسأليني عن المنتجات والأسعار والمقاسات والألوان.","bot");
+  if(/سعر|بكم|كم السعر|price|cost|how much/.test(q)&&found.length)return found.map(p=>(p.name||p.name_en)+" — "+moneyText(p.price)+(p.oldPrice&&p.oldPrice>p.price?" (بدل "+moneyText(p.oldPrice)+")":"")).join("\n");
+  if(/منتج|فستان|طقم|موديل|دور|ابحث|product|dress|set|looking for/.test(q)&&found.length)return found.map(p=>(p.name_en||p.name||"Product")+" — "+moneyText(p.price)+(p.sizes?.length?" | Sizes: "+p.sizes.join(", "):"")+(p.available===false?" | Unavailable":"")).join("\n");
+  if(found.length)return found.map(p=>(p.name_en||p.name||"Product")+" — "+moneyText(p.price)+(p.sizes?.length?" | Sizes: "+p.sizes.join(", "):"")).join("\n");
+  if(/طلب|واتساب|تواصل|اتصل|order|whatsapp|contact/.test(q)){
+   const number=String(store.whatsapp||"").replace(/\D/g,"");
+   return number?(english?"You can contact us on WhatsApp: https://wa.me/":"تقدري تتواصلي معنا مباشرة على واتساب: https://wa.me/")+number:(english?"Please use the WhatsApp contact link on the website.":"استخدمي رابط واتساب الموجود بالموقع للتواصل معنا.");
+  }
+  if(/مرحبا|اهلا|السلام عليكم|hello|hi\b/.test(q))return english?"Hello! Ask me about a product, price, size, delivery or exchange policy.":"أهلًا وسهلًا ❤️ اسأليني عن موديل أو سعر أو مقاس أو التوصيل أو سياسة الاستبدال.";
+  return english?"I can answer using the store's published product and policy information. Try the product name, or ask about sizes, delivery, exchange or offers. If you need a person, contact us via the WhatsApp link on the site.":"بقدر أجاوبك حسب معلومات المنتجات وسياسات المتجر المنشورة. جرّبي تكتبي اسم الموديل، أو اسألي عن المقاسات أو التوصيل أو الاستبدال أو العروض. وإذا بدك مساعدة من موظفة، استخدمي رابط واتساب الموجود بالموقع.";
+ };
+ const send=async value=>{const query=String(value||"").trim();if(!query)return;add(query,"user");input.value="";const reply=answer(query);window.setTimeout(()=>add(reply,"bot"),120);};
+ form.addEventListener("submit",event=>{event.preventDefault();send(input.value);});
+ document.querySelectorAll("[data-chat]").forEach(button=>button.addEventListener("click",()=>send(button.getAttribute("data-chat"))));
+ const whatsappButton=document.getElementById("espozaChatWhatsApp");
+ if(whatsappButton)whatsappButton.addEventListener("click",()=>{const number=String(store.whatsapp||"").replace(/\D/g,"");if(number)window.open("https://wa.me/"+number,"_blank","noopener,noreferrer");else send("أريد التواصل مع خدمة الزبائن");});
 })();
+</script>
+
+<div id="espozaAssistantWidget" dir="rtl">
+  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false">✦ Chat with ELYRA AI</button>
+  <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="Espoza Assistant">
+    <div class="espoza-assistant-head">
+      <div><b>ELYRA AI</b><small>Your intelligent companion</small></div>
+      <button type="button" onclick="toggleEspozaAssistant(false)" aria-label="إغلاق">×</button>
+    </div>
+    <div id="espozaAssistantMessages" aria-live="polite">
+      <div class="espoza-assistant-bubble assistant">Hello! I’m ELYRA ✨ I can help with shopping, general questions, writing, translation and ideas. For store information, I’ll use confirmed details only.</div>
+    </div>
+    <form id="espozaAssistantForm" onsubmit="sendEspozaAssistant(event)">
+      <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="Type your question..." aria-label="Your question">
+      <button id="espozaAssistantSend" type="submit">Send</button>
+    </form>
+    <div class="espoza-assistant-foot">ELYRA AI · Store information is shown according to available data.</div>
+  </section>
+</div>
+<script id="espoza-assistant-widget-script">
+const espozaAssistantHistory=[];
+function toggleEspozaAssistant(force){
+ const panel=document.getElementById("espozaAssistantPanel");
+ const launcher=document.getElementById("espozaAssistantLauncher");
+ const open=typeof force==="boolean"?force:panel.classList.contains("hidden");
+ panel.classList.toggle("hidden",!open);
+ launcher.setAttribute("aria-expanded",String(open));
+ if(open)setTimeout(()=>document.getElementById("espozaAssistantInput")?.focus(),40);
+}
+function addEspozaAssistantBubble(role,text){
+ const box=document.getElementById("espozaAssistantMessages");
+ const bubble=document.createElement("div");
+ bubble.className="espoza-assistant-bubble "+(role==="user"?"user":"assistant");
+ bubble.textContent=String(text||"");
+ box.appendChild(bubble);
+ box.scrollTop=box.scrollHeight;
+ return bubble;
+}
+function setElyraTyping(bubble){
+ bubble.textContent="إيليرا تفكّر وتحلّل";
+ bubble.setAttribute("aria-label","إيليرا تفكّر وتحلّل");
+ let dots=0;
+ const timer=window.setInterval(()=>{if(!bubble.isConnected){window.clearInterval(timer);return;}dots=(dots+1)%4;bubble.textContent="إيليرا تفكّر وتحلّل"+".".repeat(dots);},450);
+ return ()=>window.clearInterval(timer);
+}
+async function sendEspozaAssistant(event){
+ event.preventDefault();
+ const input=document.getElementById("espozaAssistantInput");
+ const button=document.getElementById("espozaAssistantSend");
+ const message=input.value.trim();
+ if(!message||button.disabled)return;
+ if(!navigator.onLine){addEspozaAssistantBubble("assistant","الاتصال بالإنترنت مقطوع. حاولي بعد عودة الاتصال.");return;}
+ addEspozaAssistantBubble("user",message);
+ const history=espozaAssistantHistory.slice(-6);
+ input.value="";
+ button.disabled=true;
+ const pending=addEspozaAssistantBubble("assistant","");
+ const stopTyping=setElyraTyping(pending);
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),30000);
+ try{
+  const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/espoza-assistant",{
+   method:"POST",
+   signal:controller.signal,
+   headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
+   body:JSON.stringify({message,history})
+  });
+  const data=await response.json();
+  if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
+  stopTyping();
+  pending.textContent=(data.mode==="faq"?"إيليرا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n":"")+data.answer;
+  espozaAssistantHistory.push({role:"user",content:message},{role:"assistant",content:data.answer});
+  if(espozaAssistantHistory.length>12)espozaAssistantHistory.splice(0,espozaAssistantHistory.length-12);
+ }catch(error){
+  stopTyping();
+  pending.textContent=error.name==="AbortError"?"استغرق الرد وقتًا طويلًا. حاولي مرة أخرى.":"إيليرا مش متاحة للحظة. جرّب مرة ثانية، أو تواصل مع المتجر عبر واتساب.";
+  input.value=message;
+ }
+ finally{clearTimeout(timeout);stopTyping();button.disabled=false;input.focus();}
+}
 </script>
 <script>
 /* Live synchronization: all public storefront data stays in Supabase.
