@@ -8537,7 +8537,7 @@ ${money(currentProduct.oldPrice)} ₪
 
 $("detailDescription")
 .textContent=
-(lang==="he" ? (currentProduct.description_he || currentProduct.description_en || currentProduct.description || "") : (lang==="he" ? (currentProduct.description_he||currentProduct.description_en||currentProduct.description||"") : lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description||currentProduct.description_en||"")))
+(lang==="he" ? (currentProduct.description_he || currentProduct.description_en || currentProduct.description || "") : lang==="en" ? (currentProduct.description_en || localizeDynamicText(currentProduct.description||"")) : (currentProduct.description || currentProduct.description_en || ""))
 ||
 t().desc;
 
@@ -10333,6 +10333,7 @@ updateWishlistUI();
 renderDeliveryOptions();
 
 renderSlider();
+if(publicWishesLoaded)loadPublicWishes();
 
 }
 
@@ -11060,6 +11061,7 @@ function applyAssistantLanguage(){
  set("espozaAssistantFoot",x.assistantFoot);
  const close=document.querySelector("#espozaAssistantPanel .elyra-close");
  if(close)close.setAttribute("aria-label",x.close);
+ const panel=document.getElementById("espozaAssistantPanel");if(panel)panel.setAttribute("aria-label",lang==="he"?"ELARA AI — עוזרת קניות":lang==="en"?"ELARA AI shopping assistant":"إيلارا — مساعدة التسوق");
  const quick=document.getElementById("espozaAssistantQuickQuestions");
  if(quick){
   const bind=(id,message)=>{const button=document.getElementById(id);if(button)button.onclick=()=>sendEspozaQuickQuestion(message);};
