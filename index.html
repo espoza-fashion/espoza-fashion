@@ -3345,6 +3345,18 @@ footer{
 .espoza-assistant-foot{padding:0 12px 9px;color:#85777c;font-size:10px;text-align:center;background:#fff}
 @media(max-width:430px){#espozaAssistantWidget{left:10px;bottom:12px}#espozaAssistantLauncher{padding:11px 14px;font-size:12px}#espozaAssistantPanel{bottom:58px;width:calc(100vw - 20px);height:min(500px,calc(100dvh - 95px))}}
 @media(prefers-reduced-motion:reduce){#espozaAssistantMessages{scroll-behavior:auto}}
+
+.espoza-assistant-products{display:flex;flex-direction:column;gap:12px;width:100%;max-width:96%;align-self:flex-start}
+.espoza-assistant-product-card{background:#fff;border:1px solid #eadfe1;border-radius:14px;overflow:hidden;box-shadow:0 5px 16px rgba(45,16,26,.07);color:#32151f}
+.espoza-assistant-product-card img{display:block;width:100%;max-height:230px;object-fit:cover;background:#f4efed}
+.espoza-assistant-product-info{padding:11px 12px;display:flex;flex-direction:column;gap:6px;font-size:12px;line-height:1.65}
+.espoza-assistant-product-name{font-size:14px;font-weight:800;color:#431321}
+.espoza-assistant-product-price{font-size:14px;font-weight:800;color:#641f34}
+.espoza-assistant-product-old-price{text-decoration:line-through;color:#8d8185;font-weight:400;margin-inline-start:6px;font-size:11px}
+.espoza-assistant-product-detail{color:#55464b}
+.espoza-assistant-product-colors{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.espoza-assistant-product-color{display:inline-flex;align-items:center;gap:4px;background:#fbf9f5;border:1px solid #eee5e7;border-radius:20px;padding:3px 8px}
+.espoza-assistant-product-swatch{width:11px;height:11px;border-radius:50%;border:1px solid #ccc;display:inline-block}
 </style>
 <link rel="stylesheet" href="./customer-sidebar.css?v=1">
 </head>
@@ -10744,6 +10756,31 @@ function addEspozaAssistantBubble(role,text){
  box.scrollTop=box.scrollHeight;
  return bubble;
 }
+function renderElyraRecommendedProducts(products){
+ const box=document.getElementById("espozaAssistantMessages");
+ if(!box||!Array.isArray(products)||!products.length)return;
+ const group=document.createElement("div");group.className="espoza-assistant-products";
+ products.slice(0,4).forEach((product)=>{
+  const card=document.createElement("article");card.className="espoza-assistant-product-card";
+  const images=Array.isArray(product.images)?product.images:[];
+  const image=images.find((item)=>item&&item.url);
+  if(image){try{const url=new URL(String(image.url),window.location.href);if(url.protocol==="https:"||url.protocol==="http:"){const img=document.createElement("img");img.src=url.href;img.alt=String(image.alt||product.name||"صورة المنتج");img.loading="lazy";card.appendChild(img);}}catch(_){}}
+  const info=document.createElement("div");info.className="espoza-assistant-product-info";
+  const name=document.createElement("div");name.className="espoza-assistant-product-name";name.textContent=String(product.name||product.name_en||"منتج من المتجر");info.appendChild(name);
+  const price=document.createElement("div");price.className="espoza-assistant-product-price";price.textContent="السعر: "+String(product.price??"—")+" ₪";
+  if(product.old_price&&Number(product.old_price)>Number(product.price)){const old=document.createElement("span");old.className="espoza-assistant-product-old-price";old.textContent=String(product.old_price)+" ₪";price.appendChild(old);}
+  info.appendChild(price);
+  if(product.description){const desc=document.createElement("div");desc.className="espoza-assistant-product-detail";desc.textContent=String(product.description);info.appendChild(desc);}
+  const colors=Array.isArray(product.colors)?product.colors:[];
+  if(colors.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";const label=document.createElement("strong");label.textContent="الألوان: ";line.appendChild(label);const chips=document.createElement("span");chips.className="espoza-assistant-product-colors";
+   colors.forEach((color)=>{const chip=document.createElement("span");chip.className="espoza-assistant-product-color";if(color.hex&&/^#[0-9a-f]{3,8}$/i.test(String(color.hex))){const swatch=document.createElement("i");swatch.className="espoza-assistant-product-swatch";swatch.style.backgroundColor=String(color.hex);chip.appendChild(swatch);}chip.appendChild(document.createTextNode(String(color.name||"")));chips.appendChild(chip);});
+   line.appendChild(chips);info.appendChild(line);}
+  const sizes=Array.isArray(product.sizes)?product.sizes.filter(Boolean):[];
+  if(sizes.length){const line=document.createElement("div");line.className="espoza-assistant-product-detail";line.textContent="المقاسات: "+sizes.join("، ");info.appendChild(line);}
+  card.appendChild(info);group.appendChild(card);
+ });
+ box.appendChild(group);box.scrollTop=box.scrollHeight;
+}
 function setElyraTyping(bubble){
  bubble.textContent="إيليرا تفكّر وتحلّل";
  bubble.setAttribute("aria-label","إيليرا تفكّر وتحلّل");
@@ -10777,6 +10814,7 @@ async function sendEspozaAssistant(event){
   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
   stopTyping();
   pending.textContent=(data.mode==="faq"?"إيليرا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n":"")+data.answer;
+  if(Array.isArray(data.products)&&data.products.length)renderElyraRecommendedProducts(data.products);
   espozaAssistantHistory.push({role:"user",content:message},{role:"assistant",content:data.answer});
   if(espozaAssistantHistory.length>12)espozaAssistantHistory.splice(0,espozaAssistantHistory.length-12);
  }catch(error){
