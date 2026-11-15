@@ -3334,6 +3334,9 @@ footer{
 .espoza-assistant-head small{display:block;color:#f1dfe4;font-size:11px;margin-top:3px}
 .espoza-assistant-head button{border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;border-radius:50%;width:32px;height:32px;font-size:22px;line-height:1}
 #espozaAssistantMessages{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.espoza-assistant-quick-wrap{display:flex;flex-wrap:wrap;gap:7px;max-width:100%;align-self:flex-start}
+.espoza-assistant-quick-wrap button{border:1px solid #e4cfd5;background:#fffaf8;color:#641f34;border-radius:999px;padding:7px 10px;font:700 11px Cairo,Arial,sans-serif;cursor:pointer;box-shadow:0 2px 7px rgba(67,19,33,.05)}
+.espoza-assistant-quick-wrap button:active{background:#f1e3e6}
 .espoza-assistant-bubble{max-width:90%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
 .espoza-assistant-bubble.assistant{align-self:flex-start;background:#fff;border:1px solid #eadfe1;color:#32151f;border-bottom-right-radius:4px}
 .espoza-assistant-bubble.user{align-self:flex-end;background:#641f34;color:#fff;border-bottom-left-radius:4px}
@@ -3347,9 +3350,13 @@ footer{
 @media(prefers-reduced-motion:reduce){#espozaAssistantMessages{scroll-behavior:auto}}
 
 .espoza-assistant-products{display:flex;flex-direction:column;gap:12px;width:100%;max-width:96%;align-self:flex-start}
-.espoza-assistant-product-card{background:#fff;border:1px solid #eadfe1;border-radius:14px;overflow:hidden;box-shadow:0 5px 16px rgba(45,16,26,.07);color:#32151f}
-.espoza-assistant-product-card img{display:block;width:100%;max-height:230px;object-fit:cover;background:#f4efed}
-.espoza-assistant-product-info{padding:11px 12px;display:flex;flex-direction:column;gap:6px;font-size:12px;line-height:1.65}
+.espoza-assistant-product-card{display:flex;flex-direction:row;align-items:stretch;gap:10px;width:100%;background:#fff;border:1px solid #eadfe1;border-radius:14px;overflow:hidden;box-shadow:0 5px 16px rgba(45,16,26,.07);color:#32151f;padding:9px;box-sizing:border-box}
+.espoza-assistant-product-card img{display:block;flex:0 0 104px;width:104px;height:128px;max-height:128px;object-fit:contain;object-position:center;background:#f8f5f2;border-radius:10px}
+.espoza-assistant-product-info{flex:1;min-width:0;padding:3px 2px;display:flex;flex-direction:column;gap:5px;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
+.espoza-assistant-product-name{font-size:13px;font-weight:800;color:#431321}
+.espoza-assistant-product-price{font-size:13px;font-weight:800;color:#641f34}
+.espoza-assistant-product-detail{font-size:10.5px}
+@media(max-width:430px){.espoza-assistant-products{max-width:100%}.espoza-assistant-product-card{gap:8px;padding:8px}.espoza-assistant-product-card img{flex-basis:88px;width:88px;height:112px;max-height:112px}.espoza-assistant-product-info{font-size:10px}.espoza-assistant-product-name{font-size:12px}}
 .espoza-assistant-product-name{font-size:14px;font-weight:800;color:#431321}
 .espoza-assistant-product-price{font-size:14px;font-weight:800;color:#641f34}
 .espoza-assistant-product-old-price{text-decoration:line-through;color:#8d8185;font-weight:400;margin-inline-start:6px;font-size:11px}
@@ -10731,6 +10738,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
     </div>
     <div id="espozaAssistantMessages" aria-live="polite">
       <div class="espoza-assistant-bubble assistant">Hello! I’m ELYRA ✨ I can help with shopping, general questions, writing, translation and ideas. For store information, I’ll use confirmed details only.</div>
+      <div id="espozaAssistantQuickQuestions" class="espoza-assistant-quick-wrap" aria-label="أسئلة سريعة"><button type="button" onclick='sendEspozaQuickQuestion("شو عندكم أطقم؟")'>🛍️ شو عندكم أطقم؟</button><button type="button" onclick='sendEspozaQuickQuestion("بدي أشوف الفساتين المتوفرة")'>👗 الفساتين المتوفرة</button><button type="button" onclick='sendEspozaQuickQuestion("شو المقاسات المتوفرة؟")'>📏 المقاسات المتوفرة</button><button type="button" onclick='sendEspozaQuickQuestion("كم تكلفة التوصيل؟")'>🚚 تكلفة التوصيل</button></div>
     </div>
     <form id="espozaAssistantForm" onsubmit="sendEspozaAssistant(event)">
       <input id="espozaAssistantInput" type="text" maxlength="500" autocomplete="off" placeholder="Type your question..." aria-label="Your question">
@@ -10748,6 +10756,15 @@ function toggleEspozaAssistant(force){
  panel.classList.toggle("hidden",!open);
  launcher.setAttribute("aria-expanded",String(open));
  if(open)setTimeout(()=>document.getElementById("espozaAssistantInput")?.focus(),40);
+}
+function sendEspozaQuickQuestion(message){
+ const input=document.getElementById("espozaAssistantInput");
+ const form=document.getElementById("espozaAssistantForm");
+ const quick=document.getElementById("espozaAssistantQuickQuestions");
+ if(!input||!form||document.getElementById("espozaAssistantSend")?.disabled)return;
+ input.value=message;
+ if(quick)quick.remove();
+ form.requestSubmit();
 }
 function addEspozaAssistantBubble(role,text){
  const box=document.getElementById("espozaAssistantMessages");
