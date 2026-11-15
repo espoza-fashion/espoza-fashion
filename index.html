@@ -4600,7 +4600,7 @@ let featuresIndex=0;
 
 let featuresTimer=null;
 
-let lang=localStorage.getItem("espoza_lang")==="en"?"en":"ar";
+let lang=["ar","en","he"].includes(localStorage.getItem("espoza_lang"))?localStorage.getItem("espoza_lang"):"ar";
 
 let typewriterTimer=null;
 
@@ -5400,6 +5400,115 @@ storyTag:
 
 }
 
+};
+
+
+
+/* Hebrew storefront copy. Arabic and English dictionaries above remain untouched. */
+TEXT.he={
+...TEXT.en,
+dir:"rtl",langBtn:"AR",
+top:"ברוכים הבאים ל‑Espoza Fashion",
+wa:"וואטסאפ",
+introTitle:"האלגנטיות שלך מתחילה כאן",
+introText:"גלי את קולקציית השמלות והחליפות האלגנטיות שלנו במגוון מידות, והזמיני בקלות את הפריט שאהבת.",
+followers:"עוקבים ברשתות החברתיות שלנו",
+models:"דגמים זמינים",
+orders:"להזמנות וליצירת קשר",
+search:"חפשי דגם...",
+searchPhrase:"מה את מחפשת?",
+cats:{all:"הכול",dresses:"שמלות",sets:"חליפות",winter_sets:"חליפות חורף",offers:"מבצעים"},
+collection:"הקולקציה שלנו",piece:"פריטים",
+socialTitle:"עקבי אחרינו",socialText:"הדגמים, הקולקציות והמבצעים החדשים ביותר",
+follower:"עוקבים",shop:"הקולקציה",colors:"צבעים",sizes:"מידות",
+order:"הזמיני עכשיו",unavailable:"אזל מהמלאי",offer:"מבצע מיוחד",
+noProducts:"לא נמצאו פריטים בקטגוריה הזו.",
+desc:"עיצוב אלגנטי מבית Espoza Fashion.",
+orderHeading:"השלמת ההזמנה",product:"פריט",color:"צבע",size:"מידה",
+name:"שם מלא",phone:"מספר טלפון",delivery:"אזור משלוח",address:"כתובת מלאה",
+notes:"הערות נוספות",optional:"לא חובה",itemPrice:"סכום הפריטים",
+deliveryPrice:"משלוח",total:"סה״כ",send:"שליחת ההזמנה בוואטסאפ",
+fill:"נא למלא שם, מספר טלפון וכתובת.",waMissing:"מספר הוואטסאפ של החנות עדיין לא הוגדר.",
+saved:"ההזמנה נשמרה. וואטסאפ ייפתח כעת.",
+waOnly:"ההזמנה לא נשמרה במערכת. הסל נשמר; שלחי את ההודעה בוואטסאפ להשלמת ההזמנה.",
+accordingImage:"כפי שמופיע בתמונה",accordingAvailable:"לפי הזמינות",
+westbank:"הגדה המערבית",jerusalem:"ירושלים",inside:"אזורי 48",
+rights:"כל הזכויות שמורות",newCollection:"קולקציה חדשה",explore:"לצפייה",
+marqueeText:"ESPOZA FASHION • האלגנטיות שלך מתחילה כאן • קולקציה חדשה • אופנת נשים •",
+feat1Icon:"🚚",feat1Title:"משלוח מהיר",feat1Text:"משלוח מהיר בתוך 2–3 ימים",
+feat2Icon:"🔍",feat2Title:"בדיקה בעת המסירה",feat2Text:"בדקי את הפריט לפני קבלת ההזמנה והתשלום",
+feat3Icon:"🛡️",feat3Title:"אמינות וביטחון",feat3Text:"קנייה בטוחה ושמירה על פרטיות הנתונים שלך",
+feat4Icon:"✨",feat4Title:"איכות מוקפדת",feat4Text:"אנו בוחרים עבורך בדים איכותיים ותשומת לב לכל פרט",
+feat5Icon:"❤️",feat5Title:"מאז 2019",feat5Text:"יותר מ‑7,750 לקוחות",
+feat6Icon:"💗",feat6Title:"עוזרים לך לבחור",feat6Text:"כתבי לנו ונעזור לך לבחור את הדגם והמידה המתאימים",
+feat7Icon:"👗",feat7Title:"עיצובים עדכניים ואלגנטיים",feat7Text:"דגמים שנבחרו בקפידה ומשלבים אלגנטיות וסגנון מודרני",
+feat8Icon:"🎧",feat8Title:"שירות ותמיכה",feat8Text:"אנחנו כאן לפני ההזמנה ואחריה לכל שאלה",
+featuresTagline:"🛍️ קני בביטחון עם Espoza Fashion 💖",
+policies:"מדיניות החנות",
+policyItems:[
+["01","החלפות","ניתן לבקש החלפה בתוך 24 שעות מקבלת ההזמנה, בתנאי שהפריט נשאר במצבו המקורי, לא נעשה בו שימוש והתוויות מחוברות אליו."],
+["02","בדיקה בעת המסירה","אפשר לבדוק את הפריט בעת המסירה ולוודא שהמידה והפרטים מתאימים לפני התשלום."],
+["03","דמי משלוח","הגדה המערבית: 20 ₪, ירושלים: 30 ₪, ואזורי 48: 70 ₪."],
+["04","זמן אספקה","ההזמנה מגיעה בדרך כלל בתוך 2–3 ימי עבודה, בהתאם לאזור המשלוח."],
+["05","ביטול הזמנה","ניתן לבטל את ההזמנה ללא תשלום לפני יציאת המשלוח מאיתנו."],
+["06","החזרות","לא ניתן להחזיר מוצרים, למעט במקרה של פגם ייצור ברור בפריט."],
+["07","פרטיות","אנו משתמשים בשם, במספר הטלפון ובכתובת שלך לצורך טיפול בהזמנה ומשלוחה בלבד, ושומרים על פרטיות המידע."],
+["08","תשלום ויצירת קשר","התשלום מתבצע במזומן בעת המסירה בלבד. לשאלות, החלפה או ביטול, אפשר לפנות אלינו ישירות בוואטסאפ."]
+],
+policyWhatsApp:"יצירת קשר בוואטסאפ",
+qty:"כמות",addToCart:"הוספה לסל",addedToCart:"הפריט נוסף לסל",
+cart:"סל הקניות",cartEmpty:"סל הקניות שלך ריק כרגע",checkoutBtn:"המשך להזמנה",
+cod:"תשלום בעת המסירה",footerSince:"ESPOZA FASHION — מאז 2019",
+footerCredit:"Designed & Created by Yousef Ajra",
+feedbackTitle:"מה הלקוחות שלנו אומרות",feedbackCounterLabel:"חוות דעת אמיתיות מהלקוחות שלנו",
+feedbackDaily:"מאות הודעות מדי יום",feedbackSwipeHint:"החליקי כדי לראות עוד",
+footerStoryTitle:"איך התחיל הסיפור של Espoza?",
+footerStoryText:"Espoza Fashion נוסדה בשנת 2019 מתוך אהבה אמיתית לאופנה ורצון להציע פריטים מיוחדים המשלבים איכות ועיצוב מוקפד. עם השנים הקולקציה התרחבה, וכך גם האמון של הלקוחות שלנו. אנו ממשיכים להציע שמלות, חליפות ופריטים אלגנטיים שנבחרו בקפידה, תוך תשומת לב לכל פרט.",
+footerContactTitle:"צרי קשר",footerLinksTitle:"קישורים מהירים",
+returnPolicyTitle:"מדיניות החזרות",returnPolicyText:"לא ניתן להחזיר מוצרים, למעט במקרה של פגם ייצור ברור בפריט.",
+exchangePolicyTitle:"מדיניות החלפות",exchangePolicyText:"ניתן לבצע החלפה בתוך 24 שעות מקבלת ההזמנה, בתנאי שהפריט במצבו המקורי, לא נעשה בו שימוש ולא ניזוק.",
+notReceivedPolicyTitle:"אי איסוף הזמנה",notReceivedPolicyText:"אם ההזמנה לא נאספה והוחזרה אלינו, אנו שומרים לעצמנו את הזכות לסרב להזמנות עתידיות במקרה של אי איסוף חוזר.",
+paymentPolicyTitle:"תשלום",paymentPolicyText:"תשלום במזומן בעת המסירה (COD).",
+customerCountCaption:"10,000 לקוחות בחרו ב‑Espoza Fashion",
+customerCountSubcaption:"האמון מתחדש עם כל הזמנה",
+storyEyebrow:"הסיפור שלנו • מאז 2019",storyTitle:"הסיפור של Espoza Fashion",
+storyText:"Espoza Fashion החלה בשנת 2019 מתוך תשוקה אמיתית לאלגנטיות ורצון להציע פריטים ייחודיים המשלבים איכות ועיצוב מוקפד. עם הזמן הקולקציה גדלה יחד עם אמון הלקוחות שלנו. אנו ממשיכים להציע שמלות, חליפות ופריטים אלגנטיים שנבחרו בקפידה, עם תשומת לב לכל פרט.",
+storyTag:"מאות הודעות מדי יום • אמון שמתחדש בכל הזמנה • Espoza Fashion",
+wishlistTitle:"המועדפים שלי",wishlistSubtitle:"הפריטים ששמרת",
+wishlistEmpty:"עדיין לא שמרת פריטים במועדפים. לחצי על ♡ בכל פריט כדי לשמור אותו.",
+addFavorite:"הוספה למועדפים",removeFavorite:"הסרה מהמועדפים",
+wishTitle:"✨ מה המשאלה הבאה שלך מ‑Espoza Fashion?",
+wishIntro:"ספרי לנו איזה פריט היית רוצה שנציע — אולי הרעיון שלך יהיה התוספת הבאה לקולקציה שלנו 🤍",
+wishPlaceholder:"כתבי כאן את המשאלה שלך...",
+wishSubmit:"שליחת המשאלה",
+wishPublic:"ציבורי 🌍 — כולם יכולים לראות",
+wishPrivate:"פרטי 🔒 — רק החנות יכולה לראות",
+wishEmpty:"עדיין אין משאלות. תהיי הראשונה לשתף ✨",
+wishUnavailable:"רשימת המשאלות אינה זמינה כרגע.",
+wishPlease:"כתבי את המשאלה שלך תחילה 🤍",
+wishPrivateSent:"המשאלה הפרטית שלך נשלחה לחנות ✨",
+wishPublicSent:"המשאלה שלך שותפה עם כולם ✨",
+wishError:"לא הצלחנו להוסיף את המשאלה כרגע. נסי שוב.",
+favorites:"מועדפים",wishList:"רשימת משאלות",reviews:"חוות דעת לקוחות",
+quickPolicies:"מדיניות החנות",cartOrder:"סל והזמנה",quickLinks:"קישורים מהירים",
+splashTag:"הסגנון שלך, הזוהר שלך",close:"סגירה",
+sizeGuide:"מדריך מידות",sizeGuideNote:"המידות בסנטימטרים, אלא אם צוין אחרת.",
+assistantLauncher:"✦ שיחה עם ELYRA AI",
+assistantSubtitle:"העוזרת האישית שלך",
+assistantWelcome:"שלום! אני ELYRA ✨ אשמח לעזור לך לבחור פריטים, לבדוק מידות, צבעים ומחירים, ולענות על שאלות. לגבי פרטי החנות אסתמך רק על מידע מאומת.",
+assistantQuickSets:"🛍️ אילו חליפות זמינות?",assistantQuickDresses:"👗 הציגי לי שמלות זמינות",
+assistantQuickSizes:"📏 אילו מידות זמינות?",assistantQuickDelivery:"🚚 כמה עולה המשלוח?",
+assistantPlaceholder:"כתבי את שאלתך...",assistantSend:"שליחה",
+assistantFoot:"ELYRA AI · פרטי החנות מוצגים לפי המידע הזמין.",
+assistantTyping:"ELYRA חושבת ומנתחת",assistantOffline:"אין חיבור לאינטרנט. נסי שוב כשהחיבור יתחדש.",
+assistantError:"ELYRA אינה זמינה כרגע. נסי שוב או פני לחנות בוואטסאפ.",
+assistantTimeout:"התגובה מתעכבת. נסי שוב.",
+priceLabel:"מחיר",colorsLabel:"צבעים",sizesLabel:"מידות",
+discountLabel:"מבצע אוטומטי",totalAfterDiscount:"סה״כ לאחר ההנחה",
+remove:"הסרה",closeModal:"סגירה",emptySearch:"לא נמצאו תוצאות",
+footerContactNote:"להזמנות ולשאלות, אפשר לפנות אלינו ישירות או לבחור את הפלטפורמה המועדפת עלייך.",
+cartLimit:"המגבלה היא עד 4 פריטים מאותו דגם, בכל הצבעים והמידות.",
+sizeChartTitle:"מדריך מידות",sizeChartBust:"היקף חזה",sizeChartWaist:"היקף מותניים",sizeChartHip:"היקף ירכיים",sizeChartLength:"אורך",
 };
 
 
@@ -6548,12 +6657,12 @@ style.textContent="@media(min-width:1001px){.products-grid{grid-template-columns
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
 const [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]=await Promise.all([
-db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
+db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","welcome_he","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","site_content_he","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
-db.from("sliders").select("id,image_url,title,subtitle,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
+db.from("sliders").select("id,image_url,title,title_ar,title_en,title_he,subtitle,subtitle_ar,subtitle_en,subtitle_he,button_text_ar,button_text_en,button_text_he,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
-db.from("categories").select("id,slug,name_ar,name_en,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
-db.from("site_sections").select("id,section_key,title_ar,title_en,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
+db.from("categories").select("id,slug,name_ar,name_en,name_he,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
+db.from("site_sections").select("id,section_key,title_ar,title_en,title_he,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
 ]);
 for(const result of [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]){
 if(result.error)console.warn("Store section could not refresh:",result.error);
@@ -6574,9 +6683,10 @@ if(settings[platform+"_followers"]!=null)store.followers[platform]=Number(settin
 }
 if(settings.site_content_ar && typeof settings.site_content_ar==="object")Object.assign(TEXT.ar,settings.site_content_ar);
 if(settings.site_content_en && typeof settings.site_content_en==="object")Object.assign(TEXT.en,settings.site_content_en);
+if(settings.site_content_he && typeof settings.site_content_he==="object")Object.assign(TEXT.he,settings.site_content_he);
 applyThemeFromAdmin(settings);
 if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
-if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",subtitle:lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",button_link:row.link_url||"all",button_text:t().explore}));
+if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="he"?(row.title_he||row.title_en||row.title||""):lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",title_he:row.title_he||"",subtitle:lang==="he"?(row.subtitle_he||row.subtitle_en||row.subtitle||""):lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",subtitle_he:row.subtitle_he||"",button_link:row.link_url||"all",button_text:lang==="he"?(row.button_text_he||t().explore):lang==="en"?(row.button_text_en||t().explore):(row.button_text_ar||t().explore)}));
 if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
 if(!categoryResult.error)adminCategories=categoryResult.data||[];
 if(!sectionResult.error)adminSiteSections=sectionResult.data||[];
@@ -6635,13 +6745,13 @@ const colorRows=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||
 const colors=colorRows.map(x=>String(x.name||x.name_en||"")).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",category:p.category||"dresses",categorySlugs:Array.isArray(p.category_slugs)?p.category_slugs:[],price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],colorsData:colorRows.map(x=>({name:String(x.name||""),name_en:String(x.name_en||"")})),sizeChart:p.size_chart||null};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",name_he:p.name_he||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",description_he:p.description_he||"",category:p.category||"dresses",categorySlugs:Array.isArray(p.category_slugs)?p.category_slugs:[],price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],colorsData:colorRows.map(x=>({name:String(x.name||""),name_en:String(x.name_en||""),name_he:String(x.name_he||"")})),sizeChart:lang==="he"?(p.size_chart_he||p.size_chart||null):(p.size_chart||null)};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
 
 const result=await db.from("products")
-.select("id,name,name_en,sku,category,price,old_price,description,description_en,size_chart,stock,active,featured,sort_order,created_at")
+.select("id,name,name_en,name_he,sku,category,price,old_price,description,description_en,description_he,size_chart,size_chart_he,stock,active,featured,sort_order,created_at")
 .eq("active",true)
 .order("sort_order",{ascending:true})
 .order("created_at",{ascending:false});
@@ -6658,7 +6768,7 @@ db.from("product_sizes").select("*").in("product_id",ids).order("sort_order",{as
 db.from("product_colors").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
 db.from("product_images").select("*").in("product_id",ids).order("sort_order",{ascending:true}),
 db.from("product_categories").select("product_id,category_id").in("product_id",ids),
-db.from("categories").select("id,slug").eq("active",true)
+db.from("categories").select("id,slug,name_ar,name_en,name_he").eq("active",true)
 ]);
 
 const childData=(settled)=>{
@@ -6903,7 +7013,7 @@ source.forEach(item=>{
 });
 if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
 const cats=base.concat([...unique.values()]);
-wrap.innerHTML=cats.map(item=>{const label=lang==="en"?item.name_en:item.name_ar;return "<button class=\"cat "+(item.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(item.slug)+"\">"+esc(label)+"</button>";}).join("");
+wrap.innerHTML=cats.map(item=>{const label=lang==="he"?(item.name_he||item.name_en||item.name_ar):lang==="en"?item.name_en:item.name_ar;return "<button class=\"cat "+(item.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(item.slug)+"\">"+esc(label)+"</button>";}).join("");
 wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
 }
 function applyAdminSiteSections(){
@@ -6914,7 +7024,7 @@ const id=cfg.element_id||section.section_key;
 const el=$(id);
 if(!el)return;
 el.classList.toggle("hidden",section.visible===false);
-const text=lang==="en"?(cfg.text_en??section.title_en??humanizeEnglish(section.section_key||"")):(cfg.text_ar??section.title_ar??"");
+const text=lang==="he"?(cfg.text_he??section.title_he??cfg.text_en??section.title_en??""):lang==="en"?(cfg.text_en??section.title_en??humanizeEnglish(section.section_key||"")):(cfg.text_ar??section.title_ar??"");
 if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(target||el).textContent=String(text);}
 });
 }
@@ -6924,7 +7034,7 @@ if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(ta
 
 function deliveryList(){
 if(Array.isArray(adminDeliveryAreas) && adminDeliveryAreas.length){
-return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),price:Number(row.price||0)}));
+return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="he"?(row.area_name_he||row.area_name_en||row.area_name_ar||row.area_name||""):lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),price:Number(row.price||0)}));
 }
 return[
 {key:"westbank",name:t().westbank,price:Number(store.delivery.westbank||0)},
