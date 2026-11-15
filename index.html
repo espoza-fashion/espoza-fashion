@@ -6921,8 +6921,9 @@ function productColorDisplayName(value){
  "أصفر":"צהוב","yellow":"צהוב","برتقالي":"כתום","orange":"כתום","ليلكي":"לילך","lilac":"לילך",
  "لافندر":"לבנדר","lavender":"לבנדר","موكا":"מוקה","mocha":"מוקה"
  };
- if(lang==="he")return namesHe[key]||raw;
- if(lang==="en")return names[key]||(/^[\x00-\x7F]*$/.test(raw)?raw:"Color");
+ const dbColor=(Array.isArray(products)?products:[]).flatMap(p=>Array.isArray(p.colorsData)?p.colorsData:[]).find(c=>String(c.name||"").trim()===raw||String(c.name_en||"").trim()===raw);
+ if(lang==="he")return dbColor?.name_he||namesHe[key]||raw;
+ if(lang==="en")return dbColor?.name_en||names[key]||(/^[\\x00-\\x7F]*$/.test(raw)?raw:"Color");
  return raw;
 }
 function dynamicProductToView(p,index){
@@ -11039,7 +11040,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 
 <div id="espozaTurnstile" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:300px;min-height:65px;z-index:99999;background:transparent;padding:4px;visibility:hidden"></div>
 <div id="espozaAssistantWidget" dir="rtl" lang="ar">
-  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false"><span class="elyra-launcher-mark">✦</span><span id="espozaAssistantLauncherText">✦ تحدثي مع ELARA AI</span></button>
+  <button id="espozaAssistantLauncher" type="button" onclick="toggleEspozaAssistant()" aria-controls="espozaAssistantPanel" aria-expanded="false"><span class="elyra-launcher-mark">✦</span><span id="espozaAssistantLauncherText">تحدثي مع ELARA AI</span></button>
   <section id="espozaAssistantPanel" class="hidden" role="dialog" aria-label="ELARA AI" aria-modal="false">
     <div class="espoza-assistant-head">
       <div class="elyra-avatar" aria-hidden="true">E</div>
