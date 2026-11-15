@@ -8098,30 +8098,9 @@ p.category==="offers"
 );
 
 
-const searchOk=
-!needle
+const colorSearch=(Array.isArray(p.colorsData)?p.colorsData:[]).some(c=>[c.name,c.name_en,c.name_he].some(value=>normalizeName(value||"").includes(needle)));
 
-||
-
-isOfferSearch
-
-||
-
-normalizeName(
-p.name
-)
-.includes(
-needle
-)
-
-||
-
-normalizeName(
-p.sku
-)
-.includes(
-needle
-);
+const searchOk=!needle||isOfferSearch||[p.name,p.name_en,p.name_he,p.description,p.description_en,p.description_he,p.sku].some(value=>normalizeName(value||"").includes(needle))||colorSearch;
 
 
 return(
