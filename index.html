@@ -11155,7 +11155,7 @@ async function sendEspozaAssistant(event){
   const data=await response.json();
   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
   stopTyping();
-  pending.textContent=(data.mode==="faq"?"إيلارا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n":"")+data.answer;
+  pending.textContent=(data.mode==="faq"?(lang==="he"?"إيلارا פועלת כעת במצב מידע של החנות בלבד; שירות הבינה המלאכותית הכללי אינו זמין.\n\n":lang==="en"?"Elara is currently in store-information mode only; general AI is temporarily unavailable.\n\n":"إيلارا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n"):"")+data.answer;
   if(Array.isArray(data.products)&&data.products.length)renderElyraRecommendedProducts(data.products);
   espozaAssistantHistory.push({role:"user",content:message},{role:"assistant",content:data.answer});
   if(espozaAssistantHistory.length>12)espozaAssistantHistory.splice(0,espozaAssistantHistory.length-12);
