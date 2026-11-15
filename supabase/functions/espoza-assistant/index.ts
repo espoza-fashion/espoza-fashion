@@ -256,6 +256,7 @@ Deno.serve(async (req: Request) => {
         parts: [{ text: cleanText(item?.content, 400) }],
       })).filter((item: any) => item.parts[0].text) : [];
       const context = {
+        response_language: language,
         store: {
           name: settingValue(settings, "store_name"),
           whatsapp: settingValue(settings, "whatsapp"),
