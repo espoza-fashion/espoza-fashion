@@ -3775,7 +3775,7 @@ FASHION
 
 <h3 id="footerContactTitle">Contact Us</h3>
 
-<p class="footer-contact-note">
+<p class="footer-contact-note" id="footerContactNote">
 للطلب والاستفسار، تواصلي معنا مباشرة أو اختاري منصتك المفضلة.
 </p>
 
@@ -3814,16 +3814,16 @@ FASHION
 
 <h3 id="footerLinksTitle">روابط سريعة</h3>
 
-<p class="footer-links-note">
+<p class="footer-links-note" id="footerLinksNote">
 كل ما تحتاجينه في مكان واحد.
 </p>
 
 <div class="footer-links">
 <a href="#shop" id="footerShop">التشكيلة</a>
-<a href="#wishlistSection">المفضلة</a>
-<a href="#publicWishesSection">قائمة الأمنيات</a>
-<a href="#feedback">آراء الزبائن</a>
-<a href="#story">قصة Espoza</a>
+<a href="#wishlistSection" id="footerFavoritesLink">المفضلة</a>
+<a href="#publicWishesSection" id="footerWishesLink">قائمة الأمنيات</a>
+<a href="#feedback" id="footerFeedbackLink">آراء الزبائن</a>
+<a href="#story" id="footerStoryLink">قصة Espoza</a>
 <button type="button" id="policiesBtn" onclick="openModal('policiesModal')">سياستنا</button>
 </div>
 
@@ -4020,22 +4020,22 @@ onclick="addCurrentToCart()">
 <div class="modal" id="customerMenuModal">
   <div class="modal-box" style="width:min(390px,100%);padding:24px">
     <button class="close-btn" type="button" onclick="closeModal('customerMenuModal')" aria-label="إغلاق">×</button>
-    <h2 style="margin:8px 0 18px">القائمة</h2>
-    <button class="order-btn" type="button" style="width:100%;margin:8px 0" onclick="openCustomerAccount()">حسابي · دخول أو إنشاء حساب</button>
-    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');scrollToWishlist()">المفضلة</button>
-    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');openCartModal()">السلة</button>
-    <p class="muted" style="font-size:13px;line-height:1.8;margin-bottom:0">سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.</p>
+    <h2 id="customerMenuTitle" style="margin:8px 0 18px">القائمة</h2>
+    <button class="order-btn" type="button" style="width:100%;margin:8px 0" onclick="openCustomerAccount()" id="customerMenuAccount">حسابي · دخول أو إنشاء حساب</button>
+    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');scrollToWishlist()" id="customerMenuFavorites">المفضلة</button>
+    <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');openCartModal()" id="customerMenuCart">السلة</button>
+    <p id="customerMenuNote" class="muted" style="font-size:13px;line-height:1.8;margin-bottom:0">سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.</p>
   </div>
 </div>
 
 <div class="modal" id="customerAccountModal">
   <div class="modal-box order-box" style="width:min(600px,100%);padding:24px">
     <button class="close-btn" type="button" onclick="closeModal('customerAccountModal')" aria-label="إغلاق">×</button>
-    <h2 style="margin:8px 0 6px">حسابي في Espoza</h2>
-    <p class="muted" style="margin:0 0 18px">أنشئي حسابك أو ادخلي لمتابعة طلباتك. نقبل عناوين البريد من مختلف المزوّدين مثل Gmail وiCloud وOutlook وHotmail وأي نطاق بريد صالح.</p>
+    <h2 id="customerAccountTitle" style="margin:8px 0 6px">حسابي في Espoza</h2>
+    <p id="customerAccountIntro" class="muted" style="margin:0 0 18px">أنشئي حسابك أو ادخلي لمتابعة طلباتك. نقبل عناوين البريد من مختلف المزوّدين مثل Gmail وiCloud وOutlook وHotmail وأي نطاق بريد صالح.</p>
     <div id="customerAccountLoggedOut">
-      <div class="field"><label for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com" required></div>
-      <div class="field"><label for="customerPassword">كلمة السر</label><input id="customerPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8 أحرف على الأقل" required></div>
+      <div class="field"><label id="customerEmailLabel" for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com" required></div>
+      <div class="field"><label id="customerPasswordLabel" for="customerPassword">كلمة السر</label><input id="customerPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8 أحرف على الأقل" required></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
         <button id="customerLoginMode" class="order-btn" type="button" onclick="setCustomerAuthMode('login')">تسجيل الدخول</button>
         <button id="customerSignupMode" class="btn ghost" type="button" onclick="setCustomerAuthMode('signup')">إنشاء حساب جديد</button>
@@ -4047,13 +4047,13 @@ onclick="addCurrentToCart()">
     </div>
     <div id="customerAccountLoggedIn" class="hidden">
       <p id="customerAccountEmail" class="muted"></p>
-      <div class="field"><label for="customerProfileName">الاسم</label><input id="customerProfileName" autocomplete="name"></div>
-      <div class="field"><label for="customerProfilePhone">رقم الهاتف / واتساب</label><input id="customerProfilePhone" autocomplete="tel"></div>
-      <div class="field"><label for="customerProfileAddress">العنوان المفضّل</label><input id="customerProfileAddress" autocomplete="street-address"></div>
-      <button class="btn gold" type="button" onclick="saveCustomerProfile()">حفظ بياناتي</button>
-      <h3 style="margin:22px 0 10px">طلباتي السابقة</h3>
-      <div id="customerOrders"><p class="muted">جارٍ تحميل الطلبات…</p></div>
-      <button class="btn ghost" type="button" style="margin-top:14px" onclick="customerLogout()">تسجيل الخروج</button>
+      <div class="field"><label id="customerProfileNameLabel" for="customerProfileName">الاسم</label><input id="customerProfileName" autocomplete="name"></div>
+      <div class="field"><label id="customerProfilePhoneLabel" for="customerProfilePhone">رقم الهاتف / واتساب</label><input id="customerProfilePhone" autocomplete="tel"></div>
+      <div class="field"><label id="customerProfileAddressLabel" for="customerProfileAddress">العنوان المفضّل</label><input id="customerProfileAddress" autocomplete="street-address"></div>
+      <button id="customerProfileSave" class="btn gold" type="button" onclick="saveCustomerProfile()">حفظ بياناتي</button>
+      <h3 id="customerOrdersTitle" style="margin:22px 0 10px">طلباتي السابقة</h3>
+      <div id="customerOrders"><p class="muted" id="customerOrdersLoading">جارٍ تحميل الطلبات…</p></div>
+      <button id="customerLogout" class="btn ghost" type="button" style="margin-top:14px" onclick="customerLogout()">تسجيل الخروج</button>
     </div>  </div>
 </div>
 
@@ -4064,8 +4064,8 @@ onclick="addCurrentToCart()">
     <img id="productImageViewerImg" src="" alt="">
     <div class="product-image-watermark" aria-hidden="true">ESPOZA FASHION • © ALL RIGHTS RESERVED</div>
   </div>
-  <div class="product-image-rights">© Espoza Fashion — جميع الحقوق محفوظة</div>
-  <div class="product-image-hint">كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير</div>
+  <div class="product-image-rights" id="productImageRights">© Espoza Fashion — جميع الحقوق محفوظة</div>
+  <div class="product-image-hint" id="productImageHint">كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير</div>
 </div>
 
 <!-- FEEDBACK IMAGE VIEW -->
@@ -4126,15 +4126,15 @@ style="color:var(--wine);margin:4px 0 18px">
 </div>
 
 <div id="cartCouponBox" style="margin:12px 0;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff">
- <label for="cartCouponCode" style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">كود الخصم (اختياري)</label>
- <div style="display:flex;gap:7px;align-items:center"><input id="cartCouponCode" type="text" autocomplete="off" placeholder="أدخلي كود الخصم" style="min-width:0;flex:1"><button type="button" class="chip clickable" onclick="applyCartCoupon()">تطبيق</button><button type="button" class="chip clickable" onclick="clearCartCoupon()" aria-label="إزالة الكود">×</button></div>
+ <label id="cartCouponLabel" for="cartCouponCode" style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">كود الخصم (اختياري)</label>
+ <div style="display:flex;gap:7px;align-items:center"><input id="cartCouponCode" type="text" autocomplete="off" placeholder="أدخلي كود الخصم" style="min-width:0;flex:1"><button type="button" class="chip clickable" onclick="applyCartCoupon()" id="cartCouponApply">تطبيق</button><button type="button" class="chip clickable" onclick="clearCartCoupon()" aria-label="إزالة الكود" id="cartCouponRemove">×</button></div>
  <p id="cartCouponMessage" class="muted" role="status" style="font-size:12px;line-height:1.6;margin:7px 0 0"></p>
 </div>
 
 <div class="total-box">
 
 <div class="total-line hidden" id="cartSubtotalRow">
-<span>مجموع المنتجات</span>
+<span id="cartSubtotalLabel">مجموع المنتجات</span>
 <b id="cartSubtotalValue">₪0</b>
 </div>
 
@@ -5540,6 +5540,42 @@ footerContactNote:"For orders and questions, contact us directly or choose your 
 assistantLauncher:"✦ Chat with ELYRA AI",assistantSubtitle:"Your intelligent companion",assistantWelcome:"Hello! I'm ELYRA ✨ I can help you shop, choose products and answer questions. Store information is based on confirmed details only.",
 assistantQuickSets:"🛍️ Which sets are available?",assistantQuickDresses:"👗 Show available dresses",assistantQuickSizes:"📏 Which sizes are available?",assistantQuickDelivery:"🚚 How much is delivery?",assistantPlaceholder:"Type your question...",assistantSend:"Send",assistantFoot:"ELYRA AI · Store information is shown according to available data.",assistantTyping:"ELYRA is thinking",assistantOffline:"You're offline. Please try again when your connection returns.",assistantError:"ELYRA is temporarily unavailable. Please try again or contact the store on WhatsApp.",assistantTimeout:"The response is taking longer than expected. Please try again.",
 priceLabel:"Price",colorsLabel:"Colors",sizesLabel:"Sizes",close:"Close",cartLimit:"The limit is 4 pieces of the same model across all colors and sizes."
+});
+
+
+
+Object.assign(TEXT.ar,{
+menuTitle:"القائمة",menuAccount:"حسابي · دخول أو إنشاء حساب",menuFavorites:"المفضلة",menuCart:"السلة",menuNote:"سجّلي الدخول ببريدك الإلكتروني لمتابعة طلباتك وحفظ بياناتك للمرات القادمة.",
+accountTitle:"حسابي في Espoza",accountIntro:"أنشئي حسابك أو ادخلي لمتابعة طلباتك. نقبل عناوين البريد من مختلف المزوّدين مثل Gmail وiCloud وOutlook وHotmail وأي نطاق بريد صالح.",
+emailLabel:"البريد الإلكتروني",passwordLabel:"كلمة السر",passwordHint:"8 أحرف على الأقل",login:"تسجيل الدخول",signup:"إنشاء حساب جديد",forgotPassword:"نسيت كلمة السر؟",resendConfirmation:"إعادة إرسال رسالة تأكيد البريد",
+profileName:"الاسم",profilePhone:"رقم الهاتف / واتساب",profileAddress:"العنوان المفضّل",saveProfile:"حفظ بياناتي",previousOrders:"طلباتي السابقة",loadingOrders:"جارٍ تحميل الطلبات…",logout:"تسجيل الخروج",noOrders:"لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.",
+orderPrefix:"طلب",orderTotal:"الإجمالي",orderStatuses:{new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"تم التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"},
+footerFavorites:"المفضلة",footerWishes:"قائمة الأمنيات",footerFeedback:"آراء الزبائن",footerStoryLink:"قصة Espoza",footerPolicies:"سياستنا",footerLinksNote:"كل ما تحتاجينه في مكان واحد.",
+imageViewerHint:"كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير",imageViewerRights:"© Espoza Fashion — جميع الحقوق محفوظة",
+couponLabel:"كود الخصم (اختياري)",couponPlaceholder:"أدخلي كود الخصم",couponApply:"تطبيق",couponRemove:"إزالة الكود",cartSubtotal:"مجموع المنتجات",discountLabel:"الخصم",discountApplied:"تم تطبيق الخصم",
+addressPlaceholder:"المدينة / البلدة / الحي / الشارع"
+});
+Object.assign(TEXT.en,{
+menuTitle:"Menu",menuAccount:"My Account · Sign in or Create Account",menuFavorites:"Favorites",menuCart:"Cart",menuNote:"Sign in with your email to track orders and save your details for next time.",
+accountTitle:"My Espoza Account",accountIntro:"Create an account or sign in to track your orders. We accept valid email addresses from Gmail, iCloud, Outlook, Hotmail and other providers.",
+emailLabel:"Email address",passwordLabel:"Password",passwordHint:"At least 8 characters",login:"Sign in",signup:"Create account",forgotPassword:"Forgot password?",resendConfirmation:"Resend email confirmation",
+profileName:"Name",profilePhone:"Phone / WhatsApp",profileAddress:"Preferred address",saveProfile:"Save my details",previousOrders:"Previous orders",loadingOrders:"Loading orders…",logout:"Sign out",noOrders:"There are no orders linked to your account yet. You can place an order and pay on delivery as usual.",
+orderPrefix:"Order",orderTotal:"Total",orderStatuses:{new:"Under review",confirmed:"Confirmed",processing:"Preparing",shipped:"Shipped",completed:"Completed",cancelled:"Cancelled"},
+footerFavorites:"Favorites",footerWishes:"Wish List",footerFeedback:"Customer Reviews",footerStoryLink:"Our Story",footerPolicies:"Our Policies",footerLinksNote:"Everything you need in one place.",
+imageViewerHint:"Pinch or double-tap to zoom • Drag the image after zooming",imageViewerRights:"© Espoza Fashion — All rights reserved",
+couponLabel:"Discount code (optional)",couponPlaceholder:"Enter discount code",couponApply:"Apply",couponRemove:"Remove code",cartSubtotal:"Items subtotal",discountLabel:"Discount",discountApplied:"Discount applied",
+addressPlaceholder:"City / town / neighborhood / street"
+});
+Object.assign(TEXT.he,{
+menuTitle:"תפריט",menuAccount:"החשבון שלי · כניסה או יצירת חשבון",menuFavorites:"מועדפים",menuCart:"סל הקניות",menuNote:"התחברי באמצעות כתובת הדוא״ל שלך כדי לעקוב אחר ההזמנות ולשמור את פרטייך לפעם הבאה.",
+accountTitle:"החשבון שלי ב‑Espoza",accountIntro:"צרי חשבון או התחברי כדי לעקוב אחר ההזמנות שלך. אנו מקבלים כתובות דוא״ל תקינות מכל הספקים, כולל Gmail, iCloud, Outlook ו‑Hotmail.",
+emailLabel:"כתובת דוא״ל",passwordLabel:"סיסמה",passwordHint:"לפחות 8 תווים",login:"כניסה",signup:"יצירת חשבון חדש",forgotPassword:"שכחת את הסיסמה?",resendConfirmation:"שליחה חוזרת של הודעת אימות",
+profileName:"שם",profilePhone:"טלפון / וואטסאפ",profileAddress:"כתובת מועדפת",saveProfile:"שמירת הפרטים שלי",previousOrders:"ההזמנות הקודמות שלי",loadingOrders:"ההזמנות נטענות…",logout:"התנתקות",noOrders:"עדיין אין הזמנות המשויכות לחשבונך. אפשר לבצע הזמנה ולשלם בעת המסירה כרגיל.",
+orderPrefix:"הזמנה",orderTotal:"סה״כ",orderStatuses:{new:"ממתינה לבדיקה",confirmed:"אושרה",processing:"בהכנה",shipped:"נשלחה",completed:"הושלמה",cancelled:"בוטלה"},
+footerFavorites:"מועדפים",footerWishes:"רשימת משאלות",footerFeedback:"חוות דעת לקוחות",footerStoryLink:"הסיפור שלנו",footerPolicies:"המדיניות שלנו",footerLinksNote:"כל מה שאת צריכה במקום אחד.",
+imageViewerHint:"צבטי בשתי אצבעות או הקישי פעמיים להגדלה • גררי את התמונה לאחר ההגדלה",imageViewerRights:"© Espoza Fashion — כל הזכויות שמורות",
+couponLabel:"קוד הנחה (לא חובה)",couponPlaceholder:"הזיני קוד הנחה",couponApply:"החלה",couponRemove:"הסרת הקוד",cartSubtotal:"סכום הפריטים",discountLabel:"הנחה",discountApplied:"ההנחה הוחלה",
+addressPlaceholder:"עיר / יישוב / שכונה / רחוב"
 });
 
 
