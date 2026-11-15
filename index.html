@@ -10055,8 +10055,7 @@ feedbackTrack.style.setProperty("animation-play-state","running","important");
 }
 
 $("langBtn")
-.textContent=
-x.langBtn;
+.textContent=lang==="ar"?"EN":lang==="en"?"HE":"AR";
 
 
 $("topNote")
@@ -11013,7 +11012,7 @@ const splashHideTimer=setTimeout(()=>{const s=document.getElementById("espozaSpl
 
   /* Keep the site's copyright notice explicit without changing product data. */
   const copyright=document.querySelector(".copyright");
-  if(copyright){copyright.textContent=lang==="he"?"© 2026 Espoza Fashion. כל הזכויות שמורות.":lang==="en"?"© 2026 Espoza Fashion. All Rights Reserved.":"© 2026 Espoza Fashion. جميع الحقوق محفوظة."; }
+  if(copyright){copyright.textContent="© 2019–"+new Date().getFullYear()+" Espoza Fashion — "+t().rights;}
 })();
 </script>
 
