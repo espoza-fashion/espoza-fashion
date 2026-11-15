@@ -8551,7 +8551,7 @@ const headers=Array.isArray(chart.headers)?chart.headers:[];
 const rows=Array.isArray(chart.rows)?chart.rows:[];
 if(headers.length<2||!rows.length)return;
 $("sizeGuideTitle").textContent=t().sizeGuide;
-$("sizeGuideNote").textContent=lang==="en"?"Measurements are in centimeters unless noted otherwise.":"القياسات بالسنتيمتر ما لم يُذكر غير ذلك.";
+$("sizeGuideNote").textContent=t().sizeGuideNote;
 $("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(lang==="he"?translateSizeChartHeader(h):h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
 $("sizeGuideModal").classList.add("open");
 document.body.style.overflow="hidden";
@@ -9748,7 +9748,7 @@ function renderPublicWishes(rows=[]){
   const list=$("publicWishesList");
   if(!list)return;
   if(!rows.length){
-    list.innerHTML='<div class="public-wishes-empty">'+(lang==="en"?"No wishes yet. Be the first to share yours ✨":"لسه ما في أمنيات. كوني أول من يشارك أمنيتك ✨")+'</div>';
+    list.innerHTML='<div class="public-wishes-empty">'+esc(t().wishEmpty)+'</div>';
     return;
   }
   list.innerHTML=rows.map(row=>'<article class="public-wish"><span class="public-wish-text">'+esc(String(row.wish_text||""))+'</span></article>').join("");
@@ -9812,7 +9812,7 @@ async function submitPublicWish(event){
   const wish=String(input.value||"").trim();
   const visibility=formWishVisibility();
   if(wish.length<2){
-    toastt().wishPlease;
+    toast(t().wishPlease);
     input.focus();
     return;
   }
@@ -9860,7 +9860,7 @@ async function submitPublicWish(event){
     await loadPublicWishes();
   }catch(error){
     console.warn("Public wish submit failed:",error);
-    toastt().wishError;
+    toast(t().wishError);
   }finally{
     button.disabled=false;
   }
@@ -11011,7 +11011,7 @@ async function sendEspozaAssistant(event){
   if(espozaAssistantHistory.length>12)espozaAssistantHistory.splice(0,espozaAssistantHistory.length-12);
  }catch(error){
   stopTyping();
-  pending.textContent=error.name==="AbortError"?"استغرق الرد وقتًا طويلًا. حاولي مرة أخرى.":"إيليرا مش متاحة للحظة. جرّب مرة ثانية، أو تواصل مع المتجر عبر واتساب.";
+  pending.textContent=error.name==="AbortError"?t().assistantTimeout:t().assistantError;
   input.value=message;
  }
  finally{clearTimeout(timeout);stopTyping();button.disabled=false;input.focus();}
