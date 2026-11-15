@@ -5703,6 +5703,11 @@ cartSyncError:"ההזמנה נשמרה, אך לא ניתן לעדכן את הס�
 });
 
 
+
+Object.assign(TEXT.ar,{sizeGuideUnavailable:"دليل المقاسات غير متوفر لهذا المنتج حاليًا. تواصلي معنا وسنساعدك في اختيار المقاس المناسب."});
+Object.assign(TEXT.en,{sizeGuideUnavailable:"A size guide is not available for this item yet. Contact us and we'll help you choose the right size."});
+Object.assign(TEXT.he,{sizeGuideUnavailable:"מדריך המידות עדיין אינו זמין לפריט הזה. אפשר לפנות אלינו ונשמח לעזור בבחירת המידה המתאימה."});
+
 const t=
 ()=>
 TEXT[lang];
@@ -8038,11 +8043,7 @@ $("searchInput").value
 
 
 const OFFER_KEYWORDS=[
-"عرض",
-"عروض",
-"عروضات",
-"offer",
-"offers"
+"عرض","عروض","عروضات","offer","offers","מבצע","מבצעים"
 ];
 
 
@@ -8097,30 +8098,9 @@ p.category==="offers"
 );
 
 
-const searchOk=
-!needle
+const colorSearch=(Array.isArray(p.colorsData)?p.colorsData:[]).some(c=>[c.name,c.name_en,c.name_he].some(value=>normalizeName(value||"").includes(needle)));
 
-||
-
-isOfferSearch
-
-||
-
-normalizeName(
-p.name
-)
-.includes(
-needle
-)
-
-||
-
-normalizeName(
-p.sku
-)
-.includes(
-needle
-);
+const searchOk=!needle||isOfferSearch||[p.name,p.name_en,p.name_he,p.description,p.description_en,p.description_he,p.sku].some(value=>normalizeName(value||"").includes(needle))||colorSearch;
 
 
 return(
@@ -8694,14 +8674,17 @@ t().unavailable;
 
 function translateSizeChartHeader(value){const key=String(value||"").trim().toLowerCase();const map={"المقاس":"מידה","القياس":"מידה","size":"מידה","الصدر":"היקף חזה","محيط الصدر":"היקף חזה","bust":"היקף חזה","chest":"היקף חזה","الخصر":"היקף מותניים","محيط الخصر":"היקף מותניים","waist":"היקף מותניים","الأرداف":"היקף ירכיים","الورك":"היקף ירכיים","hips":"היקף ירכיים","الطول":"אורך","length":"אורך"};return map[key]||value;}
 function openSizeGuide(){
-if(!currentProduct||!(currentProduct.sizeChartHe||currentProduct.sizeChart))return;
-const chart=lang==="he"?(currentProduct.sizeChartHe||currentProduct.sizeChart):currentProduct.sizeChart;
+if(!currentProduct)return;
+const chart=lang==="he"?(currentProduct.sizeChartHe||currentProduct.sizeChart||{}):(currentProduct.sizeChart||{});
 const headers=Array.isArray(chart.headers)?chart.headers:[];
 const rows=Array.isArray(chart.rows)?chart.rows:[];
-if(headers.length<2||!rows.length)return;
 $("sizeGuideTitle").textContent=t().sizeGuide;
 $("sizeGuideNote").textContent=t().sizeGuideNote;
-$("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(lang==="he"?translateSizeChartHeader(h):h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+if(headers.length<2||!rows.length){
+ $("sizeGuideTable").innerHTML='<p class="muted" style="padding:22px 14px;text-align:center;line-height:1.9">'+esc(t().sizeGuideUnavailable)+'</p>';
+}else{
+ $("sizeGuideTable").innerHTML='<table style="width:100%;border-collapse:collapse;min-width:360px;text-align:center"><thead><tr>'+headers.map(h=>'<th style="padding:11px 12px;background:#641f34;color:#fff;border:1px solid #e7e0d9">'+esc(lang==="he"?translateSizeChartHeader(h):h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map((row,i)=>'<tr style="background:'+(i%2?'#fbf9f5':'#fff')+'">'+headers.map((_,j)=>'<td style="padding:10px 12px;border:1px solid #e7e0d9">'+esc(Array.isArray(row)?(row[j]??""):"")+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+}
 $("sizeGuideModal").classList.add("open");
 document.body.style.overflow="hidden";
 }
