@@ -5708,6 +5708,8 @@ cartSyncError:"ההזמנה נשמרה, אך לא ניתן לעדכן את הס�
 Object.assign(TEXT.ar,{sizeGuideUnavailable:"دليل المقاسات غير متوفر لهذا المنتج حاليًا. تواصلي معنا وسنساعدك في اختيار المقاس المناسب."});
 Object.assign(TEXT.en,{sizeGuideUnavailable:"A size guide is not available for this item yet. Contact us and we'll help you choose the right size."});
 Object.assign(TEXT.he,{sizeGuideUnavailable:"מדריך המידות עדיין אינו זמין לפריט הזה. אפשר לפנות אלינו ונשמח לעזור בבחירת המידה המתאימה."});
+Object.assign(TEXT.ar,{remove:"إزالة"});
+Object.assign(TEXT.en,{remove:"Remove"});
 
 const t=
 ()=>
@@ -7230,7 +7232,7 @@ if(text){const target=cfg.text_target?el.querySelector(cfg.text_target):null;(ta
 
 function deliveryList(){
 if(Array.isArray(adminDeliveryAreas) && adminDeliveryAreas.length){
-return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:lang==="he"?(row.area_name_he||row.area_name_en||row.area_name_ar||row.area_name||""):lang==="en"?(row.area_name_en||localizeDynamicText(row.area_name||"",{"الضفة الغربية":t().westbank,"القدس":t().jerusalem,"الداخل":t().inside})):(row.area_name_ar||row.area_name||""),name_ar:row.area_name_ar||row.area_name||"",name_en:row.area_name_en||"",name_he:row.area_name_he||"",price:Number(row.price||0)}));
+return adminDeliveryAreas.map((row,index)=>({key:String(row.id||("delivery-"+index)),name:localizedField(row,"area_name",row.area_name||""),name_ar:row.area_name_ar||row.area_name||"",name_en:row.area_name_en||"",name_he:row.area_name_he||"",price:Number(row.price||0)}));
 }
 return[
 {key:"westbank",name:t().westbank,name_ar:"الضفة الغربية",name_en:"West Bank",name_he:"הגדה המערבית",price:Number(store.delivery.westbank||0)},
