@@ -6871,7 +6871,7 @@ if(settings.site_content_en && typeof settings.site_content_en==="object")Object
 if(settings.site_content_he && typeof settings.site_content_he==="object")Object.assign(TEXT.he,settings.site_content_he);
 applyThemeFromAdmin(settings);
 if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
-if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="he"?(row.title_he||row.title_en||row.title||""):lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",title_he:row.title_he||"",subtitle:lang==="he"?(row.subtitle_he||row.subtitle_en||row.subtitle||""):lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",subtitle_he:row.subtitle_he||"",button_link:row.link_url||"all",button_text:lang==="he"?(row.button_text_he||t().explore):lang==="en"?(row.button_text_en||t().explore):(row.button_text_ar||t().explore)}));
+if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",title_he:row.title_he||"",subtitle:row.subtitle||"",subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",subtitle_he:row.subtitle_he||"",button_link:row.link_url||"all",button_text_ar:row.button_text_ar||"",button_text_en:row.button_text_en||"",button_text_he:row.button_text_he||""}));
 if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
 if(!categoryResult.error)adminCategories=categoryResult.data||[];
 if(!sectionResult.error)adminSiteSections=sectionResult.data||[];
@@ -7419,7 +7419,7 @@ src="${esc(s.image_url)}"
 loading="${i===0?"eager":"lazy"}"
 fetchpriority="${i===0?"high":"low"}"
 decoding="async"
-alt="${esc(localizeDynamicText(s.title||"Espoza Fashion"))}"
+alt="${esc(localizedField(s,"title","Espoza Fashion"))}"
 onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
 `
 :
@@ -7431,15 +7431,15 @@ onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=d
 <div class="hero-copy">
 
 <h1>
-${esc(localizeDynamicText(s.title||t().newCollection,{"تشكيلة جديدة":t().newCollection,"مجموعة جديدة":t().newCollection}))}
+${esc(localizedField(s,"title",t().newCollection))}
 </h1>
 
 ${
-s.subtitle
+localizedField(s,"subtitle","")
 ?
 `
 <p>
-${esc(localizeDynamicText(s.subtitle))}
+${esc(localizedField(s,"subtitle",""))}
 </p>
 `
 :
@@ -7454,11 +7454,7 @@ s.button_link
 "all"
 )}')">
 
-${esc(
-s.button_text
-||
-t().explore
-)}
+${esc(localizedField(s,"button_text",t().explore))}
 
 </button>
 
@@ -10610,6 +10606,16 @@ function humanizeEnglish(value){return String(value||"").replace(/[-_]+/g," ").r
 function transliterateArabic(value){
  const map={"ا":"a","أ":"a","إ":"i","آ":"aa","ب":"b","ت":"t","ث":"th","ج":"j","ح":"h","خ":"kh","د":"d","ذ":"dh","ر":"r","ز":"z","س":"s","ش":"sh","ص":"s","ض":"d","ط":"t","ظ":"z","ع":"a","غ":"gh","ف":"f","ق":"q","ك":"k","ل":"l","م":"m","ن":"n","ه":"h","ة":"a","و":"w","ي":"y","ى":"a","ء":"","ؤ":"w","ئ":"y","ﻻ":"la"};
  return String(value||"").replace(/[\u064B-\u065F\u0670]/g,"").split("").map(ch=>map[ch]??ch).join("").replace(/\s+/g," ").trim();
+}
+function localizedField(record,field,fallback=""){
+ if(!record||typeof record!=="object")return fallback;
+ const candidates=lang==="ar"
+  ? [record[field+"_ar"],record[field]]
+  : lang==="he"
+   ? [record[field+"_he"],record[field+"_en"],record[field],record[field+"_ar"]]
+   : [record[field+"_en"],record[field],record[field+"_ar"]];
+ const value=candidates.find(v=>v!=null&&String(v).trim()!=="");
+ return value==null?fallback:String(value).trim();
 }
 function localizeDynamicText(value,known={}){
  const raw=String(value||"").trim();if(!raw)return "";
