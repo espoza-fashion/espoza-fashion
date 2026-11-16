@@ -10344,27 +10344,29 @@ x.customerCountSubcaption;
 renderFeatures();
 renderCustomerCategories();
 applyAdminSiteSections();
+
+/* Rebuild every language-sensitive customer view immediately. */
+renderFeedback();
 renderCartModal();
+if($("orderModal")?.classList.contains("open")){
+  renderOrderCartSummary();
+  updateOrderTotal();
+}
+if($("productModal")?.classList.contains("open") && currentProduct){
+  refreshProductModal();
+}
 
 updateCartBadge();
-
-
-if(
-currentProduct
-)
-refreshProductModal();
-
-
 applyStore();
-
 renderProducts();
-
 updateWishlistUI();
-
 renderDeliveryOptions();
-
 renderSlider();
 if(publicWishesLoaded)loadPublicWishes();
+
+/* Keep the document and dynamically-created controls in the selected direction. */
+document.body.dir=x.dir;
+document.body.lang=lang;
 
 }
 
