@@ -67,13 +67,18 @@ function settingValue(settings: any[], key: string) {
 }
 function reviewSummaryAnswer(reviews: any[], language: string, publishedCount: number) {
   const rows = Array.isArray(reviews) ? reviews : [];
-  if (!rows.length) {
+  const count = Number.isFinite(publishedCount) ? Math.max(0, publishedCount) : rows.length;
+  if (!count) {
     if (language === "he") return "עדיין אין ביקורות לקוחות שפורסמו באתר. אפשר לבדוק שוב בהמשך.";
     if (language === "en") return "There are no published customer reviews on the website yet. Please check again later.";
     return "لسه ما في تقييمات منشورة حاليًا على الموقع. تقدري ترجعي تشوفيها لاحقًا.";
   }
-  const count = Number.isFinite(publishedCount) ? Math.max(0, publishedCount) : rows.length;
-  const average = rows.length === count && count ? rows.reduce((sum, row) => sum + Number(row.rating || 0), 0) / count : null;
+  if (!rows.length) {
+    if (language === "he") return "יש " + count + " ביקורות שפורסמו, אך פרטי הביקורות אינם זמינים כרגע.";
+    if (language === "en") return "There are " + count + " published reviews, but their details are temporarily unavailable.";
+    return "في " + count + " تقييم منشور، لكن تفاصيل التقييمات غير متاحة مؤقتًا.";
+  }
+  const average = rows.length === count ? rows.reduce((sum, row) => sum + Number(row.rating || 0), 0) / count : null;
   if (language === "he") return "יש לנו " + count + " ביקורות לקוחות שפורסמו" + (average === null ? "" : ", עם דירוג ממוצע של " + average.toFixed(1) + " מתוך 5") + ". אפשר לקרוא את כולן באזור «ביקורות הלקוחות» באתר.";
   if (language === "en") return "We currently have " + count + " published customer reviews" + (average === null ? "" : ", with an average rating of " + average.toFixed(1) + " out of 5") + ". You can read them all in the Customer Reviews section on our website.";
   return "عندنا حاليًا " + count + " تقييم منشور من عميلاتنا" + (average === null ? "" : "، ومتوسط التقييم " + average.toFixed(1) + " من 5") + ". بتقدري تشوفي كل الآراء في قسم «آراء عميلاتنا» على الموقع.";
