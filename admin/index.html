@@ -551,6 +551,9 @@ const ADMIN_I18N={
 "ترتيب الظهور":["Display order","סדר תצוגה"],
 "نشر التقييم للزبائن وإتاحته لإيلارا":["Publish review and make it available to Elara","פרסום הביקורת והנגשתה לאלארה"],
 "حفظ التقييم":["Save review","שמירת ביקורת"],
+"منشور للزبائن":["Published","מפורסם"],
+"تم حفظ التقييم":["Review saved","הביקורת נשמרה"],
+"تم حذف التقييم":["Review deleted","הביקורת נמחקה"],
 "لا توجد تقييمات بعد.":["No reviews yet.","אין עדיין ביקורות."],
 "إضافة تقييم":["Add review","הוספת ביקורת"],
 "العربية":["Arabic","ערבית"],
@@ -1564,7 +1567,7 @@ function renderCustomerReviews(){
  const rows=customerReviewRows||[];
  const count=rows.length,active=rows.filter(x=>x.active).length;
  const average=count?rows.reduce((sum,x)=>sum+Number(x.rating||0),0)/count:0;
- if(summary)summary.textContent=count?("الإجمالي: "+count+" · المنشور: "+active+" · المتوسط: "+average.toFixed(1)+"/5"):"لا توجد تقييمات نصية بعد.";
+ if(summary)summary.textContent=count?(adminLanguage==="en"?"Total: "+count+" · Published: "+active+" · Average: "+average.toFixed(1)+"/5":adminLanguage==="he"?"סה״כ: "+count+" · פורסמו: "+active+" · ממוצע: "+average.toFixed(1)+"/5":"الإجمالي: "+count+" · المنشور: "+active+" · المتوسط: "+average.toFixed(1)+"/5"):(adminLanguage==="en"?"No written reviews yet.":adminLanguage==="he"?"עדיין אין ביקורות כתובות.":"لا توجد تقييمات نصية بعد.");
  grid.replaceChildren();
  for(const row of rows){
   const card=document.createElement("article");card.className="pcard review-admin-card";
@@ -1573,13 +1576,13 @@ function renderCustomerReviews(){
   const score=Math.max(0,Math.min(5,Number(row.rating)||0));
   const stars=document.createElement("div");stars.className="review-admin-stars";stars.textContent="★".repeat(score)+"☆".repeat(5-score);
   const review=document.createElement("p");review.textContent=row.review_text||"";
-  const status=document.createElement("small");status.textContent=row.active?"منشور للزبائن":"مخفي";status.className=row.active?"review-active":"review-hidden";
+  const status=document.createElement("small");status.textContent=row.active?(adminLanguage==="en"?"Published":adminLanguage==="he"?"מפורסם":"منشور للزبائن"):(adminLanguage==="en"?"Hidden":adminLanguage==="he"?"מוסתר":"مخفي");status.className=row.active?"review-active":"review-hidden";
   const actions=document.createElement("div");actions.className="table-actions";
   const edit=document.createElement("button");edit.className="btn sm";edit.textContent="تعديل";edit.addEventListener("click",()=>openCustomerReviewModal(row.id));
   const del=document.createElement("button");del.className="btn sm danger";del.textContent="حذف";del.addEventListener("click",()=>deleteCustomerReview(row.id));
   actions.append(edit,del);body.append(name,stars,review,status,actions);card.append(body);grid.append(card);
  }
- if(!rows.length)grid.innerHTML='<div class="empty">لا توجد تقييمات نصية بعد. أضيفي أول تقييم من هنا.</div>';
+ if(!rows.length)grid.innerHTML='<div class="empty">'+(adminLanguage==="en"?"No written reviews yet. Add the first review here.":adminLanguage==="he"?"עדיין אין ביקורות כתובות. הוסיפו את הביקורת הראשונה כאן.":"لا توجد تقييمات نصية بعد. أضيفي أول تقييم من هنا.")+'</div>';
 }
 function openCustomerReviewModal(id){
  const row=id?customerReviewRows.find(x=>x.id===id):null;
