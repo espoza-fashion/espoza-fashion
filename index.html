@@ -3419,7 +3419,7 @@ footer{
 .customer-review-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
 .customer-review-name{font-size:12px;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
 .customer-review-stars{font-size:12px;white-space:nowrap;letter-spacing:1px}
-.customer-review-text{margin:0;color:#62545a;font-size:12px;line-height:1.8;overflow-wrap:anywhere;white-space:pre-wrap}
+.customer-review-text{margin:0;color:#4b2633;font-size:13px;line-height:1.85;overflow-wrap:anywhere;white-space:pre-wrap;direction:auto;unicode-bidi:plaintext;text-align:start}
 .customer-review-date{display:block;margin-top:7px;color:#a09196;font-size:9px}
 .customer-reviews-empty{grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;padding:14px}
 .customer-reviews-more{display:block;margin:13px auto 0;padding:8px 19px;border:1px solid var(--wine);border-radius:30px;background:var(--wine);color:#fff;font-size:11px;font-weight:800}
@@ -8199,13 +8199,18 @@ async function loadCustomerReviews(){
   const empty=$("customerReviewsEmpty");
   try{
     const db=getCustomerSupabase();
-    const result=await db.from("customer_reviews")
-      .select("id,reviewer_name,rating,review_text,created_at,sort_order")
-      .eq("active",true)
-      .order("sort_order",{ascending:true})
-      .order("created_at",{ascending:false});
+    // Existing public customer messages are stored in wish_requests.
+    // Keep wishlist submissions intact, but display only genuine experience/review messages here.
+    const result=await db.from("wish_requests")
+      .select("id,wish_text,created_at,is_public")
+      .eq("is_public",true)
+      .order("created_at",{ascending:false})
+      .limit(100);
     if(result.error)throw result.error;
-    customerReviews=Array.isArray(result.data)?result.data:[];
+    const rows=Array.isArray(result.data)?result.data:[];
+    const wishOnly=/^(بتمنى|أتمنى|اتمنى|ياريت|يا ريت|اقترح|اقتراح|ممكن تنزلوا|ممكن تنزلون|نزّلوا|نزلوا|بدي|بدنا|حابين|نتمنى)/i;
+    customerReviews=rows.filter(row=>String(row.wish_text||"").trim()&&!wishOnly.test(String(row.wish_text||"").trim()))
+      .map(row=>({id:row.id,review_text:row.wish_text,created_at:row.created_at}));
     renderCustomerReviews();
   }catch(error){
     console.warn("Customer reviews could not load:",error);
@@ -8218,21 +8223,19 @@ function renderCustomerReviews(){
   const rows=Array.isArray(customerReviews)?customerReviews:[];
   const count=rows.length;
   const summary=$("customerReviewsSummary");
-  const avg=count?rows.reduce((sum,row)=>sum+Number(row.rating||0),0)/count:0;
   if(summary)summary.hidden=!count;
-  if(count){
-    $("customerReviewsAverage").textContent=avg.toFixed(1)+"/5";
-    $("customerReviewsStars").textContent="★".repeat(Math.round(avg))+"☆".repeat(5-Math.round(avg));
-    $("customerReviewsCount").textContent=lang==="en"?count+" published reviews":lang==="he"?count+" ביקורות שפורסמו":count+" تقييم منشور";
-  }
+  const countLabel=$("customerReviewsCount");
+  if(countLabel)countLabel.textContent=lang==="en"?count+" customer experiences":lang==="he"?count+" חוויות לקוחות":count+" تجربة من عميلاتنا";
+  const average=$("customerReviewsAverage"),starsSummary=$("customerReviewsStars");
+  if(average)average.hidden=true;
+  if(starsSummary)starsSummary.hidden=true;
   const shown=customerReviewsExpanded?rows:rows.slice(0,2);
   if(!shown.length){
-    grid.innerHTML='<div class="customer-reviews-empty">'+(lang==="en"?"No published reviews yet.":lang==="he"?"עדיין אין ביקורות שפורסמו.":"لا توجد تقييمات منشورة بعد.")+'</div>';
+    grid.innerHTML='<div class="customer-reviews-empty">'+(lang==="en"?"No published reviews yet.":lang==="he"?"עדיין אין ביקורות שפורסמו.":"لا توجد آراء منشورة بعد.")+'</div>';
   }else{
     grid.innerHTML=shown.map(row=>{
-      const stars=Math.max(0,Math.min(5,Number(row.rating)||0));
       const date=row.created_at?new Date(row.created_at).toLocaleDateString(lang==="en"?"en-US":lang==="he"?"he-IL":"ar-PS"):"";
-      return '<article class="customer-review-card"><div class="customer-review-top"><strong class="customer-review-name">'+esc(row.reviewer_name||"عميلة إسبوزا")+'</strong><span class="customer-review-stars" aria-label="'+stars+' / 5">'+ "★".repeat(stars)+"☆".repeat(5-stars)+'</span></div><p class="customer-review-text">'+esc(row.review_text||"")+'</p><time class="customer-review-date">'+esc(date)+'</time></article>';
+      return '<article class="customer-review-card"><p class="customer-review-text" dir="auto" lang="und">'+esc(row.review_text||"")+'</p><time class="customer-review-date">'+esc(date)+'</time></article>';
     }).join("");
   }
   const more=$("customerReviewsMore");
