@@ -260,6 +260,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
 #authGate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#431321,#641f34)}
 #authGate.hidden{display:none}.auth-card{width:min(430px,100%);background:#fff;border-radius:20px;padding:30px;box-shadow:0 25px 80px rgba(0,0,0,.35)}.auth-card h1{margin:0;color:var(--wine);font-family:"Playfair Display",serif}.auth-card p{color:var(--muted);font-size:13px;line-height:1.8;margin:8px 0 20px}.auth-card label{display:block;font-size:12px;font-weight:800;margin:10px 0 6px}.auth-card input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;outline:none}.auth-card input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(185,152,90,.12)}.auth-card button{width:100%;margin-top:14px}.auth-error{min-height:22px;color:var(--red);font-size:12px;margin-top:10px;font-weight:700}.auth-lock{font-size:11px;color:var(--muted);margin-top:8px}
 </style>
+<style id="customer-reviews-admin-style">.review-admin-summary{margin:0 0 14px;padding:10px 13px;background:var(--cream);border:1px solid var(--line);border-radius:10px;font-size:12px;font-weight:700;color:var(--wine)}.review-admin-card .pcard-body{display:flex;flex-direction:column;gap:8px}.review-admin-stars{color:var(--gold);letter-spacing:2px}.review-admin-card p{font-size:12px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}.review-active{color:var(--green);font-weight:700}.review-hidden{color:var(--muted);font-weight:700}#adminLanguageSelect{min-width:112px;background:#fff}</style>
 </head>
 <body>
 
@@ -301,6 +302,7 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
         </div>
       </div>
       <div class="topbar-actions">
+        <select class="btn" id="adminLanguageSelect" aria-label="لغة لوحة الإدارة" title="لغة لوحة الإدارة"><option value="ar">العربية</option><option value="en">English</option><option value="he">עברית</option></select>
         <button class="btn" id="refreshBtn">↻ تحديث</button><button class="btn" id="logoutBtn" type="button">تسجيل الخروج</button>
       </div>
     </div>
@@ -391,7 +393,12 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
       </section>
 
       <section id="page-feedback" class="hidden">
-        <div class="panel"><div class="panel-head"><div class="panel-title">صور آراء الزبائن</div><button class="btn primary" onclick="openFeedbackModal(null)">+ إضافة تقييم</button></div><div class="card-grid" id="feedbackGrid"></div></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title">صور آراء الزبائن</div><button class="btn primary" onclick="openFeedbackModal(null)">+ إضافة صورة</button></div><div class="card-grid" id="feedbackGrid"></div></div>
+        <div class="panel">
+          <div class="panel-head"><div><div class="panel-title">التقييمات النصية — آراء عميلاتنا</div><div class="hint">هذه التقييمات تظهر في القسم المختصر بالموقع، وتستطيع إيلارا قراءتها للإجابة عن أسئلة الزبائن.</div></div><button class="btn primary" onclick="openCustomerReviewModal(null)">+ إضافة تقييم نصي</button></div>
+          <div class="review-admin-summary" id="customerReviewsAdminSummary">جارٍ تحميل التقييمات…</div>
+          <div class="card-grid" id="customerReviewsAdminGrid"></div>
+        </div>
       </section>
       <!-- DELIVERY -->
       <section id="page-delivery" class="hidden">
@@ -504,6 +511,7 @@ const PLACEHOLDER = "https://placehold.co/400x500?text=Espoza";
 /* ===================== State ===================== */
 let orders = [], products = [], productImages = [], productSizes = [], productColors = [];
 let feedbackRows = [];
+let customerReviewRows = [];
 let customerCarts = [], cartCustomers = [], cartsLoadError = "", cartsLoadedAt = null;
 let sliderRows = [], deliveryAreas = [], storeSettings = null;
 let orderStatusFilter = "all";
@@ -521,7 +529,7 @@ const PAGE_META = {
   media:{title:"مكتبة الوسائط",sub:"الصور والملفات المستخدمة في المتجر"},
   content:{title:"محتوى الموقع",sub:"التحكم بالأقسام والعناوين والظهور"},
   slider:{title:"سلايدر الرئيسية", sub:"الشرائح الظاهرة في أعلى الموقع"},
-  feedback:{title:"آراء الزبائن",sub:"إدارة صور التقييمات المعروضة في المتجر"},
+  feedback:{title:"آراء الزبائن",sub:"إدارة صور وتقييمات عميلات المتجر"},
   delivery:{title:"مناطق التوصيل", sub:"إدارة أسعار التوصيل حسب المنطقة"},
   settings:{title:"إعدادات المتجر", sub:"معلومات المتجر وحسابات التواصل"}
 };
@@ -583,7 +591,7 @@ async function loadAll(){
   $("connText").textContent="جاري الاتصال…";
   try{
     await requireAdminSession();
-    await Promise.all([loadOrders(), loadProducts(), loadSlider(), loadDeliveryAreas(), loadStoreSettings(), loadFeedback(), refreshCarts(), loadCustomers(), loadCategories(), loadCoupons(), loadMedia(), loadSiteSections()]);
+    await Promise.all([loadOrders(), loadProducts(), loadSlider(), loadDeliveryAreas(), loadStoreSettings(), loadFeedback(), loadCustomerReviews(), refreshCarts(), loadCustomers(), loadCategories(), loadCoupons(), loadMedia(), loadSiteSections()]);
     $("connDot").classList.remove("off");
     $("connText").textContent="متصلة الآن";
   }catch(error){
@@ -1341,6 +1349,69 @@ async function deleteArea(id){
     await loadDeliveryAreas();
     renderAreas();
   }catch(error){ console.error(error); toast(friendlyError(error),"err"); }
+}
+
+
+/* ===================== Written customer reviews ===================== */
+async function loadCustomerReviews(){
+ const {data,error}=await sb.from("customer_reviews").select("id,reviewer_name,rating,review_text,active,sort_order,created_at").order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+ if(error)throw error;
+ customerReviewRows=data||[];
+ renderCustomerReviews();
+}
+function renderCustomerReviews(){
+ const grid=$("customerReviewsAdminGrid"),summary=$("customerReviewsAdminSummary");
+ if(!grid)return;
+ const rows=customerReviewRows||[];
+ const count=rows.length,active=rows.filter(x=>x.active).length;
+ const average=count?rows.reduce((sum,x)=>sum+Number(x.rating||0),0)/count:0;
+ if(summary)summary.textContent=count?("الإجمالي: "+count+" · المنشور: "+active+" · المتوسط: "+average.toFixed(1)+"/5"):"لا توجد تقييمات نصية بعد.";
+ grid.replaceChildren();
+ for(const row of rows){
+  const card=document.createElement("article");card.className="pcard review-admin-card";
+  const body=document.createElement("div");body.className="pcard-body";
+  const name=document.createElement("strong");name.textContent=row.reviewer_name||"عميلة";
+  const score=Math.max(0,Math.min(5,Number(row.rating)||0));
+  const stars=document.createElement("div");stars.className="review-admin-stars";stars.textContent="★".repeat(score)+"☆".repeat(5-score);
+  const review=document.createElement("p");review.textContent=row.review_text||"";
+  const status=document.createElement("small");status.textContent=row.active?"منشور للزبائن":"مخفي";status.className=row.active?"review-active":"review-hidden";
+  const actions=document.createElement("div");actions.className="table-actions";
+  const edit=document.createElement("button");edit.className="btn sm";edit.textContent="تعديل";edit.addEventListener("click",()=>openCustomerReviewModal(row.id));
+  const del=document.createElement("button");del.className="btn sm danger";del.textContent="حذف";del.addEventListener("click",()=>deleteCustomerReview(row.id));
+  actions.append(edit,del);body.append(name,stars,review,status,actions);card.append(body);grid.append(card);
+ }
+ if(!rows.length)grid.innerHTML='<div class="empty">لا توجد تقييمات نصية بعد. أضيفي أول تقييم من هنا.</div>';
+}
+function openCustomerReviewModal(id){
+ const row=id?customerReviewRows.find(x=>x.id===id):null;
+ const stars=Array.from({length:5},(_,i)=>'<option value="'+(i+1)+'" '+(Number(row?.rating||5)===i+1?'selected':'')+'>'+(i+1)+' نجوم</option>').join("");
+ openSimpleModal(row?"تعديل تقييم عميلة":"إضافة تقييم عميلة",
+  '<div class="field"><label>اسم العميلة الظاهر</label><input class="text-input" id="crName" maxlength="80" value="'+esc(row?.reviewer_name||"")+'" placeholder="مثال: سارة"></div>'+
+  '<div class="field"><label>التقييم بالنجوم</label><select class="text-input" id="crRating">'+stars+'</select></div>'+
+  '<div class="field"><label>نص التقييم</label><textarea class="text-input" id="crText" rows="4" maxlength="1200" placeholder="أدخلي نص التقييم كما ورد من العميلة">'+esc(row?.review_text||"")+'</textarea></div>'+
+  '<div class="field"><label>ترتيب الظهور</label><input class="text-input" id="crSort" type="number" value="'+Number(row?.sort_order||0)+'"></div>'+
+  '<label><input type="checkbox" id="crActive" '+(row?.active===true?'checked':'')+'> نشر التقييم للزبائن وإتاحته لإيلارا</label>'+
+  '<div class="table-actions" style="margin-top:16px"><button class="btn primary" id="crSave">حفظ التقييم</button>'+(row?'<button class="btn danger" id="crDelete">حذف</button>':'')+'</div>');
+ $("crSave").onclick=async()=>{
+  const button=$("crSave");button.disabled=true;
+  try{
+   await requireAdminSession();
+   const reviewer_name=$("crName").value.trim(),review_text=$("crText").value.trim(),rating=Number($("crRating").value);
+   if(reviewer_name.length<1||reviewer_name.length>80)throw new Error("أدخلي اسمًا من 1 إلى 80 حرفًا.");
+   if(review_text.length<2||review_text.length>1200)throw new Error("نص التقييم يجب أن يكون بين حرفين و1200 حرف.");
+   if(!Number.isInteger(rating)||rating<1||rating>5)throw new Error("اختاري تقييمًا من نجمة إلى خمس نجوم.");
+   const payload={reviewer_name,review_text,rating,sort_order:Number($("crSort").value)||0,active:$("crActive").checked,updated_at:new Date().toISOString()};
+   const result=row?await sb.from("customer_reviews").update(payload).eq("id",row.id).select("id").single():await sb.from("customer_reviews").insert(payload).select("id").single();
+   if(result.error)throw result.error;
+   closeModal();await loadCustomerReviews();toast("تم حفظ التقييم");
+  }catch(error){toast(friendlyError(error),"err");}finally{button.disabled=false;}
+ };
+ if(row)$("crDelete").onclick=()=>deleteCustomerReview(row.id);
+}
+async function deleteCustomerReview(id){
+ if(!confirm("حذف هذا التقييم نهائيًا؟"))return;
+ try{await requireAdminSession();const {error}=await sb.from("customer_reviews").delete().eq("id",id);if(error)throw error;closeModal();await loadCustomerReviews();toast("تم حذف التقييم");}
+ catch(error){toast(friendlyError(error),"err");}
 }
 
 /* ===================== Customer feedback ===================== */
