@@ -114,7 +114,7 @@ function fallbackAnswerHebrew(message: string, products: any[], sizes: any[], co
   if (/מחיר|כמה עולה|כמה זה|עלות/.test(q)) return "כתבי את שם הדגם כפי שמופיע באתר ואבדוק את המחיר בקטלוג העדכני."; 
   return "אשמח לעזור לך למצוא פריטים, לבדוק מחירים, מידות, צבעים, משלוחים והחלפות. אם פרט מסוים אינו מופיע במידע המאומת של החנות, לא אנחש ואפנה אותך לצוות."; 
 }
-function fallbackAnswerEnglish(message: string, products: any[], sizes: any[], colors: any[], settings: any[], delivery: any[], offers: any[], reviews: any[]) {
+function fallbackAnswerEnglish(message: string, products: any[], sizes: any[], colors: any[], settings: any[], delivery: any[], offers: any[], reviews: any[], publishedReviewsCount: number) {
   const reviewQuestion = /review|reviews|rating|ratings|testimonial|customer feedback/.test(message.toLocaleLowerCase());
   if (reviewQuestion) return reviewSummaryAnswer(reviews, "en", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
@@ -140,7 +140,7 @@ function fallbackAnswerEnglish(message: string, products: any[], sizes: any[], c
   if (/price|how much|cost/.test(q)) return "Type the product name as it appears on the website and I will check the current catalog price."; 
   return "I can help with products, prices, sizes, colors, delivery and exchanges. If a store detail is not confirmed, I will not guess."; 
 }
-function fallbackAnswer(message: string, products: any[], sizes: any[], settings: any[], delivery: any[], offers: any[], reviews: any[]) {
+function fallbackAnswer(message: string, products: any[], sizes: any[], settings: any[], delivery: any[], offers: any[], reviews: any[], publishedReviewsCount: number) {
   const reviewQuestion = /تقييم|تقييمات|آراء|رأي الزبائن|تجارب عميلات|شو رأي/.test(message.toLocaleLowerCase());
   if (reviewQuestion) return reviewSummaryAnswer(reviews, "ar", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
