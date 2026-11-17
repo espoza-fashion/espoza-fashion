@@ -1,0 +1,30 @@
+/* Espoza Fashion customer side navigation */
+#espozaSideOverlay{position:fixed;inset:0;background:rgba(24,8,14,.48);backdrop-filter:blur(3px);z-index:1490;opacity:0;visibility:hidden;transition:opacity .28s ease,visibility .28s ease}
+#espozaSideOverlay.is-open{opacity:1;visibility:visible}
+#espozaSidePanel{position:fixed;z-index:1500;top:0;bottom:0;right:0;width:min(370px,88vw);background:linear-gradient(160deg,#fffdfa 0%,#faf5f2 100%);border-left:1px solid rgba(185,152,90,.35);box-shadow:-18px 0 55px rgba(40,12,22,.2);transform:translateX(105%);transition:transform .36s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;overflow:hidden;direction:rtl;color:#32151f}
+#espozaSidePanel.is-open{transform:translateX(0)}
+#espozaSidePanel *{box-sizing:border-box}
+.esp-side-head{position:relative;padding:28px 22px 20px;background:linear-gradient(135deg,#431321,#641f34 72%,#7a3448);color:#fff;min-height:150px}
+.esp-side-head:after{content:"";position:absolute;width:170px;height:170px;border:1px solid rgba(185,152,90,.25);border-radius:50%;left:-65px;top:-80px;pointer-events:none}
+.esp-side-brand{font-family:"Playfair Display",serif;font-size:27px;font-weight:700;letter-spacing:2px;line-height:1.1}
+.esp-side-sub{font-size:9px;letter-spacing:5px;color:#dfc18a;margin-top:7px}
+.esp-side-since{font-size:10px;color:rgba(255,255,255,.68);margin-top:13px;letter-spacing:2px}
+.esp-side-close{position:absolute;left:16px;top:17px;width:38px;height:38px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.1);color:#fff;font-size:23px;line-height:1;z-index:2}
+.esp-side-body{padding:17px 16px 22px;overflow:auto;overscroll-behavior:contain;flex:1}
+.esp-side-account{width:100%;display:flex;align-items:center;gap:13px;padding:14px;border:1px solid #eadde0;border-radius:17px;background:#fff;text-align:right;color:#641f34;box-shadow:0 6px 18px rgba(67,19,33,.055)}
+.esp-side-account-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:#f5e9eb;color:#641f34;font-size:21px;flex:0 0 auto}
+.esp-side-account-copy{flex:1;min-width:0}
+.esp-side-account-copy b{display:block;font-size:14px}
+.esp-side-account-copy small{display:block;color:#85777c;font-size:10px;margin-top:3px}
+.esp-side-chevron{font-size:20px;color:#b9985a}
+.esp-side-section-title{display:flex;align-items:center;gap:9px;margin:23px 4px 10px;color:#9a7b54;font-size:11px;font-weight:800;letter-spacing:.5px}
+.esp-side-section-title:after{content:"";height:1px;background:#eadfe1;flex:1}
+.esp-side-link{width:100%;display:flex;align-items:center;gap:12px;border:0;background:transparent;border-radius:12px;padding:11px 12px;color:#49313a;text-align:right;font-size:13px;font-weight:700;transition:background .18s,color .18s}
+.esp-side-link:hover,.esp-side-link:focus-visible{background:#f4e9eb;color:#641f34;outline:none}
+.esp-side-link.is-active{background:#641f34;color:#fff}
+.esp-side-link-icon{width:22px;text-align:center;color:#b9985a;font-size:16px;flex:0 0 auto}
+.esp-side-link.is-active .esp-side-link-icon{color:#e6c98e}
+.esp-side-footer{border-top:1px solid #eee3e5;padding:13px 18px 16px;text-align:center;color:#9b858c;font-size:9px;letter-spacing:1px;background:rgba(255,255,255,.65)}
+body.esp-side-lock{overflow:hidden!important}
+@media(min-width:900px){#espozaSidePanel{width:370px}}
+@media(prefers-reduced-motion:reduce){#espozaSideOverlay,#espozaSidePanel{transition:none}}
