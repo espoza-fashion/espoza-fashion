@@ -52,14 +52,20 @@
   const title=document.createElement("div");title.className="esp-side-section-title";title.textContent=label("تسوّقي حسب القسم","SHOP BY CATEGORY");body.append(title);
   const activeCategory=body.ownerDocument.querySelector("#categories .cat.active")?.dataset.cat||"all";
   body.append(makeButton("esp-side-link"+(activeCategory==="all"?" is-active":""),"✧",label("جميع المنتجات","All Products"),label("جميع المنتجات","All Products"),()=>chooseCategory("all")));
+  const categoryIcons={dresses:"♙",sets:"♧",offers:"♜","winter-sets":"♨","winter-dresses":"♙"};
   categories().forEach(cat=>{
    const active=activeCategory===cat.slug;
-   const b=makeButton("esp-side-link"+(active?" is-active":""),"◇",cat.label,cat.label,()=>chooseCategory(cat.slug));
-   b.dataset.category=cat.slug;body.append(b);
+   const b=makeButton("esp-side-link"+(active?" is-active":""),categoryIcons[cat.slug]||"◇",cat.label,cat.label,()=>chooseCategory(cat.slug));
+   b.dataset.category=cat.slug;
+   if(cat.slug==="offers"){
+    const hot=document.createElement("span");hot.className="esp-side-hot";hot.textContent="HOT";
+    b.append(hot);
+   }
+   body.append(b);
   });
   const more=document.createElement("div");more.className="esp-side-section-title";more.textContent=label("روابط سريعة","QUICK LINKS");body.append(more);
   body.append(makeButton("esp-side-link","♡","المفضلة","Wishlist",()=>{close();if(typeof window.scrollToWishlist==="function")window.scrollToWishlist();}));
-  body.append(makeButton("esp-side-link","✦","قائمة الأمنيات","Wish List",()=>{close();if(typeof window.scrollToPublicWishes==="function")window.scrollToPublicWishes();}));
+  body.append(makeButton("esp-side-link","✦","آراء عميلاتنا","Customer Reviews",()=>{close();const section=document.getElementById("publicWishesSection")||document.getElementById("customerReviewsSection")||document.getElementById("feedback");if(section)section.scrollIntoView({behavior:"smooth",block:"start"});}));
   body.append(makeButton("esp-side-link","▣","سلة التسوق","Shopping Bag",()=>{close();if(typeof window.openCartModal==="function")window.openCartModal();}));
   body.append(makeButton("esp-side-link","i","سياسة المتجر","Store Policies",()=>{close();if(typeof window.openModal==="function")window.openModal("policiesModal");}));
   const contact=document.createElement("a");contact.className="esp-side-link";contact.href=($("whatsappHeader")&&$("whatsappHeader").href)||"#";contact.target="_blank";contact.rel="noopener noreferrer";

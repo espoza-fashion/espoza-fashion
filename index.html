@@ -3404,6 +3404,27 @@ footer{
 </style>
 <link rel="stylesheet" href="./customer-sidebar.css?v=1">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<style id="espoza-customer-reviews">
+.customer-reviews-section{padding-top:8px!important;padding-bottom:42px!important}
+.customer-reviews-card{max-width:980px;margin:0 auto;padding:22px 24px;background:linear-gradient(135deg,#fff,#f8eef1);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(67,19,33,.055)}
+.customer-reviews-head{text-align:center;margin-bottom:12px}
+.customer-reviews-head h2{font-family:"Playfair Display","Cairo",serif;color:var(--wine);font-size:clamp(23px,3vw,32px);margin:0 0 4px}
+.customer-reviews-head p{margin:0;color:var(--muted);font-size:12px}
+.customer-reviews-summary{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:12px auto 15px;padding:8px 13px;width:max-content;max-width:100%;border:1px solid var(--line);border-radius:30px;background:#fff}
+.customer-reviews-summary strong{font-size:20px;color:var(--wine)}
+.customer-review-summary-stars,.customer-review-stars{color:var(--gold);letter-spacing:2px}
+.customer-reviews-summary span:last-child{font-size:11px;color:var(--muted)}
+.customer-reviews-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.customer-review-card{min-width:0;padding:13px 15px;background:#fff;border:1px solid rgba(100,31,52,.09);border-radius:14px}
+.customer-review-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.customer-review-name{font-size:12px;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
+.customer-review-stars{font-size:12px;white-space:nowrap;letter-spacing:1px}
+.customer-review-text{margin:0;color:#62545a;font-size:12px;line-height:1.8;overflow-wrap:anywhere;white-space:pre-wrap}
+.customer-review-date{display:block;margin-top:7px;color:#a09196;font-size:9px}
+.customer-reviews-empty{grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;padding:14px}
+.customer-reviews-more{display:block;margin:13px auto 0;padding:8px 19px;border:1px solid var(--wine);border-radius:30px;background:var(--wine);color:#fff;font-size:11px;font-weight:800}
+@media(max-width:620px){.customer-reviews-card{padding:17px 12px;border-radius:18px}.customer-reviews-grid{grid-template-columns:1fr;gap:8px}.customer-review-card{padding:11px 12px}.customer-reviews-section{padding-inline:10px!important}}
+</style>
 </head>
 
 <body>
@@ -3675,7 +3696,7 @@ data-cat="offers">
 <section class="quick-links" id="quickLinks" aria-label="روابط سريعة">
 <div class="quick-links-inner">
 <button class="quick-link primary" type="button" onclick="scrollToWishlist()">♡ <span id="quickFavoritesLabel">المفضلة</span> <span id="quickWishlistCount">0</span></button>
-<button class="quick-link" type="button" onclick="scrollToPublicWishes()">✨ <span id="quickWishesLabel">قائمة الأمنيات</span></button>
+<button class="quick-link" type="button" onclick="scrollToPublicWishes()">✦ <span id="quickWishesLabel">آراء عميلاتنا</span></button>
 <button class="quick-link" type="button" onclick="smoothToSection('feedback')"><span id="quickFeedbackLabel">آراء الزبائن</span></button>
 <button class="quick-link" type="button" onclick="openModal('policiesModal')"><span id="quickPoliciesLabel">سياسة الشركة</span></button>
 <button class="quick-link" type="button" onclick="openCartModal()">🛍️ <span id="quickCartLabel">السلة والطلب</span> <span id="quickCartCount">0</span></button>
@@ -3745,21 +3766,21 @@ id="featuresTrack">
 <div class="wishlist-grid" id="wishlistGrid"></div>
 </section>
 
-<section class="public-wishes-section" id="publicWishesSection">
-<div class="public-wishes-card">
-<div class="public-wishes-head">
-<h2 id="publicWishesTitle">✨ أمنيتك القادمة مع Espoza Fashion؟</h2>
-<p id="publicWishesIntro">أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍</p>
+<section class="public-wishes-section customer-reviews-section" id="publicWishesSection">
+<div class="customer-reviews-card">
+<div class="customer-reviews-head">
+<h2 id="customerReviewsTitle">آراء عميلاتنا</h2>
+<p id="customerReviewsIntro">تجارب حقيقية من عميلات إسبوزا فاشن</p>
 </div>
-<form class="wish-form" id="wishForm">
-<div class="wish-visibility" role="group" aria-label="خصوصية الأمنية">
-<label><input type="radio" name="wishVisibility" value="public" checked> <span id="wishPublicLabel">عام 🌍 — يمكن لجميع زوار المتجر الاطلاع عليها</span></label>
-<label><input type="radio" name="wishVisibility" value="private"> <span id="wishPrivateLabel">خاص 🔒 — لا يمكن الاطلاع عليها إلا من قِبل مالك المتجر</span></label>
+<div class="customer-reviews-summary" id="customerReviewsSummary" hidden>
+<strong id="customerReviewsAverage">—</strong>
+<span class="customer-review-summary-stars" id="customerReviewsStars">★★★★★</span>
+<span id="customerReviewsCount"></span>
 </div>
-<textarea class="wish-input" id="wishInput" maxlength="240" rows="1" placeholder="اكتبي أمنيتك هنا..."></textarea>
-<button class="wish-submit" id="wishSubmit" type="submit">إرسال الأمنية</button>
-</form>
-<div class="public-wishes-list" id="publicWishesList"></div>
+<div class="customer-reviews-grid" id="customerReviewsGrid">
+<div class="customer-reviews-empty" id="customerReviewsEmpty">جارٍ تحميل التقييمات…</div>
+</div>
+<button class="customer-reviews-more" id="customerReviewsMore" type="button" onclick="toggleCustomerReviews()" hidden>عرض جميع التقييمات</button>
 </div>
 </section>
 
@@ -6541,6 +6562,8 @@ let appliedManualCoupon=null;
 let adminDeliveryAreas=null;
 let adminSliders=null;
 let adminFeedback=null;
+let customerReviews=[];
+let customerReviewsExpanded=false;
 let adminCategories=null;
 let adminSiteSections=null;
 function getCustomerSupabase(){
@@ -6841,15 +6864,16 @@ style.textContent="@media(min-width:1001px){.products-grid{grid-template-columns
 
 async function loadAdminStoreData(){
 const db=getCustomerSupabase();
-const [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]=await Promise.all([
+const [settingsResult,deliveryResult,sliderResult,feedbackResult,reviewResult,categoryResult,sectionResult]=await Promise.all([
 db.from("store_settings").select("key,value").in("key",["store_name","whatsapp","welcome","welcome_he","delivery_time","exchange_policy","site_credit","facebook","instagram","tiktok","snapchat","facebook_followers","instagram_followers","tiktok_followers","snapchat_followers","site_content_ar","site_content_en","site_content_he","theme_wine","theme_gold","theme_cream","theme_dark","theme_columns","theme_radius"]),
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
 db.from("sliders").select("id,image_url,title,title_ar,title_en,title_he,subtitle,subtitle_ar,subtitle_en,subtitle_he,button_text_ar,button_text_en,button_text_he,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
+db.from("customer_reviews").select("id,reviewer_name,rating,review_text,created_at,sort_order").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("categories").select("id,slug,name_ar,name_en,name_he,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
 db.from("site_sections").select("id,section_key,title_ar,title_en,title_he,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
 ]);
-for(const result of [settingsResult,deliveryResult,sliderResult,feedbackResult,categoryResult,sectionResult]){
+for(const result of [settingsResult,deliveryResult,sliderResult,feedbackResult,reviewResult,categoryResult,sectionResult]){
 if(result.error)console.warn("Store section could not refresh:",result.error);
 }
 const settings={};
@@ -6873,6 +6897,9 @@ applyThemeFromAdmin(settings);
 if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
 if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="he"?(row.title_he||row.title_en||row.title||""):lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",title_he:row.title_he||"",subtitle:lang==="he"?(row.subtitle_he||row.subtitle_en||row.subtitle||""):lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",subtitle_he:row.subtitle_he||"",button_link:row.link_url||"all",button_text:lang==="he"?(row.button_text_he||t().explore):lang==="en"?(row.button_text_en||t().explore):(row.button_text_ar||t().explore)}));
 if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
+if(!reviewResult.error)customerReviews=Array.isArray(reviewResult.data)?reviewResult.data:[];
+else console.warn("Customer reviews unavailable:",reviewResult.error);
+renderCustomerReviews();
 if(!categoryResult.error)adminCategories=categoryResult.data||[];
 if(!sectionResult.error)adminSiteSections=sectionResult.data||[];
 try{
@@ -6886,6 +6913,7 @@ renderCustomerCategories();
 renderDeliveryOptions();
 renderSlider();
 renderFeedback();
+renderCustomerReviews();
 applyLanguage();
 }
 function productColorDisplayName(value){
@@ -8165,9 +8193,64 @@ function scrollToWishlist(){
 const el=$("wishlistSection"); if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
 updateWishlistUI();
 }
+
+/* ===================== Published customer reviews ===================== */
+async function loadCustomerReviews(){
+  const empty=$("customerReviewsEmpty");
+  try{
+    const db=getCustomerSupabase();
+    const result=await db.from("customer_reviews")
+      .select("id,reviewer_name,rating,review_text,created_at,sort_order")
+      .eq("active",true)
+      .order("sort_order",{ascending:true})
+      .order("created_at",{ascending:false});
+    if(result.error)throw result.error;
+    customerReviews=Array.isArray(result.data)?result.data:[];
+    renderCustomerReviews();
+  }catch(error){
+    console.warn("Customer reviews could not load:",error);
+    if(empty)empty.textContent=lang==="en"?"Reviews are temporarily unavailable.":lang==="he"?"הביקורות אינן זמינות כרגע.":"التقييمات غير متاحة مؤقتًا.";
+  }
+}
+function renderCustomerReviews(){
+  const grid=$("customerReviewsGrid");
+  if(!grid)return;
+  const rows=Array.isArray(customerReviews)?customerReviews:[];
+  const count=rows.length;
+  const summary=$("customerReviewsSummary");
+  const avg=count?rows.reduce((sum,row)=>sum+Number(row.rating||0),0)/count:0;
+  if(summary)summary.hidden=!count;
+  if(count){
+    $("customerReviewsAverage").textContent=avg.toFixed(1)+"/5";
+    $("customerReviewsStars").textContent="★".repeat(Math.round(avg))+"☆".repeat(5-Math.round(avg));
+    $("customerReviewsCount").textContent=lang==="en"?count+" published reviews":lang==="he"?count+" ביקורות שפורסמו":count+" تقييم منشور";
+  }
+  const shown=customerReviewsExpanded?rows:rows.slice(0,2);
+  if(!shown.length){
+    grid.innerHTML='<div class="customer-reviews-empty">'+(lang==="en"?"No published reviews yet.":lang==="he"?"עדיין אין ביקורות שפורסמו.":"لا توجد تقييمات منشورة بعد.")+'</div>';
+  }else{
+    grid.innerHTML=shown.map(row=>{
+      const stars=Math.max(0,Math.min(5,Number(row.rating)||0));
+      const date=row.created_at?new Date(row.created_at).toLocaleDateString(lang==="en"?"en-US":lang==="he"?"he-IL":"ar-PS"):"";
+      return '<article class="customer-review-card"><div class="customer-review-top"><strong class="customer-review-name">'+esc(row.reviewer_name||"عميلة إسبوزا")+'</strong><span class="customer-review-stars" aria-label="'+stars+' / 5">'+ "★".repeat(stars)+"☆".repeat(5-stars)+'</span></div><p class="customer-review-text">'+esc(row.review_text||"")+'</p><time class="customer-review-date">'+esc(date)+'</time></article>';
+    }).join("");
+  }
+  const more=$("customerReviewsMore");
+  if(more){
+    more.hidden=count<=2;
+    more.textContent=customerReviewsExpanded?(lang==="en"?"Show less":lang==="he"?"הצג פחות":"عرض أقل"):(lang==="en"?"View all reviews":lang==="he"?"הצג את כל הביקורות":"عرض جميع التقييمات");
+  }
+  if($("customerReviewsTitle"))$("customerReviewsTitle").textContent=lang==="en"?"Customer Reviews":lang==="he"?"ביקורות הלקוחות":"آراء عميلاتنا";
+  if($("customerReviewsIntro"))$("customerReviewsIntro").textContent=lang==="en"?"Real experiences from Espoza Fashion customers":lang==="he"?"חוויות אמיתיות של לקוחות אספוזה פאשן":"تجارب حقيقية من عميلات إسبوزا فاشن";
+}
+function toggleCustomerReviews(){
+  customerReviewsExpanded=!customerReviewsExpanded;
+  renderCustomerReviews();
+}
+
 function scrollToPublicWishes(){
 const el=$("publicWishesSection"); if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
-loadPublicWishes();
+loadCustomerReviews();
 }
 
 function renderProducts(){
@@ -10026,30 +10109,21 @@ async function submitPublicWish(event){
 }
 
 function setupPublicWishes(){
-  const form=$("wishForm");
-  if(form&&!form.dataset.ready){
-    form.dataset.ready="1";
-    form.addEventListener("submit",submitPublicWish);
-  }
-
-  // Supabase may load a moment after the page script. Keep retrying instead of
-  // permanently showing "unavailable" on first load.
+  // The original wish-request feature and its Supabase data remain intact.
+  // This visible slot now displays published customer reviews instead.
   const tryLoad=()=>{
     if(window.supabase && typeof window.supabase.createClient==="function"){
-      loadPublicWishes();
+      loadCustomerReviews();
       return true;
     }
     return false;
   };
-
   if(tryLoad()) return;
-
   let attempts=0;
   const timer=setInterval(()=>{
     attempts++;
     if(tryLoad() || attempts>=30) clearInterval(timer);
   },500);
-
   window.addEventListener("load",()=>{tryLoad();},{once:true});
 }
 
@@ -10092,6 +10166,8 @@ if($("menuBtn")){$("menuBtn").setAttribute("aria-label",t().menuTitle);$("menuBt
 $("topNote")
 .textContent=
 x.top;
+if($("quickWishesLabel"))$("quickWishesLabel").textContent=lang==="en"?"Customer Reviews":lang==="he"?"ביקורות הלקוחות":"آراء عميلاتنا";
+renderCustomerReviews();
 
 
 $("whatsappHeader")
@@ -11285,7 +11361,7 @@ if("serviceWorker" in navigator){
   },{once:true});
 }
 </script>
-<script src="./customer-sidebar.js?v=1" defer></script>
+<script src="./customer-sidebar.js?v=2" defer></script>
 
 <script id="espoza-turnstile-client">
 (function(){
