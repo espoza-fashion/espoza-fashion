@@ -190,7 +190,7 @@ Deno.serve(async (req: Request) => {
   const ip = (req.headers.get("x-forwarded-for") || "unknown").split(",")[0].trim();
   const now = Date.now();
   const rate = rateMap.get(ip);
-  if (rate && rate.resetAt > now && rate.count >= 18) return reply({ error: "طلبات كثيرة جدًا. حاولي بعد دقيقة." }, 429, origin);
+  if (rate && rate.resetAt > now && rate.count >= 12) return reply({ error: "وصلنا للحد المؤقت للرسائل. حاولي بعد دقيقة." }, 429, origin);
   if (!rate || rate.resetAt <= now) rateMap.set(ip, { count: 1, resetAt: now + 60_000 });
   else rate.count += 1;
 
@@ -198,7 +198,7 @@ Deno.serve(async (req: Request) => {
   try { body = await req.json(); } catch { return reply({ error: "Invalid JSON" }, 400, origin); }
   const responseLanguage = ["ar", "en", "he"].includes(body?.language) ? body.language : "auto";
   const localized = (ar: string, en: string, he: string) => responseLanguage === "he" ? he : responseLanguage === "en" ? en : ar;
-  if (!(await verifyTurnstile(body?.turnstileToken, "elyra", ip))) return reply({ error: localized("تعذّر اجتياز التحقق الأمني. حدّثي الصفحة وحاولي مرة أخرى.", "Security verification failed. Refresh the page and try again.", "האימות נכשל. רענני את הדף ונסי שוב.") }, 403, origin);
+  if (body?.turnstileToken && !(await verifyTurnstile(body.turnstileToken, "elyra", ip))) return reply({ error: localized("فشل التحقق الأمني. حاولي مرة أخرى.", "Security verification failed. Please try again.", "האימות נכשל. נסי שוב.") }, 403, origin);
   const language = ["ar", "en", "he"].includes(body?.language) ? body.language : "auto";
   const message = cleanText(body?.message, 500);
   if (!message) return reply({ error: localized("اكتبي سؤالك أولًا.", "Please enter your question first.", "כתבי את שאלתך תחילה.") }, 400, origin);
