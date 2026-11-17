@@ -508,6 +508,116 @@ let loginAttempts = 0;
 let loginLockedUntil = 0;
 const PLACEHOLDER = "https://placehold.co/400x500?text=Espoza";
 
+
+/* ===================== Admin interface languages ===================== */
+const ADMIN_I18N={
+"لوحة التحكم":["Dashboard","לוח ניהול"],
+"نظرة عامة":["Overview","סקירה כללית"],
+"السلات المتروكة":["Abandoned carts","עגלות נטושות"],
+"الطلبات":["Orders","הזמנות"],
+"المنتجات":["Products","מוצרים"],
+"الأقسام والتصنيفات":["Categories","קטגוריות"],
+"كوبونات الخصم":["Discount coupons","קופוני הנחה"],
+"حسابات الزبائن":["Customer accounts","חשבונות לקוחות"],
+"مكتبة الوسائط":["Media library","ספריית מדיה"],
+"محتوى الموقع":["Website content","תוכן האתר"],
+"سلايدر الرئيسية":["Homepage slider","סליידר ראשי"],
+"آراء الزبائن":["Customer reviews","ביקורות לקוחות"],
+"مناطق التوصيل":["Delivery areas","אזורי משלוח"],
+"إعدادات المتجر":["Store settings","הגדרות החנות"],
+"جاري الاتصال…":["Connecting…","מתחבר…"],
+"متصلة الآن":["Connected","מחובר"],
+"تعذر الاتصال":["Connection failed","החיבור נכשל"],
+"↻ تحديث":["↻ Refresh","↻ רענון"],
+"تسجيل الخروج":["Log out","התנתקות"],
+"صور آراء الزبائن":["Customer review images","תמונות ביקורות לקוחות"],
+"+ إضافة صورة":["+ Add image","+ הוספת תמונה"],
+"التقييمات النصية — آراء عميلاتنا":["Written reviews — Customer feedback","ביקורות כתובות — חוות דעת לקוחות"],
+"هذه التقييمات تظهر في القسم المختصر بالموقع، وتستطيع إيلارا قراءتها للإجابة عن أسئلة الزبائن.":["These reviews appear on the website and Elara can use them to answer customer questions.","ביקורות אלו מוצגות באתר ואלארה יכולה להיעזר בהן כדי לענות ללקוחות."],
+"+ إضافة تقييم نصي":["+ Add written review","+ הוספת ביקורת כתובה"],
+"جارٍ تحميل التقييمات…":["Loading reviews…","טוען ביקורות…"],
+"لا توجد تقييمات نصية بعد.":["No written reviews yet.","עדיין אין ביקורות כתובות."],
+"منشور للزبائن":["Published","מפורסם"],
+"مخفي":["Hidden","מוסתר"],
+"تعديل":["Edit","עריכה"],
+"حذف":["Delete","מחיקה"],
+"حفظ":["Save","שמירה"],
+"إغلاق":["Close","סגירה"],
+"إضافة تقييم عميلة":["Add customer review","הוספת ביקורת לקוחה"],
+"تعديل تقييم عميلة":["Edit customer review","עריכת ביקורת לקוחה"],
+"اسم العميلة الظاهر":["Customer display name","שם הלקוחה להצגה"],
+"التقييم بالنجوم":["Star rating","דירוג כוכבים"],
+"نص التقييم":["Review text","תוכן הביקורת"],
+"ترتيب الظهور":["Display order","סדר תצוגה"],
+"نشر التقييم للزبائن وإتاحته لإيلارا":["Publish review and make it available to Elara","פרסום הביקורת והנגשתה לאלארה"],
+"حفظ التقييم":["Save review","שמירת ביקורת"],
+"لا توجد تقييمات بعد.":["No reviews yet.","אין עדיין ביקורות."],
+"إضافة تقييم":["Add review","הוספת ביקורת"],
+"العربية":["Arabic","ערבית"],
+"لغة لوحة الإدارة":["Admin language","שפת לוח הניהול"],
+"المنطقة":["Area","אזור"],
+"سعر التوصيل (₪)":["Delivery fee (₪)","עלות משלוח (₪)"],
+"الحالة":["Status","סטטוס"],
+"ظاهر":["Visible","גלוי"],
+"متوقف":["Disabled","מושבת"],
+"فعال":["Active","פעיל"],
+"اسم المنتج":["Product name","שם המוצר"],
+"السعر":["Price","מחיר"],
+"الوصف":["Description","תיאור"],
+"المقاسات":["Sizes","מידות"],
+"الألوان":["Colors","צבעים"],
+"إضافة منتج":["Add product","הוספת מוצר"],
+"حفظ المنتج":["Save product","שמירת מוצר"],
+"تأكيد":["Confirm","אישור"],
+"إلغاء":["Cancel","ביטול"],
+"جارٍ التحميل…":["Loading…","טוען…"],
+"لا توجد بيانات":["No data available","אין נתונים"]
+};
+const adminOriginalText=new WeakMap();
+const adminLastText=new WeakMap();
+let adminLanguage=localStorage.getItem("espoza_admin_language")||"ar";
+function translateAdminTree(root){
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ let node;
+ while((node=walker.nextNode())){
+  const current=node.nodeValue||"";
+  let original;
+  if(adminLastText.get(node)===current)original=adminOriginalText.get(node)||current;
+  else{original=current;adminOriginalText.set(node,original);}
+  const trimmed=original.trim();
+  const translation=ADMIN_I18N[trimmed];
+  const next=translation&&adminLanguage!=="ar"?original.replace(trimmed,translation[adminLanguage==="en"?0:1]):original;
+  if(node.nodeValue!==next){node.nodeValue=next;adminLastText.set(node,next);}
+  else adminLastText.set(node,next);
+ }
+ root.querySelectorAll?.("[placeholder],[title],[aria-label]").forEach(el=>{
+  ["placeholder","title","aria-label"].forEach(attr=>{
+   const value=el.getAttribute(attr);if(!value)return;
+   const entry=ADMIN_I18N[value];
+   if(entry)el.setAttribute(attr,adminLanguage==="ar"?value:entry[adminLanguage==="en"?0:1]);
+  });
+ });
+}
+function setAdminLanguage(language){
+ adminLanguage=["ar","en","he"].includes(language)?language:"ar";
+ localStorage.setItem("espoza_admin_language",adminLanguage);
+ document.documentElement.lang=adminLanguage;
+ document.documentElement.dir=adminLanguage==="en"?"ltr":"rtl";
+ const select=document.getElementById("adminLanguageSelect");
+ if(select)select.value=adminLanguage;
+ translateAdminTree(document.body);
+}
+const adminLanguageObserver=new MutationObserver(records=>{
+ records.forEach(record=>{
+  if(record.type==="childList")record.addedNodes.forEach(node=>{
+   if(node.nodeType===Node.ELEMENT_NODE)translateAdminTree(node);
+   else if(node.nodeType===Node.TEXT_NODE&&node.parentElement)translateAdminTree(node.parentElement);
+  });
+  else if(record.type==="characterData"&&record.target.parentElement)translateAdminTree(record.target.parentElement);
+ });
+});
+adminLanguageObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+
 /* ===================== State ===================== */
 let orders = [], products = [], productImages = [], productSizes = [], productColors = [];
 let feedbackRows = [];
@@ -585,6 +695,8 @@ function goPage(page){
 }
 $("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
 $("refreshBtn").addEventListener("click",loadAll);
+$("adminLanguageSelect").addEventListener("change",e=>setAdminLanguage(e.target.value));
+setAdminLanguage(adminLanguage);
 
 /* ===================== Load everything ===================== */
 async function loadAll(){
