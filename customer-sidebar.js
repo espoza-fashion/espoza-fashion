@@ -65,7 +65,7 @@
   });
   const more=document.createElement("div");more.className="esp-side-section-title";more.textContent=label("روابط سريعة","QUICK LINKS");body.append(more);
   body.append(makeButton("esp-side-link","♡","المفضلة","Wishlist",()=>{close();if(typeof window.scrollToWishlist==="function")window.scrollToWishlist();}));
-  body.append(makeButton("esp-side-link","✦","آراء عميلاتنا","Customer Reviews",()=>{close();const section=document.getElementById("customerReviewsSection")||document.getElementById("feedback");if(section)section.scrollIntoView({behavior:"smooth",block:"start"});}));
+  body.append(makeButton("esp-side-link","✦","آراء عميلاتنا","Customer Reviews",()=>{close();const section=document.getElementById("publicWishesSection")||document.getElementById("customerReviewsSection")||document.getElementById("feedback");if(section)section.scrollIntoView({behavior:"smooth",block:"start"});}));
   body.append(makeButton("esp-side-link","▣","سلة التسوق","Shopping Bag",()=>{close();if(typeof window.openCartModal==="function")window.openCartModal();}));
   body.append(makeButton("esp-side-link","i","سياسة المتجر","Store Policies",()=>{close();if(typeof window.openModal==="function")window.openModal("policiesModal");}));
   const contact=document.createElement("a");contact.className="esp-side-link";contact.href=($("whatsappHeader")&&$("whatsappHeader").href)||"#";contact.target="_blank";contact.rel="noopener noreferrer";
