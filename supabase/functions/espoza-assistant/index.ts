@@ -65,21 +65,22 @@ function settingValue(settings: any[], key: string) {
   const row = settings.find((item) => item.key === key);
   return row?.value ?? null;
 }
-function reviewSummaryAnswer(reviews: any[], language: string) {
+function reviewSummaryAnswer(reviews: any[], language: string, publishedCount: number) {
   const rows = Array.isArray(reviews) ? reviews : [];
   if (!rows.length) {
     if (language === "he") return "עדיין אין ביקורות לקוחות שפורסמו באתר. אפשר לבדוק שוב בהמשך.";
     if (language === "en") return "There are no published customer reviews on the website yet. Please check again later.";
     return "لسه ما في تقييمات منشورة حاليًا على الموقع. تقدري ترجعي تشوفيها لاحقًا.";
   }
-  const average = rows.reduce((sum, row) => sum + Number(row.rating || 0), 0) / rows.length;
-  if (language === "he") return "יש לנו " + rows.length + " ביקורות לקוחות שפורסמו, עם דירוג ממוצע של " + average.toFixed(1) + " מתוך 5. אפשר לקרוא את כולן באזור «ביקורות הלקוחות» באתר.";
-  if (language === "en") return "We currently have " + rows.length + " published customer reviews, with an average rating of " + average.toFixed(1) + " out of 5. You can read them all in the Customer Reviews section on our website.";
-  return "عندنا حاليًا " + rows.length + " تقييم منشور من عميلاتنا، ومتوسط التقييم " + average.toFixed(1) + " من 5. بتقدري تشوفي كل الآراء في قسم «آراء عميلاتنا» على الموقع.";
+  const count = Number.isFinite(publishedCount) ? Math.max(0, publishedCount) : rows.length;
+  const average = rows.length === count && count ? rows.reduce((sum, row) => sum + Number(row.rating || 0), 0) / count : null;
+  if (language === "he") return "יש לנו " + count + " ביקורות לקוחות שפורסמו" + (average === null ? "" : ", עם דירוג ממוצע של " + average.toFixed(1) + " מתוך 5") + ". אפשר לקרוא את כולן באזור «ביקורות הלקוחות» באתר.";
+  if (language === "en") return "We currently have " + count + " published customer reviews" + (average === null ? "" : ", with an average rating of " + average.toFixed(1) + " out of 5") + ". You can read them all in the Customer Reviews section on our website.";
+  return "عندنا حاليًا " + count + " تقييم منشور من عميلاتنا" + (average === null ? "" : "، ومتوسط التقييم " + average.toFixed(1) + " من 5") + ". بتقدري تشوفي كل الآراء في قسم «آراء عميلاتنا» على الموقع.";
 }
-function fallbackAnswerHebrew(message: string, products: any[], sizes: any[], colors: any[], settings: any[], delivery: any[], offers: any[], reviews: any[]) {
+function fallbackAnswerHebrew(message: string, products: any[], sizes: any[], colors: any[], settings: any[], delivery: any[], offers: any[], reviews: any[], publishedReviewsCount: number) {
   const reviewQuestion = /ביקורות|חוות דעת|דירוג|המלצות|לקוחות מרוצות/.test(message.toLocaleLowerCase());
-  if (reviewQuestion) return reviewSummaryAnswer(reviews, "he");
+  if (reviewQuestion) return reviewSummaryAnswer(reviews, "he", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
   if (/משלוח|שליח|דמי משלוח|עלות משלוח/.test(q)) {
     const areas = delivery.map((x) => (x.area_name_he || x.area_name || "") + ": " + Number(x.price || 0) + " ₪").join(" · ");
@@ -115,7 +116,7 @@ function fallbackAnswerHebrew(message: string, products: any[], sizes: any[], co
 }
 function fallbackAnswerEnglish(message: string, products: any[], sizes: any[], colors: any[], settings: any[], delivery: any[], offers: any[], reviews: any[]) {
   const reviewQuestion = /review|reviews|rating|ratings|testimonial|customer feedback/.test(message.toLocaleLowerCase());
-  if (reviewQuestion) return reviewSummaryAnswer(reviews, "en");
+  if (reviewQuestion) return reviewSummaryAnswer(reviews, "en", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
   if (/delivery|shipping|delivery fee|shipping fee/.test(q)) {
     const areas = delivery.map((x) => (x.area_name_en || x.area_name || "") + ": " + Number(x.price || 0) + " ILS").join(" · ");
@@ -141,7 +142,7 @@ function fallbackAnswerEnglish(message: string, products: any[], sizes: any[], c
 }
 function fallbackAnswer(message: string, products: any[], sizes: any[], settings: any[], delivery: any[], offers: any[], reviews: any[]) {
   const reviewQuestion = /تقييم|تقييمات|آراء|رأي الزبائن|تجارب عميلات|شو رأي/.test(message.toLocaleLowerCase());
-  if (reviewQuestion) return reviewSummaryAnswer(reviews, "ar");
+  if (reviewQuestion) return reviewSummaryAnswer(reviews, "ar", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
   const isDelivery = /توصيل|الشحن|شحن|delivery|shipping|رسوم التوصيل/.test(q);
   const isExchange = /استبدال|إرجاع|ارجاع|ترجيع|return|exchange/.test(q);
@@ -249,6 +250,17 @@ Deno.serve(async (req: Request) => {
   const delivery = Array.isArray(deliveryRaw) ? deliveryRaw : [];
   const offers = Array.isArray(offersRaw) ? offersRaw : [];
   const reviews = Array.isArray(reviewsRaw) ? reviewsRaw : [];
+  let publishedReviewsCount = reviews.length;
+  try {
+    const countResponse = await fetch(`${supabaseUrl}/rest/v1/customer_reviews?select=id&active=eq.true`, {
+      method: "HEAD",
+      headers: { apikey: publicKey, Prefer: "count=exact", Range: "0-0" },
+      signal: AbortSignal.timeout(5000),
+    });
+    const contentRange = countResponse.headers.get("content-range") || "";
+    const exactCount = Number(contentRange.split("/")[1]);
+    if (countResponse.ok && Number.isFinite(exactCount)) publishedReviewsCount = exactCount;
+  } catch {}
   let sizes: any[] = [];
   let colors: any[] = [];
   let images: any[] = [];
@@ -277,8 +289,8 @@ Deno.serve(async (req: Request) => {
       })).filter((item: any) => item.parts[0].text) : [];
       const context = {
         response_language: language,
-        published_reviews_count: reviews.length,
-        average_published_review_rating: reviews.length ? Number((reviews.reduce((sum, row) => sum + Number(row.rating || 0), 0) / reviews.length).toFixed(2)) : null,
+        published_reviews_count: publishedReviewsCount,
+        average_published_review_rating: reviews.length && publishedReviewsCount === reviews.length ? Number((reviews.reduce((sum, row) => sum + Number(row.rating || 0), 0) / reviews.length).toFixed(2)) : null,
         customer_reviews: reviews.map((row) => ({ reviewer_name: cleanText(row.reviewer_name, 80), rating: Number(row.rating), review_text: cleanText(row.review_text, 1200), created_at: row.created_at })),
         store: {
           name: settingValue(settings, "store_name"),
@@ -352,7 +364,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const fallbackLanguage = language === "auto" ? (/\p{Script=Hebrew}/u.test(message) ? "he" : /[A-Za-z]/.test(message) && !/[\u0600-\u06FF]/.test(message) ? "en" : "ar") : language;
-  const answer = fallbackLanguage === "he" ? fallbackAnswerHebrew(message, products, sizes, colors, settings, delivery, offers, reviews) : fallbackLanguage === "en" ? fallbackAnswerEnglish(message, products, sizes, colors, settings, delivery, offers, reviews) : fallbackAnswer(message, products, sizes, settings, delivery, offers, reviews);
+  const answer = fallbackLanguage === "he" ? fallbackAnswerHebrew(message, products, sizes, colors, settings, delivery, offers, reviews, publishedReviewsCount) : fallbackLanguage === "en" ? fallbackAnswerEnglish(message, products, sizes, colors, settings, delivery, offers, reviews, publishedReviewsCount) : fallbackAnswer(message, products, sizes, settings, delivery, offers, reviews, publishedReviewsCount);
   const q = message.toLocaleLowerCase();
   let fallbackMatches = products.filter((p) => [p.name, p.name_en, p.name_he].filter(Boolean).some((name) => String(name).length > 2 && (q.includes(String(name).toLocaleLowerCase()) || answer.toLocaleLowerCase().includes(String(name).toLocaleLowerCase()))));
   if (!fallbackMatches.length && (/فساتين|فستان|dress/.test(q) || fallbackLanguage === "he" && /שמלות|שמלה/.test(q))) fallbackMatches = products.filter((p) => p.category === "dresses");
