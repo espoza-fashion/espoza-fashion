@@ -6869,7 +6869,7 @@ db.from("store_settings").select("key,value").in("key",["store_name","whatsapp",
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
 db.from("sliders").select("id,image_url,title,title_ar,title_en,title_he,subtitle,subtitle_ar,subtitle_en,subtitle_he,button_text_ar,button_text_en,button_text_he,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
-db.from("customer_reviews").select("id,reviewer_name,rating,review_text,created_at,sort_order").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
+db.from("wish_requests").select("id,wish_text,created_at,is_public").eq("is_public",true).order("created_at",{ascending:false}).limit(100),
 db.from("categories").select("id,slug,name_ar,name_en,name_he,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
 db.from("site_sections").select("id,section_key,title_ar,title_en,title_he,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
 ]);
@@ -6897,7 +6897,7 @@ applyThemeFromAdmin(settings);
 if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
 if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="he"?(row.title_he||row.title_en||row.title||""):lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",title_he:row.title_he||"",subtitle:lang==="he"?(row.subtitle_he||row.subtitle_en||row.subtitle||""):lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",subtitle_he:row.subtitle_he||"",button_link:row.link_url||"all",button_text:lang==="he"?(row.button_text_he||t().explore):lang==="en"?(row.button_text_en||t().explore):(row.button_text_ar||t().explore)}));
 if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
-if(!reviewResult.error)customerReviews=Array.isArray(reviewResult.data)?reviewResult.data:[];
+if(!reviewResult.error){const wishOnly=/^(بتمنى|أتمنى|اتمنى|ياريت|يا ريت|اقترح|اقتراح|ممكن تنزلوا|ممكن تنزلون|نزّلوا|نزلوا|بدي|بدنا|حابين|نتمنى)/i;customerReviews=(Array.isArray(reviewResult.data)?reviewResult.data:[]).filter(row=>String(row.wish_text||"").trim()&&!wishOnly.test(String(row.wish_text||"").trim())).map(row=>({id:row.id,review_text:row.wish_text,created_at:row.created_at}));}
 else console.warn("Customer reviews unavailable:",reviewResult.error);
 renderCustomerReviews();
 if(!categoryResult.error)adminCategories=categoryResult.data||[];
