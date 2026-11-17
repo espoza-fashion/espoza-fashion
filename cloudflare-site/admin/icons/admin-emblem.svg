@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+<title id="title">Espoza Fashion Admin</title>
+<defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ead7a8"/><stop offset=".5" stop-color="#b9985a"/><stop offset="1" stop-color="#f3dfb2"/></linearGradient></defs>
+<rect width="512" height="512" rx="96" fill="#431321"/>
+<path d="M256 38 C292 74 350 85 405 98 L405 260 C405 350 342 420 256 472 C170 420 107 350 107 260 L107 98 C162 85 220 74 256 38Z" fill="none" stroke="url(#gold)" stroke-width="5"/>
+<path d="M256 62 C288 91 338 102 383 113 L383 256 C383 334 328 394 256 439 C184 394 129 334 129 256 L129 113 C174 102 224 91 256 62Z" fill="none" stroke="#b9985a" stroke-opacity=".55" stroke-width="2"/>
+<path d="M205 105 L220 75 L256 98 L292 75 L307 105 L286 125 L226 125Z" fill="url(#gold)"/>
+<circle cx="220" cy="75" r="5" fill="#f3dfb2"/><circle cx="256" cy="98" r="5" fill="#f3dfb2"/><circle cx="292" cy="75" r="5" fill="#f3dfb2"/>
+<text x="256" y="318" text-anchor="middle" font-family="Bodoni 72, Didot, Georgia, 'Times New Roman', serif" font-size="250" font-style="italic" fill="url(#gold)">E</text>
+<path d="M160 345 C190 374 220 387 256 387 C292 387 322 374 352 345" fill="none" stroke="url(#gold)" stroke-width="3" stroke-linecap="round"/>
+<path d="M183 366 C167 389 151 395 135 391 M329 366 C345 389 361 395 377 391" fill="none" stroke="#b9985a" stroke-width="2.5" stroke-linecap="round"/>
+<text x="256" y="421" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="700" letter-spacing="8" fill="#f0dcae">ADMIN</text>
+</svg>
