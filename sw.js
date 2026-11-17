@@ -1,4 +1,4 @@
-const CACHE_NAME = "espoza-shell-v16";
+const CACHE_NAME = "espoza-shell-v17";
 
 self.addEventListener("install", event => {
   self.skipWaiting();
