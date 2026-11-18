@@ -703,7 +703,7 @@ function renderOrders(){
         </select>
       </td>
       <td class="tsub">${fmtDate(o.created_at)}</td>
-      <td>${o.notes?`<button class="btn sm" onclick='alert(${JSON.stringify(o.notes||"")})'>ملاحظات</button>`:""}</td>
+      <td>${o.notes?`<button class="btn sm" onclick="alert(this.dataset.note)" data-note="${esc(o.notes||"")}">ملاحظات</button>`:""}</td>
     </tr>`).join("") : `<tr><td colspan="9"><div class="empty"><span class="big">🗂️</span>لا توجد طلبات مطابقة</div></td></tr>`;
 }
 $("orderSearch").addEventListener("input",renderOrders);
