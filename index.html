@@ -11278,7 +11278,7 @@ async function sendEspozaAssistant(event){
    method:"POST",
    signal:controller.signal,
    headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
-   body:JSON.stringify({message,history,language:lang})
+   body:JSON.stringify({message,history,language:lang,turnstileToken:await getEspozaTurnstileToken("elyra")})
   });
   const data=await response.json();
   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
