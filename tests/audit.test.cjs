@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const shop=fs.readFileSync('index.html','utf8'),admin=fs.readFileSync('espoza-admin-dashboard.html','utf8');
+const shop=fs.readFileSync('index.html','utf8'),admin=fs.readFileSync('admin/index.html','utf8');
 function fn(source,name){
  const start=source.search(new RegExp('^(?:async )?function '+name+'\\(','m'));
  assert.ok(start>=0,name);
