@@ -1,3 +1,12 @@
+# Local environment secrets
+.env
+.env.*
+!.env.example
 
-# Private audit snapshots must not be published.
+# Local dependencies and operating-system files
+node_modules/
+.DS_Store
+
+# Private audit snapshots and local backups
+/backups/
 supabase/backups/
