@@ -7432,11 +7432,7 @@ list
 <div
 class="hero-slide"
 style="cursor:pointer"
-onclick="goCategory('${esc(
-s.button_link
-||
-"all"
-)}')">
+onclick="goCategory(${esc(JSON.stringify(s.button_link || "all"))})">
 
 ${
 s.image_url
@@ -7710,7 +7706,7 @@ function feedbackFrameHTML(url,index){
 return`
 <div
 class="iphone-frame"
-onclick="openFeedbackImage('${esc(url)}')"
+onclick="openFeedbackImage(${esc(JSON.stringify(url))})"
 role="button"
 tabindex="0"
 aria-label="Espoza Fashion customer feedback">
@@ -8169,8 +8165,8 @@ grid.innerHTML=list.map(p=>{
 const image=p.images&&p.images[0]?p.images[0].url:PLACEHOLDER;
 return `
 <article class="product-card">
-<button class="heart-btn active" type="button" aria-label="${esc(t().removeFavorite||t().remove)}" onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">♥</button>
-<div class="product-img" onclick="openProduct('${esc(p.id)}')">
+<button class="heart-btn active" type="button" aria-label="${esc(t().removeFavorite||t().remove)}" onclick="event.stopPropagation();toggleWishlistByProduct(${esc(JSON.stringify(p.id))})">♥</button>
+<div class="product-img" onclick="openProduct(${esc(JSON.stringify(p.id))})">
 <img src="${esc(image)}" alt="${esc(productDisplayName(p))}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
 ${p.offer?'<span class="offer-badge">'+esc(t().offer)+'</span>':''}
 </div>
@@ -8300,13 +8296,13 @@ marqueeDividerHTML(Math.floor(i/GROUP_SIZE)-1)
 class="heart-btn"
 type="button"
 aria-label="${esc(t().addFavorite)}"
-onclick="event.stopPropagation();toggleWishlistByProduct('${esc(p.id)}')">
+onclick="event.stopPropagation();toggleWishlistByProduct(${esc(JSON.stringify(p.id))})">
 ${isWishlistedProduct(p) ? "♥" : "♡"}
 </button>
 
 <div
 class="product-img"
-onclick="openProduct('${esc(p.id)}')">
+onclick="openProduct(${esc(JSON.stringify(p.id))})">
 
 <img
 src="${esc(
@@ -8717,7 +8713,7 @@ color===currentColor
 ""
 }"
 type="button"
-onclick="selectColor('${esc(color)}')">
+onclick="selectColor(${esc(JSON.stringify(color))})">
 ${esc(colorLabel)}
 </button>
 `;
@@ -8747,7 +8743,7 @@ size===currentSize
 ""
 }"
 type="button"
-onclick="selectSize('${esc(size)}')">
+onclick="selectSize(${esc(JSON.stringify(size))})">
 ${esc(size)}
 </button>
 `
