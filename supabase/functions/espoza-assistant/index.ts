@@ -222,7 +222,7 @@ Deno.serve(async (req: Request) => {
   try { body = await req.json(); } catch { return reply({ error: "Invalid JSON" }, 400, origin); }
   const responseLanguage = ["ar", "en", "he"].includes(body?.language) ? body.language : "auto";
   const localized = (ar: string, en: string, he: string) => responseLanguage === "he" ? he : responseLanguage === "en" ? en : ar;
-  if (body?.turnstileToken && !(await verifyTurnstile(body.turnstileToken, "elyra", ip))) return reply({ error: localized("فشل التحقق الأمني. حاولي مرة أخرى.", "Security verification failed. Please try again.", "האימות נכשל. נסי שוב.") }, 403, origin);
+  if (!(await verifyTurnstile(body?.turnstileToken, "elyra", ip))) return reply({ error: localized("فشل التحقق الأمني. حاولي مرة أخرى.", "Security verification failed. Please try again.", "האימות נכשל. נסי שוב.") }, 403, origin);
   const language = ["ar", "en", "he"].includes(body?.language) ? body.language : "auto";
   const message = cleanText(body?.message, 500);
   if (!message) return reply({ error: localized("اكتبي سؤالك أولًا.", "Please enter your question first.", "כתבי את שאלתך תחילה.") }, 400, origin);
