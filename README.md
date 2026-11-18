@@ -1,16 +1,47 @@
-## Hi there 👋
+# Espoza Fashion
 
-<!--
-**Espoza-fashion/espoza-fashion** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+المستودع الرسمي لمتجر **Espoza Fashion** الإلكتروني ولوحة إدارته.
 
-Here are some ideas to get you started:
+## التطبيقات
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+- **متجر الزبائن:** الصفحة الرئيسية في `index.html`.
+- **لوحة الإدارة:** `/admin/` — لوحة الإدارة الحالية الوحيدة.
+
+كل تطبيق يملك إعدادات PWA مستقلة:
+- `manifest.webmanifest` و`sw.js` لمتجر الزبائن.
+- `admin/manifest.webmanifest` و`admin/sw.js` للوحة الإدارة.
+
+## التقنيات والخدمات
+
+- واجهة المتجر ولوحة الإدارة: HTML وCSS وJavaScript.
+- قاعدة البيانات والمصادقة وتخزين الصور: Supabase.
+- الوظائف الخلفية: Supabase Edge Functions.
+- الاستضافة: GitHub Pages.
+
+## هيكل المستودع
+
+- `index.html` — متجر الزبائن.
+- `admin/` — لوحة الإدارة وملفات PWA الخاصة بها.
+- `icons/` — أيقونات المتجر.
+- `supabase/functions/` — الوظائف الخلفية.
+- `supabase/migrations/` — تغييرات قاعدة البيانات.
+- `tests/` — اختبارات الواجهة والمنطق واختبارات SQL.
+- `docs/` — وثائق وتقارير المراجعة.
+- `backups/` — نسخ احتياطية محفوظة للرجوع إليها.
+
+## الاختبارات
+
+يتطلب تشغيل اختبارات JavaScript وجود Node.js:
+
+```bash
+node --test tests/*.test.cjs
+```
+
+ملف `tests/backend-orders.sql` اختبار قاعدة بيانات؛ يُراجع ويُشغّل في بيئة Supabase المناسبة، وليس كاختبار Node.js.
+
+## ملاحظات أمنية
+
+- لا تضع مفاتيح Supabase السرية أو مفاتيح الخدمات في ملفات الواجهة أو المستودع.
+- استخدم مفتاح Supabase العام المخصص للواجهة فقط، مع سياسات RLS صحيحة.
+- احتفظ بالأسرار في إعدادات Supabase Edge Functions أو إعدادات البيئة الآمنة.
+- راجع تغييرات قاعدة البيانات والوظائف الخلفية قبل نشرها.
