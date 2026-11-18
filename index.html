@@ -7472,11 +7472,7 @@ ${esc(localizeDynamicText(s.subtitle))}
 
 <button
 type="button"
-onclick="event.stopPropagation();goCategory('${esc(
-s.button_link
-||
-"all"
-)}')">
+onclick="event.stopPropagation();goCategory(${esc(JSON.stringify(s.button_link || "all"))})">
 
 ${esc(
 s.button_text
