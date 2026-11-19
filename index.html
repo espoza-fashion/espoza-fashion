@@ -8300,7 +8300,7 @@ function renderCustomerReviews(){
   const copy=renderCustomerReviewFormLanguage();
   if(countLabel)countLabel.textContent=lang==="en"?count+" "+(copy?.count||"customer reviews"):lang==="he"?count+" "+(copy?.count||"חוות דעת של לקוחות"):count+" "+(copy?.count||"تقييم من عميلاتنا");
   const average=$("customerReviewsAverage"),starsSummary=$("customerReviewsStars");
-  const avg=count?rows.reduce((sum,row)=>sum+(Number(row.rating)||0),0)/count:0;
+  const ratedRows=rows.filter(row=>Number(row.rating)>=1&&Number(row.rating)<=5);const avg=ratedRows.length?ratedRows.reduce((sum,row)=>sum+Number(row.rating),0)/ratedRows.length:0;
   if(average){average.hidden=!count;average.textContent=count?avg.toFixed(1)+"/5":"—";}
   if(starsSummary){starsSummary.hidden=!count;starsSummary.textContent="★★★★★";}
   const shown=customerReviewsExpanded?rows:rows.slice(0,2);
@@ -8309,8 +8309,8 @@ function renderCustomerReviews(){
   }else{
     grid.innerHTML=shown.map(row=>{
       const date=row.created_at?new Date(row.created_at).toLocaleDateString(lang==="en"?"en-US":lang==="he"?"he-IL":"ar-PS"):"";
-      const rating=Math.max(0,Math.min(5,Number(row.rating)||0));
-      return '<article class="customer-review-card"><div class="customer-review-top"><strong class="customer-review-name">'+esc(row.reviewer_name||"")+'</strong><span class="customer-review-stars" aria-label="'+rating+' / 5">'+("★".repeat(rating))+('<span class="empty-star">★</span>'.repeat(5-rating))+'</span></div><p class="customer-review-text" dir="auto">'+esc(row.review_text||"")+'</p><time class="customer-review-date">'+esc(date)+'</time></article>';
+      const rating=Number(row.rating)>=1&&Number(row.rating)<=5?Number(row.rating):null;
+      return '<article class="customer-review-card"><div class="customer-review-top"><strong class="customer-review-name">'+esc(row.reviewer_name||"")+'</strong>'+(rating===null?'':'<span class="customer-review-stars" aria-label="'+rating+' / 5">'+("★".repeat(rating))+'<span class="empty-star">★</span>'.repeat(5-rating)+'</span>')+'</div><p class="customer-review-text" dir="auto">'+esc(row.review_text||"")+'</p><time class="customer-review-date">'+esc(date)+'</time></article>';
     }).join("");
   }
   const more=$("customerReviewsMore");
