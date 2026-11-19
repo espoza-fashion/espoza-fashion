@@ -3408,6 +3408,18 @@ footer{
 .customer-reviews-section{padding-top:8px!important;padding-bottom:42px!important}
 .customer-reviews-card{max-width:980px;margin:0 auto;padding:22px 24px;background:linear-gradient(135deg,#fff,#f8eef1);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(67,19,33,.055)}
 .customer-reviews-head{text-align:center;margin-bottom:12px}
+.customer-review-form{display:grid;gap:8px;margin:18px auto 20px;padding:17px;background:#fff;border:1px solid var(--line);border-radius:17px;max-width:650px}
+.customer-review-form-heading{text-align:center;margin-bottom:4px}.customer-review-form-heading h3{margin:0;color:var(--wine);font-size:18px}.customer-review-form-heading p{margin:3px 0 0;color:var(--muted);font-size:10px}
+.customer-review-form label{font-size:11px;font-weight:800;color:var(--dark);margin-top:3px}
+.customer-review-form input,.customer-review-form textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;color:var(--dark);outline:none;font:inherit;font-size:13px;resize:vertical}
+.customer-review-form input:focus,.customer-review-form textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(185,152,90,.12)}
+.customer-review-rating{display:flex;gap:5px;direction:ltr;justify-content:center}
+.customer-review-rating button{border:0;background:transparent;color:#d8cfd1;font-size:30px;line-height:1;padding:2px;cursor:pointer}
+.customer-review-rating button.selected{color:var(--gold)}
+.customer-review-submit{border:0;border-radius:30px;background:linear-gradient(135deg,var(--wine),var(--dark));color:#fff;padding:11px 18px;font-weight:800;font-size:12px;box-shadow:0 7px 18px rgba(67,19,33,.14);margin-top:4px}
+.customer-review-submit:disabled{opacity:.6;cursor:wait}
+.empty-star{color:#e6dfe1}
+
 .customer-reviews-head h2{font-family:"Playfair Display","Cairo",serif;color:var(--wine);font-size:clamp(23px,3vw,32px);margin:0 0 4px}
 .customer-reviews-head p{margin:0;color:var(--muted);font-size:12px}
 .customer-reviews-summary{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:12px auto 15px;padding:8px 13px;width:max-content;max-width:100%;border:1px solid var(--line);border-radius:30px;background:#fff}
@@ -3777,6 +3789,18 @@ id="featuresTrack">
 <span class="customer-review-summary-stars" id="customerReviewsStars">★★★★★</span>
 <span id="customerReviewsCount"></span>
 </div>
+<form class="customer-review-form" id="customerReviewForm" onsubmit="submitCustomerReview(event)" novalidate>
+<div class="customer-review-form-heading"><h3 id="customerReviewFormTitle">اكتبي تقييمك</h3><p id="customerReviewPending">سيظهر تقييمك بعد مراجعته من فريق إسبوزا</p></div>
+<label id="customerReviewNameLabel" for="customerReviewName">اسمك</label>
+<input id="customerReviewName" name="reviewer_name" type="text" maxlength="80" autocomplete="name" required placeholder="اكتبي اسمك">
+<label id="customerReviewRatingLabel">تقييمك</label>
+<div class="customer-review-rating" id="customerReviewStars" role="group" aria-label="اختاري عدد النجوم">
+<button type="button" data-rating="1" aria-label="1 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(1)">★</button><button type="button" data-rating="2" aria-label="2 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(2)">★</button><button type="button" data-rating="3" aria-label="3 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(3)">★</button><button type="button" data-rating="4" aria-label="4 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(4)">★</button><button type="button" data-rating="5" aria-label="5 نجوم" aria-pressed="true" onclick="setCustomerReviewRating(5)">★</button>
+</div>
+<label id="customerReviewTextLabel" for="customerReviewText">رأيك وتجربتك</label>
+<textarea id="customerReviewText" name="review_text" rows="3" maxlength="1200" required placeholder="احكيلنا عن تجربتك مع إسبوزا فاشن"></textarea>
+<button class="customer-review-submit" id="customerReviewSubmit" type="submit">إرسال التقييم</button>
+</form>
 <div class="customer-reviews-grid" id="customerReviewsGrid">
 <div class="customer-reviews-empty" id="customerReviewsEmpty">جارٍ تحميل التقييمات…</div>
 </div>
@@ -6869,7 +6893,7 @@ db.from("store_settings").select("key,value").in("key",["store_name","whatsapp",
 db.from("delivery_areas").select("*").eq("active",true).order("sort_order",{ascending:true}),
 db.from("sliders").select("id,image_url,title,title_ar,title_en,title_he,subtitle,subtitle_ar,subtitle_en,subtitle_he,button_text_ar,button_text_en,button_text_he,link_url,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}),
 db.from("feedback").select("id,image_url,title,alt_text,active,sort_order,created_at").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:true}),
-db.from("wish_requests").select("id,wish_text,created_at,is_public").eq("is_public",true).order("created_at",{ascending:false}).limit(100),
+db.from("customer_reviews").select("id,reviewer_name,rating,review_text,created_at,language").eq("active",true).order("sort_order",{ascending:true}).order("created_at",{ascending:false}).limit(100),
 db.from("categories").select("id,slug,name_ar,name_en,name_he,active,sort_order").eq("active",true).order("sort_order",{ascending:true}),
 db.from("site_sections").select("id,section_key,title_ar,title_en,title_he,config,visible,sort_order").eq("visible",true).order("sort_order",{ascending:true})
 ]);
@@ -6897,7 +6921,7 @@ applyThemeFromAdmin(settings);
 if(!deliveryResult.error)adminDeliveryAreas=deliveryResult.data||[];
 if(!sliderResult.error)adminSliders=(sliderResult.data||[]).map(row=>({image_url:row.image_url,title:lang==="he"?(row.title_he||row.title_en||row.title||""):lang==="en"?(row.title_en||row.title||""):(row.title_ar||row.title||""),title_ar:row.title_ar||row.title||"",title_en:row.title_en||"",title_he:row.title_he||"",subtitle:lang==="he"?(row.subtitle_he||row.subtitle_en||row.subtitle||""):lang==="en"?(row.subtitle_en||row.subtitle||""):(row.subtitle_ar||row.subtitle||""),subtitle_ar:row.subtitle_ar||row.subtitle||"",subtitle_en:row.subtitle_en||"",subtitle_he:row.subtitle_he||"",button_link:row.link_url||"all",button_text:lang==="he"?(row.button_text_he||t().explore):lang==="en"?(row.button_text_en||t().explore):(row.button_text_ar||t().explore)}));
 if(!feedbackResult.error)adminFeedback=(feedbackResult.data||[]).map(row=>({image_url:row.image_url,title:row.title||"",alt_text:row.alt_text||""}));
-if(!reviewResult.error){const wishOnly=/^(بتمنى|أتمنى|اتمنى|ياريت|يا ريت|اقترح|اقتراح|ممكن تنزلوا|ممكن تنزلون|نزّلوا|نزلوا|بدي|بدنا|حابين|نتمنى)/i;customerReviews=(Array.isArray(reviewResult.data)?reviewResult.data:[]).filter(row=>String(row.wish_text||"").trim()&&!wishOnly.test(String(row.wish_text||"").trim())).map(row=>({id:row.id,review_text:row.wish_text,created_at:row.created_at}));}
+if(!reviewResult.error){customerReviews=Array.isArray(reviewResult.data)?reviewResult.data:[];}
 else console.warn("Customer reviews unavailable:",reviewResult.error);
 renderCustomerReviews();
 if(!categoryResult.error)adminCategories=categoryResult.data||[];
@@ -8191,22 +8215,78 @@ async function loadCustomerReviews(){
   const empty=$("customerReviewsEmpty");
   try{
     const db=getCustomerSupabase();
-    // Existing public customer messages are stored in wish_requests.
-    // Keep wishlist submissions intact, but display only genuine experience/review messages here.
-    const result=await db.from("wish_requests")
-      .select("id,wish_text,created_at,is_public")
-      .eq("is_public",true)
+    const result=await db.from("customer_reviews")
+      .select("id,reviewer_name,rating,review_text,created_at,language")
+      .eq("active",true)
+      .order("sort_order",{ascending:true})
       .order("created_at",{ascending:false})
       .limit(100);
     if(result.error)throw result.error;
-    const rows=Array.isArray(result.data)?result.data:[];
-    const wishOnly=/^(بتمنى|أتمنى|اتمنى|ياريت|يا ريت|اقترح|اقتراح|ممكن تنزلوا|ممكن تنزلون|نزّلوا|نزلوا|بدي|بدنا|حابين|نتمنى)/i;
-    customerReviews=rows.filter(row=>String(row.wish_text||"").trim()&&!wishOnly.test(String(row.wish_text||"").trim()))
-      .map(row=>({id:row.id,review_text:row.wish_text,created_at:row.created_at}));
+    customerReviews=Array.isArray(result.data)?result.data:[];
     renderCustomerReviews();
   }catch(error){
     console.warn("Customer reviews could not load:",error);
     if(empty)empty.textContent=lang==="en"?"Reviews are temporarily unavailable.":lang==="he"?"הביקורות אינן זמינות כרגע.":"التقييمات غير متاحة مؤقتًا.";
+  }
+}
+let customerReviewRating=5;
+let customerReviewSubmitting=false;
+function setCustomerReviewRating(value){
+  customerReviewRating=Math.max(1,Math.min(5,Number(value)||5));
+  document.querySelectorAll("#customerReviewStars button").forEach(button=>{
+    const active=Number(button.dataset.rating)<=customerReviewRating;
+    button.classList.toggle("selected",active);
+    button.setAttribute("aria-pressed",String(Number(button.dataset.rating)===customerReviewRating));
+  });
+}
+function renderCustomerReviewFormLanguage(){
+  const copy={
+    ar:{title:"اكتبي تقييمك",name:"اسمك",namePlaceholder:"اكتبي اسمك",review:"رأيك وتجربتك",reviewPlaceholder:"احكيلنا عن تجربتك مع إسبوزا فاشن",rating:"تقييمك",submit:"إرسال التقييم",pending:"سيظهر تقييمك بعد مراجعته من فريق إسبوزا",success:"وصلنا تقييمك بنجاح وسيظهر بعد المراجعة",error:"تعذر إرسال التقييم حاليًا حاولي مرة ثانية",required:"اكتبي اسمك ورأيك واختاري التقييم",count:"تقييم من عميلاتنا",empty:"لا توجد تقييمات منشورة بعد",more:"عرض جميع التقييمات",less:"عرض أقل"},
+    en:{title:"Write a review",name:"Your name",namePlaceholder:"Enter your name",review:"Your experience",reviewPlaceholder:"Tell us about your experience with Espoza Fashion",rating:"Your rating",submit:"Submit review",pending:"Your review will appear after approval by the Espoza team",success:"Your review was received and will appear after approval",error:"Could not submit your review. Please try again",required:"Enter your name and review, then choose a rating",count:"customer reviews",empty:"No published reviews yet",more:"View all reviews",less:"Show less"},
+    he:{title:"כתבי חוות דעת",name:"השם שלך",namePlaceholder:"הזיני את שמך",review:"החוויה שלך",reviewPlaceholder:"ספרי לנו על החוויה שלך עם Espoza Fashion",rating:"הדירוג שלך",submit:"שליחת חוות הדעת",pending:"חוות הדעת תופיע לאחר אישור צוות Espoza",success:"חוות הדעת התקבלה ותופיע לאחר אישור",error:"לא ניתן לשלוח כרגע. נסי שוב",required:"הזיני שם וחוות דעת ובחרי דירוג",count:"חוות דעת של לקוחות",empty:"עדיין אין חוות דעת שפורסמו",more:"הצגת כל חוות הדעת",less:"הצג פחות"}
+  }[lang]||null;
+  const x=copy||null;
+  if(!x)return;
+  const set=(id,value)=>{const el=$(id);if(el)el.textContent=value;};
+  set("customerReviewFormTitle",x.title);set("customerReviewNameLabel",x.name);
+  set("customerReviewTextLabel",x.review);set("customerReviewRatingLabel",x.rating);
+  set("customerReviewSubmit",x.submit);set("customerReviewPending",x.pending);
+  const name=$("customerReviewName"),review=$("customerReviewText");
+  if(name)name.placeholder=x.namePlaceholder;
+  if(review)review.placeholder=x.reviewPlaceholder;
+  const submit=$("customerReviewSubmit");if(submit&&!customerReviewSubmitting)submit.textContent=x.submit;
+  return x;
+}
+async function submitCustomerReview(event){
+  event.preventDefault();
+  if(customerReviewSubmitting)return;
+  const name=$("customerReviewName"),review=$("customerReviewText"),button=$("customerReviewSubmit");
+  const reviewer_name=String(name?.value||"").trim();
+  const review_text=String(review?.value||"").trim();
+  const copy=renderCustomerReviewFormLanguage();
+  if(!reviewer_name||reviewer_name.length>80||review_text.length<2||review_text.length>1200||!customerReviewRating){
+    toast(copy?.required||"Please complete the review");
+    return;
+  }
+  if(!navigator.onLine){toast(copy?.error||"Offline");return;}
+  customerReviewSubmitting=true;
+  if(button){button.disabled=true;button.textContent=lang==="en"?"Sending…":lang==="he"?"שולחת…":"جارٍ الإرسال…";}
+  try{
+    const db=getCustomerSupabase();
+    const result=await db.from("customer_reviews").insert({
+      reviewer_name,review_text,rating:customerReviewRating,language:lang,
+      active:false,sort_order:0
+    });
+    if(result.error)throw result.error;
+    $("customerReviewForm").reset();
+    setCustomerReviewRating(5);
+    toast(copy?.success||"Review received");
+  }catch(error){
+    console.error("Customer review submission failed:",error);
+    toast(copy?.error||"Could not submit review");
+  }finally{
+    customerReviewSubmitting=false;
+    if(button){button.disabled=false;button.textContent=copy?.submit||"Submit review";}
   }
 }
 function renderCustomerReviews(){
@@ -8217,26 +8297,30 @@ function renderCustomerReviews(){
   const summary=$("customerReviewsSummary");
   if(summary)summary.hidden=!count;
   const countLabel=$("customerReviewsCount");
-  if(countLabel)countLabel.textContent=lang==="en"?count+" customer experiences":lang==="he"?count+" חוויות לקוחות":count+" تجربة من عميلاتنا";
+  const copy=renderCustomerReviewFormLanguage();
+  if(countLabel)countLabel.textContent=lang==="en"?count+" "+(copy?.count||"customer reviews"):lang==="he"?count+" "+(copy?.count||"חוות דעת של לקוחות"):count+" "+(copy?.count||"تقييم من عميلاتنا");
   const average=$("customerReviewsAverage"),starsSummary=$("customerReviewsStars");
-  if(average)average.hidden=true;
-  if(starsSummary)starsSummary.hidden=true;
+  const avg=count?rows.reduce((sum,row)=>sum+(Number(row.rating)||0),0)/count:0;
+  if(average){average.hidden=!count;average.textContent=count?avg.toFixed(1)+"/5":"—";}
+  if(starsSummary){starsSummary.hidden=!count;starsSummary.textContent="★★★★★";}
   const shown=customerReviewsExpanded?rows:rows.slice(0,2);
   if(!shown.length){
-    grid.innerHTML='<div class="customer-reviews-empty">'+(lang==="en"?"No published reviews yet.":lang==="he"?"עדיין אין ביקורות שפורסמו.":"لا توجد آراء منشورة بعد.")+'</div>';
+    grid.innerHTML='<div class="customer-reviews-empty">'+(copy?.empty||"لا توجد تقييمات منشورة بعد")+'</div>';
   }else{
     grid.innerHTML=shown.map(row=>{
       const date=row.created_at?new Date(row.created_at).toLocaleDateString(lang==="en"?"en-US":lang==="he"?"he-IL":"ar-PS"):"";
-      return '<article class="customer-review-card"><p class="customer-review-text" dir="auto" lang="und">'+esc(row.review_text||"")+'</p><time class="customer-review-date">'+esc(date)+'</time></article>';
+      const rating=Math.max(0,Math.min(5,Number(row.rating)||0));
+      return '<article class="customer-review-card"><div class="customer-review-top"><strong class="customer-review-name">'+esc(row.reviewer_name||"")+'</strong><span class="customer-review-stars" aria-label="'+rating+' / 5">'+("★".repeat(rating))+('<span class="empty-star">★</span>'.repeat(5-rating))+'</span></div><p class="customer-review-text" dir="auto">'+esc(row.review_text||"")+'</p><time class="customer-review-date">'+esc(date)+'</time></article>';
     }).join("");
   }
   const more=$("customerReviewsMore");
   if(more){
     more.hidden=count<=2;
-    more.textContent=customerReviewsExpanded?(lang==="en"?"Show less":lang==="he"?"הצג פחות":"عرض أقل"):(lang==="en"?"View all reviews":lang==="he"?"הצג את כל הביקורות":"عرض جميع التقييمات");
+    more.textContent=customerReviewsExpanded?(copy?.less||"عرض أقل"):(copy?.more||"عرض جميع التقييمات");
   }
   if($("customerReviewsTitle"))$("customerReviewsTitle").textContent=lang==="en"?"Customer Reviews":lang==="he"?"ביקורות הלקוחות":"آراء عميلاتنا";
-  if($("customerReviewsIntro"))$("customerReviewsIntro").textContent=lang==="en"?"Real experiences from Espoza Fashion customers":lang==="he"?"חוויות אמיתיות של לקוחות אספוזה פאשן":"تجارب حقيقية من عميلات إسبوزا فاشن";
+  if($("customerReviewsIntro"))$("customerReviewsIntro").textContent=lang==="en"?"Real experiences from Espoza Fashion customers":lang==="he"?"חוויות אמיתיות של לקוחות Espoza Fashion":"تجارب حقيقية من عميلات إسبوزا فاشن";
+  setCustomerReviewRating(customerReviewRating);
 }
 function toggleCustomerReviews(){
   customerReviewsExpanded=!customerReviewsExpanded;
