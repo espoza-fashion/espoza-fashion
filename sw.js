@@ -1,7 +1,10 @@
-const CACHE_NAME = "espoza-shell-v18";
+const CACHE_NAME = "espoza-shell-v19";
 
-self.addEventListener("install", event => {
-  self.skipWaiting();
+/* Keep an updated worker in the waiting phase until the visitor approves. */
+self.addEventListener("message", event => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("activate", event => {
