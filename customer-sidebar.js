@@ -10,8 +10,9 @@
   {slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets"}
  ];
  let panel,overlay,opened=false;
- const english=()=>document.documentElement.lang==="en";
- const label=(ar,en)=>english()?en:ar;
+ const currentLanguage=()=>document.documentElement.lang||"ar";
+ const english=()=>currentLanguage()==="en";
+ const label=(ar,en,he)=>currentLanguage()==="he"?(he||en):english()?en:ar;
  function makeButton(cls,icon,ar,en,action){
   const b=document.createElement("button");b.type="button";b.className=cls;
   const i=document.createElement("span");i.className="esp-side-link-icon";i.textContent=icon;
@@ -91,6 +92,7 @@
   const originalLanguage=window.applyLanguage;
   if(typeof originalLanguage==="function")window.applyLanguage=function(){const result=originalLanguage.apply(this,arguments);if(opened)render();return result;};
   window.addEventListener("pageshow",()=>{if(opened)close();});
+  window.addEventListener("espoza:languagechange",()=>{if(opened)render();});
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
