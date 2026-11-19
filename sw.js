@@ -1,4 +1,4 @@
-const CACHE_NAME = "espoza-shell-v19";
+const CACHE_NAME = "espoza-shell-v20";
 
 /* Keep an updated worker in the waiting phase until the visitor approves. */
 self.addEventListener("message", event => {
@@ -10,7 +10,15 @@ self.addEventListener("message", event => {
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME).map(key => caches.delete(key)));
+    const previousShellCaches = keys
+      .filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME)
+      .sort((a, b) => {
+        const versionA = Number((a.match(/v(\\d+)$/) || [])[1] || 0);
+        const versionB = Number((b.match(/v(\\d+)$/) || [])[1] || 0);
+        return versionB - versionA;
+      });
+    /* Retain one previous shell cache as an offline recovery path. */
+    await Promise.all(previousShellCaches.slice(1).map(key => caches.delete(key)));
     await self.clients.claim();
   })());
 });
@@ -45,6 +53,21 @@ self.addEventListener("fetch", event => {
     } catch (error) {
       const cached = await cache.match(request);
       if (cached) return cached;
+
+      /* If the new shell has not cached this resource yet, fall back to the
+         last known-good shell instead of leaving the visitor with a blank page. */
+      const previousKeys = (await caches.keys())
+        .filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME)
+        .sort((a, b) => {
+          const versionA = Number((a.match(/v(\\d+)$/) || [])[1] || 0);
+          const versionB = Number((b.match(/v(\\d+)$/) || [])[1] || 0);
+          return versionB - versionA;
+        });
+      for (const previousKey of previousKeys) {
+        const previousResponse = await (await caches.open(previousKey)).match(request);
+        if (previousResponse) return previousResponse;
+      }
+
       if (isNavigation) {
         return new Response('<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#641f34"><title>Espoza Fashion</title><body style="font-family:Arial,sans-serif;background:#faf7f2;color:#641f34;text-align:center;padding:15vh 24px"><main style="max-width:420px;margin:auto;background:#fff;border:1px solid #eadfe1;border-radius:24px;padding:34px 24px;box-shadow:0 18px 50px #43132118"><div style="color:#b9985a;font-size:28px">✦</div><h2 id="offlineTitle">تعذّر الاتصال بالمتجر</h2><p id="offlineText">تحققي من اتصال الإنترنت ثم أعيدي المحاولة.</p><button id="offlineButton" onclick="location.reload()" style="padding:12px 24px;border:0;border-radius:24px;background:#641f34;color:white">إعادة المحاولة</button></main><script>try{const l=localStorage.getItem("espoza_lang");const lang=["ar","en","he"].includes(l)?l:"ar";const d={ar:{dir:"rtl",title:"تعذّر الاتصال بالمتجر",text:"تحققي من اتصال الإنترنت ثم أعيدي المحاولة.",button:"إعادة المحاولة"},en:{dir:"ltr",title:"Store connection unavailable",text:"Check your internet connection and try again.",button:"Try again"},he:{dir:"rtl",title:"אין חיבור לחנות",text:"בדקי את חיבור האינטרנט ונסי שוב.",button:"נסי שוב"}}[lang];document.documentElement.lang=lang;document.documentElement.dir=d.dir;document.getElementById("offlineTitle").textContent=d.title;document.getElementById("offlineText").textContent=d.text;document.getElementById("offlineButton").textContent=d.button;}catch(e){}</script></body></html>', {
           headers: { "Content-Type": "text/html; charset=utf-8" },
