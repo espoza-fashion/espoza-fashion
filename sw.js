@@ -13,8 +13,8 @@ self.addEventListener("activate", event => {
     const previousShellCaches = keys
       .filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME)
       .sort((a, b) => {
-        const versionA = Number((a.match(/v(\\d+)$/) || [])[1] || 0);
-        const versionB = Number((b.match(/v(\\d+)$/) || [])[1] || 0);
+        const versionA = Number((a.match(/v(\d+)$/) || [])[1] || 0);
+        const versionB = Number((b.match(/v(\d+)$/) || [])[1] || 0);
         return versionB - versionA;
       });
     /* Retain one previous shell cache as an offline recovery path. */
@@ -59,8 +59,8 @@ self.addEventListener("fetch", event => {
       const previousKeys = (await caches.keys())
         .filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME)
         .sort((a, b) => {
-          const versionA = Number((a.match(/v(\\d+)$/) || [])[1] || 0);
-          const versionB = Number((b.match(/v(\\d+)$/) || [])[1] || 0);
+          const versionA = Number((a.match(/v(\d+)$/) || [])[1] || 0);
+          const versionB = Number((b.match(/v(\d+)$/) || [])[1] || 0);
           return versionB - versionA;
         });
       for (const previousKey of previousKeys) {
