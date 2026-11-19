@@ -3334,6 +3334,7 @@ footer{
 #espozaAssistantLauncher:hover{transform:translateY(-3px);box-shadow:0 17px 38px rgba(67,19,33,.3)}
 .elyra-launcher-mark{width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.14);color:#e6c78b;font-size:17px}
 #espozaAssistantPanel{position:absolute;left:0;bottom:68px;width:min(390px,calc(100vw - 30px));height:min(570px,calc(100dvh - 108px));background:linear-gradient(180deg,#fffdfa 0%,#faf7f2 100%);border:1px solid rgba(185,152,90,.35);border-radius:24px;overflow:hidden;box-shadow:0 28px 80px rgba(45,16,26,.28),0 3px 12px rgba(45,16,26,.08);display:flex;flex-direction:column;transform-origin:bottom left;animation:elyraPanelIn .28s cubic-bezier(.2,.8,.2,1) both}
+#espozaAssistantLauncher{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
 #espozaAssistantPanel.hidden{display:none!important}
 @keyframes elyraPanelIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .espoza-assistant-head{background:linear-gradient(125deg,#35101e 0%,#641f34 70%,#7b3448 100%);color:#fff;padding:16px 17px;display:flex;align-items:center;gap:12px;position:relative}
@@ -11399,14 +11400,22 @@ async function sendEspozaAssistant(event){
  const controller=new AbortController();
  const timeout=setTimeout(()=>controller.abort(),30000);
  try{
-  const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/espoza-assistant",{
-   method:"POST",
-   signal:controller.signal,
-   headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
-   body:JSON.stringify({message,history,language:lang,turnstileToken:await getEspozaTurnstileToken("elyra")})
-  });
-  const data=await response.json();
-  if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
+  const requestAssistant=async(retry=false)=>{
+   const token=await getEspozaTurnstileToken("elyra");
+   if(typeof token!=="string"||token.length<10)throw new Error(t().assistantError);
+   const response=await fetch("https://opqbcfxqtmyebxsafeea.supabase.co/functions/v1/espoza-assistant",{
+    method:"POST",signal:controller.signal,
+    headers:{"apikey":CUSTOMER_SUPABASE_KEY,"Content-Type":"application/json"},
+    body:JSON.stringify({message,history,language:lang,turnstileToken:token})
+   });
+   const data=await response.json().catch(()=>({}));
+   if(response.status===403&&!retry&&/security|verification|אימות|تحقق|الأمني/i.test(String(data.error||""))){
+    return requestAssistant(true);
+   }
+   if(!response.ok||!data.answer)throw new Error(data.error||"تعذّر الحصول على إجابة");
+   return data;
+  };
+  const data=await requestAssistant();
   stopTyping();
   pending.textContent=(data.mode==="faq"?(lang==="he"?"ELARA פועלת כעת במצב מידע של החנות בלבד; שירות הבינה המלאכותית הכללי אינו זמין.\n\n":lang==="en"?"Elara is currently in store-information mode only; general AI is temporarily unavailable.\n\n":"إيلارا تعمل حاليًا بوضع معلومات المتجر فقط؛ الاتصال بالذكاء الاصطناعي العام غير متاح.\n\n"):"")+data.answer;
   if(Array.isArray(data.products)&&data.products.length)renderElyraRecommendedProducts(data.products);
