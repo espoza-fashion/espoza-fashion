@@ -11380,7 +11380,7 @@ applyAssistantLanguage();
   let refreshTimer = null;
   const pendingRefreshKinds = new Set();
   const productTables = ["products","product_sizes","product_colors","product_images","product_categories"];
-  const contentTables = ["categories","site_sections","coupons","sliders","feedback","store_settings","delivery_areas"];
+  const contentTables = ["categories","site_sections","coupons","sliders","feedback","store_settings","delivery_areas","customer_reviews"];
   const db = getCustomerSupabase();
   const scheduleRefresh = (kind) => {
     pendingRefreshKinds.add(kind);
