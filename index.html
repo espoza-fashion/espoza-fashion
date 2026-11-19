@@ -3480,6 +3480,26 @@ footer{
 .customer-reviews-more{display:block;margin:13px auto 0;padding:8px 19px;border:1px solid var(--wine);border-radius:30px;background:var(--wine);color:#fff;font-size:11px;font-weight:800}
 @media(max-width:620px){.customer-reviews-card{padding:17px 12px;border-radius:18px}.customer-reviews-grid{grid-template-columns:1fr;gap:8px}.customer-review-card{padding:11px 12px}.customer-reviews-section{padding-inline:10px!important}}
 </style>
+
+<style id="espoza-update-notice-style">
+.espoza-update-notice{
+  position:fixed;z-index:2147483001;inset:auto 18px 18px 18px;margin-inline:auto;
+  width:min(440px,calc(100vw - 28px));padding:17px 18px;
+  border:1px solid rgba(185,152,90,.55);border-radius:18px;
+  background:#fffdf9;color:#29181e;box-shadow:0 18px 55px rgba(35,10,18,.22);
+  font-family:"Cairo",Arial,sans-serif;text-align:start;
+}
+.espoza-update-title{display:block;color:#641f34;font-size:15px;font-weight:800;line-height:1.6}
+.espoza-update-description{margin:5px 0 14px;color:#75676c;font-size:12px;line-height:1.8}
+.espoza-update-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.espoza-update-actions button{min-height:40px;border-radius:24px;padding:9px 16px;font:700 12px "Cairo",Arial,sans-serif}
+.espoza-update-accept{border:1px solid #641f34;background:#641f34;color:#fff;flex:1}
+.espoza-update-accept:disabled,.espoza-update-later:disabled{opacity:.65;cursor:wait}
+.espoza-update-later{border:1px solid #eadfe1;background:#fff;color:#641f34}
+@media(max-width:480px){.espoza-update-notice{inset:auto 10px 10px;width:calc(100vw - 20px);padding:15px}.espoza-update-actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){.espoza-update-notice{scroll-behavior:auto}}
+</style>
+
 </head>
 
 <body>
@@ -11478,20 +11498,91 @@ applyAssistantLanguage();
 })();
 </script>
 <script>
-/* Keep the installed customer app aligned with the published storefront. */
+/* Customer PWA updates: notify first, activate only after an explicit choice. */
 if("serviceWorker" in navigator){
-  let refreshingForUpdate=false;
-  const hadController=!!navigator.serviceWorker.controller;
+  let reloadAfterUpdateApproval=false;
+  let updatePrompt=null;
+
+  const updateCopy={
+    ar:{title:"يتوفر تحديث جديد للمتجر",body:"أصدرنا نسخة أحدث من Espoza Fashion لتحسين تجربة التسوق.",update:"تحديث الموقع الآن",later:"لاحقًا",working:"جارٍ تجهيز التحديث…"},
+    en:{title:"A new store update is available",body:"A newer version of Espoza Fashion is ready with improvements to your shopping experience.",update:"Update now",later:"Later",working:"Preparing update…"},
+    he:{title:"קיים עדכון חדש לחנות",body:"גרסה חדשה של Espoza Fashion זמינה עם שיפורים לחוויית הקנייה.",update:"עדכון עכשיו",later:"מאוחר יותר",working:"מכין את העדכון…"}
+  };
+
+  function showStoreUpdate(registration){
+    if(!registration || !registration.waiting || !document.body)return;
+    if(updatePrompt && updatePrompt.isConnected)return;
+
+    const lang=(document.documentElement.lang||"ar").slice(0,2);
+    const copy=updateCopy[lang]||updateCopy.ar;
+    const panel=document.createElement("section");
+    panel.className="espoza-update-notice";
+    panel.setAttribute("role","status");
+    panel.setAttribute("aria-live","polite");
+    panel.dir=lang==="en"?"ltr":"rtl";
+
+    const heading=document.createElement("strong");
+    heading.className="espoza-update-title";
+    heading.textContent=copy.title;
+    const description=document.createElement("p");
+    description.className="espoza-update-description";
+    description.textContent=copy.body;
+    const actions=document.createElement("div");
+    actions.className="espoza-update-actions";
+    const accept=document.createElement("button");
+    accept.type="button";
+    accept.className="espoza-update-accept";
+    accept.textContent=copy.update;
+    const later=document.createElement("button");
+    later.type="button";
+    later.className="espoza-update-later";
+    later.textContent=copy.later;
+
+    accept.addEventListener("click",()=>{
+      const waiting=registration.waiting;
+      if(!waiting)return;
+      accept.disabled=true;
+      later.disabled=true;
+      accept.textContent=copy.working;
+      reloadAfterUpdateApproval=true;
+      waiting.postMessage({type:"SKIP_WAITING"});
+    });
+    later.addEventListener("click",()=>{
+      panel.remove();
+      updatePrompt=null;
+    });
+
+    actions.append(accept,later);
+    panel.append(heading,description,actions);
+    document.body.appendChild(panel);
+    updatePrompt=panel;
+  }
+
   navigator.serviceWorker.addEventListener("controllerchange",()=>{
-    if(!hadController || refreshingForUpdate)return;
-    refreshingForUpdate=true;
+    if(!reloadAfterUpdateApproval)return;
+    reloadAfterUpdateApproval=false;
     window.location.reload();
   });
+
   window.addEventListener("load",async()=>{
     try{
       const registration=await navigator.serviceWorker.register("./sw.js",{scope:"./"});
+      const watchForInstalledUpdate=()=>{
+        const installing=registration.installing;
+        if(!installing)return;
+        installing.addEventListener("statechange",()=>{
+          if(installing.state==="installed" && navigator.serviceWorker.controller){
+            showStoreUpdate(registration);
+          }
+        });
+      };
+      registration.addEventListener("updatefound",watchForInstalledUpdate);
+      if(registration.waiting)showStoreUpdate(registration);
       await registration.update();
-      if(registration.waiting)registration.waiting.postMessage({type:"SKIP_WAITING"});
+      if(registration.waiting)showStoreUpdate(registration);
+      document.addEventListener("visibilitychange",()=>{
+        if(document.visibilityState==="visible")registration.update().catch(()=>{});
+      });
     }catch(error){
       console.warn("App update service worker unavailable:",error);
     }
