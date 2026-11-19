@@ -3425,6 +3425,7 @@ footer{
 .customer-reviews-summary{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin:12px auto 15px;padding:8px 13px;width:max-content;max-width:100%;border:1px solid var(--line);border-radius:30px;background:#fff}
 .customer-reviews-summary strong{font-size:20px;color:var(--wine)}
 .customer-review-summary-stars,.customer-review-stars{color:var(--gold);letter-spacing:2px}
+.customer-review-scale{font-size:14px!important;color:var(--wine);font-weight:900}
 .customer-reviews-summary span:last-child{font-size:11px;color:var(--muted)}
 .customer-reviews-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .customer-review-card{min-width:0;padding:13px 15px;background:#fff;border:1px solid rgba(100,31,52,.09);border-radius:14px}
@@ -3786,7 +3787,8 @@ id="featuresTrack">
 </div>
 <div class="customer-reviews-summary" id="customerReviewsSummary" hidden>
 <strong id="customerReviewsAverage">—</strong>
-<span class="customer-review-summary-stars" id="customerReviewsStars">★★★★★</span>
+<span class="customer-review-summary-stars" id="customerReviewsStars" aria-label="5 out of 5 stars">★★★★★</span>
+<strong class="customer-review-scale" id="customerReviewsScale">5/5</strong>
 <span id="customerReviewsCount"></span>
 </div>
 <form class="customer-review-form" id="customerReviewForm" onsubmit="submitCustomerReview(event)" novalidate>
