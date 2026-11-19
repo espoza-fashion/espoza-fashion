@@ -3786,13 +3786,10 @@ id="featuresTrack">
 <p id="customerReviewsIntro">تجارب حقيقية من عميلات إسبوزا فاشن</p>
 </div>
 <div class="customer-reviews-summary" id="customerReviewsSummary" hidden>
-<strong id="customerReviewsAverage">—</strong>
-<span class="customer-review-summary-stars" id="customerReviewsStars" aria-label="5 out of 5 stars">★★★★★</span>
-<strong class="customer-review-scale" id="customerReviewsScale">5/5</strong>
 <span id="customerReviewsCount"></span>
 </div>
 <form class="customer-review-form" id="customerReviewForm" onsubmit="submitCustomerReview(event)" novalidate>
-<div class="customer-review-form-heading"><h3 id="customerReviewFormTitle">اخبرينا برأيك في Espoza Fashion</h3><p id="customerReviewPending">سيظهر تقييمك بعد مراجعته من فريق إسبوزا</p></div>
+<div class="customer-review-form-heading"><h3 id="customerReviewFormTitle">اخبرينا برأيك في Espoza Fashion</h3><p id="customerReviewPending">سيظهر تقييمك مباشرة بعد الإرسال</p></div>
 <label id="customerReviewRatingLabel">تقييمك</label>
 <div class="customer-review-rating" id="customerReviewStars" role="group" aria-label="اختاري عدد النجوم">
 <button type="button" data-rating="1" aria-label="1 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(1)">★</button><button type="button" data-rating="2" aria-label="2 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(2)">★</button><button type="button" data-rating="3" aria-label="3 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(3)">★</button><button type="button" data-rating="4" aria-label="4 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(4)">★</button><button type="button" data-rating="5" aria-label="5 نجوم" aria-pressed="true" onclick="setCustomerReviewRating(5)">★</button>
@@ -8242,8 +8239,8 @@ function setCustomerReviewRating(value){
 function renderCustomerReviewFormLanguage(){
   const copy={
     ar:{title:"اخبرينا برأيك في Espoza Fashion",reviewPlaceholder:"اخبرينا برأيك في Espoza Fashion",rating:"اختاري النجوم",submit:"إرسال التقييم",pending:"سيظهر تقييمك بعد مراجعته من فريق إسبوزا",success:"وصلنا تقييمك بنجاح وسيظهر بعد المراجعة",error:"تعذر إرسال التقييم حاليًا حاولي مرة ثانية",required:"اكتبي رأيك واختاري عدد النجوم",count:"تقييم من عميلاتنا",empty:"لا توجد تقييمات منشورة بعد",more:"عرض جميع التقييمات",less:"عرض أقل"},
-    en:{title:"Tell us what you think of Espoza Fashion",reviewPlaceholder:"Tell us what you think of Espoza Fashion",rating:"Choose your stars",submit:"Submit review",pending:"Your review will appear after approval by the Espoza team",success:"Your review was received and will appear after approval",error:"Could not submit your review. Please try again",required:"Write your review and choose a star rating",count:"customer reviews",empty:"No published reviews yet",more:"View all reviews",less:"Show less"},
-    he:{title:"ספרי לנו מה דעתך על Espoza Fashion",reviewPlaceholder:"ספרי לנו מה דעתך על Espoza Fashion",rating:"בחרי כוכבים",submit:"שליחת חוות הדעת",pending:"חוות הדעת תופיע לאחר אישור צוות Espoza",success:"חוות הדעת התקבלה ותופיע לאחר אישור",error:"לא ניתן לשלוח כרגע. נסי שוב",required:"כתבי חוות דעת ובחרי דירוג בכוכבים",count:"חוות דעת של לקוחות",empty:"עדיין אין חוות דעת שפורסמו",more:"הצגת כל חוות הדעת",less:"הצג פחות"}
+    en:{title:"Tell us what you think of Espoza Fashion",reviewPlaceholder:"Tell us what you think of Espoza Fashion",rating:"Choose your stars",submit:"Submit review",pending:"Your review will be published immediately after submission",success:"Your review has been published successfully",error:"Could not submit your review. Please try again",required:"Write your review and choose a star rating",count:"customer reviews",empty:"No published reviews yet",more:"View all reviews",less:"Show less"},
+    he:{title:"ספרי לנו מה דעתך על Espoza Fashion",reviewPlaceholder:"ספרי לנו מה דעתך על Espoza Fashion",rating:"בחרי כוכבים",submit:"שליחת חוות הדעת",pending:"חוות הדעת תפורסם מיד לאחר השליחה",success:"חוות הדעת פורסמה בהצלחה",error:"לא ניתן לשלוח כרגע. נסי שוב",required:"כתבי חוות דעת ובחרי דירוג בכוכבים",count:"חוות דעת של לקוחות",empty:"עדיין אין חוות דעת שפורסמו",more:"הצגת כל חוות הדעת",less:"הצג פחות"}
   }[lang]||null;
   const x=copy||null;
   if(!x)return;
@@ -8273,12 +8270,13 @@ async function submitCustomerReview(event){
     const db=getCustomerSupabase();
     const result=await db.from("customer_reviews").insert({
       reviewer_name:"عميلة إسبوزا",review_text,rating:customerReviewRating,language:lang,
-      active:false,sort_order:0
+      active:true,sort_order:0
     });
     if(result.error)throw result.error;
     $("customerReviewForm").reset();
     setCustomerReviewRating(5);
-    toast(copy?.success||"Review received");
+    await loadCustomerReviews();
+    toast(copy?.success||"Review published");
   }catch(error){
     console.error("Customer review submission failed:",error);
     toast(copy?.error||"Could not submit review");
