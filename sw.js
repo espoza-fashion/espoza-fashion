@@ -22,7 +22,7 @@ function previousShellCaches() {
 
 self.addEventListener("install", event => {
   const shellFiles = [
-    "./", "./espoza-app.js", "./customer-sidebar.js?v=3", "./customer-sidebar.css?v=1",
+    "./", "./espoza-app.js", "./customer-sidebar.js?v=4", "./customer-sidebar.css?v=1",
     "./manifest.webmanifest", "./icons/espoza-luxe-emblem.svg", "./icons/espoza-app-192.png"
   ];
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(

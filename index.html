@@ -3512,6 +3512,71 @@ footer{
 @media(prefers-reduced-motion:reduce){.espoza-update-notice{scroll-behavior:auto}}
 </style>
 
+<style id="espoza-shop-category-style">
+#categories[hidden],#productsGrid[hidden],#shopBack[hidden],#productCount[hidden]{display:none!important}
+
+.shop-section-head{margin-block:1.85rem 1.1rem;align-items:end}
+.shop-section-head h2{font-size:clamp(1.65rem,3vw,2.45rem);line-height:1.25}
+.shop-section-head[data-view="categories"]{justify-content:center;text-align:center}
+.shop-section-head[data-view="categories"] h2::after{
+  content:"";display:block;width:2.9rem;height:2px;margin: .8rem auto 0;background:var(--gold)
+}
+.shop-section-head #productCount{font-size:.875rem;white-space:nowrap}
+.shop-back{
+  min-height:44px;margin-block-end:.5rem;padding:.45rem 1rem;border:1px solid #d6b784;
+  border-radius:999px;background:#fff9f4;color:var(--wine);font:inherit;font-size:.9rem;font-weight:750
+}
+.shop-back:hover{background:#f8e9e6}
+.shop-back:focus-visible,.shop-category-card:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+.shop-category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(.65rem,1.5vw,1.15rem)}
+.shop-category-grid[data-count="1"]{grid-template-columns:minmax(0,28rem);justify-content:center}
+.shop-category-grid[data-count="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.shop-category-grid[data-count="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+.shop-category-grid[data-count="5"]{
+  grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr));
+  grid-auto-rows:clamp(11rem,20vw,15.5rem)
+}
+.shop-category-grid[data-count="5"] .shop-category-card{min-height:0}
+.shop-category-grid[data-count="5"] .shop-category-card:first-child{grid-row:span 2}
+.shop-category-card{
+  position:relative;display:flex;align-items:end;min-width:0;min-height:clamp(12rem,28vw,21rem);padding:0;
+  overflow:hidden;isolation:isolate;border:1px solid #c8a56d;border-radius:1.15rem;
+  background:radial-gradient(ellipse at 50% 0%,#9d5265,var(--dark) 79%);
+  box-shadow:0 10px 27px rgba(67,19,33,.16);color:#fffaf2;font:inherit;text-align:start;
+}
+.shop-category-card img{
+  position:absolute;inset:0;z-index:-2;display:block;width:100%;height:100%;
+  object-fit:cover;object-position:center 23%;transition:transform .45s ease
+}
+.shop-category-card[data-cat="winter-sets"] img{object-position:center 13%}
+.shop-category-card::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(29,10,18,.04) 35%,rgba(32,12,20,.42) 68%,rgba(35,11,22,.94) 100%);
+}
+.shop-category-card::after{
+  content:"";pointer-events:none;position:absolute;inset:.55rem;
+  border:1px solid rgba(235,206,155,.68);border-radius:.78rem
+}
+.shop-category-card-title{
+  display:block;max-width:100%;padding:1.15rem clamp(1.05rem,2.35vw,1.65rem);
+  font-family:"Playfair Display","Cairo",serif;font-size:clamp(1.15rem,2.2vw,1.75rem);
+  font-weight:750;line-height:1.3;overflow-wrap:anywhere;text-shadow:0 2px 12px rgba(28,7,16,.55)
+}
+.shop-category-grid[data-count="5"] .shop-category-card:first-child .shop-category-card-title{
+  font-size:clamp(1.35rem,3vw,2.25rem)
+}
+.shop-category-empty{grid-column:1/-1}
+@media(hover:hover){.shop-category-card:hover img{transform:scale(1.045)}}
+@media(max-width:700px){
+  .shop-category-grid[data-count]:not([data-count="1"]){grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:auto}
+  .shop-category-card,.shop-category-grid[data-count="5"] .shop-category-card{min-height:0;aspect-ratio:4/5}
+  .shop-category-grid[data-count="5"] .shop-category-card:first-child{grid-column:1/-1;grid-row:auto;aspect-ratio:5/3}
+  .shop-category-grid[data-count="5"] .shop-category-card:first-child img{object-position:center 11%}
+  .shop-category-card::after{inset:.4rem}
+}
+@media(prefers-reduced-motion:reduce){.shop-category-card img{transition:none}}
+</style>
 </head>
 
 <body>
@@ -3740,41 +3805,8 @@ id="shop">
 class="search"
 id="searchInput"
 type="search"
+aria-label="البحث في المنتجات"
 placeholder="">
-
-</div>
-
-<div
-class="cats"
-id="categories">
-
-<button
-class="cat active"
-type="button"
-data-cat="all">
-الكل
-</button>
-
-<button
-class="cat"
-type="button"
-data-cat="dresses">
-الفساتين
-</button>
-
-<button
-class="cat"
-type="button"
-data-cat="sets">
-الأطقم
-</button>
-
-<button
-class="cat"
-type="button"
-data-cat="offers">
-العروضات
-</button>
 
 </div>
 
@@ -3793,28 +3825,16 @@ data-cat="offers">
 
 <!-- PRODUCTS -->
 
-<section class="catalog">
-
-<div class="section-head">
-
-<h2 id="collectionTitle">
-تشكيلتنا
-</h2>
-
-<span id="productCount"></span>
-
-</div>
-
-<div
-class="products-grid"
-id="productsGrid">
-
-<div class="loading">
-جاري تحميل التشكيلة...
-</div>
-
-</div>
-
+<section class="catalog" id="shopCatalogue" aria-labelledby="collectionTitle">
+  <div class="section-head shop-section-head" id="shopSectionHead" data-view="categories">
+    <div>
+      <button class="shop-back" id="shopBack" type="button" aria-controls="categories" hidden>كل الأقسام</button>
+      <h2 id="collectionTitle" tabindex="-1">تسوّقي حسب القسم</h2>
+    </div>
+    <span id="productCount" aria-live="polite" hidden></span>
+  </div>
+  <div class="shop-category-grid" id="categories"></div>
+  <div class="products-grid" id="productsGrid" hidden></div>
 </section>
 
 
@@ -7311,29 +7331,91 @@ $("footerSince").textContent=t().footerSince;
 /* ==========================================
    محتوى وفئات الموقع من لوحة الإدارة
    ========================================== */
-function renderCustomerCategories(){
-const wrap=$("categories");
-if(!wrap)return;
-const base=[{slug:"all",name_ar:"الكل",name_en:"All",name_he:"הכול"}];
-const defaults=[{slug:"dresses",name_ar:"الفساتين",name_en:"Dresses",name_he:"שמלות"},{slug:"sets",name_ar:"الأطقم",name_en:"Sets",name_he:"חליפות"},{slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets",name_he:"חליפות חורף"},{slug:"offers",name_ar:"العروضات",name_en:"Offers",name_he:"מבצעים"}];
-const englishNames={all:"All",dresses:"Dresses",sets:"Sets","winter-sets":"Winter Sets",offers:"Offers"};
-const source=Array.isArray(adminCategories)&&adminCategories.length?adminCategories:defaults;
-const unique=new Map();
-source.forEach(item=>{
- if(!item)return;
- const rawSlug=String(item.slug||"").trim();
- const arName=String(item.name_ar||"").trim();
- const enName=String(item.name_en||"").trim();
- const heName=String(item.name_he||"").trim();
- const slug=rawSlug==="winter_sets"?"winter-sets":rawSlug;
- if(!slug||slug==="all"||unique.has(slug))return;
- const fallback=defaults.find(x=>x.slug===slug)||{};
- unique.set(slug,{slug,name_ar:arName||fallback.name_ar||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug),name_en:enName||fallback.name_en||englishNames[slug]||humanizeEnglish(slug),name_he:heName||fallback.name_he||t().cats[slug.replace(/-/g,"_")]||humanizeEnglish(slug)});
-});
-if(!unique.has("winter-sets"))unique.set("winter-sets",defaults.find(x=>x.slug==="winter-sets"));
-const cats=base.concat([...unique.values()]);
-wrap.innerHTML=cats.map(item=>{const label=lang==="he"?(item.name_he||item.name_en||item.name_ar):lang==="en"?item.name_en:item.name_ar;return "<button class=\"cat "+(item.slug===currentCategory?"active":"")+"\" type=\"button\" data-cat=\""+esc(item.slug)+"\">"+esc(label)+"</button>";}).join("");
-wrap.querySelectorAll(".cat").forEach(button=>button.addEventListener("click",()=>{currentCategory=button.dataset.cat||"all";wrap.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b===button));renderProducts();}));
+const fallbackShopCategories=[
+  {slug:"dresses",name_ar:"الفساتين",name_en:"Dresses",name_he:"שמלות"},
+  {slug:"sets",name_ar:"الأطقم",name_en:"Sets",name_he:"חליפות"},
+  {slug:"offers",name_ar:"العروضات",name_en:"Offers",name_he:"מבצעים"},
+  {slug:"winter-sets",name_ar:"الطقوم الشتوية",name_en:"Winter Sets",name_he:"חליפות חורף"},
+  {slug:"winter-dresses",name_ar:"الفساتين الشتوية",name_en:"Winter Dresses",name_he:"שמלות חורף"}
+];
+const shopCategoryCovers=new Map([
+  ["dresses","./images/shop-categories/dresses.webp"],
+  ["sets","./images/shop-categories/sets.webp"],
+  ["offers","./images/shop-categories/offers.webp"],
+  ["winter-sets","./images/shop-categories/winter-sets.webp"],
+  ["winter-dresses","./images/shop-categories/winter-dresses.webp"]
+]);
+const shopCatalogueText={
+  ar:{title:"تسوّقي حسب القسم",back:"كل الأقسام",search:"نتائج البحث",searchLabel:"البحث في المنتجات",empty:"لا توجد أقسام متاحة حاليًا."},
+  en:{title:"Shop by category",back:"All categories",search:"Search results",searchLabel:"Search products",empty:"There are no categories available right now."},
+  he:{title:"קנייה לפי קטגוריה",back:"כל הקטגוריות",search:"תוצאות החיפוש",searchLabel:"חיפוש מוצרים",empty:"אין קטגוריות זמינות כרגע."}
+};
+
+function normalizeShopCategory(value){
+  return String(value||"").trim().replace(/^winter_sets$/,"winter-sets");
+}
+
+function getShopCategories(){
+  const source=Array.isArray(adminCategories)?adminCategories:fallbackShopCategories;
+  const nameKey="name_"+lang;
+  const categories=new Map();
+  for(const row of source){
+    const slug=normalizeShopCategory(row?.slug);
+    if(!slug || slug==="all" || row.active===false || categories.has(slug))continue;
+    const fallback=fallbackShopCategories.find(category=>category.slug===slug);
+    const names=[row[nameKey],fallback?.[nameKey],row.name_en,row.name_ar];
+    const label=names.find(name=>typeof name==="string" && name.trim());
+    categories.set(slug,label?.trim()||humanizeEnglish(slug));
+  }
+  return categories;
+}
+
+function renderCustomerCategories(categories=getShopCategories()){
+  const gallery=$("categories");
+  if(!gallery)return;
+  const text=shopCatalogueText[lang]||shopCatalogueText.ar;
+  const entries=Array.from(categories,([slug,label])=>{
+    const image=shopCategoryCovers.get(slug)||
+      products.find(product=>matchesShopCategory(product,slug)&&product.images?.[0]?.url)?.images[0].url;
+    return {slug,label,image};
+  });
+  const content=JSON.stringify([text.empty,entries]);
+  if(gallery.dataset.content!==content){
+    gallery.dataset.content=content;
+    gallery.dataset.count=String(entries.length);
+    const cards=entries.map(({slug,label,image})=>{
+      const card=document.createElement("button");
+      card.className="shop-category-card";
+      card.type="button";
+      card.dataset.cat=slug;
+      card.setAttribute("aria-controls","productsGrid");
+      if(image){
+        const photo=document.createElement("img");
+        photo.src=image;
+        photo.alt="";
+        photo.loading="lazy";
+        photo.decoding="async";
+        photo.addEventListener("error",()=>photo.remove(),{once:true});
+        card.append(photo);
+      }
+      const title=document.createElement("span");
+      title.className="shop-category-card-title";
+      title.textContent=label;
+      card.append(title);
+      card.addEventListener("click",()=>goCategory(slug));
+      return card;
+    });
+    if(!cards.length){
+      const empty=document.createElement("p");
+      empty.className="empty shop-category-empty";
+      empty.textContent=text.empty;
+      cards.push(empty);
+    }
+    gallery.replaceChildren(...cards);
+  }
+  gallery.querySelectorAll("button[data-cat]").forEach(button=>{
+    button.setAttribute("aria-current",String(button.dataset.cat===currentCategory));
+  });
 }
 function applyAdminSiteSections(){
 const sections=Array.isArray(adminSiteSections)?adminSiteSections:[];
@@ -8114,129 +8196,38 @@ observer.observe(box);
 
 
 function goCategory(category){
-
-const allowed=["all",...(Array.isArray(adminCategories)?adminCategories.map(item=>String(item.slug||"").replace(/^winter_sets$/,"winter-sets")):["dresses","sets","winter-sets","offers"])];
-
-
-currentCategory=
-allowed.includes(category)
-?
-category
-:
-"all";
-
-
-document
-.querySelectorAll(".cat")
-.forEach(
-b=>
-b.classList.toggle(
-"active",
-b.dataset.cat===currentCategory
-)
-);
-
-
-renderProducts();
-
-
-$("shop")
-.scrollIntoView({
-behavior:"smooth"
-});
-
+  const slug=normalizeShopCategory(category);
+  currentCategory=getShopCategories().has(slug)?slug:"all";
+  $("searchInput").value="";
+  renderProducts();
+  $("collectionTitle").focus({preventScroll:true});
+  smoothToSection("shopCatalogue");
 }
 
-
-/* ==========================================
-   فلترة المنتجات
-   ========================================== */
+function matchesShopCategory(product,category){
+  const primary=normalizeShopCategory(product.category);
+  return category==="all" || primary===category ||
+    (category==="offers" && !!product.offer) ||
+    (Array.isArray(product.categorySlugs) &&
+      product.categorySlugs.some(slug=>normalizeShopCategory(slug)===category));
+}
 
 function filteredProducts(){
-
-const needle=
-normalizeName(
-$("searchInput").value
-);
-
-
-const OFFER_KEYWORDS=[
-"عرض","عروض","عروضات","offer","offers","מבצע","מבצעים"
-];
-
-
-const isOfferSearch=
-!!needle
-
-&&
-
-OFFER_KEYWORDS.some(
-k=>
-needle.includes(
-normalizeName(k)
-)
-);
-
-
-return products
-.filter(
-p=>{
-
-
-const categoryOk=
-
-isOfferSearch
-
-?
-
-(
-p.offer
-||
-p.category==="offers"
-)
-
-:
-
-(
-currentCategory==="all"
-
-||
-
-(
-currentCategory==="offers"
-?
-(
-p.offer
-||
-p.category==="offers"
-)
-:
-((Array.isArray(p.categorySlugs)&&p.categorySlugs.includes(currentCategory))||p.category===currentCategory||(currentCategory==="winter-sets"&&p.category==="winter_sets"))
-)
-);
-
-
-const colorSearch=(Array.isArray(p.colorsData)?p.colorsData:[]).some(c=>[c.name,c.name_en,c.name_he].some(value=>normalizeName(value||"").includes(needle)));
-
-const searchOk=!needle||isOfferSearch||[p.name,p.name_en,p.name_he,p.description,p.description_en,p.description_he,p.sku].some(value=>normalizeName(value||"").includes(needle))||colorSearch;
-
-
-return(
-categoryOk
-&&
-searchOk
-);
-
+  const needle=normalizeName($("searchInput").value);
+  const offerKeywords=["عرض","عروض","عروضات","offer","offers","מבצע","מבצעים"];
+  const isOfferSearch=!!needle && offerKeywords.some(word=>needle.includes(normalizeName(word)));
+  return products.filter(product=>{
+    if(!matchesShopCategory(product,currentCategory))return false;
+    if(!needle)return true;
+    if(isOfferSearch)return matchesShopCategory(product,"offers");
+    const fields=[product.name,product.name_en,product.name_he,product.description,
+      product.description_en,product.description_he,product.sku];
+    const colors=Array.isArray(product.colorsData)?product.colorsData:[];
+    return fields.some(value=>normalizeName(value||"").includes(needle)) ||
+      colors.some(color=>[color.name,color.name_en,color.name_he]
+        .some(value=>normalizeName(value||"").includes(needle)));
+  });
 }
-);
-
-}
-
-
-/* ==========================================
-   عرض المنتجات
-   ========================================== */
-
 
 /* ===== Wishlist moved from Demo ===== */
 let wishlistIds=[];
@@ -8411,9 +8402,31 @@ loadCustomerReviews();
 }
 
 function renderProducts(){
+const categories=getShopCategories();
+if(!categories.has(currentCategory))currentCategory="all";
+renderCustomerCategories(categories);
 
-const list=
-filteredProducts();
+const search=$("searchInput");
+const text=shopCatalogueText[lang]||shopCatalogueText.ar;
+const showProducts=currentCategory!=="all" || search.value.trim()!=="";
+const grid=$("productsGrid");
+const count=$("productCount");
+
+search.setAttribute("aria-label",text.searchLabel);
+$("categories").hidden=showProducts;
+grid.hidden=!showProducts;
+count.hidden=!showProducts;
+$("shopBack").hidden=!showProducts;
+$("shopBack").textContent=text.back;
+$("shopSectionHead").dataset.view=showProducts?"products":"categories";
+$("collectionTitle").textContent=showProducts?(categories.get(currentCategory)||text.search):text.title;
+if(!showProducts){
+  if(grid.childElementCount)grid.replaceChildren();
+  count.textContent="";
+  return;
+}
+
+const list=filteredProducts();
 
 
 $("productCount")
@@ -10358,14 +10371,6 @@ x.orders;
 startTypewriter();
 
 
-if(!Array.isArray(adminCategories)||!adminCategories.length){document.querySelectorAll(".cat").forEach(b=>b.textContent=x.cats[b.dataset.cat]||b.textContent);}else{renderCustomerCategories();}
-
-
-$("collectionTitle")
-.textContent=
-x.collection;
-
-
 
 $("footerShop")
 .textContent=
@@ -10725,11 +10730,8 @@ $("langBtn").addEventListener("click",()=>{
 });
 
 
-$("searchInput")
-.addEventListener(
-"input",
-renderProducts
-);
+$("searchInput").addEventListener("input",renderProducts);
+$("shopBack").addEventListener("click",()=>goCategory("all"));
 
 
 
@@ -11536,7 +11538,7 @@ applyAssistantLanguage();
 })();
 </script>
 <script src="./espoza-app.js" defer></script>
-<script src="./customer-sidebar.js?v=3" defer></script>
+<script src="./customer-sidebar.js?v=4" defer></script>
 
 <script id="espoza-turnstile-client">
 (function(){

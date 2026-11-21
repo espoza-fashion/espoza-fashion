@@ -69,6 +69,49 @@ test('successful empty catalog removes stale products',async()=>{
 test('failed catalog refresh preserves the last available catalog',async()=>{
  const c=context(shop,['refreshSupabaseProducts'],{console:{warn(){}},loadSupabaseProducts:async()=>{throw Error('offline');},products:[{id:'old'}]});await c.refreshSupabaseProducts();assert.equal(c.products[0].id,'old');
 });
+test('the catalog opens on categories and shows product results only when requested',()=>{
+ const c=context(shop,['renderProducts'],{
+  currentCategory:'all',lang:'en',
+  getShopCategories:()=>new Map([['sets','Sets']]),renderCustomerCategories(){},
+  shopCatalogueText:{en:{title:'Shop by category',back:'All categories',search:'Search results',searchLabel:'Search products'}},
+  filteredProducts:()=>[],t:()=>({piece:'items',noProducts:'Nothing found'}),setupScrollReveal(){}
+ });
+ c.$('shopSectionHead').dataset={};
+ c.$('searchInput').setAttribute=()=>{};
+ c.renderProducts();
+ assert.equal(c.$('categories').hidden,false);
+ assert.equal(c.$('productsGrid').hidden,true);
+ assert.equal(c.$('collectionTitle').textContent,'Shop by category');
+
+ c.currentCategory='sets';
+ c.renderProducts();
+ assert.equal(c.$('categories').hidden,true);
+ assert.equal(c.$('productsGrid').hidden,false);
+ assert.equal(c.$('shopBack').hidden,false);
+ assert.equal(c.$('collectionTitle').textContent,'Sets');
+
+ c.currentCategory='all';
+ c.$('searchInput').value='red';
+ c.renderProducts();
+ assert.equal(c.$('collectionTitle').textContent,'Search results');
+ assert.equal(c.$('productsGrid').hidden,false);
+});
+test('category results include multiple tags, and an offer search stays inside the selected category',()=>{
+ const products=[
+  {id:'winter',category:'sets',categorySlugs:['winter_sets'],name:'Winter set',offer:true},
+  {id:'dress',category:'dresses',name:'Evening dress',offer:true},
+  {id:'set',category:'sets',name:'Tailored set',offer:false}
+ ];
+ const c=context(shop,['normalizeShopCategory','matchesShopCategory','filteredProducts'],{
+  products,currentCategory:'winter-sets',normalizeName:value=>String(value).trim().toLowerCase()
+ });
+ const ids=()=>Array.from(c.filteredProducts(),product=>product.id);
+ assert.deepEqual(ids(),['winter']);
+ c.$('searchInput').value='offers';
+ assert.deepEqual(ids(),['winter']);
+ c.currentCategory='all';
+ assert.deepEqual(ids(),['winter','dress']);
+});
 function mockDB(failInsert=false){const calls=[];return {calls,from(table){let action,data;const query={update(v){action='update';data=v;calls.push({table,action,data});return this;},insert(v){action='insert';data=v;calls.push({table,action,data});return this;},delete(){action='delete';calls.push({table,action});return this;},eq(){return this;},select(){return this;},single(){return Promise.resolve({data:{id:'id'}});},then(resolve){resolve(action==='insert'&&failInsert?{error:Error('upload relation failed')}:{data:[]});}};return query;}};}
 test('unchanged child rows preserve IDs and metadata without writes',async()=>{
  const sb=mockDB(),c=context(admin,['syncProductChildren'],{sb});await c.syncProductChildren('product_images','p','image_url',['old'],[{id:'original',image_url:'old',sort_order:0,alt_text:'keep'}]);assert.equal(sb.calls.length,0);

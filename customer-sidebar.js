@@ -51,8 +51,8 @@
   account.addEventListener("click",()=>{close();if(typeof window.openCustomerAccount==="function")window.openCustomerAccount();});
   body.append(account);
   const title=document.createElement("div");title.className="esp-side-section-title";title.textContent=label("تسوّقي حسب القسم","SHOP BY CATEGORY");body.append(title);
-  const activeCategory=body.ownerDocument.querySelector("#categories .cat.active")?.dataset.cat||"all";
-  body.append(makeButton("esp-side-link"+(activeCategory==="all"?" is-active":""),"✧",label("جميع المنتجات","All Products"),label("جميع المنتجات","All Products"),()=>chooseCategory("all")));
+  const activeCategory=body.ownerDocument.querySelector('#categories button[aria-current="true"]')?.dataset.cat||"all";
+  body.append(makeButton("esp-side-link"+(activeCategory==="all"?" is-active":""),"✧","كل الأقسام","All categories",()=>chooseCategory("all"),"כל הקטגוריות"));
   const categoryIcons={dresses:"♙",sets:"♧",offers:"♜","winter-sets":"♨","winter-dresses":"♙"};
   categories().forEach(cat=>{
    const active=activeCategory===cat.slug;
