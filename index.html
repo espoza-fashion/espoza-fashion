@@ -3851,7 +3851,7 @@ id="featuresTrack">
 <span id="customerReviewsCount"></span>
 </div>
 <form class="customer-review-form" id="customerReviewForm" onsubmit="submitCustomerReview(event)" novalidate>
-<div class="customer-review-form-heading"><h3 id="customerReviewFormTitle">اخبرينا برأيك في Espoza Fashion</h3><p id="customerReviewPending">سيظهر تقييمك مباشرة بعد الإرسال</p></div>
+<div class="customer-review-form-heading"><h3 id="customerReviewFormTitle">اخبرينا برأيك في Espoza Fashion</h3><p id="customerReviewPending">سجّلي الدخول لنشر تقييم واحد فورًا لكل طلب مكتمل.</p></div>
 <label id="customerReviewRatingLabel">تقييمك</label>
 <div class="customer-review-rating" id="customerReviewStars" role="group" aria-label="اختاري عدد النجوم">
 <button type="button" data-rating="1" aria-label="1 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(1)">★</button><button type="button" data-rating="2" aria-label="2 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(2)">★</button><button type="button" data-rating="3" aria-label="3 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(3)">★</button><button type="button" data-rating="4" aria-label="4 نجوم" aria-pressed="false" onclick="setCustomerReviewRating(4)">★</button><button type="button" data-rating="5" aria-label="5 نجوم" aria-pressed="true" onclick="setCustomerReviewRating(5)">★</button>
@@ -4504,7 +4504,7 @@ id="toast">
 </div>
 
 
-<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2" integrity="sha384-7i/4BYWz4Mn+lJfg2HWfEPfZQ7tmFKF3CTSKlXBpxWjNlLjcg+T6smpHG4gLmU1u" crossorigin="anonymous"></script>
 
 
 <script>
@@ -8300,9 +8300,9 @@ function setCustomerReviewRating(value){
 }
 function renderCustomerReviewFormLanguage(){
   const copy={
-    ar:{title:"اخبرينا برأيك في Espoza Fashion",reviewPlaceholder:"اخبرينا برأيك في Espoza Fashion",rating:"اختاري النجوم",submit:"إرسال التقييم",pending:"سيظهر تقييمك بعد مراجعته من فريق إسبوزا",success:"تم نشر تقييمك بنجاح",error:"تعذر إرسال التقييم حاليًا حاولي مرة ثانية",required:"اكتبي رأيك واختاري عدد النجوم",count:"تقييم من عميلاتنا",empty:"لا توجد تقييمات منشورة بعد",more:"عرض جميع التقييمات",less:"عرض أقل"},
-    en:{title:"Tell us what you think of Espoza Fashion",reviewPlaceholder:"Tell us what you think of Espoza Fashion",rating:"Choose your stars",submit:"Submit review",pending:"Your review will be published immediately after submission",success:"Your review has been published successfully",error:"Could not submit your review. Please try again",required:"Write your review and choose a star rating",count:"customer reviews",empty:"No published reviews yet",more:"View all reviews",less:"Show less"},
-    he:{title:"ספרי לנו מה דעתך על Espoza Fashion",reviewPlaceholder:"ספרי לנו מה דעתך על Espoza Fashion",rating:"בחרי כוכבים",submit:"שליחת חוות הדעת",pending:"חוות הדעת תפורסם מיד לאחר השליחה",success:"חוות הדעת פורסמה בהצלחה",error:"לא ניתן לשלוח כרגע. נסי שוב",required:"כתבי חוות דעת ובחרי דירוג בכוכבים",count:"חוות דעת של לקוחות",empty:"עדיין אין חוות דעת שפורסמו",more:"הצגת כל חוות הדעת",less:"הצג פחות"}
+    ar:{title:"اخبرينا برأيك في Espoza Fashion",reviewPlaceholder:"اخبرينا برأيك في Espoza Fashion",rating:"اختاري النجوم",submit:"إرسال التقييم",pending:"سجّلي الدخول لنشر تقييم واحد فورًا لكل طلب مكتمل.",eligibility:"سجّلي الدخول بحساب فيه طلب مكتمل لم تقيّميه بعد.",success:"تم نشر تقييمك بنجاح",error:"تعذر إرسال التقييم حاليًا حاولي مرة ثانية",required:"اكتبي رأيك واختاري عدد النجوم",count:"تقييم من عميلاتنا",empty:"لا توجد تقييمات منشورة بعد",more:"عرض جميع التقييمات",less:"عرض أقل"},
+    en:{title:"Tell us what you think of Espoza Fashion",reviewPlaceholder:"Tell us what you think of Espoza Fashion",rating:"Choose your stars",submit:"Submit review",pending:"Sign in to publish one review immediately for each completed order.",eligibility:"Sign in with an account that has a completed order you haven’t reviewed yet.",success:"Your review has been published successfully",error:"Could not submit your review. Please try again",required:"Write your review and choose a star rating",count:"customer reviews",empty:"No published reviews yet",more:"View all reviews",less:"Show less"},
+    he:{title:"ספרי לנו מה דעתך על Espoza Fashion",reviewPlaceholder:"ספרي לנו מה דעתך על Espoza Fashion",rating:"בחרי כוכבים",submit:"שליחת חוות הדעת",pending:"התחברי כדי לפרסם מיד חוות דעת אחת לכל הזמנה שהושלמה.",eligibility:"התחברי לחשבון עם הזמנה שהושלמה וטרם דירגת.",success:"חוות הדעת פורסמה בהצלחה",error:"לא ניתן לשלוח כרגע. נסי שוב",required:"כתבי חוות דעת ובחרי דירוג בכוכבים",count:"חוות דעת של לקוחות",empty:"עדיין אין חוות דעת שפורסמו",more:"הצגת כל חוות הדעת",less:"הצג פחות"}
   }[lang]||null;
   const x=copy||null;
   if(!x)return;
@@ -8321,6 +8321,7 @@ async function submitCustomerReview(event){
   const review=$("customerReviewText"),button=$("customerReviewSubmit");
   const review_text=String(review?.value||"").trim();
   const copy=renderCustomerReviewFormLanguage();
+  const eligibility=copy?.eligibility||"Sign in with a completed order you haven’t reviewed yet.";
   if(review_text.length<2||review_text.length>1200||!customerReviewRating){
     toast(copy?.required||"Please complete the review");
     return;
@@ -8330,10 +8331,17 @@ async function submitCustomerReview(event){
   if(button){button.disabled=true;button.textContent=lang==="en"?"Sending…":lang==="he"?"שולחת…":"جارٍ الإرسال…";}
   try{
     const db=getCustomerSupabase();
+    const session=await db.auth.getSession();
+    if(session.error)throw session.error;
+    if(!session.data.session){toast(eligibility);return;}
     const result=await db.from("customer_reviews").insert({
       reviewer_name:"عميلة إسبوزا",review_text,rating:customerReviewRating,language:lang,
       active:true,sort_order:0
     });
+    if(result.error?.code==="P0001"&&result.error.message==="customer_review_requires_order"){
+      toast(eligibility);
+      return;
+    }
     if(result.error)throw result.error;
     $("customerReviewForm").reset();
     setCustomerReviewRating(5);

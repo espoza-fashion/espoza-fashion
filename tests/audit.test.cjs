@@ -91,16 +91,43 @@ test('AI timeout restores input and releases send button',async()=>{
 test('FAQ backend mode is disclosed and completed exchanges enter history',async()=>{
  let bubble;const c=context(shop,['sendEspozaAssistant'],{navigator:{onLine:true},document:{getElementById:id=>c.$(id)},espozaAssistantHistory:[],CUSTOMER_SUPABASE_KEY:'public-test-key',AbortController,setElyraTyping:()=>()=>{},addEspozaAssistantBubble:()=>bubble={textContent:''},fetch:async()=>({ok:true,json:async()=>({mode:'faq',answer:'store answer'})})});c.$('espozaAssistantInput').value='hello';c.$('espozaAssistantInput').focus=()=>{};await c.sendEspozaAssistant({preventDefault(){}});assert.match(bubble.textContent,/معلومات المتجر فقط/);assert.equal(c.espozaAssistantHistory.length,2);
 });
-test('checkout keeps cart on failed database save',()=>{assert.ok(shop.includes('if(!savedToAdmin)return;'));assert.ok(!shop.includes('insert(orderPayload).select'));assert.ok(shop.includes('if(orderSubmissionPending||!cart.length)return;'));});
+test('checkout does not request private order fields in the insert response',()=>{
+ assert.match(shop,/await customerDb\.from\("orders"\)\.insert\(orderPayload\);/);
+ assert.ok(shop.includes('if(orderSubmissionPending||!cart.length)return;'));
+});
 function checkoutContext(error){
- const c=context(shop,['sendOrder'],{orderSubmissionPending:false,cart:[{dbId:'p',name:'Dress',qty:1,price:100,size:'40'}],cartModelKey:()=> 'p',store:{whatsapp:'0000000000',name:'Espoza'},selectedDelivery:()=>({name:'Test',price:20}),cartSubtotal:()=>100,getAutomaticOffer:()=>null,money:x=>String(x),productDisplayName:x=>x.name,cartItemCategory:()=> 'dresses',lang:'ar',ensureCustomerProfile:async()=>null,getCustomerSupabase:()=>({from:()=>({insert:async()=>({error})})}),window:{open:()=>({location:{}})},t:()=>({saved:'saved',waOnly:'wa-only'}),toast(){},saveCart(){},updateCartBadge(){},closeModal(){},console:{warn(){}},alert(){}});
- for(const id of ['customerName','customerPhone','customerAddress'])c.$(id).value='TEST';return c;
+ const product={id:'p',name:'Dress',category:'dresses',price:100,product_sizes:[{size:'40'}]};
+ const calls=[];
+ const db={from(table){
+  if(table==='products')return {select(){return this;},in(){return this;},eq:async()=>({data:[product]})};
+  assert.equal(table,'orders');
+  return {insert:async payload=>{calls.push(payload);return {error};}};
+ }};
+ const popup={location:{},close(){}};
+ const c=context(shop,['sendOrder'],{orderSubmissionPending:false,cart:[{name:'Dress',qty:1,price:100,size:'40'}],cartModelKey:()=> 'p',store:{whatsapp:'0000000000',name:'Espoza'},selectedDelivery:()=>({name:'Test',price:20}),cartSubtotal:()=>100,getAutomaticOffer:()=>null,money:x=>String(x),productDisplayName:x=>x.name,lang:'ar',ensureCustomerProfile:async()=>null,getCustomerSupabase:()=>db,window:{open:()=>popup},t:()=>({saved:'saved',waOnly:'wa-only'}),toast(){},saveCart(){},syncCustomerCart:async()=>{},updateCartBadge(){},closeModal(){},console:{warn(){}},alert(){},calls,popup});
+ c.$('customerName').value='Test customer';
+ c.$('customerPhone').value='0000000000';
+ c.$('customerAddress').value='Test address';
+ return c;
 }
 test('checkout API failure preserves basket and releases submission lock',async()=>{
- const c=checkoutContext({message:'permission denied'});await c.sendOrder();assert.equal(c.cart.length,1);assert.equal(c.orderSubmissionPending,false);assert.equal(c.$('sendOrderBtn').disabled,false);
+ const c=checkoutContext({message:'permission denied'});
+ await c.sendOrder();
+ assert.equal(c.calls.length,1);
+ assert.equal(c.cart.length,1);
+ assert.equal(c.orderSubmissionPending,false);
+ assert.equal(c.$('sendOrderBtn').disabled,false);
 });
 test('checkout confirmed insert clears basket and releases submission lock',async()=>{
- const c=checkoutContext(null);await c.sendOrder();assert.equal(c.cart.length,0);assert.equal(c.orderSubmissionPending,false);assert.equal(c.$('sendOrderBtn').disabled,false);
+ const c=checkoutContext(null);
+ await c.sendOrder();
+ assert.equal(c.calls.length,1);
+ assert.equal(c.calls[0].customer_id,null);
+ assert.equal(c.calls[0].total,120);
+ assert.match(c.popup.location.href,/^https:\/\/wa\.me\//);
+ assert.equal(c.cart.length,0);
+ assert.equal(c.orderSubmissionPending,false);
+ assert.equal(c.$('sendOrderBtn').disabled,false);
 });
 
 test('abandoned cart classification excludes empty, recent and invalid dates',()=>{

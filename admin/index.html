@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2" integrity="sha384-7i/4BYWz4Mn+lJfg2HWfEPfZQ7tmFKF3CTSKlXBpxWjNlLjcg+T6smpHG4gLmU1u" crossorigin="anonymous"></script>
 
 <style>
 :root{
@@ -819,7 +819,7 @@ function cartIsInactive(row,hours,now=Date.now()){
 function cartEstimatedValue(items){
   return items.reduce((sum,item)=>{const price=Number(item.price),qty=Number(item.qty);return sum+(Number.isFinite(price)&&price>=0&&Number.isFinite(qty)&&qty>0?price*qty:0);},0);
 }
-async function readAllCartRows(table,columns,sort){
+async function readAllRows(table,columns,sort){
   let rows=[];
   for(let offset=0;;offset+=500){
     const {data,error}=await sb.from(table).select(columns).order(sort,{ascending:true}).range(offset,offset+499);
@@ -833,7 +833,7 @@ async function refreshCarts(){
   $("refreshCartsBtn").disabled=true;
   try{
     await requireAdminSession();
-    const [rows,customers]=await Promise.all([readAllCartRows("customer_carts","user_id,items,updated_at","user_id"),readAllCartRows("customers","user_id,name,email,phone","id")]);
+    const [rows,customers]=await Promise.all([readAllRows("customer_carts","user_id,items,updated_at","user_id"),readAllRows("customers","user_id,name,email,phone","id")]);
     customerCarts=rows;cartCustomers=customers;cartsLoadError="";cartsLoadedAt=new Date().toISOString();
   }catch(error){cartsLoadError=friendlyError(error);}
   finally{$("refreshCartsBtn").disabled=false;renderCarts();}
@@ -854,7 +854,9 @@ $("cartAgeFilter").addEventListener("change",renderCarts);
 setInterval(()=>{if(currentPage==="carts")renderCarts();},60000);
 
 async function loadOrders(){
-  const {data,error} = await sb.from("orders").select("*").order("created_at",{ascending:false});
+  const {data,error} = await sb.from("orders")
+    .select("id,customer_name,phone,region,address,items,total,status,notes,created_at")
+    .order("created_at",{ascending:false});
   if(error) throw error;
   orders = (data||[]).map(o=>{
     const first = Array.isArray(o.items) ? o.items[0] : null;
@@ -1752,13 +1754,15 @@ $("saveSettingsBtn").addEventListener("click", async ()=>{
 let customerProfiles=[], authAccounts=[], authAccountsLoaded=false, categoryRows=[], couponRows=[], mediaRows=[], siteSectionRows=[];
 function fmtSafeDate(v){return v?new Date(v).toLocaleString("ar-PS",{dateStyle:"medium",timeStyle:"short"}):"—";}
 async function loadCustomers(){
- const results=await Promise.all([sb.from("customers").select("id,user_id,name,email,phone,total_orders,total_spend,created_at").order("created_at",{ascending:false}),sb.functions.invoke("admin-users",{body:{}})]);
- if(results[0].error)throw results[0].error;
- customerProfiles=results[0].data||[];
- authAccountsLoaded=!results[1].error&&Array.isArray(results[1].data?.users);
- authAccounts=authAccountsLoaded?results[1].data.users:[];
+ const [profiles,authResult]=await Promise.all([
+  readAllRows("admin_customer_overview","id,user_id,name,email,phone,total_orders,total_spend,created_at","id"),
+  sb.functions.invoke("admin-users",{body:{}})
+ ]);
+ customerProfiles=profiles.sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
+ authAccountsLoaded=!authResult.error&&Array.isArray(authResult.data?.users);
+ authAccounts=authAccountsLoaded?authResult.data.users:[];
  renderCustomers();
- if(results[1].error)$("accountsNote").textContent="قائمة Auth الكاملة غير متاحة بعد؛ تظهر ملفات الزبائن فقط. "+(results[1].error.message||"");
+ if(authResult.error)$("accountsNote").textContent="قائمة Auth الكاملة غير متاحة بعد؛ تظهر ملفات الزبائن فقط. "+(authResult.error.message||"");
 }
 function renderCustomers(){
  const byId=new Map(customerProfiles.map(x=>[x.user_id,x]));
