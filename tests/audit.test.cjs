@@ -73,14 +73,19 @@ test('the catalog opens on categories and shows product results only when reques
  const c=context(shop,['renderProducts'],{
   currentCategory:'all',lang:'en',
   getShopCategories:()=>new Map([['sets','Sets']]),renderCustomerCategories(){},
+  getShopCategoryImage:()=> './sets.webp',makeShopCategoryPhoto:src=>({src}),shopPhotoObserver:null,
   shopCatalogueText:{en:{title:'Shop by category',back:'All categories',search:'Search results',searchLabel:'Search products'}},
   filteredProducts:()=>[],t:()=>({piece:'items',noProducts:'Nothing found'}),setupScrollReveal(){}
  });
  c.$('shopSectionHead').dataset={};
  c.$('searchInput').setAttribute=()=>{};
+ const cover=c.$('shopCategoryCover');
+ cover.dataset={};
+ cover.replaceChildren=photo=>{cover.photo=photo;};
  c.renderProducts();
  assert.equal(c.$('categories').hidden,false);
  assert.equal(c.$('productsGrid').hidden,true);
+ assert.equal(cover.hidden,true);
  assert.equal(c.$('collectionTitle').textContent,'Shop by category');
 
  c.currentCategory='sets';
@@ -88,6 +93,8 @@ test('the catalog opens on categories and shows product results only when reques
  assert.equal(c.$('categories').hidden,true);
  assert.equal(c.$('productsGrid').hidden,false);
  assert.equal(c.$('shopBack').hidden,false);
+ assert.equal(cover.hidden,false);
+ assert.equal(cover.photo.src,'./sets.webp');
  assert.equal(c.$('collectionTitle').textContent,'Sets');
 
  c.currentCategory='all';
@@ -95,6 +102,7 @@ test('the catalog opens on categories and shows product results only when reques
  c.renderProducts();
  assert.equal(c.$('collectionTitle').textContent,'Search results');
  assert.equal(c.$('productsGrid').hidden,false);
+ assert.equal(cover.hidden,true);
 });
 test('category results include multiple tags, and an offer search stays inside the selected category',()=>{
  const products=[

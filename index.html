@@ -3513,7 +3513,7 @@ footer{
 </style>
 
 <style id="espoza-shop-category-style">
-#categories[hidden],#productsGrid[hidden],#shopBack[hidden],#productCount[hidden]{display:none!important}
+#categories[hidden],#productsGrid[hidden],#shopBack[hidden],#productCount[hidden],#shopCategoryCover[hidden]{display:none!important}
 
 .shop-section-head{margin-block:1.85rem 1.1rem;align-items:end}
 .shop-section-head h2{font-size:clamp(1.65rem,3vw,2.45rem);line-height:1.25}
@@ -3521,7 +3521,25 @@ footer{
 .shop-section-head[data-view="categories"] h2::after{
   content:"";display:block;width:2.9rem;height:2px;margin: .8rem auto 0;background:var(--gold)
 }
-.shop-section-head #productCount{font-size:.875rem;white-space:nowrap}
+.shop-section-head #productCount{display:block;margin-top:.4rem;font-size:.875rem;white-space:nowrap}
+.shop-section-copy{grid-area:copy}
+.shop-section-head[data-view="category"]{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);grid-template-areas:"copy cover";
+  align-items:center;gap:clamp(1rem,3vw,2.75rem);padding:clamp(.9rem,2.5vw,2rem);
+  border:1px solid #c8a56d;border-radius:1.15rem;
+  background:radial-gradient(ellipse at 5% 0%,#8d4358,var(--dark) 78%);
+  box-shadow:0 10px 27px rgba(67,19,33,.14);
+}
+.shop-section-head[data-view="category"] h2{color:#fffaf2}
+.shop-section-head[data-view="category"] #productCount{color:#f4e6de}
+.shop-category-cover{
+  grid-area:cover;min-width:0;margin:0;overflow:hidden;border:1px solid #d6b784;
+  border-radius:.8rem;background:linear-gradient(155deg,#714051,#2d1420);
+}
+.shop-category-cover img{
+  display:block;width:100%;height:clamp(15rem,27vw,22rem);
+  object-fit:contain;object-position:center top;
+}
 .shop-back{
   min-height:44px;margin-block-end:.5rem;padding:.45rem 1rem;border:1px solid #d6b784;
   border-radius:999px;background:#fff9f4;color:var(--wine);font:inherit;font-size:.9rem;font-weight:750
@@ -3532,51 +3550,45 @@ footer{
 .shop-category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(.65rem,1.5vw,1.15rem)}
 .shop-category-grid[data-count="1"]{grid-template-columns:minmax(0,28rem);justify-content:center}
 .shop-category-grid[data-count="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
-.shop-category-grid[data-count="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
-.shop-category-grid[data-count="5"]{
-  grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr));
-  grid-auto-rows:clamp(11rem,20vw,15.5rem)
-}
-.shop-category-grid[data-count="5"] .shop-category-card{min-height:0}
-.shop-category-grid[data-count="5"] .shop-category-card:first-child{grid-row:span 2}
 .shop-category-card{
-  position:relative;display:flex;align-items:end;min-width:0;min-height:clamp(12rem,28vw,21rem);padding:0;
-  overflow:hidden;isolation:isolate;border:1px solid #c8a56d;border-radius:1.15rem;
-  background:radial-gradient(ellipse at 50% 0%,#9d5265,var(--dark) 79%);
-  box-shadow:0 10px 27px rgba(67,19,33,.16);color:#fffaf2;font:inherit;text-align:start;
+  display:flex;min-width:0;flex-direction:column;padding:0;overflow:hidden;
+  border:1px solid #c8a56d;border-radius:1.15rem;background:var(--dark);
+  box-shadow:0 10px 27px rgba(67,19,33,.16);color:#fffaf2;font:inherit;text-align:center;
 }
-.shop-category-card img{
-  position:absolute;inset:0;z-index:-2;display:block;width:100%;height:100%;
-  object-fit:cover;object-position:center 5%;transition:transform .45s ease
+.shop-category-photo{
+  display:block;flex:none;width:100%;aspect-ratio:3/4;overflow:hidden;
+  background:linear-gradient(145deg,#f1e7e0,#decbc6);
 }
-.shop-category-grid[data-count="5"] .shop-category-card:first-child img{object-position:center 23%}
-.shop-category-card[data-cat="winter-sets"] img{object-position:center 7%}
-.shop-category-card::before{
-  content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(180deg,rgba(29,10,18,.04) 35%,rgba(32,12,20,.42) 68%,rgba(35,11,22,.94) 100%);
-}
-.shop-category-card::after{
-  content:"";pointer-events:none;position:absolute;inset:.55rem;
-  border:1px solid rgba(235,206,155,.68);border-radius:.78rem
+.shop-category-photo img{
+  display:block;width:100%;height:100%;object-fit:contain;object-position:center top;
 }
 .shop-category-card-title{
-  display:block;max-width:100%;padding:1.15rem clamp(1.05rem,2.35vw,1.65rem);
-  font-family:"Playfair Display","Cairo",serif;font-size:clamp(1.15rem,2.2vw,1.75rem);
-  font-weight:750;line-height:1.3;overflow-wrap:anywhere;text-shadow:0 2px 12px rgba(28,7,16,.55)
-}
-.shop-category-grid[data-count="5"] .shop-category-card:first-child .shop-category-card-title{
-  font-size:clamp(1.35rem,3vw,2.25rem)
+  display:grid;place-items:center;flex:1;min-height:3.55rem;width:100%;padding:.75rem .55rem;
+  border-top:1px solid #d6b784;background:linear-gradient(140deg,var(--wine),var(--dark));
+  font-family:"Playfair Display","Cairo",serif;font-size:clamp(1rem,1.8vw,1.42rem);
+  font-weight:750;line-height:1.35;overflow-wrap:anywhere;
 }
 .shop-category-empty{grid-column:1/-1}
-@media(hover:hover){.shop-category-card:hover img{transform:scale(1.045)}}
-@media(max-width:700px){
-  .shop-category-grid[data-count]:not([data-count="1"]){grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:auto}
-  .shop-category-card,.shop-category-grid[data-count="5"] .shop-category-card{min-height:0;aspect-ratio:4/5}
-  .shop-category-grid[data-count="5"] .shop-category-card:first-child{grid-column:1/-1;grid-row:auto;aspect-ratio:5/3}
-  .shop-category-grid[data-count="5"] .shop-category-card:first-child img{object-position:center 11%}
-  .shop-category-card::after{inset:.4rem}
+@media(hover:hover){.shop-category-card:hover{box-shadow:0 13px 30px rgba(67,19,33,.24)}}
+@media(min-width:1020px){
+  .shop-category-grid[data-count="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .shop-category-grid[data-count="5"]{grid-template-columns:repeat(5,minmax(0,1fr))}
 }
-@media(prefers-reduced-motion:reduce){.shop-category-card img{transition:none}}
+@media(max-width:700px){
+  .shop-category-grid[data-count]:not([data-count="1"]){grid-template-columns:repeat(2,minmax(0,1fr))}
+  .shop-section-head[data-view="category"]{grid-template-columns:1fr;grid-template-areas:"cover" "copy"}
+  .shop-category-cover img{height:clamp(14rem,62vw,20rem)}
+}
+@media(prefers-reduced-motion:no-preference){
+  .shop-photo-waiting{clip-path:inset(0 0 100% 0)}
+  .shop-photo-visible{
+    animation:shop-photo-reveal .55s cubic-bezier(.22,.75,.32,1) both
+  }
+  @keyframes shop-photo-reveal{
+    from{clip-path:inset(0 0 100% 0)}
+    to{clip-path:inset(0)}
+  }
+}
 </style>
 </head>
 
@@ -3828,11 +3840,12 @@ placeholder="">
 
 <section class="catalog" id="shopCatalogue" aria-labelledby="collectionTitle">
   <div class="section-head shop-section-head" id="shopSectionHead" data-view="categories">
-    <div>
+    <div class="shop-section-copy">
       <button class="shop-back" id="shopBack" type="button" aria-controls="categories" hidden>كل الأقسام</button>
       <h2 id="collectionTitle" tabindex="-1">تسوّقي حسب القسم</h2>
+      <span id="productCount" aria-live="polite" hidden></span>
     </div>
-    <span id="productCount" aria-live="polite" hidden></span>
+    <figure class="shop-category-cover" id="shopCategoryCover" hidden></figure>
   </div>
   <div class="shop-category-grid" id="categories"></div>
   <div class="products-grid" id="productsGrid" hidden></div>
@@ -7351,6 +7364,13 @@ const shopCatalogueText={
   en:{title:"Shop by category",back:"All categories",search:"Search results",searchLabel:"Search products",empty:"There are no categories available right now."},
   he:{title:"קנייה לפי קטגוריה",back:"כל הקטגוריות",search:"תוצאות החיפוש",searchLabel:"חיפוש מוצרים",empty:"אין קטגוריות זמינות כרגע."}
 };
+const shopPhotoObserver=typeof IntersectionObserver==="function"?new IntersectionObserver((entries,observer)=>{
+  for(const {target,isIntersecting} of entries){
+    if(!isIntersecting)continue;
+    target.querySelector("img")?.classList.replace("shop-photo-waiting","shop-photo-visible");
+    observer.unobserve(target);
+  }
+},{threshold:.1}):null;
 
 function normalizeShopCategory(value){
   return String(value||"").trim().replace(/^winter_sets$/,"winter-sets");
@@ -7371,15 +7391,34 @@ function getShopCategories(){
   return categories;
 }
 
+function getShopCategoryImage(slug){
+  return shopCategoryCovers.get(slug)||
+    products.find(product=>matchesShopCategory(product,slug)&&product.images?.[0]?.url)?.images[0].url;
+}
+
+function makeShopCategoryPhoto(source){
+  const photo=document.createElement("img");
+  photo.alt="";
+  photo.loading="lazy";
+  photo.decoding="async";
+  if(shopPhotoObserver){
+    photo.addEventListener("load",()=>{
+      const frame=photo.parentElement;
+      if(!frame?.isConnected)return;
+      photo.classList.add("shop-photo-waiting");
+      shopPhotoObserver.observe(frame);
+    },{once:true});
+  }
+  photo.addEventListener("error",()=>photo.remove(),{once:true});
+  photo.src=source;
+  return photo;
+}
+
 function renderCustomerCategories(categories=getShopCategories()){
   const gallery=$("categories");
   if(!gallery)return;
   const text=shopCatalogueText[lang]||shopCatalogueText.ar;
-  const entries=Array.from(categories,([slug,label])=>{
-    const image=shopCategoryCovers.get(slug)||
-      products.find(product=>matchesShopCategory(product,slug)&&product.images?.[0]?.url)?.images[0].url;
-    return {slug,label,image};
-  });
+  const entries=Array.from(categories,([slug,label])=>({slug,label,image:getShopCategoryImage(slug)}));
   const content=JSON.stringify([text.empty,entries]);
   if(gallery.dataset.content!==content){
     gallery.dataset.content=content;
@@ -7390,19 +7429,13 @@ function renderCustomerCategories(categories=getShopCategories()){
       card.type="button";
       card.dataset.cat=slug;
       card.setAttribute("aria-controls","productsGrid");
-      if(image){
-        const photo=document.createElement("img");
-        photo.src=image;
-        photo.alt="";
-        photo.loading="lazy";
-        photo.decoding="async";
-        photo.addEventListener("error",()=>photo.remove(),{once:true});
-        card.append(photo);
-      }
+      const frame=document.createElement("span");
+      frame.className="shop-category-photo";
+      if(image)frame.append(makeShopCategoryPhoto(image));
       const title=document.createElement("span");
       title.className="shop-category-card-title";
       title.textContent=label;
-      card.append(title);
+      card.append(frame,title);
       card.addEventListener("click",()=>goCategory(slug));
       return card;
     });
@@ -7412,6 +7445,7 @@ function renderCustomerCategories(categories=getShopCategories()){
       empty.textContent=text.empty;
       cards.push(empty);
     }
+    gallery.querySelectorAll(".shop-category-photo").forEach(frame=>shopPhotoObserver?.unobserve(frame));
     gallery.replaceChildren(...cards);
   }
   gallery.querySelectorAll("button[data-cat]").forEach(button=>{
@@ -8409,9 +8443,12 @@ renderCustomerCategories(categories);
 
 const search=$("searchInput");
 const text=shopCatalogueText[lang]||shopCatalogueText.ar;
-const showProducts=currentCategory!=="all" || search.value.trim()!=="";
+const selectedCategory=categories.get(currentCategory);
+const showProducts=!!selectedCategory || search.value.trim()!=="";
 const grid=$("productsGrid");
 const count=$("productCount");
+const cover=$("shopCategoryCover");
+const coverSource=selectedCategory&&getShopCategoryImage(currentCategory);
 
 search.setAttribute("aria-label",text.searchLabel);
 $("categories").hidden=showProducts;
@@ -8419,8 +8456,14 @@ grid.hidden=!showProducts;
 count.hidden=!showProducts;
 $("shopBack").hidden=!showProducts;
 $("shopBack").textContent=text.back;
-$("shopSectionHead").dataset.view=showProducts?"products":"categories";
-$("collectionTitle").textContent=showProducts?(categories.get(currentCategory)||text.search):text.title;
+cover.hidden=!coverSource;
+if(coverSource&&cover.dataset.source!==coverSource){
+  shopPhotoObserver?.unobserve(cover);
+  cover.dataset.source=coverSource;
+  cover.replaceChildren(makeShopCategoryPhoto(coverSource));
+}
+$("shopSectionHead").dataset.view=coverSource?"category":showProducts?"products":"categories";
+$("collectionTitle").textContent=showProducts?(selectedCategory||text.search):text.title;
 if(!showProducts){
   if(grid.childElementCount)grid.replaceChildren();
   count.textContent="";
