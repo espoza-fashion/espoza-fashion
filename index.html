@@ -3525,6 +3525,10 @@ footer{
 .espoza-update-accept{border:1px solid #641f34;background:#641f34;color:#fff;flex:1}
 .espoza-update-accept:disabled,.espoza-update-later:disabled{opacity:.65;cursor:wait}
 .espoza-update-later{border:1px solid #eadfe1;background:#fff;color:#641f34}
+.espoza-update-success{border-color:#a3b392}
+.espoza-update-success .espoza-update-title{color:#35552c}
+.espoza-notification-settings{z-index:2147483002}
+body:has(#espozaNotificationSettings) #espozaTurnstile{z-index:2147483003!important}
 @media(max-width:480px){.espoza-update-notice{inset:auto 10px calc(10px + env(safe-area-inset-bottom,0px));width:calc(100vw - 20px);padding:15px}.espoza-update-actions button{flex:1}}
 @media(prefers-reduced-motion:reduce){.espoza-update-notice{scroll-behavior:auto}}
 </style>
@@ -9978,7 +9982,11 @@ updateCartBadge();
 closeModal(
 "orderModal"
 );
-}finally{orderSubmissionPending=false;$("sendOrderBtn").disabled=false;}
+}finally{
+orderSubmissionPending=false;
+$("sendOrderBtn").disabled=false;
+window.dispatchEvent?.(new Event("espoza:order-idle"));
+}
 }
 
 
@@ -11615,12 +11623,12 @@ applyAssistantLanguage();
 })();
 </script>
 <script src="./espoza-app.js" defer></script>
-<script src="./customer-sidebar.js?v=4" defer></script>
+<script src="./customer-sidebar.js?v=5" defer></script>
 
 <script id="espoza-turnstile-client">
 (function(){
  const SITE_KEY="0x4AAAAAAGCADfK6n4v3hrrO";
- let widgetId=null, resolver=null, rejecter=null, active=false;
+ let widgetId=null, widgetAction=null, resolver=null, rejecter=null, active=false;
  function waitForTurnstile(){
   return new Promise((resolve,reject)=>{
    const started=Date.now();
@@ -11631,7 +11639,7 @@ applyAssistantLanguage();
   });
  }
  window.getEspozaTurnstileToken=async function(action){
-  if(!["elyra","coupon"].includes(action))throw new Error("Invalid security action");
+  if(!["elyra","coupon","update_subscription"].includes(action))throw new Error("Invalid security action");
   await waitForTurnstile();
   if(active)throw new Error("Security check already running");
   active=true;
@@ -11639,16 +11647,22 @@ applyAssistantLanguage();
    const token=await new Promise((resolve,reject)=>{
     resolver=resolve;rejecter=reject;
     const options={
-     sitekey:SITE_KEY,execution:"execute",appearance:"interaction-only",
+     sitekey:SITE_KEY,action,execution:"execute",appearance:"interaction-only",
      callback:(value)=>{const done=resolver;resolver=null;rejecter=null;const box=document.getElementById("espozaTurnstile");if(box)box.style.visibility="hidden";if(done)done(value);},
      "error-callback":()=>{const fail=rejecter;resolver=null;rejecter=null;const box=document.getElementById("espozaTurnstile");if(box)box.style.visibility="hidden";if(fail)fail(new Error("فشل التحقق الأمني."));},
      "expired-callback":()=>{const fail=rejecter;resolver=null;rejecter=null;const box=document.getElementById("espozaTurnstile");if(box)box.style.visibility="hidden";if(fail)fail(new Error("انتهت صلاحية التحقق. حاولي مرة أخرى."));}
     };
     try{
-     if(widgetId===null)widgetId=window.turnstile.render("#espozaTurnstile",options);
-     else window.turnstile.reset(widgetId);
+     if(widgetId!==null&&widgetAction!==action){
+      window.turnstile.remove(widgetId);
+      widgetId=null;
+     }
+     if(widgetId===null){
+      widgetId=window.turnstile.render("#espozaTurnstile",options);
+      widgetAction=action;
+     }else window.turnstile.reset(widgetId);
      const box=document.getElementById("espozaTurnstile");if(box)box.style.visibility="visible";
-     window.turnstile.execute(widgetId,{action});
+     window.turnstile.execute(widgetId);
     }catch(error){reject(error);}
     setTimeout(()=>{if(rejecter){const fail=rejecter;resolver=null;rejecter=null;fail(new Error("انتهت مهلة التحقق الأمني."));}},15000);
    });

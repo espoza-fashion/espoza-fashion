@@ -8,7 +8,9 @@ try {
 }
 
 const CACHE_PREFIX = "espoza-shell-";
-const CACHE_NAME = CACHE_PREFIX + "v21-" + (self.espozaRelease || "local");
+const RELEASE = String(self.espozaRelease || "local");
+const CACHE_NAME = CACHE_PREFIX + "v22-" + RELEASE;
+const releaseParameter = "espoza-release";
 const scope = new URL(self.registration.scope);
 const home = scope.href;
 const indexPath = new URL("index.html", scope).pathname;
@@ -22,7 +24,7 @@ function previousShellCaches() {
 
 self.addEventListener("install", event => {
   const shellFiles = [
-    "./", "./espoza-app.js", "./customer-sidebar.js?v=4", "./customer-sidebar.css?v=1",
+    "./", "./espoza-app.js", "./customer-sidebar.js?v=5", "./customer-sidebar.css?v=1",
     "./manifest.webmanifest", "./icons/espoza-luxe-emblem.svg", "./icons/espoza-app-192.png"
   ];
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(
@@ -32,7 +34,10 @@ self.addEventListener("install", event => {
 
 /* Keep an updated worker in the waiting phase until the visitor approves. */
 self.addEventListener("message", event => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
+  if (event.data?.type === "GET_RELEASE") {
+    event.ports?.[0]?.postMessage({ release: RELEASE });
+  } else if (event.data?.type === "SKIP_WAITING" &&
+      (!event.data.release || event.data.release === RELEASE)) {
     event.waitUntil(self.skipWaiting());
   }
 });
@@ -68,6 +73,11 @@ self.addEventListener("fetch", event => {
   // The static storefront serves the same shell for all URL parameters, including auth callbacks.
   const cacheKey = isNavigation ? home : request;
   event.respondWith((async () => {
+    const source = isNavigation ? url : request.referrer && new URL(request.referrer);
+    if (source?.origin === scope.origin && source.searchParams.get(releaseParameter) === RELEASE) {
+      const installed = await caches.open(CACHE_NAME).then(cache => cache.match(cacheKey));
+      if (installed) return installed;
+    }
     try {
       const response = await fetch(request, { cache: "no-store" });
       if (response && response.ok) {
@@ -93,6 +103,46 @@ self.addEventListener("fetch", event => {
         });
       }
       return Response.error();
+    }
+  })());
+});
+
+const updateNotifications = {
+  ar: ["تحديث جديد من Espoza", "اضغطي لفتح التطبيق وتفعيل أحدث نسخة."],
+  en: ["New Espoza update", "Tap to open the app and activate the latest version."],
+  he: ["עדכון חדש ל‑Espoza", "לחצי כדי לפתוח את האפליקציה ולהפעיל את הגרסה העדכנית."]
+};
+
+self.addEventListener("push", event => {
+  let update;
+  try { update = event.data?.json(); } catch { return; }
+  if (update?.type !== "release" || !/^\d{1,12}$/.test(update.release)) return;
+  const locale = ["ar", "en", "he"].includes(update.locale) ? update.locale : "ar";
+  const [title, body] = updateNotifications[locale];
+  event.waitUntil(self.registration.showNotification(title, {
+    body,
+    icon: new URL("./icons/espoza-app-192.png", scope).href,
+    tag: "espoza-store-update",
+    dir: locale === "en" ? "ltr" : "rtl",
+    lang: locale,
+    data: { type: "release" }
+  }));
+});
+
+self.addEventListener("notificationclick", event => {
+  if (event.notification.data?.type !== "release") return;
+  event.notification.close();
+  event.waitUntil((async () => {
+    const pages = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    const page = pages.find(client => {
+      const url = new URL(client.url);
+      return url.origin === scope.origin && (url.pathname === scope.pathname || url.pathname === indexPath);
+    });
+    if (page) {
+      await page.focus();
+      page.postMessage({ type: "ESPOZA_OPEN_UPDATE" });
+    } else {
+      await self.clients.openWindow(home);
     }
   })());
 });

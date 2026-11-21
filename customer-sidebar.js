@@ -72,6 +72,12 @@
   if(window.espozaApp?.canInstall()){
    body.append(makeButton("esp-side-link","⊞","تثبيت التطبيق","Install app",()=>{close();window.espozaApp.install();},"התקנת האפליקציה"));
   }
+  if(window.espozaApp?.hasUpdate?.()){
+   body.append(makeButton("esp-side-link","↻","تحديث التطبيق","Update app",()=>{close();window.espozaApp.openUpdate();},"עדכון האפליקציה"));
+  }
+  if(window.espozaApp?.canManageNotifications?.()){
+   body.append(makeButton("esp-side-link","♢","إشعارات التحديث","Update notifications",()=>{close();window.espozaApp.openNotificationSettings();},"התראות עדכון"));
+  }
   const contact=document.createElement("a");contact.className="esp-side-link";contact.href=($("whatsappHeader")&&$("whatsappHeader").href)||"#";contact.target="_blank";contact.rel="noopener noreferrer";
   const ci=document.createElement("span");ci.className="esp-side-link-icon";ci.textContent="✆";const ct=document.createElement("span");ct.textContent=label("تواصلي معنا عبر واتساب","Contact us on WhatsApp");contact.append(ci,ct);body.append(contact);
  }
