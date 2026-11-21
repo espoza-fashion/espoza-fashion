@@ -3547,9 +3547,10 @@ footer{
 }
 .shop-category-card img{
   position:absolute;inset:0;z-index:-2;display:block;width:100%;height:100%;
-  object-fit:cover;object-position:center 23%;transition:transform .45s ease
+  object-fit:cover;object-position:center 5%;transition:transform .45s ease
 }
-.shop-category-card[data-cat="winter-sets"] img{object-position:center 13%}
+.shop-category-grid[data-count="5"] .shop-category-card:first-child img{object-position:center 23%}
+.shop-category-card[data-cat="winter-sets"] img{object-position:center 7%}
 .shop-category-card::before{
   content:"";position:absolute;inset:0;z-index:-1;
   background:linear-gradient(180deg,rgba(29,10,18,.04) 35%,rgba(32,12,20,.42) 68%,rgba(35,11,22,.94) 100%);
