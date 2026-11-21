@@ -9,7 +9,9 @@
 <meta name="description" content="Espoza Fashion - فساتين وأطقم نسائية أنيقة">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./icons/espoza-luxe-emblem.svg">
-<link rel="apple-touch-icon" href="./icons/espoza-luxe-emblem.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/espoza-app-180.png">
+<meta name="apple-mobile-web-app-title" content="Espoza">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3481,7 +3483,17 @@ footer{
 @media(max-width:620px){.customer-reviews-card{padding:17px 12px;border-radius:18px}.customer-reviews-grid{grid-template-columns:1fr;gap:8px}.customer-review-card{padding:11px 12px}.customer-reviews-section{padding-inline:10px!important}}
 </style>
 
-<style id="espoza-update-notice-style">
+<style id="espoza-app-controls-style">
+.espoza-install-dialog{
+  width:min(400px,calc(100% - 32px));padding:24px;border:1px solid var(--line);
+  border-radius:22px;background:#fffdf9;color:var(--dark);text-align:start;
+  box-shadow:0 24px 70px rgba(35,10,18,.26);
+}
+.espoza-install-dialog::backdrop{background:rgba(35,10,18,.55)}
+.espoza-install-icon{display:block;width:52px;height:52px;border-radius:12px}
+.espoza-install-dialog h2{margin:12px 0 6px;font-size:1.25rem;color:var(--wine)}
+.espoza-install-dialog p{margin:0 0 18px;font-size:1rem;line-height:1.7}
+.espoza-install-dialog button{width:100%;min-height:44px;border-radius:24px;font:inherit;font-weight:700}
 .espoza-update-notice{
   position:fixed;z-index:2147483001;inset:auto 18px 18px 18px;margin-inline:auto;
   width:min(440px,calc(100vw - 28px));padding:17px 18px;
@@ -3490,13 +3502,13 @@ footer{
   font-family:"Cairo",Arial,sans-serif;text-align:start;
 }
 .espoza-update-title{display:block;color:#641f34;font-size:15px;font-weight:800;line-height:1.6}
-.espoza-update-description{margin:5px 0 14px;color:#75676c;font-size:12px;line-height:1.8}
+.espoza-update-description{margin:5px 0 14px;color:#75676c;font-size:.875rem;line-height:1.65}
 .espoza-update-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.espoza-update-actions button{min-height:40px;border-radius:24px;padding:9px 16px;font:700 12px "Cairo",Arial,sans-serif}
+.espoza-update-actions button{min-height:44px;border-radius:24px;padding:9px 16px;font:700 .875rem "Cairo",Arial,sans-serif}
 .espoza-update-accept{border:1px solid #641f34;background:#641f34;color:#fff;flex:1}
 .espoza-update-accept:disabled,.espoza-update-later:disabled{opacity:.65;cursor:wait}
 .espoza-update-later{border:1px solid #eadfe1;background:#fff;color:#641f34}
-@media(max-width:480px){.espoza-update-notice{inset:auto 10px 10px;width:calc(100vw - 20px);padding:15px}.espoza-update-actions button{flex:1}}
+@media(max-width:480px){.espoza-update-notice{inset:auto 10px calc(10px + env(safe-area-inset-bottom,0px));width:calc(100vw - 20px);padding:15px}.espoza-update-actions button{flex:1}}
 @media(prefers-reduced-motion:reduce){.espoza-update-notice{scroll-behavior:auto}}
 </style>
 
@@ -4504,7 +4516,7 @@ id="toast">
 </div>
 
 
-<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2" integrity="sha384-7i/4BYWz4Mn+lJfg2HWfEPfZQ7tmFKF3CTSKlXBpxWjNlLjcg+T6smpHG4gLmU1u" crossorigin="anonymous"></script>
+<script id="espoza-supabase-script" async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2" integrity="sha384-7i/4BYWz4Mn+lJfg2HWfEPfZQ7tmFKF3CTSKlXBpxWjNlLjcg+T6smpHG4gLmU1u" crossorigin="anonymous"></script>
 
 
 <script>
@@ -11459,145 +11471,72 @@ async function sendEspozaAssistant(event){
 applyAssistantLanguage();
 </script>
 <script>
-/* Live synchronization: all public storefront data stays in Supabase.
-   Admin changes are reflected without waiting for the next page visit. */
+/* Keep the storefront current after changes and after returning to a suspended tab or app. */
 (function setupEspozaRealtimeSync(){
-  if (!("supabase" in window) || typeof getCustomerSupabase !== "function") return;
-  let refreshTimer = null;
-  const pendingRefreshKinds = new Set();
-  const productTables = ["products","product_sizes","product_colors","product_images","product_categories"];
-  const contentTables = ["categories","site_sections","coupons","sliders","feedback","store_settings","delivery_areas","customer_reviews"];
-  const db = getCustomerSupabase();
-  const scheduleRefresh = (kind) => {
-    pendingRefreshKinds.add(kind);
-    if (refreshTimer) clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(async () => {
-      const kinds = new Set(pendingRefreshKinds);
-      pendingRefreshKinds.clear();
-      const jobs = [];
-      if (kinds.has("products")) {
-        if (typeof refreshSupabaseProducts === "function") jobs.push(refreshSupabaseProducts());
-      }
-      if (kinds.has("content")) {
-        if (typeof loadAdminStoreData === "function") jobs.push(loadAdminStoreData());
-      }
-      if (kinds.has("orders") && customerProfile && typeof loadCustomerOrders === "function") {
-        jobs.push(loadCustomerOrders());
-      }
-      await Promise.allSettled(jobs);
-    }, 350);
-  };
-  let channel = db.channel("espoza-storefront-live-sync");
-  for (const table of productTables) {
-    channel = channel.on("postgres_changes", { event: "*", schema: "public", table }, () => scheduleRefresh("products"));
-  }
-  for (const table of contentTables) {
-    channel = channel.on("postgres_changes", { event: "*", schema: "public", table }, () => scheduleRefresh("content"));
-  }
-  // Keep the signed-in customer's order history current when Admin changes an order.
-  channel = channel.on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => scheduleRefresh("orders"));
-  window.__espozaRealtimeChannel = channel.subscribe((status) => {
-    if (status === "SUBSCRIBED") {
-      console.info("Espoza live store synchronization connected.");
-    } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-      console.warn("Espoza live synchronization temporarily unavailable:", status);
+  function subscribe(){
+    if(!window.supabase || typeof getCustomerSupabase !== "function")return;
+    const db = getCustomerSupabase();
+    const pending = new Set();
+    let timer;
+    let refreshing = false;
+    let subscribedBefore = false;
+
+    function scheduleRefresh(...kinds){
+      kinds.forEach(kind => pending.add(kind));
+      if(timer || refreshing || document.hidden || !navigator.onLine || !pending.size)return;
+      timer = setTimeout(async () => {
+        timer = null;
+        if(document.hidden || !navigator.onLine)return;
+        const changes = new Set(pending);
+        pending.clear();
+        refreshing = true;
+        try{
+          const jobs = [];
+          if(changes.has("products"))jobs.push(refreshSupabaseProducts());
+          if(changes.has("content"))jobs.push(loadAdminStoreData());
+          if(changes.has("orders") && customerProfile)jobs.push(loadCustomerOrders());
+          await Promise.allSettled(jobs);
+        }finally{
+          refreshing = false;
+          scheduleRefresh();
+        }
+      }, 350);
     }
-  });
+
+    const catchUp = () => scheduleRefresh("products", "content", "orders");
+    const productTables = ["products","product_sizes","product_colors","product_images","product_categories"];
+    const contentTables = ["categories","site_sections","coupons","sliders","feedback","store_settings","delivery_areas","customer_reviews"];
+    let channel = db.channel("espoza-storefront-live-sync");
+    for(const table of productTables){
+      channel = channel.on("postgres_changes", { event:"*", schema:"public", table }, () => scheduleRefresh("products"));
+    }
+    for(const table of contentTables){
+      channel = channel.on("postgres_changes", { event:"*", schema:"public", table }, () => scheduleRefresh("content"));
+    }
+    channel = channel.on("postgres_changes", { event:"*", schema:"public", table:"orders" }, () => scheduleRefresh("orders"));
+    window.__espozaRealtimeChannel = channel.subscribe(status => {
+      if(status === "SUBSCRIBED"){
+        if(subscribedBefore)catchUp();
+        subscribedBefore = true;
+      }else if(status === "CHANNEL_ERROR" || status === "TIMED_OUT"){
+        console.warn("Espoza live synchronization temporarily unavailable:", status);
+      }
+    });
+    window.addEventListener("online", catchUp);
+    document.addEventListener("visibilitychange", () => {
+      if(!document.hidden)catchUp();
+    });
+    // Unpublished rows can disappear under RLS without a visible change event.
+    window.setInterval(() => {
+      if(!document.hidden && navigator.onLine)scheduleRefresh("products", "content");
+    }, 60000);
+  }
+  if(window.supabase)subscribe();
+  else document.getElementById("espoza-supabase-script")?.addEventListener("load", subscribe, {once:true});
 })();
 </script>
-<script>
-/* Customer PWA updates: notify first, activate only after an explicit choice. */
-if("serviceWorker" in navigator){
-  let reloadAfterUpdateApproval=false;
-  let updatePrompt=null;
-
-  const updateCopy={
-    ar:{title:"يتوفر تحديث جديد للمتجر",body:"أصدرنا نسخة أحدث من Espoza Fashion لتحسين تجربة التسوق.",update:"تحديث الموقع الآن",later:"لاحقًا",working:"جارٍ تجهيز التحديث…"},
-    en:{title:"A new store update is available",body:"A newer version of Espoza Fashion is ready with improvements to your shopping experience.",update:"Update now",later:"Later",working:"Preparing update…"},
-    he:{title:"קיים עדכון חדש לחנות",body:"גרסה חדשה של Espoza Fashion זמינה עם שיפורים לחוויית הקנייה.",update:"עדכון עכשיו",later:"מאוחר יותר",working:"מכין את העדכון…"}
-  };
-
-  function showStoreUpdate(registration){
-    if(!registration || !registration.waiting || !document.body)return;
-    if(updatePrompt && updatePrompt.isConnected)return;
-
-    const lang=(document.documentElement.lang||"ar").slice(0,2);
-    const copy=updateCopy[lang]||updateCopy.ar;
-    const panel=document.createElement("section");
-    panel.className="espoza-update-notice";
-    panel.setAttribute("role","status");
-    panel.setAttribute("aria-live","polite");
-    panel.dir=lang==="en"?"ltr":"rtl";
-
-    const heading=document.createElement("strong");
-    heading.className="espoza-update-title";
-    heading.textContent=copy.title;
-    const description=document.createElement("p");
-    description.className="espoza-update-description";
-    description.textContent=copy.body;
-    const actions=document.createElement("div");
-    actions.className="espoza-update-actions";
-    const accept=document.createElement("button");
-    accept.type="button";
-    accept.className="espoza-update-accept";
-    accept.textContent=copy.update;
-    const later=document.createElement("button");
-    later.type="button";
-    later.className="espoza-update-later";
-    later.textContent=copy.later;
-
-    accept.addEventListener("click",()=>{
-      const waiting=registration.waiting;
-      if(!waiting)return;
-      accept.disabled=true;
-      later.disabled=true;
-      accept.textContent=copy.working;
-      reloadAfterUpdateApproval=true;
-      waiting.postMessage({type:"SKIP_WAITING"});
-    });
-    later.addEventListener("click",()=>{
-      panel.remove();
-      updatePrompt=null;
-    });
-
-    actions.append(accept,later);
-    panel.append(heading,description,actions);
-    document.body.appendChild(panel);
-    updatePrompt=panel;
-  }
-
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{
-    if(!reloadAfterUpdateApproval)return;
-    reloadAfterUpdateApproval=false;
-    window.location.reload();
-  });
-
-  window.addEventListener("load",async()=>{
-    try{
-      const registration=await navigator.serviceWorker.register("./sw.js",{scope:"./"});
-      const watchForInstalledUpdate=()=>{
-        const installing=registration.installing;
-        if(!installing)return;
-        installing.addEventListener("statechange",()=>{
-          if(installing.state==="installed" && navigator.serviceWorker.controller){
-            showStoreUpdate(registration);
-          }
-        });
-      };
-      registration.addEventListener("updatefound",watchForInstalledUpdate);
-      if(registration.waiting)showStoreUpdate(registration);
-      await registration.update();
-      if(registration.waiting)showStoreUpdate(registration);
-      document.addEventListener("visibilitychange",()=>{
-        if(document.visibilityState==="visible")registration.update().catch(()=>{});
-      });
-    }catch(error){
-      console.warn("App update service worker unavailable:",error);
-    }
-  },{once:true});
-}
-</script>
-<script src="./customer-sidebar.js?v=2" defer></script>
+<script src="./espoza-app.js" defer></script>
+<script src="./customer-sidebar.js?v=3" defer></script>
 
 <script id="espoza-turnstile-client">
 (function(){

@@ -1,24 +1,47 @@
-const CACHE_NAME = "espoza-shell-v20";
+// GitHub Pages renders a new release script on each publication.
+// Service worker update checks include this import even when sw.js stays the same.
+try {
+  importScripts("./app-release.js");
+} catch (error) {
+  const local = ["localhost", "127.0.0.1", "[::1]"].includes(self.location.hostname);
+  if (!local) throw error;
+}
+
+const CACHE_PREFIX = "espoza-shell-";
+const CACHE_NAME = CACHE_PREFIX + "v21-" + (self.espozaRelease || "local");
+const scope = new URL(self.registration.scope);
+const home = scope.href;
+const indexPath = new URL("index.html", scope).pathname;
+const adminPath = new URL("admin/", scope).pathname;
+
+function previousShellCaches() {
+  return caches.keys().then(keys => keys
+    .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
+    .reverse());
+}
+
+self.addEventListener("install", event => {
+  const shellFiles = [
+    "./", "./espoza-app.js", "./customer-sidebar.js?v=3", "./customer-sidebar.css?v=1",
+    "./manifest.webmanifest", "./icons/espoza-luxe-emblem.svg", "./icons/espoza-app-192.png"
+  ];
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(
+    shellFiles.map(file => new Request(new URL(file, scope), { cache: "reload" }))
+  )));
+});
 
 /* Keep an updated worker in the waiting phase until the visitor approves. */
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
+    event.waitUntil(self.skipWaiting());
   }
 });
 
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
-    const keys = await caches.keys();
-    const previousShellCaches = keys
-      .filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME)
-      .sort((a, b) => {
-        const versionA = Number((a.match(/v(\d+)$/) || [])[1] || 0);
-        const versionB = Number((b.match(/v(\d+)$/) || [])[1] || 0);
-        return versionB - versionA;
-      });
     /* Retain one previous shell cache as an offline recovery path. */
-    await Promise.all(previousShellCaches.slice(1).map(key => caches.delete(key)));
+    const previous = await previousShellCaches();
+    await Promise.all(previous.slice(1).map(key => caches.delete(key)));
     await self.clients.claim();
   })());
 });
@@ -33,38 +56,33 @@ self.addEventListener("fetch", event => {
   if (url.origin !== self.location.origin) return;
 
   const isNavigation = request.mode === "navigate";
-  const isStaticAsset = ["script", "style", "image", "font"].includes(request.destination);
+  const isStaticAsset = ["script", "style", "image", "font", "manifest"].includes(request.destination);
   if (!isNavigation && !isStaticAsset) return;
 
-  const isAdminPage = url.pathname.includes("/admin");
-  if (isAdminPage) {
+  const isStorefront = url.pathname === scope.pathname || url.pathname === indexPath;
+  if (url.pathname.startsWith(adminPath) || (isNavigation && !isStorefront)) {
     event.respondWith(fetch(request, { cache: "no-store" }));
     return;
   }
 
+  // The static storefront serves the same shell for all URL parameters, including auth callbacks.
+  const cacheKey = isNavigation ? home : request;
   event.respondWith((async () => {
-    const cache = await caches.open(CACHE_NAME);
     try {
       const response = await fetch(request, { cache: "no-store" });
       if (response && response.ok) {
-        await cache.put(request, response.clone()).catch(() => {});
+        await caches.open(CACHE_NAME).then(cache => cache.put(cacheKey, response.clone())).catch(() => {});
       }
       return response;
     } catch (error) {
-      const cached = await cache.match(request);
+      const cached = await caches.open(CACHE_NAME).then(cache => cache.match(cacheKey));
       if (cached) return cached;
 
       /* If the new shell has not cached this resource yet, fall back to the
          last known-good shell instead of leaving the visitor with a blank page. */
-      const previousKeys = (await caches.keys())
-        .filter(key => key.startsWith("espoza-shell-") && key !== CACHE_NAME)
-        .sort((a, b) => {
-          const versionA = Number((a.match(/v(\d+)$/) || [])[1] || 0);
-          const versionB = Number((b.match(/v(\d+)$/) || [])[1] || 0);
-          return versionB - versionA;
-        });
+      const previousKeys = await previousShellCaches();
       for (const previousKey of previousKeys) {
-        const previousResponse = await (await caches.open(previousKey)).match(request);
+        const previousResponse = await (await caches.open(previousKey)).match(cacheKey);
         if (previousResponse) return previousResponse;
       }
 

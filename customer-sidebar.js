@@ -13,10 +13,10 @@
  const currentLanguage=()=>document.documentElement.lang||"ar";
  const english=()=>currentLanguage()==="en";
  const label=(ar,en,he)=>currentLanguage()==="he"?(he||en):english()?en:ar;
- function makeButton(cls,icon,ar,en,action){
+ function makeButton(cls,icon,ar,en,action,he){
   const b=document.createElement("button");b.type="button";b.className=cls;
   const i=document.createElement("span");i.className="esp-side-link-icon";i.textContent=icon;
-  const t=document.createElement("span");t.textContent=label(ar,en);
+  const t=document.createElement("span");t.textContent=label(ar,en,he);
   b.append(i,t);b.addEventListener("click",action);return b;
  }
  function categories(){
@@ -69,6 +69,9 @@
   body.append(makeButton("esp-side-link","✦","آراء عميلاتنا","Customer Reviews",()=>{close();const section=document.getElementById("publicWishesSection")||document.getElementById("customerReviewsSection")||document.getElementById("feedback");if(section)section.scrollIntoView({behavior:"smooth",block:"start"});}));
   body.append(makeButton("esp-side-link","▣","سلة التسوق","Shopping Bag",()=>{close();if(typeof window.openCartModal==="function")window.openCartModal();}));
   body.append(makeButton("esp-side-link","i","سياسة المتجر","Store Policies",()=>{close();if(typeof window.openModal==="function")window.openModal("policiesModal");}));
+  if(window.espozaApp?.canInstall()){
+   body.append(makeButton("esp-side-link","⊞","تثبيت التطبيق","Install app",()=>{close();window.espozaApp.install();},"התקנת האפליקציה"));
+  }
   const contact=document.createElement("a");contact.className="esp-side-link";contact.href=($("whatsappHeader")&&$("whatsappHeader").href)||"#";contact.target="_blank";contact.rel="noopener noreferrer";
   const ci=document.createElement("span");ci.className="esp-side-link-icon";ci.textContent="✆";const ct=document.createElement("span");ct.textContent=label("تواصلي معنا عبر واتساب","Contact us on WhatsApp");contact.append(ci,ct);body.append(contact);
  }
