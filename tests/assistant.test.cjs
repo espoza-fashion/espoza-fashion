@@ -7,3 +7,13 @@ test('missing secret is explicitly diagnosed without leaking keys',async()=>{con
 test('general question and context reach provider and response is decoded',async()=>{let body;const r=await handler('secret',async options=>{body=JSON.parse(options.body);return Response.json({output:[{content:[{type:'output_text',text:'Rain forms when water condenses.'}]}]});})(request('Explain rain',[{role:'user',content:'Answer in English'}]));const d=await r.json();assert.equal(d.mode,'ai');assert.match(d.answer,/Rain/);assert.equal(body.store,false);assert.equal(body.input.at(-2).content,'Answer in English');assert.ok(body.instructions.includes('general-purpose'));});
 test('provider quota failure is diagnosed',async()=>{const r=await handler('secret',async()=>Response.json({error:{code:'insufficient_quota'}},{status:429}))(request());assert.equal((await r.json()).reason,'provider_rate_or_quota');});
 test('unapproved origins are refused',async()=>{const r=await handler(undefined)(new Request('https://example.test',{method:'POST',headers:{origin:'https://untrusted.test'},body:'{}'}));assert.equal(r.status,403);});
+test('payment policy answers use the current storefront translation',()=>{
+ const runtime={Deno:{serve(){}}};
+ vm.runInNewContext(code,runtime);
+ const policies={ar:'الدفع إلكتروني عند الاستلام فقط.',en:'Electronic payment only upon delivery.',he:'תשלום אלקטרוני בעת המסירה בלבד.'};
+ const settings=Object.entries(policies).map(([language,paymentPolicyText])=>({key:`site_content_${language}`,value:{paymentPolicyText}}));
+ settings.push({key:'payment_policy_he',value:'Former payment policy'});
+ assert.equal(runtime.fallbackAnswer('كيف أدفع عند الاستلام؟',[],[],settings,[],[],[],0),policies.ar);
+ assert.equal(runtime.fallbackAnswerEnglish('Do you accept cash on delivery?',[],[],[],settings,[],[],[],0),policies.en);
+ assert.equal(runtime.fallbackAnswerHebrew('איך מתבצע התשלום במשלוח?',[],[],[],settings,[],[],[],0),policies.he);
+});

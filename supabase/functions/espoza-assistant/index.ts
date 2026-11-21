@@ -65,6 +65,12 @@ function settingValue(settings: any[], key: string) {
   const row = settings.find((item) => item.key === key);
   return row?.value ?? null;
 }
+function storePaymentPolicy(settings: any[], language: string) {
+  const text = settingValue(settings, `site_content_${language}`)?.paymentPolicyText;
+  if (typeof text === "string" && text.trim()) return cleanText(text, 500);
+  const legacy = language === "he" ? settingValue(settings, "payment_policy_he") : null;
+  return typeof legacy === "string" && legacy.trim() ? cleanText(legacy, 500) : null;
+}
 function reviewSummaryAnswer(reviews: any[], language: string, publishedCount: number) {
   const rows = Array.isArray(reviews) ? reviews : [];
   const count = Number.isFinite(publishedCount) ? Math.max(0, publishedCount) : rows.length;
@@ -87,6 +93,9 @@ function fallbackAnswerHebrew(message: string, products: any[], sizes: any[], co
   const reviewQuestion = /ביקורות|חוות דעת|דירוג|המלצות|לקוחות מרוצות/.test(message.toLocaleLowerCase());
   if (reviewQuestion) return reviewSummaryAnswer(reviews, "he", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
+  if (/תשלום|מזומן|אשראי|כרטיס/.test(q)) {
+    return storePaymentPolicy(settings, "he") || "אפשר לפנות לחנות בוואטסאפ לבירור אופן התשלום.";
+  }
   if (/משלוח|שליח|דמי משלוח|עלות משלוח/.test(q)) {
     const areas = delivery.map((x) => (x.area_name_he || x.area_name || "") + ": " + Number(x.price || 0) + " ₪").join(" · ");
     const time = settingValue(settings, "delivery_time_he") || "2–3 ימי עסקים";
@@ -97,7 +106,6 @@ function fallbackAnswerHebrew(message: string, products: any[], sizes: any[], co
     if (matches.length) return matches.slice(0, 4).map((p) => { const names = colors.filter((c) => String(c.product_id) === String(p.id)).map((c) => c.name_he || c.name_en || c.name).filter(Boolean); return (p.name_he || p.name_en || p.name) + (names.length ? " · צבעים זמינים: " + [...new Set(names)].join(", ") : " · לא מופיעים צבעים זמינים כרגע."); }).join("\\n");
     return "כתבי את שם הדגם ואבדוק אילו צבעים זמינים עבורו.";
   }
-  if (/תשלום|מזומן|אשראי|כרטיס/.test(q)) return String(settingValue(settings, "payment_policy_he") || "התשלום מתבצע במזומן בעת המסירה בלבד.");
   if (/החלפה|החזרה|להחזיר|מדיניות/.test(q)) {
     const policy = settingValue(settings, "exchange_policy_he") || settingValue(settings, "return_policy_he");
     return policy ? "לפי מדיניות החנות: " + String(policy) : "ניתן לבקש החלפה בתוך 24 שעות מקבלת ההזמנה, בתנאי שהפריט נשאר במצבו המקורי ולא נעשה בו שימוש. אין החזרות, למעט במקרה של פגם ייצור ברור."; 
@@ -123,6 +131,9 @@ function fallbackAnswerEnglish(message: string, products: any[], sizes: any[], c
   const reviewQuestion = /review|reviews|rating|ratings|testimonial|customer feedback/.test(message.toLocaleLowerCase());
   if (reviewQuestion) return reviewSummaryAnswer(reviews, "en", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
+  if (/\b(?:payments?|cash on delivery|pay (?:online|on delivery|by|with)|how (?:do|can|should) i pay)\b/.test(q)) {
+    return storePaymentPolicy(settings, "en") || "Contact the store on WhatsApp to confirm how to pay.";
+  }
   if (/delivery|shipping|delivery fee|shipping fee/.test(q)) {
     const areas = delivery.map((x) => (x.area_name_en || x.area_name || "") + ": " + Number(x.price || 0) + " ILS").join(" · ");
     return areas ? "Delivery fees by area: " + areas + "." : "Delivery fees depend on the area. Please contact the store on WhatsApp to confirm."; 
@@ -149,6 +160,9 @@ function fallbackAnswer(message: string, products: any[], sizes: any[], settings
   const reviewQuestion = /تقييم|تقييمات|آراء|رأي الزبائن|تجارب عميلات|شو رأي/.test(message.toLocaleLowerCase());
   if (reviewQuestion) return reviewSummaryAnswer(reviews, "ar", publishedReviewsCount);
   const q = message.toLocaleLowerCase();
+  if (/الدفع|كيف (?:أ|ا|ب)?دفع|(?:أ|ا|ب)?دفع عند|كاش|نقدًا|نقدا|فيزا/.test(q)) {
+    return storePaymentPolicy(settings, "ar") || "تواصلي مع المتجر عبر واتساب لتأكيد طريقة الدفع.";
+  }
   const isDelivery = /توصيل|الشحن|شحن|delivery|shipping|رسوم التوصيل/.test(q);
   const isExchange = /استبدال|إرجاع|ارجاع|ترجيع|return|exchange/.test(q);
   const isSize = /مقاس|المقاسات|قياس|صدر|خصر|طول|size|measure/.test(q);
@@ -227,6 +241,7 @@ Deno.serve(async (req: Request) => {
   const message = cleanText(body?.message, 500);
   if (!message) return reply({ error: localized("اكتبي سؤالك أولًا.", "Please enter your question first.", "כתבי את שאלתך תחילה.") }, 400, origin);
   if (message.length < 2) return reply({ error: localized("اكتبي سؤالًا أوضح قليلًا.", "Please enter a little more detail.", "כתבי שאלה מעט מפורטת יותר.") }, 400, origin);
+  const fallbackLanguage = language === "auto" ? (/\p{Script=Hebrew}/u.test(message) ? "he" : /[A-Za-z]/.test(message) && !/[\u0600-\u06FF]/.test(message) ? "en" : "ar") : language;
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const publicKey = getPublicKey();
@@ -302,7 +317,7 @@ Deno.serve(async (req: Request) => {
           whatsapp: settingValue(settings, "whatsapp"),
           exchange_policy: language === "he" ? (settingValue(settings, "exchange_policy_he") || settingValue(settings, "return_policy_he")) : settingValue(settings, "exchange_policy"),
           delivery_time: language === "he" ? (settingValue(settings, "delivery_time_he") || settingValue(settings, "delivery_time")) : settingValue(settings, "delivery_time"),
-          payment_policy: language === "he" ? settingValue(settings, "payment_policy_he") : null,
+          payment_policy: storePaymentPolicy(settings, fallbackLanguage),
         },
         delivery_areas: delivery,
         automatic_offers: offers,
@@ -368,7 +383,6 @@ Deno.serve(async (req: Request) => {
     }
   }
 
-  const fallbackLanguage = language === "auto" ? (/\p{Script=Hebrew}/u.test(message) ? "he" : /[A-Za-z]/.test(message) && !/[\u0600-\u06FF]/.test(message) ? "en" : "ar") : language;
   const answer = fallbackLanguage === "he" ? fallbackAnswerHebrew(message, products, sizes, colors, settings, delivery, offers, reviews, publishedReviewsCount) : fallbackLanguage === "en" ? fallbackAnswerEnglish(message, products, sizes, colors, settings, delivery, offers, reviews, publishedReviewsCount) : fallbackAnswer(message, products, sizes, settings, delivery, offers, reviews, publishedReviewsCount);
   const q = message.toLocaleLowerCase();
   let fallbackMatches = products.filter((p) => [p.name, p.name_en, p.name_he].filter(Boolean).some((name) => String(name).length > 2 && (q.includes(String(name).toLocaleLowerCase()) || answer.toLocaleLowerCase().includes(String(name).toLocaleLowerCase()))));

@@ -1929,15 +1929,12 @@ body{
   line-height:2;
   margin:0;
 }
-.footer-contact,
-.footer-links{
+.footer-contact{
   display:flex;
   flex-direction:column;
   gap:8px;
 }
-.footer-contact a,
-.footer-links button,
-.footer-links a{
+.footer-contact a{
   color:#d9cdd1;
   font-size:11px;
   background:none;
@@ -1945,9 +1942,7 @@ body{
   padding:0;
   text-align:inherit;
 }
-.footer-contact a:hover,
-.footer-links button:hover,
-.footer-links a:hover{
+.footer-contact a:hover{
   color:#fff;
   transform:translateX(-3px);
 }
@@ -1998,29 +1993,6 @@ body{
   font-weight:800;
 }
 
-.policy-box{
-  width:min(760px,100%);
-}
-.policy-content{
-  color:#5e5156;
-  line-height:1.95;
-  font-size:12px;
-}
-.policy-section{
-  background:#fbf5f4;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:13px 14px;
-  margin:9px 0;
-}
-.policy-section h3{
-  color:var(--wine);  margin:0 0 5px;
-  font-size:14px;
-}
-.policy-section p{
-  margin:0;
-}
-
 .modal.open .modal-box{
   animation:modalIn .42s cubic-bezier(.2,.8,.2,1) both;
 }
@@ -2055,13 +2027,13 @@ body{
     gap:23px;
     text-align:center;
   }
-  .footer-contact,.footer-links{
+  .footer-contact{
     align-items:center;
   }
   .footer-social-row{
     justify-content:center;
   }
-  .footer-contact a:hover,.footer-links button:hover,.footer-links a:hover{
+  .footer-contact a:hover{
     transform:translateY(-2px);
   }
 }
@@ -2099,8 +2071,6 @@ body{
 .feedback-showcase{direction:ltr}
 .iphone-screen img{object-fit:contain;object-position:center;background:#fff}
 .feedback-showcase:hover .feedback-showcase-track{animation-play-state:running}
-.policy-ico{margin-inline-end:4px}
-.policy-wa{display:inline-block;margin-top:10px;padding:9px 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:800;text-decoration:none}
 /* ESPOZA — cinematic luxury entrance */
 #espozaSplash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;isolation:isolate;background:radial-gradient(ellipse at 50% 48%,#743047 0%,#641f34 48%,#2b101b 100%);color:#fff;overflow:hidden;transition:opacity .2s ease,visibility .2s ease;contain:strict}
 #espozaSplash::before{content:"";position:absolute;inset:0;z-index:4;background:linear-gradient(110deg,transparent 35%,rgba(255,231,180,.08) 49%,rgba(255,255,255,.42) 50%,rgba(255,231,180,.08) 51%,transparent 65%);transform:translateX(-120%);animation:splashGleam 1.1s 1.8s ease-out forwards;pointer-events:none}
@@ -2485,9 +2455,6 @@ header{background:rgba(250,247,242,.86)!important;backdrop-filter:blur(18px)!imp
 .marquee-divider{background:var(--wine)!important;color:#fff!important;border-block:1px solid var(--gold)!important}
 .marquee-track{animation-duration:25s!important}
 .feature-slide{padding:34px 18px!important}
-.policy-box{box-shadow:0 14px 45px rgba(67,19,33,.07)!important}
-.policy-section{border-radius:2px!important;background:#fff!important;transition:.3s!important}
-.policy-section:hover{transform:translateY(-2px)!important;box-shadow:0 8px 22px rgba(67,19,33,.06)!important}
 footer{background:linear-gradient(135deg,#2d111a,#431321)!important;padding:42px 20px!important}
 .foot-brand{font-size:30px!important}.footer-credit strong{color:var(--gold)!important}
 .modal-box{border-radius:3px!important;box-shadow:0 30px 90px rgba(22,8,13,.25)!important}
@@ -2809,8 +2776,7 @@ footer{
   line-height:2.05;
   color:#d6c7cd;
 }
-.footer-contact-note,
-.footer-links-note{
+.footer-contact-note{
   color:#bfaeb5;
   font-size:11px;
   line-height:1.9;
@@ -2869,28 +2835,39 @@ footer{
 .footer-social-icon-link:nth-child(5) .footer-social-icon svg{
   stroke-width:1.55;
 }
-.footer-links{
-  gap:10px;
+.footer-policy-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+  border-block-start:1px solid rgba(229,204,160,.24);
+  text-align:start;
 }
-.footer-links a,
-.footer-links button{
-  display:flex!important;
+.footer-policy-list button{
+  display:flex;
   align-items:center;
-  gap:10px;
+  justify-content:space-between;
+  gap:12px;
   width:100%;
-  color:#eee!important;
-  padding:10px 0!important;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  font-size:12px!important;
-  transition:color .25s ease,transform .25s ease;
+  min-height:44px;
+  padding:7px 0;
+  border:0;
+  border-block-end:1px solid rgba(255,255,255,.13);
+  background:transparent;
+  color:#f1e6e5;
+  font-size:.875rem;
+  text-align:start;
 }
-.footer-links a span,
-.footer-links button span{
-  color:var(--gold);
-  font-family:"Playfair Display",serif;
-  font-size:11px;
-  min-width:22px;
+.footer-policy-list button:hover{color:#f5dcae}
+.footer-policy-list button:focus-visible{outline:2px solid #e5cca0;outline-offset:3px}
+.footer-policy-arrow{
+  flex:0 0 .43rem;
+  height:.43rem;
+  margin-inline-end:.3rem;
+  border-block-start:1px solid #e5cca0;
+  border-inline-end:1px solid #e5cca0;
+  transform:rotate(45deg);
 }
+.footer-policy-arrow:dir(rtl){transform:rotate(-45deg)}
 .footer-social-row{
   justify-content:center;
   align-items:flex-start;
@@ -2944,72 +2921,116 @@ footer{
   font-weight:700;
 }
 .policy-box{
-  background:linear-gradient(180deg,#fff,#fcf8f6);
-  border:1px solid rgba(185,152,90,.28);
-  box-shadow:0 30px 80px rgba(45,16,26,.22);
-  padding:clamp(18px,3vw,30px);
+  position:fixed;
+  inset:0;
+  width:min(700px,calc(100% - 24px));
+  max-width:none;
+  max-height:calc(100% - 24px);
+  max-height:min(790px,calc(100dvh - 24px));
+  margin:auto;
+  padding:0;
+  overflow:hidden;
+  border:1px solid #dbc5a5;
+  border-radius:14px;
+  background:#fcf9f6;
+  color:var(--dark);
+  box-shadow:0 30px 80px rgba(45,16,26,.24);
 }
-.policy-box h2{
-  font-family:"Playfair Display","Cairo",serif;
-  font-size:clamp(26px,4vw,38px)!important;
-  letter-spacing:.2px;
-  padding-bottom:12px;
-  border-bottom:1px solid var(--line);
-}
-.policy-content{
-  font-size:13px;
-  line-height:2;
-  color:#594b51;
-}
-.policy-section{
-  position:relative;
-  background:rgba(255,255,255,.82);
-  border:1px solid rgba(185,152,90,.20);
-  border-radius:17px;
-  padding:15px 16px 15px 18px;
-  margin:10px 0;
-  box-shadow:0 8px 25px rgba(67,19,33,.045);
-}
-.policy-section::before{
-  content:"";
-  position:absolute;
-  inset-inline-start:0;
-  top:14px;
-  bottom:14px;
-  width:3px;
-  border-radius:4px;
-  background:linear-gradient(var(--gold),rgba(185,152,90,.18));
-}
-.policy-section h3{
+.policy-box[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+.policy-box::backdrop{background:rgba(22,8,13,.68);backdrop-filter:blur(5px)}
+.policy-header{
   display:flex;
   align-items:center;
-  gap:7px;
+  justify-content:space-between;
+  gap:16px;
+  padding:clamp(14px,3vw,24px) clamp(14px,4vw,28px);
+  background:#fff;
+  border-block-end:1px solid var(--line);
+}
+.policy-header h2{
+  font-family:"Playfair Display","Cairo",serif;
+  font-size:clamp(1.5rem,4vw,2.15rem);
   color:var(--wine);
-  margin:0 0 5px;
-  font-size:14px;
+  margin:0;
+}
+.policy-close{
+  flex:0 0 44px;
+  height:44px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:#faf3f1;
+  color:var(--wine);
+  font-size:1.5rem;
+}
+.policy-content{
+  position:relative;
+  overflow:auto;
+  overscroll-behavior:contain;
+  padding:clamp(14px,4vw,28px);
+}
+.policy-section{
+  margin-block-end:8px;
+  border:1px solid #e7d9d5;
+  border-radius:9px;
+  background:#fff;
+}
+.policy-section[open]{border-color:#c9ad89;box-shadow:0 6px 20px rgba(67,19,33,.06)}
+.policy-section summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  min-height:48px;
+  padding:9px 15px;
+  list-style:none;
+  color:var(--wine);
+  font-size:1rem;
+  font-weight:800;
+  cursor:pointer;
+}
+.policy-section summary::-webkit-details-marker{display:none}
+.policy-section[open] summary{background:#f8eee9;border-radius:8px 8px 0 0}
+.policy-section summary:focus-visible,.policy-close:focus-visible,.policy-wa:focus-visible{
+  outline:2px solid var(--wine);
+  outline-offset:-3px;
+}
+.policy-indicator{
+  display:grid;
+  place-items:center;
+  flex:0 0 18px;
+  height:18px;
+}
+.policy-indicator::before,.policy-indicator::after{
+  content:"";
+  grid-area:1/1;
+  width:12px;
+  height:1.5px;
+  background:currentColor;
+}
+.policy-indicator::after{transform:rotate(90deg)}
+.policy-section[open] .policy-indicator::after{display:none}
+.policy-copy{padding:14px 15px 17px;color:#4d3c42;font-size:.9375rem;line-height:1.85}
+.policy-copy h3{margin:0 0 4px;color:var(--wine);font-size:1rem}
+.policy-copy p{margin:0 0 9px}
+.policy-copy p:last-child{margin-bottom:0}
+.policy-clause + .policy-clause{margin-block-start:14px;padding-block-start:14px;border-block-start:1px solid var(--line)}
+.policy-rates{margin:9px 0 0;padding:0;background:#fcf8f3;border-radius:6px}
+.policy-rates div{display:flex;justify-content:space-between;gap:12px;padding:5px 12px}
+.policy-rates div + div{border-block-start:1px solid #ebded0}
+.policy-rates dd{margin:0;color:var(--wine);font-weight:800}
+.policy-wa{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  margin-block-start:6px;
+  padding:6px 14px;
+  border:1px solid #d2bab0;
+  border-radius:7px;
+  color:var(--wine);
+  font-size:.875rem;
   font-weight:800;
 }
-.policy-ico{
-  display:inline-grid;
-  place-items:center;
-  min-width:28px;
-  height:28px;
-  border-radius:50%;
-  background:#f6ede9;
-  color:var(--gold);
-  font-family:"Playfair Display",serif;
-  font-size:10px;
-  margin-inline-end:2px;
-}
-.policy-section p{
-  margin:0;
-  color:#75666c;
-}
-.policy-wa{
-  margin-top:12px!important;
-  background:var(--wine)!important;
-  box-shadow:0 8px 20px rgba(100,31,52,.16);
-}
+.policy-wa:hover{background:#f8eee9}
 .price-row{
   min-height:35px;
   align-items:center;
@@ -3054,9 +3075,9 @@ footer{
   .footer-contact-item{
     justify-content:center;
   }
-  .footer-links{
-    max-width:360px;
-    margin:auto;
+  .footer-policy-list{
+    max-width:430px;
+    margin-inline:auto;
   }
   .footer-social-row{
     gap:9px;
@@ -3212,10 +3233,6 @@ footer{
 .floating-cart{position:fixed;right:20px;bottom:20px;z-index:260;display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:linear-gradient(135deg,var(--wine),var(--dark));color:#fff;padding:12px 16px;box-shadow:0 16px 38px rgba(43,13,25,.28);font-weight:800;cursor:pointer;backdrop-filter:blur(12px);transition:transform .25s ease,box-shadow .25s ease}
 .floating-cart:hover{transform:translateY(-3px);box-shadow:0 20px 45px rgba(43,13,25,.34)}
 .floating-cart-icon{font-size:17px;line-height:1}.floating-cart-label{font-size:11px}.floating-cart-count{min-width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--wine);font-size:10px}
-.footer-links a span,.footer-links button span{display:none!important}
-.footer-links a,.footer-links button{justify-content:space-between!important;gap:12px!important}
-.footer-links a::after,.footer-links button::after{content:"›";color:var(--gold);font-size:18px;line-height:1;transition:transform .25s ease}
-.footer-links a:hover::after,.footer-links button:hover::after{transform:translateX(-3px)}
 @media(max-width:800px){.public-wishes-list{grid-template-columns:1fr 1fr}.wish-form{grid-template-columns:1fr}.wish-submit{min-height:46px}}
 @media(max-width:560px){.wish-btn-label{display:none}.public-wishes-section{padding-inline:10px}.public-wishes-card{padding:20px 14px;border-radius:20px}.public-wishes-list{grid-template-columns:1fr}.floating-cart{right:12px;bottom:14px;padding:11px 13px}}
 </style>
@@ -3830,7 +3847,7 @@ placeholder="">
 <button class="quick-link primary" type="button" onclick="scrollToWishlist()">♡ <span id="quickFavoritesLabel">المفضلة</span> <span id="quickWishlistCount">0</span></button>
 <button class="quick-link" type="button" onclick="scrollToPublicWishes()">✦ <span id="quickWishesLabel">آراء عميلاتنا</span></button>
 <button class="quick-link" type="button" onclick="smoothToSection('feedback')"><span id="quickFeedbackLabel">آراء الزبائن</span></button>
-<button class="quick-link" type="button" onclick="openModal('policiesModal')"><span id="quickPoliciesLabel">سياسة الشركة</span></button>
+<button class="quick-link" type="button" aria-haspopup="dialog" aria-controls="policiesModal" onclick="openModal('policiesModal')"><span id="quickPoliciesLabel">سياسات المتجر</span></button>
 <button class="quick-link" type="button" onclick="openCartModal()">🛍️ <span id="quickCartLabel">السلة والطلب</span> <span id="quickCartCount">0</span></button>
 </div>
 </section>
@@ -3986,24 +4003,10 @@ FASHION
 
 </div>
 
-<div class="footer-column footer-links-column">
-
-<h3 id="footerLinksTitle">روابط سريعة</h3>
-
-<p class="footer-links-note" id="footerLinksNote">
-كل ما تحتاجينه في مكان واحد.
-</p>
-
-<div class="footer-links">
-<a href="#shop" id="footerShop">التشكيلة</a>
-<a href="#wishlistSection" id="footerFavoritesLink">المفضلة</a>
-<a href="#publicWishesSection" id="footerWishesLink">قائمة الأمنيات</a>
-<a href="#feedback" id="footerFeedbackLink">آراء الزبائن</a>
-<a href="#story" id="footerStoryLink">قصة Espoza</a>
-<button type="button" id="policiesBtn" onclick="openModal('policiesModal')">سياستنا</button>
-</div>
-
-</div>
+<nav class="footer-column" id="footerPolicies" aria-labelledby="footerPoliciesTitle">
+<h3 id="footerPoliciesTitle">سياسات المتجر</h3>
+<ul class="footer-policy-list" id="footerPolicyList"></ul>
+</nav>
 
 </div>
 
@@ -4503,7 +4506,7 @@ placeholder="اختياري">
 <div
 class="cod-note"
 id="codNote">
-الدفع عند الاستلام
+الدفع الإلكتروني عند الاستلام فقط
 </div>
 
 
@@ -4521,28 +4524,13 @@ type="button">
 
 <!-- POLICIES -->
 
-<div
-class="modal"
-id="policiesModal">
-
-<div class="modal-box policy-box">
-
-<button
-class="close-btn"
-type="button"
-onclick="closeModal('policiesModal')">
-×
-</button>
-
-<h2 id="policiesHeading" style="color:var(--wine);margin:4px 0 18px">
-سياستنا
-</h2>
-
+<dialog class="policy-box" id="policiesModal" aria-labelledby="policiesHeading">
+<div class="policy-header">
+<h2 id="policiesHeading">سياسات المتجر</h2>
+<button class="policy-close" id="policyClose" type="button" aria-label="إغلاق" onclick="closeModal('policiesModal')" autofocus>×</button>
+</div>
 <div class="policy-content" id="policyContent"></div>
-
-</div>
-
-</div>
+</dialog>
 
 <div
 class="toast"
@@ -5140,7 +5128,7 @@ checkoutBtn:
 "إتمام الطلب",
 
 cod:
-"الدفع عند الاستلام",
+"الدفع الإلكتروني عند الاستلام فقط",
 
 footerSince:
 "إسبوزا فاشن — منذ 2019",
@@ -5181,21 +5169,19 @@ footerStoryText:
 footerContactTitle:
 "تواصلي معنا",
 
-footerLinksTitle:
-"روابط سريعة",
-
 policies:
-"سياستنا",
+"سياسات المتجر",
 
+policyTopicTitles:{delivery:"التوصيل",payment:"الدفع والمعاينة",other:"سياسات أخرى"},
 policyItems:[
-["01","الاستبدال","يمكن طلب استبدال القطعة خلال 24 ساعة من استلام الطلب، على أن تبقى القطعة بحالتها الأصلية، غير مستخدمة، ومع التاجات المرفقة بها."],
-["02","المعاينة عند الاستلام","نمنحكِ وقتًا لمعاينة القطعة عند الاستلام والتأكد من المقاس والتفاصيل قبل إتمام الدفع."],
-["03","التوصيل","الضفة الغربية 20 شيكل، القدس 30 شيكل، والداخل (48) 70 شيكل."],
-["04","مدة الوصول","يصل الطلب عادةً خلال 2–3 أيام عمل، بحسب منطقة التوصيل."],
-["05","الإلغاء","يمكن إلغاء الطلب مجانًا قبل خروج الشحنة من طرفنا."],
-["06","الإرجاع","لا يتوفر إرجاع للمنتجات، ويُستثنى من ذلك وجود عيب مصنعي واضح في القطعة."],
-["07","الخصوصية","نستخدم الاسم ورقم الهاتف والعنوان فقط لمعالجة الطلب وتوصيله، ونحافظ على خصوصية بياناتك."],
-["08","الدفع والتواصل","الدفع عند الاستلام فقط. ولأي استفسار أو استبدال أو إلغاء، يسعدنا التواصل معكِ مباشرة عبر واتساب."]
+["01","الاستبدال","يمكنكِ طلب استبدال القطعة خلال 24 ساعة من وقت استلام الطلب. يُشترط أن تبقى القطعة بحالتها الأصلية، غير مستخدمة، وأن تظل بطاقاتها الأصلية (التاجات) مثبتة عليها.\n\nلطلب الاستبدال، راسلينا عبر واتساب. اذكري القطعة التي ترغبين باستبدالها والمقاس أو الموديل المطلوب حتى نساعدكِ بالخيارات المتاحة."],
+["02","المعاينة عند الاستلام","خذي وقتكِ لمعاينة القطعة عند وصول الطلب وقبل إتمام الدفع. تأكدي من المقاس واللون وتفاصيل القطعة، وقارنيها بما اخترتِه عند الطلب. إذا لاحظتِ مشكلة أو اختلافًا، تواصلي معنا عبر واتساب لنساعدكِ."],
+["03","رسوم التوصيل","تعتمد رسوم التوصيل على المنطقة التي تختارينها عند إتمام الطلب. تظهر الرسوم كبند مستقل في ملخص الطلب، وتُضاف إلى الإجمالي قبل إرسال الطلب."],
+["04","مدة الوصول","يصل الطلب عادةً خلال 2–3 أيام عمل، بحسب منطقة التوصيل. اكتبي عنوانًا واضحًا ورقم هاتف يمكن التواصل معكِ عليه لتنسيق التسليم. للاستفسار عن موعد وصول طلبكِ، راسلينا عبر واتساب."],
+["05","إلغاء الطلب","يمكنكِ إلغاء الطلب مجانًا قبل خروج الشحنة من المتجر. إذا رغبتِ بالإلغاء، راسلينا عبر واتساب في أقرب وقت واذكري تفاصيل الطلب حتى نتمكن من التحقق من حالته. إذا خرجت الشحنة بالفعل، تواصلي معنا للاستفسار عن الخيارات المتاحة."],
+["06","الإرجاع","يُقبل إرجاع القطعة فقط في حال وجود عيب مصنعي واضح. إذا لاحظتِ عيبًا، راسلينا عبر واتساب مع وصف المشكلة وتفاصيل الطلب حتى نراجع الحالة ونوضح لكِ الخطوة التالية."],
+["07","الخصوصية","نستخدم اسمكِ ورقم هاتفكِ وعنوانكِ لأغراض معالجة الطلب وتوصيله فقط. يساعدنا الاسم في التعرف على الطلب، ويُستخدم الهاتف لتنسيق التسليم، ويحدد العنوان وجهة التوصيل. نحافظ على خصوصية هذه البيانات، ويمكنكِ التواصل معنا عبر واتساب للاستفسار عن بيانات طلبكِ."],
+["08","الدفع الإلكتروني","الدفع إلكتروني عند استلام الطلب فقط، بعد معاينة القطعة ودون دفعة مسبقة. راجعي إجمالي المبلغ شاملًا رسوم التوصيل في ملخص الطلب قبل إرساله عبر واتساب. للاستفسار عن طريقة الدفع الإلكتروني عند التسليم، راسلينا عبر واتساب."]
 ],
 policyWhatsApp:"تواصلي عبر واتساب",
 
@@ -5209,7 +5195,7 @@ exchangePolicyTitle:
 "سياسة التبديل",
 
 exchangePolicyText:
-"يسمح بالتبديل بعد مرور 24 ساعة من استلام الطلب، على أن تكون القطعة بحالتها الأصلية كما تم استلامها، وغير مستخدمة أو متضررة.",
+"يمكن طلب الاستبدال خلال 24 ساعة من استلام الطلب، بشرط أن تبقى القطعة بحالتها الأصلية، غير مستخدمة، وبطاقاتها الأصلية مثبتة عليها.",
 
 notReceivedPolicyTitle:
 "عدم استلام الطلب",
@@ -5221,7 +5207,7 @@ paymentPolicyTitle:
 "الدفع",
 
 paymentPolicyText:
-"الدفع عند الاستلام — Cash on Delivery (COD).",
+"الدفع إلكتروني عند استلام الطلب فقط، بعد معاينة القطعة، دون دفعة مسبقة.",
 
 customerCountCaption:
 "10,000 زبونة اختارت Espoza Fashion للتألق",
@@ -5474,17 +5460,18 @@ featuresTagline:
 "🛍️ Shop with confidence at Espoza Fashion 💖",
 
 policies:
-"Our Policy",
+"Store Policies",
 
+policyTopicTitles:{delivery:"Delivery",payment:"Payment & Inspection",other:"Other Policies"},
 policyItems:[
-["01","Exchange","You may request an exchange within 24 hours of delivery, provided the item remains unused, in its original condition, and with its tags attached."],
-["02","Inspect on Delivery","Please inspect your item when it arrives and confirm the size and details before completing payment."],
-["03","Delivery Fees","West Bank 20 ILS, Jerusalem 30 ILS, and Inside 48 70 ILS."],
-["04","Delivery Time","Orders usually arrive within 2–3 working days, depending on the delivery area."],
-["05","Cancellation","You may cancel your order free of charge before the parcel leaves us."],
-["06","Returns","Returns are not available, except in the case of a clear manufacturing defect."],
-["07","Privacy","Your name, phone number and address are used only to process and deliver your order, and we respect the privacy of your information."],
-["08","Payment & Contact","Cash on Delivery only. For questions, exchanges or cancellations, contact us directly on WhatsApp."]
+["01","Exchanges","You can request an exchange within 24 hours of receiving your order. The item must be unused, in its original condition, with its original tags still attached.\n\nTo request an exchange, message us on WhatsApp with the item you received and the size or style you would like so we can help you check the available options."],
+["02","Inspection on Delivery","Take a moment to inspect your item when it arrives, before you pay. Check the size, color and details against what you ordered. If something differs or you notice a problem, contact us on WhatsApp for help."],
+["03","Delivery Fees","Your delivery fee depends on the area you select at checkout. The fee appears separately in your order summary and is included in the total before you send the order."],
+["04","Delivery Time","Orders typically arrive within 2–3 business days, depending on the delivery area. Provide a clear address and a phone number we can use to coordinate delivery. For questions about your delivery date, message us on WhatsApp."],
+["05","Order Cancellation","You can cancel your order free of charge before the parcel leaves the store. If you need to cancel, message us on WhatsApp as soon as possible with your order details so we can check its status. If the parcel has already shipped, contact us about the available options."],
+["06","Returns","We accept returns only when an item has a clear manufacturing defect. If you notice a defect, contact us on WhatsApp with a description of the problem and your order details so we can review it and explain the next step."],
+["07","Privacy","We use your name, phone number and address only to process and deliver your order. Your name helps us find your order, your phone number helps us coordinate delivery, and your address tells us where to deliver it. We protect the privacy of these details. Contact us on WhatsApp with questions about your order information."],
+["08","Electronic Payment","Payment is made electronically only upon delivery, after you inspect the item, with no advance payment required. Review your total, including the delivery fee, before you send your order through WhatsApp. Message us on WhatsApp with questions about the electronic payment method at delivery."]
 ],
 policyWhatsApp:"Chat on WhatsApp",
 
@@ -5508,7 +5495,7 @@ checkoutBtn:
 "Checkout",
 
 cod:
-"Cash on Delivery",
+"Electronic payment on delivery only",
 
 footerSince:
 "ESPOZA FASHION — Since 2019",
@@ -5537,9 +5524,6 @@ footerStoryText:
 footerContactTitle:
 "Contact Us",
 
-footerLinksTitle:
-"Quick Links",
-
 returnPolicyTitle:
 "Return Policy",
 
@@ -5562,7 +5546,7 @@ paymentPolicyTitle:
 "Payment",
 
 paymentPolicyText:
-"Cash on Delivery (COD).",
+"Payment is made electronically only upon delivery, after you inspect the item, with no advance payment required.",
 
 customerCountCaption:
 "10,000 customers have chosen Espoza Fashion",
@@ -5629,30 +5613,31 @@ feat7Icon:"👗",feat7Title:"עיצובים עדכניים ואלגנטיים",f
 feat8Icon:"🎧",feat8Title:"שירות ותמיכה",feat8Text:"אנחנו כאן לפני ההזמנה ואחריה לכל שאלה",
 featuresTagline:"🛍️ קני בביטחון עם Espoza Fashion 💖",
 policies:"מדיניות החנות",
+policyTopicTitles:{delivery:"משלוחים",payment:"תשלום ובדיקה",other:"מדיניות נוספת"},
 policyItems:[
-["01","החלפות","ניתן לבקש החלפה בתוך 24 שעות מקבלת ההזמנה, בתנאי שהפריט נשאר במצבו המקורי, לא נעשה בו שימוש והתוויות מחוברות אליו."],
-["02","בדיקה בעת המסירה","אפשר לבדוק את הפריט בעת המסירה ולוודא שהמידה והפרטים מתאימים לפני התשלום."],
-["03","דמי משלוח","הגדה המערבית: 20 ₪, ירושלים: 30 ₪, ואזורי 48: 70 ₪."],
-["04","זמן אספקה","ההזמנה מגיעה בדרך כלל בתוך 2–3 ימי עבודה, בהתאם לאזור המשלוח."],
-["05","ביטול הזמנה","ניתן לבטל את ההזמנה ללא תשלום לפני יציאת המשלוח מאיתנו."],
-["06","החזרות","לא ניתן להחזיר מוצרים, למעט במקרה של פגם ייצור ברור בפריט."],
-["07","פרטיות","אנו משתמשים בשם, במספר הטלפון ובכתובת שלך לצורך טיפול בהזמנה ומשלוחה בלבד, ושומרים על פרטיות המידע."],
-["08","תשלום ויצירת קשר","התשלום מתבצע במזומן בעת המסירה בלבד. לשאלות, החלפה או ביטול, אפשר לפנות אלינו ישירות בוואטסאפ."]
+["01","החלפות","אפשר לבקש להחליף פריט בתוך 24 שעות מרגע קבלת ההזמנה. על הפריט להישאר במצבו המקורי, ללא שימוש ועם התוויות המקוריות מחוברות אליו.\n\nלבקשת החלפה, כתבי לנו בוואטסאפ עם פרטי הפריט שקיבלת והמידה או הדגם שאת מבקשת, ונעזור לך לבדוק את האפשרויות הזמינות."],
+["02","בדיקה בעת המסירה","קחי רגע לבדוק את הפריט כשהמשלוח מגיע ולפני התשלום. ודאי שהמידה, הצבע והפרטים תואמים להזמנה שלך. אם גילית בעיה או אי התאמה, פני אלינו בוואטסאפ ונשמח לעזור."],
+["03","דמי משלוח","דמי המשלוח נקבעים לפי אזור המשלוח שתבחרי בעת ההזמנה. הם מופיעים בנפרד בסיכום ההזמנה ונכללים בסכום הכולל לפני שתשלחי אותה."],
+["04","זמן אספקה","ההזמנה מגיעה בדרך כלל בתוך 2–3 ימי עסקים, בהתאם לאזור המשלוח. כדי שנוכל לתאם את המסירה, הזיני כתובת ברורה ומספר טלפון זמין. לבירור מועד ההגעה, כתבי לנו בוואטסאפ."],
+["05","ביטול הזמנה","אפשר לבטל את ההזמנה ללא תשלום לפני שהמשלוח יוצא מהחנות. אם ברצונך לבטל, פני אלינו בהקדם בוואטסאפ עם פרטי ההזמנה כדי שנוכל לבדוק את מצבה. אם המשלוח כבר יצא, פני אלינו לבירור האפשרויות הזמינות."],
+["06","החזרות","אפשר להחזיר פריט רק במקרה של פגם ייצור ברור. אם הבחנת בפגם, כתבי לנו בוואטסאפ עם תיאור הבעיה ופרטי ההזמנה כדי שנוכל לבדוק את המקרה ולהסביר לך מה הצעד הבא."],
+["07","פרטיות","אנו משתמשים בשם, במספר הטלפון ובכתובת שלך רק כדי לטפל בהזמנה ולספק אותה. השם עוזר לנו לאתר את ההזמנה, הטלפון משמש לתיאום המסירה, והכתובת מציינת היכן למסור את ההזמנה. אנו שומרים על פרטיות הפרטים האלה. לשאלות על פרטי ההזמנה אפשר לפנות אלינו בוואטסאפ."],
+["08","תשלום אלקטרוני","התשלום מתבצע באופן אלקטרוני בעת המסירה בלבד, לאחר בדיקת הפריט וללא תשלום מראש. אפשר לבדוק את הסכום לתשלום, כולל דמי המשלוח, לפני שליחת ההזמנה בוואטסאפ. לשאלות על אמצעי התשלום בעת המסירה, כתבי לנו בוואטסאפ."]
 ],
 policyWhatsApp:"יצירת קשר בוואטסאפ",
 qty:"כמות",addToCart:"הוספה לסל",addedToCart:"הפריט נוסף לסל",
 cart:"סל הקניות",cartEmpty:"סל הקניות שלך ריק כרגע",checkoutBtn:"המשך להזמנה",
-cod:"תשלום בעת המסירה",footerSince:"ESPOZA FASHION — מאז 2019",
+cod:"תשלום אלקטרוני בעת המסירה בלבד",footerSince:"ESPOZA FASHION — מאז 2019",
 footerCredit:"Designed & Created by Yousef Ajra",
 feedbackTitle:"מה הלקוחות שלנו אומרות",feedbackCounterLabel:"חוות דעת אמיתיות מהלקוחות שלנו",
 feedbackDaily:"מאות הודעות מדי יום",feedbackSwipeHint:"החליקי כדי לראות עוד",
 footerStoryTitle:"איך התחיל הסיפור של Espoza?",
 footerStoryText:"Espoza Fashion נוסדה בשנת 2019 מתוך אהבה אמיתית לאופנה ורצון להציע פריטים מיוחדים המשלבים איכות ועיצוב מוקפד. עם השנים הקולקציה התרחבה, וכך גם האמון של הלקוחות שלנו. אנו ממשיכים להציע שמלות, חליפות ופריטים אלגנטיים שנבחרו בקפידה, תוך תשומת לב לכל פרט.",
-footerContactTitle:"צרי קשר",footerLinksTitle:"קישורים מהירים",
+footerContactTitle:"צרי קשר",
 returnPolicyTitle:"מדיניות החזרות",returnPolicyText:"לא ניתן להחזיר מוצרים, למעט במקרה של פגם ייצור ברור בפריט.",
 exchangePolicyTitle:"מדיניות החלפות",exchangePolicyText:"ניתן לבצע החלפה בתוך 24 שעות מקבלת ההזמנה, בתנאי שהפריט במצבו המקורי, לא נעשה בו שימוש ולא ניזוק.",
 notReceivedPolicyTitle:"אי איסוף הזמנה",notReceivedPolicyText:"אם ההזמנה לא נאספה והוחזרה אלינו, אנו שומרים לעצמנו את הזכות לסרב להזמנות עתידיות במקרה של אי איסוף חוזר.",
-paymentPolicyTitle:"תשלום",paymentPolicyText:"תשלום במזומן בעת המסירה (COD).",
+paymentPolicyTitle:"תשלום",paymentPolicyText:"התשלום מתבצע באופן אלקטרוני בעת המסירה בלבד, לאחר בדיקת הפריט וללא תשלום מראש.",
 customerCountCaption:"10,000 לקוחות בחרו ב‑Espoza Fashion",
 customerCountSubcaption:"האמון מתחדש עם כל הזמנה",
 storyEyebrow:"הסיפור שלנו • מאז 2019",storyTitle:"הסיפור של Espoza Fashion",
@@ -5674,7 +5659,7 @@ wishPrivateSent:"המשאלה הפרטית שלך נשלחה לחנות ✨",
 wishPublicSent:"המשאלה שלך שותפה עם כולם ✨",
 wishError:"לא הצלחנו להוסיף את המשאלה כרגע. נסי שוב.",
 favorites:"מועדפים",wishList:"רשימת משאלות",reviews:"חוות דעת לקוחות",
-quickPolicies:"מדיניות החנות",cartOrder:"סל והזמנה",quickLinks:"קישורים מהירים",
+cartOrder:"סל והזמנה",quickLinks:"קישורים מהירים",
 splashTag:"הסגנון שלך, הזוהר שלך",close:"סגירה",
 sizeGuide:"מדריך מידות",sizeGuideNote:"המידות בסנטימטרים, אלא אם צוין אחרת.",
 assistantLauncher:"שיחה עם ELARA AI",
@@ -5698,7 +5683,7 @@ sizeChartTitle:"מדריך מידות",sizeChartBust:"היקף חזה",sizeChart
 
 
 Object.assign(TEXT.ar,{
-favorites:"المفضلة",wishList:"قائمة الأمنيات",reviews:"آراء الزبائن",quickPolicies:"سياسة المتجر",cartOrder:"السلة والطلب",splashTag:"خيارك للتألق",quickLinks:"روابط سريعة",
+favorites:"المفضلة",wishList:"قائمة الأمنيات",reviews:"آراء الزبائن",cartOrder:"السلة والطلب",splashTag:"خيارك للتألق",quickLinks:"روابط سريعة",
 wishlistTitle:"المفضلة",wishlistSubtitle:"القطع التي حفظتها",wishlistEmpty:"المفضلة فارغة حالياً. اضغطي ♡ على أي قطعة لإضافتها.",
 wishTitle:"✨ أمنيتك القادمة مع Espoza Fashion؟",wishIntro:"أخبرينا بالقطعة التي تتمنين توفرها لدينا، فقد تكون فكرتك هي القطعة القادمة التي نضيفها 🤍",wishPlaceholder:"اكتبي أمنيتك هنا...",wishSubmit:"إرسال الأمنية",wishPublic:"عام 🌍 — يمكن لجميع زوار المتجر الاطلاع عليها",wishPrivate:"خاص 🔒 — لا يمكن الاطلاع عليها إلا من قِبل مالك المتجر",
 wishEmpty:"لسه ما في أمنيات. كوني أول من يشارك أمنيتك ✨",wishUnavailable:"قائمة الأمنيات غير متاحة مؤقتًا.",wishPlease:"اكتبي أمنيتك أولاً 🤍",wishPrivateSent:"تم إرسال أمنيتك بشكل خاص للمتجر ✨",wishPublicSent:"تمت إضافة أمنيتك للجميع ✨",wishError:"ما قدرنا نضيف الأمنية حاليًا، حاولي مرة ثانية.",
@@ -5708,7 +5693,7 @@ assistantQuickSets:"🛍️ شو عندكم أطقم؟",assistantQuickDresses:"�
 priceLabel:"السعر",colorsLabel:"الألوان",sizesLabel:"المقاسات",close:"إغلاق",cartLimit:"الحد الأقصى 4 قطع من نفس الموديل، مع احتساب جميع الألوان والمقاسات."
 });
 Object.assign(TEXT.en,{
-favorites:"Favorites",wishList:"Wish List",reviews:"Customer Reviews",quickPolicies:"Store Policies",cartOrder:"Cart & Order",splashTag:"Your Style, Your Shine",quickLinks:"Quick Links",
+favorites:"Favorites",wishList:"Wish List",reviews:"Customer Reviews",cartOrder:"Cart & Order",splashTag:"Your Style, Your Shine",quickLinks:"Quick Links",
 wishlistTitle:"Favorites",wishlistSubtitle:"Pieces you saved",wishlistEmpty:"You haven't saved any pieces yet. Tap ♡ on a product to add it here.",
 wishTitle:"✨ What is your next wish from Espoza Fashion?",wishIntro:"Tell us what piece you wish we offered — your idea could become our next addition 🤍",wishPlaceholder:"Write your wish here...",wishSubmit:"Share your wish",wishPublic:"Public 🌍 — Visible to all store visitors",wishPrivate:"Private 🔒 — Only the store owner can view it",
 wishEmpty:"No wishes yet. Be the first to share yours ✨",wishUnavailable:"Wishes are temporarily unavailable.",wishPlease:"Please write your wish first.",wishPrivateSent:"Your private wish was sent to the store ✨",wishPublicSent:"Your wish was shared with everyone ✨",wishError:"We couldn't add the wish right now. Please try again.",
@@ -5726,7 +5711,6 @@ accountTitle:"حسابي في Espoza",accountIntro:"أنشئي حسابك أو �
 emailLabel:"البريد الإلكتروني",passwordLabel:"كلمة السر",passwordHint:"8 أحرف على الأقل",login:"تسجيل الدخول",signup:"إنشاء حساب جديد",forgotPassword:"نسيت كلمة السر؟",resendConfirmation:"إعادة إرسال رسالة تأكيد البريد",
 profileName:"الاسم",profilePhone:"رقم الهاتف / واتساب",profileAddress:"العنوان المفضّل",saveProfile:"حفظ بياناتي",previousOrders:"طلباتي السابقة",loadingOrders:"جارٍ تحميل الطلبات…",logout:"تسجيل الخروج",noOrders:"لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.",
 orderPrefix:"طلب",orderTotal:"الإجمالي",orderStatuses:{new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"تم التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"},
-footerFavorites:"المفضلة",footerWishes:"قائمة الأمنيات",footerFeedback:"آراء الزبائن",footerStoryLink:"قصة Espoza",footerPolicies:"سياستنا",footerLinksNote:"كل ما تحتاجينه في مكان واحد.",
 imageViewerHint:"كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير",imageViewerRights:"© Espoza Fashion — جميع الحقوق محفوظة",
 couponLabel:"كود الخصم (اختياري)",couponPlaceholder:"أدخلي كود الخصم",couponApply:"تطبيق",couponRemove:"إزالة الكود",cartSubtotal:"مجموع المنتجات",discountLabel:"الخصم",discountApplied:"تم تطبيق الخصم",
 addressPlaceholder:"المدينة / البلدة / الحي / الشارع"
@@ -5737,7 +5721,6 @@ accountTitle:"My Espoza Account",accountIntro:"Create an account or sign in to t
 emailLabel:"Email address",passwordLabel:"Password",passwordHint:"At least 8 characters",login:"Sign in",signup:"Create account",forgotPassword:"Forgot password?",resendConfirmation:"Resend email confirmation",
 profileName:"Name",profilePhone:"Phone / WhatsApp",profileAddress:"Preferred address",saveProfile:"Save my details",previousOrders:"Previous orders",loadingOrders:"Loading orders…",logout:"Sign out",noOrders:"There are no orders linked to your account yet. You can place an order and pay on delivery as usual.",
 orderPrefix:"Order",orderTotal:"Total",orderStatuses:{new:"Under review",confirmed:"Confirmed",processing:"Preparing",shipped:"Shipped",completed:"Completed",cancelled:"Cancelled"},
-footerFavorites:"Favorites",footerWishes:"Wish List",footerFeedback:"Customer Reviews",footerStoryLink:"Our Story",footerPolicies:"Our Policies",footerLinksNote:"Everything you need in one place.",
 imageViewerHint:"Pinch or double-tap to zoom • Drag the image after zooming",imageViewerRights:"© Espoza Fashion — All rights reserved",
 couponLabel:"Discount code (optional)",couponPlaceholder:"Enter discount code",couponApply:"Apply",couponRemove:"Remove code",cartSubtotal:"Items subtotal",discountLabel:"Discount",discountApplied:"Discount applied",
 addressPlaceholder:"City / town / neighborhood / street"
@@ -5748,7 +5731,6 @@ accountTitle:"החשבון שלי ב‑Espoza",accountIntro:"צרי חשבון �
 emailLabel:"כתובת דוא״ל",passwordLabel:"סיסמה",passwordHint:"לפחות 8 תווים",login:"כניסה",signup:"יצירת חשבון חדש",forgotPassword:"שכחת את הסיסמה?",resendConfirmation:"שליחה חוזרת של הודעת אימות",
 profileName:"שם",profilePhone:"טלפון / וואטסאפ",profileAddress:"כתובת מועדפת",saveProfile:"שמירת הפרטים שלי",previousOrders:"ההזמנות הקודמות שלי",loadingOrders:"ההזמנות נטענות…",logout:"התנתקות",noOrders:"עדיין אין הזמנות המשויכות לחשבונך. אפשר לבצע הזמנה ולשלם בעת המסירה כרגיל.",
 orderPrefix:"הזמנה",orderTotal:"סה״כ",orderStatuses:{new:"ממתינה לבדיקה",confirmed:"אושרה",processing:"בהכנה",shipped:"נשלחה",completed:"הושלמה",cancelled:"בוטלה"},
-footerFavorites:"מועדפים",footerWishes:"רשימת משאלות",footerFeedback:"חוות דעת לקוחות",footerStoryLink:"הסיפור שלנו",footerPolicies:"המדיניות שלנו",footerLinksNote:"כל מה שאת צריכה במקום אחד.",
 imageViewerHint:"צבטי בשתי אצבעות או הקישי פעמיים להגדלה • גררי את התמונה לאחר ההגדלה",imageViewerRights:"© Espoza Fashion — כל הזכויות שמורות",
 couponLabel:"קוד הנחה (לא חובה)",couponPlaceholder:"הזיני קוד הנחה",couponApply:"החלה",couponRemove:"הסרת הקוד",cartSubtotal:"סכום הפריטים",discountLabel:"הנחה",discountApplied:"ההנחה הוחלה",
 addressPlaceholder:"עיר / יישוב / שכונה / רחוב"
@@ -5762,7 +5744,6 @@ accountTitle:"حسابي في Espoza",accountIntro:"أنشئي حسابك أو �
 emailLabel:"البريد الإلكتروني",passwordLabel:"كلمة السر",passwordHint:"8 أحرف على الأقل",login:"تسجيل الدخول",signup:"إنشاء حساب جديد",forgotPassword:"نسيت كلمة السر؟",resendConfirmation:"إعادة إرسال رسالة تأكيد البريد",
 profileName:"الاسم",profilePhone:"رقم الهاتف / واتساب",profileAddress:"العنوان المفضّل",saveProfile:"حفظ بياناتي",previousOrders:"طلباتي السابقة",loadingOrders:"جارٍ تحميل الطلبات…",logout:"تسجيل الخروج",noOrders:"لا توجد طلبات مرتبطة بحسابك حتى الآن. يمكنك إتمام طلبك والدفع عند الاستلام كالمعتاد.",
 orderPrefix:"طلب",orderTotal:"الإجمالي",orderStatuses:{new:"قيد المراجعة",confirmed:"تم التأكيد",processing:"قيد التجهيز",shipped:"تم الشحن",completed:"مكتمل",cancelled:"ملغي"},
-footerFavorites:"المفضلة",footerWishes:"قائمة الأمنيات",footerFeedback:"آراء الزبائن",footerStoryLink:"قصة Espoza",footerPolicies:"سياستنا",footerLinksNote:"كل ما تحتاجينه في مكان واحد.",
 imageViewerHint:"كبّري بإصبعين أو اضغطي مرتين للتكبير • اسحبي للصورة بعد التكبير",imageViewerRights:"© Espoza Fashion — جميع الحقوق محفوظة",
 couponLabel:"كود الخصم (اختياري)",couponPlaceholder:"أدخلي كود الخصم",couponApply:"تطبيق",couponRemove:"إزالة الكود",cartSubtotal:"مجموع المنتجات",discountApplied:"تم تطبيق الخصم",addressPlaceholder:"المدينة / البلدة / الحي / الشارع"
 });
@@ -5772,7 +5753,6 @@ accountTitle:"My Espoza Account",accountIntro:"Create an account or sign in to t
 emailLabel:"Email address",passwordLabel:"Password",passwordHint:"At least 8 characters",login:"Sign in",signup:"Create account",forgotPassword:"Forgot password?",resendConfirmation:"Resend email confirmation",
 profileName:"Name",profilePhone:"Phone / WhatsApp",profileAddress:"Preferred address",saveProfile:"Save my details",previousOrders:"Previous orders",loadingOrders:"Loading orders…",logout:"Sign out",noOrders:"There are no orders linked to your account yet. You can place an order and pay on delivery as usual.",
 orderPrefix:"Order",orderTotal:"Total",orderStatuses:{new:"Under review",confirmed:"Confirmed",processing:"Preparing",shipped:"Shipped",completed:"Completed",cancelled:"Cancelled"},
-footerFavorites:"Favorites",footerWishes:"Wish List",footerFeedback:"Customer Reviews",footerStoryLink:"Our Story",footerPolicies:"Our Policies",footerLinksNote:"Everything you need in one place.",
 imageViewerHint:"Pinch or double-tap to zoom • Drag the image after zooming",imageViewerRights:"© Espoza Fashion — All rights reserved",
 couponLabel:"Discount code (optional)",couponPlaceholder:"Enter discount code",couponApply:"Apply",couponRemove:"Remove code",cartSubtotal:"Items subtotal",discountApplied:"Discount applied",addressPlaceholder:"City / town / neighborhood / street"
 });
@@ -5782,7 +5762,6 @@ accountTitle:"החשבון שלי ב‑Espoza",accountIntro:"צרי חשבון �
 emailLabel:"כתובת דוא״ל",passwordLabel:"סיסמה",passwordHint:"לפחות 8 תווים",login:"כניסה",signup:"יצירת חשבון חדש",forgotPassword:"שכחת את הסיסמה?",resendConfirmation:"שליחה חוזרת של הודעת אימות",
 profileName:"שם",profilePhone:"טלפון / וואטסאפ",profileAddress:"כתובת מועדפת",saveProfile:"שמירת הפרטים שלי",previousOrders:"ההזמנות הקודמות שלי",loadingOrders:"ההזמנות נטענות…",logout:"התנתקות",noOrders:"עדיין אין הזמנות המשויכות לחשבונך. אפשר לבצע הזמנה ולשלם בעת המסירה כרגיל.",
 orderPrefix:"הזמנה",orderTotal:"סה״כ",orderStatuses:{new:"ממתינה לבדיקה",confirmed:"אושרה",processing:"בהכנה",shipped:"נשלחה",completed:"הושלמה",cancelled:"בוטלה"},
-footerFavorites:"מועדפים",footerWishes:"רשימת משאלות",footerFeedback:"חוות דעת לקוחות",footerStoryLink:"הסיפור שלנו",footerPolicies:"המדיניות שלנו",footerLinksNote:"כל מה שאת צריכה במקום אחד.",
 imageViewerHint:"צבטי בשתי אצבעות או הקישי פעמיים להגדלה • גררי את התמונה לאחר ההגדלה",imageViewerRights:"© Espoza Fashion — כל הזכויות שמורות",
 couponLabel:"קוד הנחה (לא חובה)",couponPlaceholder:"הזיני קוד הנחה",couponApply:"החלה",couponRemove:"הסרת הקוד",cartSubtotal:"סכום הפריטים",discountApplied:"ההנחה הוחלה",addressPlaceholder:"עיר / יישוב / שכונה / רחוב"
 });
@@ -7773,17 +7752,56 @@ startSlider();
    سلايدر المميزات (Fast Delivery, Trust, etc)
    ========================================== */
 
+function groupPolicies(items, titles){
+  const topicCodes={delivery:["03","04"],payment:["08","02"],exchange:["01"],returns:["06"],cancellation:["05"],privacy:["07"]};
+  const entries=(Array.isArray(items)?items:[])
+    .filter(item=>Array.isArray(item)&&typeof item[1]==="string"&&typeof item[2]==="string")
+    .map(([code,title,text])=>({code:String(code).padStart(2,"0"),title,text}));
+  const knownCodes=new Set(Object.values(topicCodes).flat());
+  const topics=Object.entries(topicCodes).map(([id,codes])=>({
+    id,
+    entries:codes.flatMap(code=>entries.filter(entry=>entry.code===code))
+  }));
+  topics.push({id:"other",entries:entries.filter(entry=>!knownCodes.has(entry.code))});
+  return topics.filter(topic=>topic.entries.length).map(topic=>({
+    ...topic,
+    title:titles?.[topic.id]||topic.entries[0].title
+  }));
+}
+
 function renderPolicies(){
-const box=$("policyContent");
-if(!box)return;
-const x=t();
-const wa=String(store.whatsapp||"").replace(/\D/g,"");
-box.innerHTML=(x.policyItems||[]).map(([icon,title,text],i,arr)=>`
-<div class="policy-section">
-<h3><span class="policy-ico">${esc(icon)}</span> ${esc(title)}</h3>
-<p>${esc(text)}</p>
-${i===arr.length-1&&wa?`<a class="policy-wa" href="https://wa.me/${esc(wa)}" target="_blank" rel="noopener">💬 ${esc(x.policyWhatsApp||"")}</a>`:""}
-</div>`).join("");
+  const content=$("policyContent");
+  const footer=$("footerPolicyList");
+  const x=t();
+  const topics=groupPolicies(x.policyItems,x.policyTopicTitles);
+  const rates=deliveryList();
+  const whatsapp=String(store.whatsapp||"").replace(/\D/g,"");
+  const signature=JSON.stringify([topics,rates,whatsapp,x.policyWhatsApp]);
+  if(content.dataset.renderedPolicies===signature)return;
+
+  const openTopic=content.querySelector("details[open]")?.dataset.policyTopic;
+  footer.innerHTML=topics.map(({id,title})=>`
+    <li><button type="button" aria-haspopup="dialog" aria-controls="policiesModal" onclick="openModal('policiesModal','${id}')">
+      ${esc(title)}<span class="footer-policy-arrow" aria-hidden="true"></span>
+    </button></li>`).join("");
+
+  const feeTable=`<dl class="policy-rates">${rates.map(({name,price})=>`
+    <div><dt>${esc(name)}</dt><dd><bdi>₪${money(price)}</bdi></dd></div>`).join("")}</dl>`;
+  content.innerHTML=topics.map(({id,title,entries})=>`
+    <details class="policy-section" name="espoza-policies" data-policy-topic="${id}"${id===openTopic?" open":""}>
+      <summary>${esc(title)}<span class="policy-indicator" aria-hidden="true"></span></summary>
+      <div class="policy-copy">${entries.map(entry=>`
+        <div class="policy-clause">
+          ${entries.length>1||entry.title!==title?`<h3>${esc(entry.title)}</h3>`:""}
+          ${entry.text.split(/\n\s*\n/).map(paragraph=>`<p>${esc(paragraph)}</p>`).join("")}
+          ${entry.code==="03"?feeTable:""}
+        </div>`).join("")}
+      </div>
+    </details>`).join("");
+  if(whatsapp&&x.policyWhatsApp){
+    content.insertAdjacentHTML("beforeend",`<a class="policy-wa" href="https://wa.me/${whatsapp}" target="_blank" rel="noopener noreferrer">${esc(x.policyWhatsApp)}</a>`);
+  }
+  content.dataset.renderedPolicies=signature;
 }
 
 function renderFeatures(){
@@ -9886,7 +9904,12 @@ const linesHe=cart.map(item=>`👗 ${productDisplayName(item)}\n   מידה: ${i
 
 /* رسالة واتساب */
 
-const message=lang==="ar"?`مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}\n💳 الدفع عند الاستلام`:lang==="he"?`שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesHe}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}${offerHe}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}\n💳 תשלום במזומן בעת המסירה`:`Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}\n💳 Cash on Delivery`;
+const orderDetails=lang==="ar"
+  ? `مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}`
+  : lang==="he"
+    ? `שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesHe}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}${offerHe}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}`
+    : `Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}`;
+const message=`${orderDetails}\n💳 ${t().cod}`;
 
 
 const whatsappUrl=`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
@@ -10160,7 +10183,7 @@ function setupProductImageViewer(){
    ========================================== */
 
 /* فتح النوافذ (سياستنا) */
-function openModal(id){
+function openModal(id, policyTopic){
 const el=$(id);
 if(!el)return;
 if(!el._backdropReady){
@@ -10168,8 +10191,28 @@ el._backdropReady=true;
 el.addEventListener("click",function(e){
 if(e.target===el)closeModal(id);
 });
+if(id==="policiesModal")el.addEventListener("close",()=>{
+  if(!el.open)document.body.style.overflow=el._pageOverflow;
+});
 }
-if(id==="policiesModal")renderPolicies();
+if(id==="policiesModal"){
+  renderPolicies();
+  const content=$("policyContent");
+  const sections=Array.from(content.querySelectorAll("details"));
+  const selected=sections.find(section=>section.dataset.policyTopic===policyTopic)||sections[0];
+  sections.forEach(section=>{section.open=section===selected;});
+  if(!el.open){
+    el._pageOverflow=document.body.style.overflow;
+    el.showModal();
+  }
+  document.body.style.overflow="hidden";
+  content.scrollTop=0;
+  if(policyTopic&&selected){
+    selected.querySelector("summary").focus({preventScroll:true});
+    content.scrollTop=selected.offsetTop-12;
+  }
+  return;
+}
 el.classList.add("open");
 document.body.style.overflow="hidden";
 }
@@ -10178,6 +10221,11 @@ function closeModal(
 id,
 restoreScroll=true
 ){
+
+if(id==="policiesModal"){
+$(id).close();
+return;
+}
 
 $(id)
 .classList.remove(
@@ -10416,11 +10464,6 @@ startTypewriter();
 
 
 
-$("footerShop")
-.textContent=
-x.shop;
-
-
 $("colorTitle")
 .textContent=
 x.colors;
@@ -10545,15 +10588,11 @@ $("footerContactTitle")
 .textContent=
 x.footerContactTitle;
 
-$("footerLinksTitle")
-.textContent=
-x.footerLinksTitle;
-if($("footerLinksNote"))$("footerLinksNote").textContent=x.footerLinksNote;
 if($("wishlistBtnLabel"))$("wishlistBtnLabel").textContent=t().favorites;
 if($("quickFavoritesLabel"))$("quickFavoritesLabel").textContent=t().favorites;
 if($("quickWishesLabel"))$("quickWishesLabel").textContent=t().wishList;
 if($("quickFeedbackLabel"))$("quickFeedbackLabel").textContent=t().reviews;
-if($("quickPoliciesLabel"))$("quickPoliciesLabel").textContent=t().quickPolicies;
+if($("quickPoliciesLabel"))$("quickPoliciesLabel").textContent=x.policies;
 if($("quickCartLabel"))$("quickCartLabel").textContent=t().cartOrder;
 if($("splashTag"))$("splashTag").textContent=t().splashTag;
 if($("quickLinks"))$("quickLinks").setAttribute("aria-label",t().quickLinks);
@@ -10577,7 +10616,6 @@ const uiText=[
 ["customerLoginMode","login"],["customerSignupMode","signup"],["customerResetPassword","forgotPassword"],["customerResendConfirmation","resendConfirmation"],
 ["customerProfileNameLabel","profileName"],["customerProfilePhoneLabel","profilePhone"],["customerProfileAddressLabel","profileAddress"],["customerProfileSave","saveProfile"],
 ["customerOrdersTitle","previousOrders"],["customerOrdersLoading","loadingOrders"],["customerLogout","logout"],
-["footerFavoritesLink","footerFavorites"],["footerWishesLink","footerWishes"],["footerFeedbackLink","footerFeedback"],["footerStoryLink","footerStoryLink"],["footerLinksNote","footerLinksNote"],
 ["productImageHint","imageViewerHint"],["productImageRights","imageViewerRights"],["cartCouponLabel","couponLabel"],["cartCouponApply","couponApply"],["cartSubtotalLabel","cartSubtotal"]
 ];
 uiText.forEach(([id,key])=>{const el=$(id);if(el)el.textContent=x[key]||"";});
@@ -10594,14 +10632,9 @@ if(typeof applyAssistantLanguage==="function")applyAssistantLanguage();
 try{window.dispatchEvent(new CustomEvent("espoza:languagechange",{detail:{language:lang,direction:x.dir}}));}catch(_){}
 document.querySelectorAll("[data-espoza-language]").forEach(el=>{el.lang=lang;el.dir=x.dir;});
 
-$("policiesBtn")
-.textContent=
-x.policies;
-
-$("policiesHeading")
-.textContent=
-x.policies;
-
+$("footerPoliciesTitle").textContent=x.policies;
+$("policiesHeading").textContent=x.policies;
+$("policyClose").setAttribute("aria-label",x.close);
 renderPolicies();
 
 

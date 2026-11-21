@@ -21,6 +21,21 @@ function context(source,names,extras={}){
  return c;
 }
 test('all inline scripts parse',()=>{for(const source of [shop,admin])for(const m of source.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi))if(m[1].trim())new vm.Script(m[1]);});
+test('policy topics keep each translated clause and retain additional policies',()=>{
+ const translations=vm.runInNewContext(shop.slice(shop.indexOf('const TEXT={'),shop.indexOf('Object.assign(TEXT.ar,{'))+'\nTEXT');
+ const c=context(shop,['groupPolicies']);
+ const expected={delivery:['03','04'],payment:['08','02'],exchange:['01'],returns:['06'],cancellation:['05'],privacy:['07']};
+ for(const locale of ['ar','en','he']){
+  const {policyItems,policyTopicTitles}=translations[locale];
+  const topics=c.groupPolicies(policyItems,policyTopicTitles);
+  const codes=Object.fromEntries(Array.from(topics,topic=>[topic.id,Array.from(topic.entries,entry=>entry.code)]));
+  assert.deepEqual(codes,expected);
+  assert.equal(topics[1].title,policyTopicTitles.payment);
+ }
+ const extra=c.groupPolicies([[1,'Exchange','Keep the tags attached'],null,['09','Store pickup','Contact us']],{other:'Other policies'});
+ assert.equal(extra[0].id,'exchange');
+ assert.equal(extra[1].entries[0].title,'Store pickup');
+});
 test('recovery accepts a new password with an empty email and preserves success message',async()=>{
  let updated=false,signedOut=false;
  const c=context(shop,['setCustomerAuthMode','submitCustomerAuth'],{customerAuthMode:'recovery',getCustomerSupabase:()=>({auth:{updateUser:async({password})=>{updated=password==='test-password';return {};},signOut:async()=>{signedOut=true;return {};}}})});
@@ -155,7 +170,7 @@ function checkoutContext(error){
   return {insert:async payload=>{calls.push(payload);return {error};}};
  }};
  const popup={location:{},close(){}};
- const c=context(shop,['sendOrder'],{orderSubmissionPending:false,cart:[{name:'Dress',qty:1,price:100,size:'40'}],cartModelKey:()=> 'p',store:{whatsapp:'0000000000',name:'Espoza'},selectedDelivery:()=>({name:'Test',price:20}),cartSubtotal:()=>100,getAutomaticOffer:()=>null,money:x=>String(x),productDisplayName:x=>x.name,lang:'ar',ensureCustomerProfile:async()=>null,getCustomerSupabase:()=>db,window:{open:()=>popup},t:()=>({saved:'saved',waOnly:'wa-only'}),toast(){},saveCart(){},syncCustomerCart:async()=>{},updateCartBadge(){},closeModal(){},console:{warn(){}},alert(){},calls,popup});
+ const c=context(shop,['sendOrder'],{orderSubmissionPending:false,cart:[{name:'Dress',qty:1,price:100,size:'40'}],cartModelKey:()=> 'p',store:{whatsapp:'0000000000',name:'Espoza'},selectedDelivery:()=>({name:'Test',price:20}),cartSubtotal:()=>100,getAutomaticOffer:()=>null,money:x=>String(x),productDisplayName:x=>x.name,lang:'ar',ensureCustomerProfile:async()=>null,getCustomerSupabase:()=>db,window:{open:()=>popup},t:()=>({saved:'saved',waOnly:'wa-only',cod:'الدفع الإلكتروني عند الاستلام فقط'}),toast(){},saveCart(){},syncCustomerCart:async()=>{},updateCartBadge(){},closeModal(){},console:{warn(){}},alert(){},calls,popup});
  c.$('customerName').value='Test customer';
  c.$('customerPhone').value='0000000000';
  c.$('customerAddress').value='Test address';
@@ -175,7 +190,9 @@ test('checkout confirmed insert clears basket and releases submission lock',asyn
  assert.equal(c.calls.length,1);
  assert.equal(c.calls[0].customer_id,null);
  assert.equal(c.calls[0].total,120);
+ assert.equal(c.calls[0].payment_status,'cod');
  assert.match(c.popup.location.href,/^https:\/\/wa\.me\//);
+ assert.ok(new URL(c.popup.location.href).searchParams.get('text').endsWith(c.t().cod));
  assert.equal(c.cart.length,0);
  assert.equal(c.orderSubmissionPending,false);
  assert.equal(c.$('sendOrderBtn').disabled,false);
