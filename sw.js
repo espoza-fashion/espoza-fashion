@@ -9,7 +9,7 @@ try {
 
 const CACHE_PREFIX = "espoza-shell-";
 const RELEASE = String(self.espozaRelease || "local");
-const CACHE_NAME = CACHE_PREFIX + "v22-" + RELEASE;
+const CACHE_NAME = CACHE_PREFIX + "v23-" + RELEASE;
 const releaseParameter = "espoza-release";
 const scope = new URL(self.registration.scope);
 const home = scope.href;
@@ -24,7 +24,7 @@ function previousShellCaches() {
 
 self.addEventListener("install", event => {
   const shellFiles = [
-    "./", "./espoza-app.js", "./customer-sidebar.js?v=5", "./customer-sidebar.css?v=1",
+    "./", "./espoza-app.js", "./customer-sidebar.js?v=6", "./customer-sidebar.css?v=2",
     "./manifest.webmanifest", "./icons/espoza-luxe-emblem.svg", "./icons/espoza-app-192.png"
   ];
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(
