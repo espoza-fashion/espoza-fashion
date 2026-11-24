@@ -45,19 +45,26 @@
   if(!panel)return;
   const body=panel.querySelector(".esp-side-body");body.replaceChildren();
   const account=document.createElement("button");account.type="button";account.className="esp-side-account";
-  account.innerHTML='<span class="esp-side-account-icon" aria-hidden="true">♙</span><span class="esp-side-account-copy"><b></b><small></small></span><span class="esp-side-chevron" aria-hidden="true">‹</span>';
+  account.innerHTML='<span class="esp-side-account-icon" aria-hidden="true">♙</span><span class="esp-side-account-copy"><b></b><small></small></span><span class="esp-side-vip">VIP</span><span class="esp-side-chevron" aria-hidden="true">‹</span>';
   account.querySelector("b").textContent=label("حسابي","My Account");
   account.querySelector("small").textContent=label("تسجيل الدخول أو إنشاء حساب جديد","Sign in or create an account");
   account.addEventListener("click",()=>{close();if(typeof window.openCustomerAccount==="function")window.openCustomerAccount();});
   body.append(account);
-  const title=document.createElement("div");title.className="esp-side-section-title";title.textContent=label("تسوّقي حسب القسم","SHOP BY CATEGORY");body.append(title);
+  const title=document.createElement("div");title.className="esp-side-section-title";title.textContent=label("تسوّقي حسب اختيارك","SHOP BY CATEGORY");body.append(title);
   const activeCategory=body.ownerDocument.querySelector('#categories button[aria-current="true"]')?.dataset.cat||"all";
-  body.append(makeButton("esp-side-link"+(activeCategory==="all"?" is-active":""),"✧","كل الأقسام","All categories",()=>chooseCategory("all"),"כל הקטגוריות"));
+  const allButton=makeButton("esp-side-link"+(activeCategory==="all"?" is-active":""),"✧","كل الأقسام","All categories",()=>chooseCategory("all"),"כל הקטגוריות");
+  const allCount=document.createElement("span");allCount.className="esp-side-count";allCount.textContent=String(typeof products!=="undefined"&&Array.isArray(products)?products.length:0);
+  const allArrow=document.createElement("span");allArrow.className="esp-side-arrow";allArrow.textContent="‹";allButton.append(allCount,allArrow);body.append(allButton);
   const categoryIcons={dresses:"♙",sets:"♧",offers:"♜","winter-sets":"♨","winter-dresses":"♙"};
   categories().forEach(cat=>{
    const active=activeCategory===cat.slug;
    const b=makeButton("esp-side-link"+(active?" is-active":""),categoryIcons[cat.slug]||"◇",cat.label,cat.label,()=>chooseCategory(cat.slug));
    b.dataset.category=cat.slug;
+   const count=document.createElement("span");count.className="esp-side-count";
+   const sourceProducts=typeof products!=="undefined"&&Array.isArray(products)?products:[];
+   const amount=sourceProducts.filter(p=>normalizeSlug(p.category||p.category_slug||p.categorySlug||"")===cat.slug).length;
+   if(amount)count.textContent=String(amount);
+   const arrow=document.createElement("span");arrow.className="esp-side-arrow";arrow.textContent="‹";b.append(count,arrow);
    if(cat.slug==="offers"){
     const hot=document.createElement("span");hot.className="esp-side-hot";hot.textContent="HOT";
     b.append(hot);
@@ -90,8 +97,9 @@
   if($("espozaSidePanel"))return;
   overlay=document.createElement("div");overlay.id="espozaSideOverlay";overlay.setAttribute("aria-hidden","true");overlay.addEventListener("click",close);
   panel=document.createElement("aside");panel.id="espozaSidePanel";panel.setAttribute("aria-label","Espoza Fashion navigation");panel.setAttribute("aria-hidden","true");
-  panel.innerHTML='<div class="esp-side-head"><button type="button" class="esp-side-close" aria-label="Close menu">×</button><div class="esp-side-brand">ESPOZA</div><div class="esp-side-sub">FASHION</div><div class="esp-side-since">SINCE 2019</div></div><div class="esp-side-body"></div><div class="esp-side-footer">ESPOZA FASHION · SINCE 2019</div>';
+  panel.innerHTML='<div class="esp-side-head"><button type="button" class="esp-side-close" aria-label="Close menu">×</button><div class="esp-side-brand">FASHION</div><div class="esp-side-sub">— SINCE 2019 —</div></div><div class="esp-side-body"></div><div class="esp-side-footer"><button type="button" class="esp-side-language" aria-label="Change language"><span class="esp-side-globe">◎</span><span class="esp-side-language-label">العربية</span></button><div class="esp-side-currency"><span>₪</span><span class="esp-side-currency-label">شيكل</span></div></div>';
   panel.querySelector(".esp-side-close").addEventListener("click",close);
+  panel.querySelector(".esp-side-language").addEventListener("click",()=>{const languageButton=$("langBtn");if(languageButton)languageButton.click();const current=currentLanguage();panel.querySelector(".esp-side-language-label").textContent=current==="en"?"English":current==="he"?"עברית":"العربية";if(opened)render();});
   document.body.append(overlay,panel);
   window.openCustomerMenu=open;
   const trigger=$("menuBtn");if(trigger){trigger.setAttribute("aria-haspopup","dialog");trigger.setAttribute("aria-expanded","false");trigger.setAttribute("aria-label",label("فتح القائمة الجانبية","Open navigation menu"));}
