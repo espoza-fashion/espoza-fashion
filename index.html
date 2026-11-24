@@ -3956,7 +3956,7 @@ function renderHomeProductSections(){
  const fill=(id,items,tag)=>{const el=document.getElementById(id);if(el)el.innerHTML=items.map((p,i)=>card(p,i,tag)).join("")||'<p class="home-empty">سيتم عرض المنتجات هنا عند توفرها.</p>';};
  const offers=list.filter(p=>p.oldPrice&&p.oldPrice>p.price);
  const featured=list.filter(p=>p.offer);
- const newest=list.slice(0,6);
+ const newest=list.slice().sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0)).slice(0,6);
  fill("homeOffersGrid",offers,"عرض");
  fill("homeBestSellersGrid",(featured.length?featured:list).slice(0,10),"إسبوزا");
  const newGrid=document.getElementById("homeNewArrivalsGrid");
@@ -9095,6 +9095,8 @@ ${esc(size)} <small>${available?"متوفر":"نفد"}</small></button>`;
 }).join("");
 
 
+const qtySection=$("qtySection");
+if(qtySection)qtySection.classList.toggle("hidden",currentProduct.sizes.length>0);
 const sizeGuideBtn=$("sizeGuideBtn");
 const sizeChart=lang==="he"?(currentProduct.sizeChartHe||currentProduct.sizeChart):currentProduct.sizeChart;
 if(sizeGuideBtn){const valid=!!(sizeChart&&Array.isArray(sizeChart.headers)&&sizeChart.headers.length>1&&Array.isArray(sizeChart.rows)&&sizeChart.rows.length);sizeGuideBtn.style.display=valid?"inline-flex":"none";sizeGuideBtn.textContent=t().sizeGuide;}
@@ -9265,6 +9267,7 @@ return cart.reduce((sum,item)=>sum+(cartModelKey(item)===key?Math.max(0,Number(i
 
 function changeQty(delta){
 if(!currentProduct)return;
+if(currentProduct.sizes.length){currentQty=1;const fixed=$("qtyValue");if(fixed)fixed.textContent="1";return;}
 const key=cartModelKey({productId:currentProduct.id,dbId:currentProduct.dbId,name:currentProduct.name});
 const inCart=cartModelQuantity(key);
 const maxQty=Math.max(1,4-inCart);
@@ -9483,7 +9486,7 @@ currentProduct.colors[0]
 );
 
 
-const qty=1;
+const qty=currentProduct.sizes.length?1:Math.max(1,Number(currentQty)||1);
 const modelKey=cartModelKey({productId:currentProduct.id,dbId:currentProduct.dbId,name:currentProduct.name});
 const alreadyInCart=cartModelQuantity(modelKey);
 if(alreadyInCart+qty>4){
@@ -9503,10 +9506,8 @@ item.color===color
 
 
 if(existing){
-
-existing.qty+=
-qty;
-
+ if(currentProduct.sizes.length){alert("المتوفر من هذا المقاس قطعة واحدة فقط، وقد أُضيفت للسلة بالفعل.");return;}
+ existing.qty+=qty;
 }else{
 
 cart.push({
@@ -9692,6 +9693,7 @@ $("checkoutBtn")
 function changeCartQty(idx,delta){
 const item=cart[idx];
 if(!item)return;
+if(delta>0&&String(item.size||"").trim()){toast("المتوفر من هذا المقاس قطعة واحدة فقط.","err");return;}
 if(delta>0&&cartModelQuantity(cartModelKey(item))+delta>4){
 alert(t().cartLimit);
 return;
