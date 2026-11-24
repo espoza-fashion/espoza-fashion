@@ -3626,6 +3626,42 @@ body:has(#espozaNotificationSettings) #espozaTurnstile{z-index:2147483003!import
 @media(max-width:600px){#customerAccountModal .modal-box{padding:23px!important;border-radius:24px}#customerAccountModal h2{font-size:22px}}
 </style>
 
+<style id="espoza-home-luxury-sections">
+.home-editorial{max-width:1240px;margin:0 auto;padding:34px 18px 12px}
+.home-editorial-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:20px}
+.home-editorial-head .eyebrow{color:#b9985a;font-size:10px;letter-spacing:2px;font-weight:800}
+.home-editorial-head h2{margin:4px 0 0;color:#641f34;font-size:clamp(23px,3vw,32px);font-weight:800}
+.home-editorial-head p{margin:0;color:#85777c;font-size:12px}
+.home-offer-panel{background:linear-gradient(115deg,#35101f,#641f34 68%,#7a4050);border-radius:24px;padding:25px;color:#fff;overflow:hidden;position:relative}
+.home-offer-panel:after{content:"ESPOZA";position:absolute;left:12px;bottom:-38px;color:#ffffff0b;font:90px "Playfair Display",serif;letter-spacing:8px;pointer-events:none}
+.home-demo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.home-demo-card{min-width:0;background:#fffdfa;border:1px solid #eadfe1;border-radius:17px;overflow:hidden;box-shadow:0 8px 25px #4313210b;transition:transform .35s,box-shadow .35s}
+.home-demo-card:hover{transform:translateY(-5px);box-shadow:0 15px 30px #43132118}
+.home-demo-image{height:230px;position:relative;background:#eee3e1;overflow:hidden}
+.home-demo-image img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.home-demo-card:hover .home-demo-image img{transform:scale(1.06)}
+.home-demo-tag{position:absolute;top:11px;right:11px;background:#fffdf2;color:#641f34;border-radius:30px;padding:5px 10px;font-size:10px;font-weight:800}
+.home-demo-info{padding:12px 14px}
+.home-demo-info small{color:#b9985a;font-size:9px;letter-spacing:1px}
+.home-demo-info h3{margin:4px 0;color:#35101f;font-size:14px}
+.home-demo-info p{margin:0;color:#85777c;font-size:11px}
+.home-motion-panel{background:#f1e9e3;border-radius:25px;padding:26px;position:relative;overflow:hidden}
+.home-motion-panel:before,.home-motion-panel:after{content:"";position:absolute;border:1px solid #b9985a55;border-radius:50%;pointer-events:none;animation:espozaOrbit 28s linear infinite}
+.home-motion-panel:before{width:350px;height:350px;left:-150px;top:-210px}
+.home-motion-panel:after{width:220px;height:220px;left:-85px;top:-145px;animation-direction:reverse}
+.home-motion-title{font:italic clamp(22px,4vw,36px) "Playfair Display",serif;color:#b9985a;animation:espozaShimmer 3.5s ease-in-out infinite}
+.home-new-tiles{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:13px;position:relative;z-index:1}
+.home-new-tile{height:245px;border-radius:18px;overflow:hidden;position:relative;background:#641f34}
+.home-new-tile img{width:100%;height:100%;object-fit:cover;opacity:.83;transition:transform .8s}
+.home-new-tile:hover img{transform:scale(1.07)}
+.home-new-tile:after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#35101fe0)}
+.home-new-tile span{position:absolute;z-index:1;bottom:16px;right:17px;color:#fff;font-weight:800;font-size:16px}
+.home-all-link{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:19px 22px;border:1px solid #eadfe1;border-radius:17px;background:#fffdfa;color:#641f34;font-weight:800}
+.home-all-link span:last-child{color:#b9985a;font-size:23px}
+@keyframes espozaOrbit{to{transform:rotate(360deg)}}@keyframes espozaShimmer{0%,100%{opacity:.65;letter-spacing:1px}50%{opacity:1;letter-spacing:4px}}
+@media(max-width:760px){.home-demo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.home-demo-image{height:205px}.home-new-tiles{grid-template-columns:1fr 1fr}.home-new-tile:first-child{grid-column:1/-1;height:220px}.home-new-tile{height:165px}.home-editorial{padding:25px 13px 8px}.home-editorial-head{align-items:start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.home-motion-panel:before,.home-motion-panel:after,.home-motion-title{animation:none!important}}
+</style>
 </head>
 
 <body>
@@ -3890,6 +3926,34 @@ placeholder="">
 
 
 
+
+<section class="home-editorial" id="homeOffers">
+<div class="home-offer-panel">
+ <div class="home-editorial-head"><div><div class="eyebrow" style="color:#d9bd83">SPECIAL SELECTION</div><h2 style="color:#fff">عروض لفترة محدودة</h2><p style="color:#ead9d9;margin-top:6px">اكتشفي اختيارات مميزة من إسبوزا.</p></div></div>
+ <div class="home-demo-grid">
+ <article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">مساحة عرض</span></div><div class="home-demo-info"><small>ESPOZA SELECTION</small><h3>اختيارات أنيقة</h3><p>ستظهر العروض الفعلية هنا بعد اختيارها.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">مساحة عرض</span></div><div class="home-demo-info"><small>ESPOZA SELECTION</small><h3>إطلالات مميزة</h3><p>ستظهر العروض الفعلية هنا بعد اختيارها.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">مساحة عرض</span></div><div class="home-demo-info"><small>ESPOZA SELECTION</small><h3>تفاصيل راقية</h3><p>ستظهر العروض الفعلية هنا بعد اختيارها.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">مساحة عرض</span></div><div class="home-demo-info"><small>ESPOZA SELECTION</small><h3>لمسات الموسم</h3><p>ستظهر العروض الفعلية هنا بعد اختيارها.</p></div></article>
+ </div>
+</div>
+</section>
+<section class="home-editorial" id="homeBestSellers">
+ <div class="home-editorial-head"><div><div class="eyebrow">CUSTOMER FAVOURITES</div><h2>الأكثر طلباً</h2></div><p>10 إطلالات مختارة بعناية</p></div>
+ <div class="home-demo-grid">
+ <article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 01</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 02</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 03</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 04</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 05</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 06</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 07</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 08</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 09</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article><article class="home-demo-card"><div class="home-demo-image"><img loading="lazy" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=600&q=80" alt="صورة توضيحية للأزياء"><span class="home-demo-tag">اختيار 10</span></div><div class="home-demo-info"><small>ESPOZA · EDIT</small><h3>مساحة عرض الموديل</h3><p>سيُضاف الموديل الفعلي لاحقاً.</p></div></article>
+ </div>
+</section>
+<section class="home-editorial" id="homeNewArrivals">
+ <div class="home-motion-panel">
+  <div class="home-editorial-head"><div><div class="eyebrow">JUST LANDED</div><h2>وصل حديثاً</h2><p>تفاصيل جديدة، وإلهام يتجدد.</p></div><div class="home-motion-title">New Season ✦</div></div>
+  <div class="home-new-tiles">
+   <div class="home-new-tile"><img loading="lazy" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=850&q=80" alt="إطلالة أنيقة"><span>اكتشفي الجديد　↖</span></div>
+   <div class="home-new-tile"><img loading="lazy" src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=650&q=80" alt="تفاصيل الأزياء"><span>أناقة التفاصيل</span></div>
+   <div class="home-new-tile"><img loading="lazy" src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=650&q=80" alt="أزياء الموسم"><span>اختيارات الموسم</span></div>
+  </div>
+ </div>
+</section>
+<section class="home-editorial" id="homeAllProducts">
+ <a class="home-all-link" href="#shopCatalogue"><span>اكتشفي جميع منتجاتنا</span><span>←</span></a>
+</section>
 
 <!-- TRUST / FEATURES -->
 
