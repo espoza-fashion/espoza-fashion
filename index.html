@@ -10641,6 +10641,7 @@ const uiText=[
 ["productImageHint","imageViewerHint"],["productImageRights","imageViewerRights"],["cartCouponLabel","couponLabel"],["cartCouponApply","couponApply"],["cartSubtotalLabel","cartSubtotal"]
 ];
 uiText.forEach(([id,key])=>{const el=$(id);if(el)el.textContent=x[key]||"";});
+if($("customerAuthSwitch"))$("customerAuthSwitch").textContent=customerAuthMode==="signup"?(lang==="en"?"Already have an account? Sign in":lang==="he"?"כבר יש לך חשבון? התחברי":"لديك حساب؟ سجّلي الدخول"):(lang==="en"?"New here? Create an account":lang==="he"?"חדשה כאן? צרי חשבון":"ليس لديك حساب؟ أنشئي حساباً");
 document.querySelectorAll(".modal .close-btn, .modal [data-close-modal]").forEach(el=>el.setAttribute("aria-label",x.close));
 if($("customerPassword"))$("customerPassword").placeholder=x.passwordHint;
 if($("cartCouponCode"))$("cartCouponCode").placeholder=x.couponPlaceholder;
