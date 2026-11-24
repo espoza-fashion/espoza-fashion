@@ -3463,7 +3463,7 @@ footer{
  #espozaAssistantPanel{height:calc(100dvh - 92px)!important;min-height:260px}
 }
 </style>
-<link rel="stylesheet" href="./customer-sidebar.css?v=1">
+<link rel="stylesheet" href="./customer-sidebar.css?v=2">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <style id="espoza-customer-reviews">
 .customer-reviews-section{padding-top:8px!important;padding-bottom:42px!important}
@@ -3611,6 +3611,21 @@ body:has(#espozaNotificationSettings) #espozaTurnstile{z-index:2147483003!import
   }
 }
 </style>
+
+<style id="espoza-auth-luxe">
+#customerAccountModal .modal-box{max-height:calc(100dvh - 28px);overflow:auto;border:1px solid rgba(185,152,90,.28);border-radius:28px;background:linear-gradient(155deg,#fff 0%,#fbf8f3 100%);box-shadow:0 24px 70px rgba(35,12,20,.24);padding:30px!important}
+#customerAccountModal h2{color:#431321;font-size:25px;letter-spacing:-.3px}
+#customerAccountModal #customerAccountIntro{font-size:13px;line-height:1.9;color:#82777b}
+#customerAccountModal .field{margin:12px 0;padding:12px 14px;border:1px solid #e9e1df;border-radius:15px;background:#fff}
+#customerAccountModal .field label{display:block;color:#641f34;font-size:13px;font-weight:800;margin-bottom:7px}
+#customerAccountModal .field input{width:100%;border:0;outline:0;background:transparent;color:#24171c;font-size:15px}
+#customerAccountModal #customerAuthSubmit{min-height:52px;border-radius:16px;background:linear-gradient(120deg,#641f34,#431321);box-shadow:0 9px 20px rgba(67,19,33,.16);font-size:16px;font-weight:800}
+#customerAccountModal .auth-mode-switch{display:block;margin:13px auto 8px;border:0;background:transparent;color:#8c6c39;text-decoration:underline;text-underline-offset:4px;font-size:13px;font-weight:800}
+#customerAccountModal #customerResetPassword,#customerAccountModal #customerResendConfirmation{border-radius:13px;border-color:#eadfe1;color:#641f34;background:#fff;min-height:42px}
+#customerAccountModal .close-btn{width:38px;height:38px;border-radius:50%;background:#f6eff0;color:#641f34;border:1px solid #eadfe1}
+@media(max-width:600px){#customerAccountModal .modal-box{padding:23px!important;border-radius:24px}#customerAccountModal h2{font-size:22px}}
+</style>
+
 </head>
 
 <body>
@@ -4219,10 +4234,7 @@ onclick="addCurrentToCart()">
     <div id="customerAccountLoggedOut">
       <div class="field"><label id="customerEmailLabel" for="customerEmail">البريد الإلكتروني</label><input id="customerEmail" type="email" autocomplete="email" placeholder="name@example.com" required></div>
       <div class="field"><label id="customerPasswordLabel" for="customerPassword">كلمة السر</label><input id="customerPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8 أحرف على الأقل" required></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
-        <button id="customerLoginMode" class="order-btn" type="button" onclick="setCustomerAuthMode('login')">تسجيل الدخول</button>
-        <button id="customerSignupMode" class="btn ghost" type="button" onclick="setCustomerAuthMode('signup')">إنشاء حساب جديد</button>
-      </div>
+      <button id="customerAuthSwitch" class="auth-mode-switch" type="button" onclick="setCustomerAuthMode(customerAuthMode==='signup'?'login':'signup')">ليس لديك حساب؟ أنشئي حساباً</button>
       <button id="customerAuthSubmit" class="order-btn" type="button" style="width:100%" onclick="submitCustomerAuth()">تسجيل الدخول</button>
       <button id="customerResetPassword" class="btn ghost" type="button" style="width:100%;margin-top:8px" onclick="resetCustomerPassword()">نسيت كلمة السر؟</button>
       <button id="customerResendConfirmation" class="btn ghost" type="button" style="width:100%;margin-top:8px" onclick="resendCustomerConfirmation()">إعادة إرسال رسالة تأكيد البريد</button>
@@ -6831,8 +6843,10 @@ let customerAuthMode="login";
 function setCustomerAuthMode(mode){
  customerAuthMode=["signup","recovery"].includes(mode)?mode:"login";
  const login=$("customerLoginMode"),signup=$("customerSignupMode"),submit=$("customerAuthSubmit"),password=$("customerPassword");
- if(login)login.style.display=customerAuthMode==="recovery"?"none":"";
- if(signup)signup.style.display=customerAuthMode==="recovery"?"none":"";
+ if(login)login.style.display="none";
+ if(signup)signup.style.display="none";
+ const switcher=$("customerAuthSwitch");
+ if(switcher){switcher.classList.toggle("hidden",customerAuthMode==="recovery");switcher.textContent=customerAuthMode==="signup"?(lang==="en"?"Already have an account? Sign in":lang==="he"?"כבר יש לך חשבון? התחברי":"لديك حساب؟ سجّلي الدخول"):(lang==="en"?"New here? Create an account":lang==="he"?"חדשה כאן? צרי חשבון":"ليس لديك حساب؟ أنشئي حساباً");}
  if(submit)submit.textContent=customerAuthMode==="signup"?t().signupSubmit:customerAuthMode==="recovery"?t().recoverySubmit:t().login;
  const recovery=customerAuthMode==="recovery";
  $("customerEmail").closest(".field").classList.toggle("hidden",recovery);
@@ -11629,7 +11643,7 @@ applyAssistantLanguage();
 })();
 </script>
 <script src="./espoza-app.js" defer></script>
-<script src="./customer-sidebar.js?v=5" defer></script>
+<script src="./customer-sidebar.js?v=6" defer></script>
 
 <script id="espoza-turnstile-client">
 (function(){
