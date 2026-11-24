@@ -31,3 +31,57 @@
 body.esp-side-lock{overflow:hidden!important}
 @media(min-width:900px){#espozaSidePanel{width:370px}}
 @media(prefers-reduced-motion:reduce){#espozaSideOverlay,#espozaSidePanel{transition:none}}
+
+/* Luxury reference-matched customer drawer */
+#espozaSidePanel{background:#faf9f6;border:0;box-shadow:-18px 0 60px rgba(30,12,18,.22)}
+.esp-side-head{min-height:192px;padding:34px 22px 25px;background:#171414;color:#d9bd83;border-bottom:2px solid rgba(185,152,90,.7)}
+.esp-side-head:before{width:340px;height:340px;left:calc(50% - 170px);top:-255px;border-color:rgba(185,152,90,.08)}
+.esp-side-head:after{display:none}
+.esp-side-brand{font-size:42px;letter-spacing:8px;color:#d8bd84;text-shadow:none;font-weight:600}
+.esp-side-sub{font-size:13px;letter-spacing:4px;color:#b9985a;margin-top:16px}
+.esp-side-since{display:none}
+.esp-side-close{left:18px;top:54px;width:58px;height:58px;border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.07);font-size:30px}
+.esp-side-body{padding:22px 20px 20px;background:#faf9f6}
+.esp-side-account{min-height:112px;padding:18px 20px;border:1px solid #e7e2dc;border-radius:27px;background:#fff;gap:15px;box-shadow:0 7px 24px rgba(40,20,24,.045)}
+.esp-side-account-icon{width:62px;height:62px;border-radius:50%;background:#f7f2e7;color:#641f34;font-size:27px;box-shadow:inset 0 0 0 1px rgba(185,152,90,.28)}
+.esp-side-account-copy b{font-size:20px;color:#191416}
+.esp-side-account-copy small{font-size:13px;color:#8b8585}
+.esp-side-vip{padding:7px 13px;border-radius:22px;background:#f5f0e3;border:1px solid #e7dcc1;color:#9b7d47;font-size:12px;font-weight:800;white-space:nowrap}
+.esp-side-chevron{font-size:26px;color:#aaa}
+.esp-side-section-title{margin:30px 4px 16px;color:#777;font-size:17px;font-weight:800}
+.esp-side-section-title:after{background:#e8e3dd}
+.esp-side-link{min-height:86px;gap:14px;border:1px solid #e9e5df;background:#fff;border-radius:26px;padding:13px 17px;margin:9px 0;color:#191416;font-size:20px;font-weight:800;box-shadow:0 3px 8px rgba(30,20,20,.035)}
+.esp-side-link.is-active{min-height:126px;background:linear-gradient(120deg,#641f34,#431321);color:#fff;border-color:rgba(185,152,90,.26);box-shadow:0 12px 25px rgba(67,19,33,.18)}
+.esp-side-link-icon{width:56px;height:56px;border-radius:20px;background:#f8f2f4;color:#641f34;font-size:24px}
+.esp-side-link.is-active .esp-side-link-icon{background:rgba(255,255,255,.07);color:#d9bd83;border:1px solid rgba(217,189,131,.25)}
+.esp-side-count{margin-inline-start:auto;color:#aaa;font-size:14px;font-weight:500;min-width:25px;text-align:center}
+.esp-side-link.is-active .esp-side-count{color:#e5d5d9}
+.esp-side-arrow{font-size:27px;color:#aaa;line-height:1}
+.esp-side-link.is-active .esp-side-arrow{color:#d7bb82}
+.esp-side-hot{margin-inline-start:0;background:#c95769;font-size:12px;padding:7px 13px}
+.esp-side-link[data-category="offers"]{background:#fff;border-color:#e9e5df}
+.esp-side-link[data-category="offers"] .esp-side-link-icon{color:#c95769;background:#fbf1f3}
+.esp-side-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 20px calc(17px + env(safe-area-inset-bottom));border-top:1px solid #e9e5df;background:#fff;color:#20191b;letter-spacing:0}
+.esp-side-language,.esp-side-currency{min-height:52px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 17px;border:1px solid #e7e2dc;border-radius:20px;background:#faf9f6;color:#211a1d;font:700 15px "Cairo",Arial,sans-serif}
+.esp-side-language{min-width:142px}
+.esp-side-globe{font-size:21px;color:#641f34}
+.esp-side-currency{min-width:150px;color:#641f34}
+.esp-side-currency-label{color:#211a1d}
+@media(max-width:767px){
+ #espozaSidePanel{top:8px;bottom:0;right:0;width:100vw;max-width:none;border-radius:34px 34px 0 0;transform:translateY(105%);border:0}
+ #espozaSidePanel.is-open{transform:translateY(0)}
+ .esp-side-head{min-height:192px;border-radius:34px 34px 0 0}
+ .esp-side-close{top:54px;left:18px}
+ .esp-side-body{padding:22px 20px 24px}
+ .esp-side-footer{padding-left:20px;padding-right:20px}
+}
+@media(max-width:390px){
+ .esp-side-account{gap:9px;padding:14px}
+ .esp-side-account-copy b{font-size:17px}
+ .esp-side-account-copy small{font-size:11px}
+ .esp-side-vip{font-size:10px;padding:6px 9px}
+ .esp-side-link{font-size:18px;min-height:78px}
+ .esp-side-link.is-active{min-height:112px}
+ .esp-side-footer{gap:8px;padding-left:12px;padding-right:12px}
+ .esp-side-language,.esp-side-currency{min-width:0;flex:1;padding:0 10px;font-size:13px}
+}
