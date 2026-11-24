@@ -3637,9 +3637,9 @@ body:has(#espozaNotificationSettings) #espozaTurnstile{z-index:2147483003!import
 .home-demo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .home-demo-card{min-width:0;background:#fffdfa;border:1px solid #eadfe1;border-radius:17px;overflow:hidden;box-shadow:0 8px 25px #4313210b;transition:transform .35s,box-shadow .35s}
 .home-demo-card:hover{transform:translateY(-5px);box-shadow:0 15px 30px #43132118}
-.home-demo-image{height:230px;position:relative;background:#eee3e1;overflow:hidden}
-.home-demo-image img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
-.home-demo-card:hover .home-demo-image img{transform:scale(1.06)}
+.home-demo-image{height:230px;position:relative;background:#f7f1ed;overflow:hidden;display:grid;place-items:center}
+.home-demo-image img{width:100%;height:100%;padding:9px;object-fit:contain;object-position:center;transition:transform .7s}
+.home-demo-card:hover .home-demo-image img{transform:scale(1.025)}
 .home-demo-tag{position:absolute;top:11px;right:11px;background:#fffdf2;color:#641f34;border-radius:30px;padding:5px 10px;font-size:10px;font-weight:800}
 .home-demo-info{padding:12px 14px}
 .home-demo-info small{color:#b9985a;font-size:9px;letter-spacing:1px}
@@ -3652,7 +3652,7 @@ body:has(#espozaNotificationSettings) #espozaTurnstile{z-index:2147483003!import
 .home-motion-title{font:italic clamp(22px,4vw,36px) "Playfair Display",serif;color:#b9985a;animation:espozaShimmer 3.5s ease-in-out infinite}
 .home-new-tiles{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:13px;position:relative;z-index:1}
 .home-new-tile{height:245px;border-radius:18px;overflow:hidden;position:relative;background:#641f34}
-.home-new-tile img{width:100%;height:100%;object-fit:cover;opacity:.83;transition:transform .8s}
+.home-new-tile img{width:100%;height:100%;padding:10px;object-fit:contain;opacity:1;background:#f7f1ed;transition:transform .8s}
 .home-new-tile:hover img{transform:scale(1.07)}
 .home-new-tile:after{content:"";position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#35101fe0)}
 .home-new-tile span{position:absolute;z-index:1;bottom:16px;right:17px;color:#fff;font-weight:800;font-size:16px}
@@ -3943,7 +3943,7 @@ placeholder="">
 </section>
 <section class="home-editorial" id="homeAllProducts">
  <div class="home-editorial-head"><div><div class="eyebrow">THE COLLECTION</div><h2>جميع المنتجات</h2></div><a class="home-all-link" href="#shopCatalogue"><span>تصفّحي الكتالوج كاملاً</span><span>←</span></a></div>
- <div id="homeAllProductsGrid" class="home-all-products-list"></div>
+ <a class="home-catalog-entry" href="#shopCatalogue" onclick="setTimeout(()=>document.getElementById('shopCatalogue')?.scrollIntoView({behavior:'smooth'}),40)"><span class="catalog-entry-icon" aria-hidden="true">✦</span><span class="catalog-entry-copy"><strong>اكتشفي التشكيلة كاملة</strong><small>كل موديلات إسبوزا في مكان واحد</small></span><span class="catalog-entry-arrow" aria-hidden="true">←</span></a>
 </section>
 <script id="espoza-home-real-products">
 function renderHomeProductSections(){
@@ -3961,21 +3961,42 @@ function renderHomeProductSections(){
  fill("homeBestSellersGrid",(featured.length?featured:list).slice(0,10),"إسبوزا");
  const newGrid=document.getElementById("homeNewArrivalsGrid");
  if(newGrid)newGrid.innerHTML=newest.map((p,i)=>`<div class="home-new-tile" role="button" tabindex="0" onclick="openProduct(${esc(JSON.stringify(p.id))})" onkeydown="if(event.key==='Enter'){openProduct(${esc(JSON.stringify(p.id))})}"><img loading="lazy" decoding="async" src="${esc(p.images[0].url)}" alt="${esc(productDisplayName(p))}" onerror="this.closest('.home-new-tile')?.remove()"><span>${esc(productDisplayName(p))} · ${money(p.price)} ₪</span></div>`).join("");
- const all=document.getElementById("homeAllProductsGrid");
- if(all)all.innerHTML=list.map((p,i)=>card(p,i)).join("");
+ /* الكتالوج الكامل يظهر داخل قسم التسوق المخصص فقط. */
 }
 </script>
 
 
 <style id="espoza-home-real-products-css">
-.home-all-products-list{display:flex;flex-direction:column;gap:14px}
-.home-all-products-list .home-demo-card{display:grid;grid-template-columns:minmax(110px,220px) 1fr;align-items:center;max-width:100%;gap:14px}
-.home-all-products-list .home-demo-image{aspect-ratio:4/5}
-.home-all-products-list .home-demo-info{padding:12px}
 .home-demo-card .home-demo-info p{display:flex;gap:10px;align-items:center}
 .home-demo-card .home-demo-info del{opacity:.65;font-size:.9em}
 .home-empty{padding:18px;text-align:center;color:var(--muted,#777)}
+.home-catalog-entry{display:flex;align-items:center;gap:17px;min-height:112px;padding:22px 24px;border:1px solid #eadfe1;border-radius:22px;background:linear-gradient(110deg,#fffdfa,#f3e9e8);box-shadow:0 12px 30px #4313210b;overflow:hidden;transition:transform .35s,box-shadow .35s}
+.home-catalog-entry:hover{transform:translateY(-4px);box-shadow:0 18px 38px #43132117}
+.catalog-entry-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:18px;background:#641f34;color:#e5cca0;font-size:28px;animation:catalogIconFloat 3.2s ease-in-out infinite}
+.catalog-entry-copy{display:grid;gap:4px;color:#431321}.catalog-entry-copy strong{font-size:17px}.catalog-entry-copy small{font-size:12px;color:#85777c}
+.catalog-entry-arrow{margin-inline-start:auto;color:#b9985a;font-size:27px;transition:transform .3s}.home-catalog-entry:hover .catalog-entry-arrow{transform:translateX(-5px)}
+.menu-brand-lockup{display:flex;align-items:center;gap:12px;padding:18px 16px;margin:4px 0 20px;border-radius:18px;background:linear-gradient(120deg,#fbf7f1,#f2e8e7);border:1px solid #eadfe1;color:#641f34}
+.menu-brand-mark{display:grid;place-items:center;width:48px;height:48px;border:1px solid #b9985a;border-radius:50%;font:italic 35px Georgia,serif;color:#641f34}
+.menu-brand-lockup strong{display:block;font:800 20px "Playfair Display",serif;letter-spacing:2px;color:#641f34}
+.menu-brand-lockup small{display:block;margin-top:3px;font-size:9px;letter-spacing:4px;color:#b9985a}
+#customerMenuModal .modal-box{border:1px solid #eadfe1;border-radius:24px;background:#fffdfa;box-shadow:0 24px 70px #35101f30}
+#customerMenuModal #customerMenuTitle{color:#641f34;font-weight:800}
+@keyframes catalogIconFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(5deg)}}
+@keyframes sectionGlow{0%,100%{box-shadow:0 0 0 0 #b9985a00}50%{box-shadow:0 0 0 5px #b9985a12}}
+.home-editorial{animation:sectionGlow 8s ease-in-out infinite}
+.home-editorial:nth-of-type(2n){animation-delay:1.2s}
+.home-demo-card .home-demo-image:after{content:"";position:absolute;inset:8px;border:1px solid #b9985a35;border-radius:12px;pointer-events:none}
+@media(max-width:600px){.home-catalog-entry{padding:17px;min-height:96px}.catalog-entry-icon{width:48px;height:48px}.catalog-entry-copy strong{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.catalog-entry-icon,.home-editorial{animation:none!important}}
 .home-new-tile{cursor:pointer}
+.size-sold-out{opacity:.45;text-decoration:line-through;cursor:not-allowed!important;background:#f4eeee!important;color:#8a7e82!important}
+#detailSizes .chip small{display:block;font-size:9px;line-height:1.3;margin-top:2px;color:#9b858c}
+#detailSizes .chip.active small{color:#f4e7cf}
+#detailSizes .chip:disabled{opacity:.55;cursor:not-allowed;border-style:dashed}
+#homeOffers .home-editorial-head:after{content:"✦";color:#b9985a;font-size:23px;animation:catalogIconFloat 4s ease-in-out infinite}
+#homeBestSellers .home-editorial-head:after{content:"♡";color:#b9985a;font-size:25px;animation:catalogIconFloat 4s ease-in-out infinite}
+#homeNewArrivals .home-editorial-head:after{content:"✧";color:#b9985a;font-size:25px;animation:catalogIconFloat 4s ease-in-out infinite}
+#homeAllProducts .home-editorial-head:after{content:"⌕";color:#b9985a;font-size:25px;animation:catalogIconFloat 4s ease-in-out infinite}
 @media(max-width:600px){.home-all-products-list .home-demo-card{grid-template-columns:112px 1fr}.home-all-products-list .home-demo-info{padding:8px}.home-all-products-list .home-demo-info h3{font-size:14px}}
 </style>
 <!-- TRUST / FEATURES -->
@@ -4305,7 +4326,7 @@ onclick="addCurrentToCart()">
 <div class="modal" id="customerMenuModal">
   <div class="modal-box" style="width:min(390px,100%);padding:24px">
     <button class="close-btn" type="button" onclick="closeModal('customerMenuModal')" aria-label="إغلاق">×</button>
-    <h2 id="customerMenuTitle" style="margin:8px 0 18px">القائمة</h2>
+    <div class="menu-brand-lockup"><span class="menu-brand-mark">E</span><div><strong>ESPOZA</strong><small>FASHION</small></div></div><h2 id="customerMenuTitle" style="margin:8px 0 18px">القائمة</h2>
     <button class="order-btn" type="button" style="width:100%;margin:8px 0" onclick="openCustomerAccount()" id="customerMenuAccount">حسابي · دخول أو إنشاء حساب</button>
     <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');scrollToWishlist()" id="customerMenuFavorites">المفضلة</button>
     <button class="chip clickable" type="button" style="width:100%;margin:6px 0" onclick="closeModal('customerMenuModal');openCartModal()" id="customerMenuCart">السلة</button>
@@ -7174,14 +7195,16 @@ function productColorDisplayName(value){
  return raw;
 }
 function dynamicProductToView(p,index){
-const sizes=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map(x=>String(x.size));
+const sizeRows=(p.product_sizes||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0));
+const sizes=sizeRows.map(x=>String(x.size));
+const sizeStockBySize=Object.fromEntries(sizeRows.map(x=>[String(x.size),Math.max(0,Number(x.stock??1))]));
 const colorRows=(p.product_colors||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0));
 /* Keep the Arabic/database color as the stable internal value.
    The visible label is translated only when rendering the color chips. */
 const colors=colorRows.map(x=>String(x.name||x.name_en||"")).filter(Boolean);
 const images=(p.product_images||[]).slice().sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)).map((x,i)=>({id:p.id+"-img-"+i,url:normalizeImage(x.image_url),color:colors[i]||""}));
 const oldStatic=STATIC_PRODUCTS.find(x=>x.name===p.name);
-return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",name_he:p.name_he||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",description_he:p.description_he||"",category:p.category||"dresses",categorySlugs:Array.isArray(p.category_slugs)?p.category_slugs:[],price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],colorsData:colorRows.map(x=>({name:String(x.name||""),name_en:String(x.name_en||""),name_he:String(x.name_he||"")})),sizeChart:p.size_chart||null,sizeChartHe:p.size_chart_he||null};
+return{id:oldStatic?oldStatic.id:"db-"+p.id,dbId:p.id,source:"supabase",name:p.name,name_en:p.name_en||"",name_he:p.name_he||"",sku:p.sku||"ESP-"+String(index+1).padStart(3,"0"),description:p.description||"",description_en:p.description_en||"",description_he:p.description_he||"",category:p.category||"dresses",categorySlugs:Array.isArray(p.category_slugs)?p.category_slugs:[],price:Number(p.price||0),oldPrice:p.old_price==null?null:Number(p.old_price),offer:!!p.featured,available:p.active!==false&&(p.stock==null||Number(p.stock)>0),active:p.active!==false,images:images.length?images:[{id:p.id+"-placeholder",url:PLACEHOLDER,color:""}],sizes,colors:[...new Set(colors)],colorsData:colorRows.map(x=>({name:String(x.name||""),name_en:String(x.name_en||""),name_he:String(x.name_he||"")})),sizeChart:p.size_chart||null,sizeChartHe:p.size_chart_he||null,sizeStockBySize,createdAt:p.created_at||null};
 }
 async function loadSupabaseProducts(){
 const db=getCustomerSupabase();
@@ -8907,12 +8930,7 @@ currentProduct.colors[0]
 "";
 
 
-currentSize=
-currentProduct.sizes[0]
-
-||
-
-"";
+currentSize=(currentProduct.sizes.find(size=>getProductSizeStock(currentProduct,size)>0))||"";
 
 
 currentQty=
@@ -9069,25 +9087,12 @@ $("sizeSection")
 
 $("detailSizes")
 .innerHTML=
-currentProduct.sizes
-.map(
-size=>
-`
-<button
-class="chip clickable ${
-size===currentSize
-?
-"active"
-:
-""
-}"
-type="button"
-onclick="selectSize(${esc(JSON.stringify(size))})">
-${esc(size)}
-</button>
-`
-)
-.join("");
+currentProduct.sizes.map(size=>{
+ const available=getProductSizeStock(currentProduct,size)>0;
+ return `
+<button class="chip clickable ${size===currentSize?"active":""} ${available?"":"size-sold-out"}" type="button" ${available?"":"disabled"} onclick="selectSize(${esc(JSON.stringify(size))})">
+${esc(size)} <small>${available?"متوفر":"نفد"}</small></button>`;
+}).join("");
 
 
 const sizeGuideBtn=$("sizeGuideBtn");
@@ -9237,13 +9242,14 @@ refreshProductModal();
 }
 
 
+function getProductSizeStock(product,size){
+ if(!product||!Array.isArray(product.sizes)||!product.sizes.length)return Infinity;
+ const stock=product.sizeStockBySize?.[String(size)];
+ return stock===undefined?1:Math.max(0,Number(stock)||0);
+}
 function selectSize(size){
-
-currentSize=
-size;
-
-refreshProductModal();
-
+ if(getProductSizeStock(currentProduct,size)<=0){toast("هذا المقاس نفد حالياً","err");return;}
+ currentSize=size;currentQty=1;refreshProductModal();
 }
 
 
@@ -9445,12 +9451,8 @@ sum+Number(item.price||0)*Number(item.qty||0),
 
 function addCurrentToCart(){
 
-if(
-!currentProduct
-||
-!currentProduct.available
-)
-return;
+if(!currentProduct||!currentProduct.available)return;
+if(currentProduct.sizes.length&&(!currentSize||getProductSizeStock(currentProduct,currentSize)<=0)){alert("اختاري مقاساً متوفراً قبل الإضافة إلى السلة.");return;}
 
 
 const size=
@@ -9481,7 +9483,7 @@ currentProduct.colors[0]
 );
 
 
-const qty=Math.max(1,Number(currentQty)||1);
+const qty=1;
 const modelKey=cartModelKey({productId:currentProduct.id,dbId:currentProduct.dbId,name:currentProduct.name});
 const alreadyInCart=cartModelQuantity(modelKey);
 if(alreadyInCart+qty>4){
@@ -10055,8 +10057,9 @@ else throw new Error(t().orderSizeUnavailable);
 return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,name_en:dbProduct.name_en||item.name_en||"",name_he:dbProduct.name_he||item.name_he||"",price:Number(dbProduct.price),size:orderSize,color:orderColor,color_en:matchedColor?.name_en||item.color_en||"",color_he:matchedColor?.name_he||item.color_he||"",qty:Number(item.qty||1),image:item.image||""};
 });
 const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name_ar||delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
-const saved=await customerDb.from("orders").insert(orderPayload);
+const saved=await customerDb.rpc("espoza_create_order_with_inventory",{p_order:orderPayload});
 if(saved.error)throw saved.error;
+await refreshSupabaseProducts();
 if(profileForOrder)customerHasPreviousOrders=true;
 }catch(error){
 console.warn("Order database save failed:",error);
