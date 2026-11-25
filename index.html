@@ -3760,6 +3760,9 @@ id="hero">
 class="slides-track"
 id="slidesTrack">
 </div>
+<button class="hero-arrow hero-arrow-prev" type="button" aria-label="الشريحة السابقة" onclick="moveSlide(-1)">‹</button>
+<button class="hero-arrow hero-arrow-next" type="button" aria-label="الشريحة التالية" onclick="moveSlide(1)">›</button>
+<div class="hero-pagination" id="heroPagination" aria-label="التنقل بين الصور"></div>
 
 </div>
 
@@ -7547,11 +7550,12 @@ function renderCustomerCategories(categories=getShopCategories()){
   if(gallery.dataset.content!==content){
     gallery.dataset.content=content;
     gallery.dataset.count=String(entries.length);
-    const cards=entries.map(({slug,label,image})=>{
+    const cards=entries.map(({slug,label,image},index)=>{
       const card=document.createElement("button");
       card.className="shop-category-card";
       card.type="button";
       card.dataset.cat=slug;
+      card.style.setProperty("--category-index",String(index));
       card.setAttribute("aria-controls","productsGrid");
       const frame=document.createElement("span");
       frame.className="shop-category-photo";
@@ -7790,8 +7794,8 @@ s.image_url
 <img
 class="hero-product-image"
 src="${esc(s.image_url)}"
-loading="${i===0?"eager":"lazy"}"
-fetchpriority="${i===0?"high":"low"}"
+loading="eager"
+fetchpriority="${i===0?"high":"auto"}"
 decoding="async"
 alt="${esc(localizeDynamicText(s.title||"Espoza Fashion"))}"
 onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
@@ -7840,30 +7844,37 @@ t().explore
 .join("");
 
 
+list.forEach((slide,index)=>{
+  if(!slide.image_url)return;
+  const image=new Image();
+  image.decoding="async";
+  image.fetchPriority=index===0?"high":"auto";
+  image.src=slide.image_url;
+});
 updateSliderTransform();
+bindHeroSwipe();
 
 }
 
 
 function updateSliderTransform(){
-  $("slidesTrack").style.transform=`translateX(-${sliderIndex*100}%)`;
+  const track=$("slidesTrack");
+  if(track)track.style.transform=`translateX(-${sliderIndex*100}%)`;
+  renderHeroPagination();
   typeHeroHeadline();
 }
-
-let heroTypingTimer=null;
-function typeHeroHeadline(){
-  if(heroTypingTimer)clearInterval(heroTypingTimer);
-  const slide=document.querySelectorAll("#slidesTrack .hero-slide")[sliderIndex];
-  const heading=slide?.querySelector(".hero-typewriter");
-  if(!heading)return;
-  const text=heading.dataset.typeText||"";
-  heading.textContent="";
-  let position=0;
-  heroTypingTimer=setInterval(()=>{
-    heading.textContent=text.slice(0,position+1);
-    position++;
-    if(position>=text.length)clearInterval(heroTypingTimer);
-  },62);
+function renderHeroPagination(){
+  const host=$("heroPagination");
+  if(!host)return;
+  const total=activeSlides().length;
+  host.innerHTML=Array.from({length:total},(_,index)=>`<button type="button" class="hero-dot ${index===sliderIndex?"active":""}" aria-label="الشريحة ${index+1}" aria-current="${index===sliderIndex?"true":"false"}" onclick="sliderIndex=${index};updateSliderTransform();restartSlider()"></button>`).join("");
+}
+let heroSwipeBound=false;
+function bindHeroSwipe(){
+  const hero=$("hero");if(!hero||heroSwipeBound)return;heroSwipeBound=true;
+  let startX=0,startY=0;
+  hero.addEventListener("touchstart",event=>{const touch=event.touches[0];startX=touch.clientX;startY=touch.clientY;},{passive:true});
+  hero.addEventListener("touchend",event=>{const touch=event.changedTouches[0];const dx=touch.clientX-startX;const dy=touch.clientY-startY;if(Math.abs(dx)>48&&Math.abs(dx)>Math.abs(dy)*1.25)moveSlide(dx<0?1:-1);},{passive:true});
 }
 
 function moveSlide(delta){
@@ -8714,9 +8725,9 @@ p.images[0]?.url
 PLACEHOLDER
 )}"
 alt="${esc(productDisplayName(p))}"
-loading="lazy"
+loading="${i<8?"eager":"lazy"}"
 decoding="async"
-fetchpriority="low"
+fetchpriority="${i<4?"high":"auto"}"
 onerror="this.src='${PLACEHOLDER}'">
 
 ${
@@ -11975,5 +11986,55 @@ applyAssistantLanguage();
 }
 @media(prefers-reduced-motion:reduce){.hero-copy button{transition:none!important}}
 </style>
+
+<style id="espoza-premium-motion-performance">
+.hero-wrap{width:100%;max-width:none;margin:0;padding:0 0 22px}.hero{width:100%;max-width:none;border:0;border-radius:0;overflow:hidden;box-shadow:0 18px 48px rgba(48,12,25,.12);background:#eee7e2}
+.slides-track{display:flex;direction:ltr;transition:transform .72s cubic-bezier(.22,.72,.18,1);will-change:transform}
+.hero-slide{flex:0 0 100%;width:100%;height:clamp(500px,55vw,760px)!important;min-height:0!important;aspect-ratio:16/8.2;background:linear-gradient(135deg,#f3e9e5,#e6d6d1)!important}
+.hero-slide img.hero-product-image{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;padding:0!important}
+.hero-image-backdrop{display:none!important}
+.hero-slide:after{background:linear-gradient(90deg,rgba(39,10,22,.28),rgba(39,10,22,.02) 58%,rgba(39,10,22,.10))!important}
+.hero-overlay{align-items:flex-end!important;justify-content:flex-start!important;padding:clamp(22px,6vw,86px)!important;background:linear-gradient(0deg,rgba(35,9,20,.42),transparent 68%)!important}
+.hero-copy{max-width:min(600px,78%)!important;padding:0!important;border:0!important;background:none!important;backdrop-filter:none!important;text-align:right!important}
+.hero-copy h1{font-family:"Amiri","Cairo",serif!important;font-size:clamp(42px,6vw,78px)!important;line-height:1.25!important;color:#fffaf2!important;text-shadow:0 5px 26px rgba(20,5,12,.6)!important;margin:0 0 8px!important}
+.hero-copy p{font-size:clamp(13px,1.35vw,17px)!important;line-height:1.9!important;margin:0 0 18px!important}
+.hero-copy button{border:1px solid #d8bb84!important;border-radius:4px!important;background:linear-gradient(135deg,#fffaf2,#e9d8b8)!important;color:#431321!important;padding:12px 28px!important;box-shadow:0 9px 24px #1b07152e!important}
+.hero-arrow{position:absolute;z-index:8;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:1px solid #fff8;background:rgba(55,15,31,.52);color:#fff;font-size:30px;line-height:1;display:grid;place-items:center;backdrop-filter:blur(8px);transition:background .25s,transform .25s}
+.hero-arrow:hover{background:#641f34;transform:translateY(-50%) scale(1.07)}.hero-arrow-prev{left:22px}.hero-arrow-next{right:22px}
+.hero-pagination{position:absolute;z-index:9;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;align-items:center}
+.hero-dot{width:7px;height:7px;border:0;border-radius:20px;padding:0;background:#fff9;transition:width .3s,background .3s}.hero-dot.active{width:27px;background:#e5c98f}
+.hero-typewriter:after{display:none!important}.hero-copy h1{animation:heroHeadlineEnter .65s cubic-bezier(.2,.8,.2,1) both}
+@keyframes heroHeadlineEnter{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.shop-category-grid{gap:clamp(12px,2vw,22px)!important;align-items:stretch}
+.shop-category-card{position:relative;isolation:isolate;border:1px solid rgba(185,152,90,.7)!important;border-radius:18px!important;background:#431321!important;box-shadow:0 10px 28px rgba(67,19,33,.11)!important;min-height:100%;transition:transform .45s cubic-bezier(.2,.75,.25,1),box-shadow .45s,border-color .45s!important;animation:categoryCardEnter .7s both;animation-delay:calc(var(--category-index,0)*85ms)}
+.shop-category-card:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.22) 48%,transparent 70%);transform:translateX(130%);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.shop-category-card:hover:before,.shop-category-card:focus-visible:before{transform:translateX(-130%)}
+.shop-category-photo{position:relative;aspect-ratio:4/4.7!important;background:linear-gradient(145deg,#f6eee8,#e4d4cf)!important;overflow:hidden}
+.shop-category-photo img{width:100%;height:100%;object-fit:contain!important;transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .8s!important;will-change:transform}
+.shop-category-card:hover .shop-category-photo img,.shop-category-card:focus-visible .shop-category-photo img{transform:scale(1.055);filter:saturate(1.07)}
+.shop-category-card-title{position:relative;z-index:3;min-height:62px!important;border-top:1px solid #c8a56d!important;background:linear-gradient(110deg,#641f34,#431321 65%,#552039)!important;font-family:"Cairo",sans-serif!important;font-size:clamp(14px,1.5vw,18px)!important;font-weight:800!important}
+.shop-category-card-title:after{content:"←";display:inline-block;margin-inline-start:8px;color:#e5c98f;transition:transform .3s}.shop-category-card:hover .shop-category-card-title:after{transform:translateX(-5px)}
+@keyframes categoryCardEnter{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.home-category-lane{transition:transform .4s,box-shadow .4s}.home-category-lane:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(67,19,33,.09)}
+.home-demo-card,.home-new-tile{transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s}.home-demo-card:hover,.home-new-tile:hover{transform:translateY(-6px);box-shadow:0 16px 34px rgba(67,19,33,.13)}
+@media(min-width:1500px){.hero-slide{height:min(58vw,820px)!important}}
+@media(max-width:760px){
+ .hero-wrap{padding:0 0 16px}.hero{border-radius:0}
+ .hero-slide{height:clamp(500px,76svh,680px)!important;min-height:500px!important;aspect-ratio:auto}
+ .hero-slide img.hero-product-image{object-fit:contain!important;object-position:center center!important}
+ .hero-overlay{padding:20px 18px 56px!important}.hero-copy{max-width:94%!important}
+ .hero-copy h1{font-size:clamp(36px,10vw,52px)!important;line-height:1.28!important}
+ .hero-copy p{font-size:12px!important;max-width:34ch}.hero-copy button{padding:10px 22px!important;font-size:12px!important}
+ .hero-arrow{width:36px;height:36px;font-size:24px}.hero-arrow-prev{left:10px}.hero-arrow-next{right:10px}.hero-pagination{bottom:13px}
+ .shop-category-grid{gap:11px!important}.shop-category-card{border-radius:14px!important}
+ .shop-category-photo{aspect-ratio:4/4.8!important}.shop-category-card-title{min-height:54px!important;padding:9px 5px!important;font-size:13px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .slides-track{transition:none}.hero-copy h1,.shop-category-card{animation:none!important}
+ .shop-category-card,.shop-category-photo img,.home-demo-card,.home-new-tile{transition:none!important}
+ .shop-category-card:before{display:none}
+}
+</style>
+
 </body>
 </html>
