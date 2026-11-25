@@ -85,3 +85,165 @@ body.esp-side-lock{overflow:hidden!important}
  .esp-side-footer{gap:8px;padding-left:12px;padding-right:12px}
  .esp-side-language,.esp-side-currency{min-width:0;flex:1;padding:0 10px;font-size:13px}
 }
+
+
+/* =========================================================
+   Responsive drawer + storefront layout refinement
+   Mobile navigation remains attached to the screen edge.
+   ========================================================= */
+@media(max-width:767px){
+  #espozaSidePanel{
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:auto!important;
+    width:min(370px,88vw)!important;
+    max-width:calc(100vw - 42px)!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    min-height:0!important;
+    border-radius:28px 0 0 28px!important;
+    transform:translateX(105%)!important;
+    box-shadow:-16px 0 48px rgba(30,12,18,.22)!important;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  #espozaSidePanel.is-open{transform:translateX(0)!important}
+  .esp-side-head{
+    min-height:154px!important;
+    padding:26px 18px 18px!important;
+    border-radius:28px 0 0 0!important;
+  }
+  .esp-side-brand{font-size:clamp(27px,8vw,36px)!important;letter-spacing:5px!important}
+  .esp-side-sub{font-size:10px!important;letter-spacing:3px!important;margin-top:9px!important}
+  .esp-side-close{top:18px!important;left:14px!important;width:42px!important;height:42px!important;font-size:24px!important}
+  .esp-side-body{padding:16px 14px 20px!important;min-height:0!important}
+  .esp-side-account{min-height:76px!important;padding:11px 12px!important;border-radius:18px!important}
+  .esp-side-account-icon{width:43px!important;height:43px!important;font-size:21px!important}
+  .esp-side-account-copy b{font-size:15px!important}
+  .esp-side-account-copy small{font-size:10px!important}
+  .esp-side-vip{font-size:10px!important;padding:5px 8px!important}
+  .esp-side-section-title{font-size:12px!important;margin:20px 4px 10px!important}
+  .esp-side-link,.esp-side-link.is-active{
+    min-height:54px!important;
+    padding:9px 11px!important;
+    margin:6px 0!important;
+    border-radius:15px!important;
+    gap:10px!important;
+    font-size:14px!important;
+  }
+  .esp-side-link-icon{width:35px!important;height:35px!important;border-radius:12px!important;font-size:17px!important}
+  .esp-side-count{font-size:11px!important}
+  .esp-side-arrow{font-size:20px!important}
+  .esp-side-hot{font-size:9px!important;padding:4px 8px!important}
+  .esp-side-footer{
+    flex:0 0 auto!important;
+    padding:10px 13px calc(12px + env(safe-area-inset-bottom))!important;
+    gap:8px!important;
+  }
+  .esp-side-language,.esp-side-currency{
+    min-width:0!important;
+    min-height:44px!important;
+    flex:1 1 0!important;
+    padding:0 9px!important;
+    border-radius:14px!important;
+    font-size:12px!important;
+  }
+}
+/* The assistant stays in its own corner; it never floats above an open drawer. */
+body.esp-side-lock #espozaAssistantWidget{
+  z-index:1400!important;
+}
+body.esp-side-lock #espozaAssistantPanel{
+  z-index:1401!important;
+}
+#espozaAssistantWidget{
+  max-width:calc(100vw - 20px);
+}
+#espozaAssistantLauncher{
+  max-width:calc(100vw - 20px);
+  white-space:nowrap;
+}
+@media(max-width:767px){
+  #espozaAssistantWidget{
+    left:max(10px,env(safe-area-inset-left))!important;
+    right:auto!important;
+    bottom:max(12px,env(safe-area-inset-bottom))!important;
+  }
+  #espozaAssistantLauncher{
+    min-height:46px;
+    padding:8px 12px!important;
+    font-size:11px!important;
+    gap:7px!important;
+  }
+  .elyra-launcher-mark{width:24px!important;height:24px!important;flex:0 0 24px}
+  #espozaAssistantPanel{
+    left:0!important;
+    right:auto!important;
+    width:min(430px,calc(100vw - 20px))!important;
+    max-width:calc(100vw - 20px)!important;
+    height:min(620px,calc(100dvh - 100px))!important;
+    max-height:calc(100dvh - 100px)!important;
+    min-height:280px!important;
+  }
+}
+@media(max-width:360px){
+  #espozaAssistantLauncher{padding:7px 9px!important;font-size:10px!important}
+  #espozaAssistantPanel{width:calc(100vw - 16px)!important}
+  #espozaSidePanel{width:90vw!important}
+}
+/* Global responsive safeguards for narrow phones, tablets and desktop. */
+html,body{width:100%;min-width:0;overflow-x:clip}
+body{min-height:100%;-webkit-text-size-adjust:100%}
+main,header,footer,section,article,nav{min-width:0}
+img,video,iframe{max-width:100%}
+button,a,input,select,textarea{max-width:100%}
+@media(max-width:767px){
+  .hero-wrap,.intro,.feedback,.toolbar,.catalog,.social,.features{
+    padding-left:12px!important;padding-right:12px!important;
+  }
+  .hero-wrap{padding-top:12px!important}
+  .hero{border-radius:17px!important}
+  .hero-slide{height:clamp(220px,64vw,360px)!important}
+  .intro-card{padding:22px 15px!important;border-radius:18px!important}
+  .section-head{align-items:flex-start!important;flex-direction:column!important;gap:5px!important}
+  .section-head h2{font-size:clamp(22px,6vw,28px)!important}
+  .products-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .product-card{min-width:0;border-radius:14px!important}
+  .product-info{padding:10px 9px 12px!important}
+  .product-name{font-size:12px!important;overflow-wrap:anywhere}
+  .price-row{gap:5px!important;flex-wrap:wrap!important;white-space:normal!important}
+  .price{font-size:13px!important}
+  .old-price{font-size:10px!important}
+  .search-row{min-width:0}
+  .search{min-width:0;width:100%}
+  .cats{flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none;padding-bottom:10px!important}
+  .cat{font-size:12px!important;padding:8px 13px!important}
+  .social-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .detail-grid{grid-template-columns:minmax(0,1fr)!important;gap:12px!important}
+  .modal{padding:8px!important;align-items:flex-end!important}
+  .modal-box{width:100%!important;max-height:92dvh!important;border-radius:20px 20px 12px 12px!important;padding:15px!important}
+  .customer-reviews-card{padding:16px 12px!important}
+  .customer-reviews-grid{grid-template-columns:minmax(0,1fr)!important}
+  footer{padding-left:12px!important;padding-right:12px!important}
+}
+@media(min-width:480px) and (max-width:767px){
+  .products-grid{gap:14px!important}
+  .product-info{padding:12px!important}
+}
+@media(min-width:768px) and (max-width:1100px){
+  .products-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+  .nav{padding-left:14px!important;padding-right:14px!important}
+  .hero-slide{height:clamp(300px,42vw,420px)!important}
+}
+@media(max-width:430px){
+  .nav{grid-template-columns:auto minmax(0,1fr) auto!important;gap:5px!important;padding:9px 8px!important}
+  .brand-main{font-size:20px!important;letter-spacing:1.5px!important}
+  .brand-sub{font-size:7px!important;letter-spacing:2px!important}
+  .nav-side{gap:5px!important}
+  .nav-side.end .icon-btn{padding:7px 8px!important}
+  #menuBtn{min-width:36px!important}
+  #langBtn{min-width:36px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #espozaSidePanel,#espozaSideOverlay{transition:none!important}
+}
