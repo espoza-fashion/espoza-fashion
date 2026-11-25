@@ -3964,6 +3964,7 @@ function renderHomeProductSections(){
  fill("homeOffersGrid",offers,"عرض");
  fill("homeBestSellersGrid",(featured.length?featured:list).slice(0,10),"إسبوزا");
  renderHomeCategorySliders(list,card);
+ if(typeof renderSlider==="function")renderSlider();
  const newGrid=document.getElementById("homeNewArrivalsGrid");
  if(newGrid)newGrid.innerHTML=newest.map((p,i)=>`<div class="home-new-tile" role="button" tabindex="0" onclick="openProduct(${esc(JSON.stringify(p.id))})" onkeydown="if(event.key==='Enter'){openProduct(${esc(JSON.stringify(p.id))})}"><img loading="lazy" decoding="async" src="${esc(p.images[0].url)}" alt="${esc(productDisplayName(p))}" onerror="this.closest('.home-new-tile')?.remove()"><span>${esc(productDisplayName(p))} · ${money(p.price)} ₪</span></div>`).join("");
  function renderHomeCategorySliders(list,card){
