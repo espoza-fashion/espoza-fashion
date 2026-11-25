@@ -3760,9 +3760,6 @@ id="hero">
 class="slides-track"
 id="slidesTrack">
 </div>
-<button class="hero-arrow hero-arrow-prev" type="button" aria-label="الشريحة السابقة" onclick="moveSlide(-1)">‹</button>
-<button class="hero-arrow hero-arrow-next" type="button" aria-label="الشريحة التالية" onclick="moveSlide(1)">›</button>
-<div class="hero-pagination" id="heroPagination" aria-label="التنقل بين الصور"></div>
 
 </div>
 
@@ -7756,23 +7753,11 @@ button_link:
 
 
 function activeSlides(){
-  const source=Array.isArray(products)?products:[];
-  const choose=(slug)=>source.find(p=>matchesShopCategory(p,slug)&&p.images?.[0]?.url&&!String(p.images[0].url).includes("placeholder"));
-  const sets=choose("sets");
-  const dresses=choose("dresses");
-  const offers=choose("offers");
-  const copy=lang==="en"
-    ? {sets:"Discover the sets",dresses:"Discover the dresses",offers:"Discover the offers",new:"Discover the collection"}
-    : lang==="he"
-      ? {sets:"גלי את הסטים",dresses:"גלי את השמלות",offers:"גלי את המבצעים",new:"גלי את הקולקציה"}
-      : {sets:"اكتشفي الأطقم",dresses:"اكتشفي الفساتين",offers:"اكتشفي العروض"};
-  const slides=[
-    {id:"product-sets",image_url:sets?.images?.[0]?.url,title:copy.sets,subtitle:lang==="en"?"Elegant looks, selected for you":"اختيارات أنيقة بتفاصيل تستحق الاكتشاف",button_text:t().explore,button_link:"sets"},
-    {id:"product-dresses",image_url:dresses?.images?.[0]?.url,title:copy.dresses,subtitle:lang==="en"?"Find the look that feels like you":"فساتين بتفاصيل تكمّل أناقتك",button_text:t().explore,button_link:"dresses"},
-    {id:"product-offers",image_url:offers?.images?.[0]?.url,title:copy.offers||copy.new,subtitle:lang==="en"?"Special selections at current prices":"اختيارات مميزة من عروض إسبوزا",button_text:t().explore,button_link:"offers"}
-  ];
-  if(source.length && slides.some(slide=>slide.image_url)) return slides.filter(slide=>slide.image_url);
-  return Array.isArray(adminSliders)&&adminSliders.length?adminSliders:fallbackSlides();
+
+return Array.isArray(adminSliders)
+? adminSliders
+: fallbackSlides();
+
 }
 
 
@@ -7803,12 +7788,10 @@ ${
 s.image_url
 ?
 `
-<div class="hero-image-backdrop" style="background-image:url('${esc(s.image_url)}')"></div>
 <img
-class="hero-product-image"
 src="${esc(s.image_url)}"
-loading="eager"
-fetchpriority="${i===0?"high":"auto"}"
+loading="${i===0?"eager":"lazy"}"
+fetchpriority="${i===0?"high":"low"}"
 decoding="async"
 alt="${esc(localizeDynamicText(s.title||"Espoza Fashion"))}"
 onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=decodeURIComponent(this.src.split('/').pop().split('?')[0])}catch(e){this.dataset.localRetry='2'}}else{this.onerror=null;this.src='${PLACEHOLDER}'}">
@@ -7821,7 +7804,9 @@ onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=d
 
 <div class="hero-copy">
 
-<h1 class="hero-typewriter" data-type-text="${esc(localizeDynamicText(s.title||t().newCollection,{"تشكيلة جديدة":t().newCollection,"مجموعة جديدة":t().newCollection}))}"></h1>
+<h1>
+${esc(localizeDynamicText(s.title||t().newCollection,{"تشكيلة جديدة":t().newCollection,"مجموعة جديدة":t().newCollection}))}
+</h1>
 
 ${
 s.subtitle
@@ -7857,25 +7842,19 @@ t().explore
 .join("");
 
 
-list.forEach((slide,index)=>{
-  if(!slide.image_url)return;
-  const image=new Image();
-  image.decoding="async";
-  image.fetchPriority=index===0?"high":"auto";
-  image.src=slide.image_url;
-});
 updateSliderTransform();
-bindHeroSwipe();
 
 }
 
 
 function updateSliderTransform(){
-  const track=$("slidesTrack");
-  if(track)track.style.transform=`translateX(-${sliderIndex*100}%)`;
-  renderHeroPagination();
-  typeHeroHeadline();
+
+$("slidesTrack")
+.style.transform=
+`translateX(-${sliderIndex*100}%)`;
+
 }
+
 function renderHeroPagination(){
   const host=$("heroPagination");
   if(!host)return;
@@ -11901,104 +11880,7 @@ applyAssistantLanguage();
 }
 @media(prefers-reduced-motion:reduce){.hero-typewriter:after{animation:none}.home-category-lane-track .home-demo-image img{transition:none}}
 </style>
-<style id="espoza-luxury-hero-refinement">
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@500;600;700;800&display=swap');
-/* Large, complete product image: blurred fill is only a backdrop, foreground remains uncropped. */
-.hero-slide{
- position:relative!important;
- height:clamp(470px,58vw,760px)!important;
- min-height:470px!important;
- background:#eee7e2!important;
- isolation:isolate!important;
-}
-.hero-image-backdrop{
- position:absolute;inset:-22px;z-index:0;
- background-position:center;background-size:cover;background-repeat:no-repeat;
- filter:blur(24px) brightness(.66) saturate(.8);
- transform:scale(1.06);
- opacity:.56;
-}
-.hero-slide:after{
- content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
- background:linear-gradient(90deg,rgba(35,8,18,.22),rgba(35,8,18,.02) 50%,rgba(35,8,18,.12));
-}
-.hero-slide img.hero-product-image{
- position:relative!important;z-index:2!important;
- display:block!important;
- width:100%!important;height:100%!important;
- max-width:100%!important;max-height:100%!important;
- object-fit:contain!important;object-position:center center!important;
- background:transparent!important;
- filter:none!important;
- transform:none!important;
-}
-.hero-overlay{
- z-index:3!important;
- pointer-events:none!important;
- direction:rtl!important;
- align-items:flex-end!important;
- justify-content:flex-start!important;
- padding:clamp(24px,5vw,68px)!important;
- background:linear-gradient(0deg,rgba(36,9,20,.42),transparent 72%)!important;
-}
-.hero-copy{
- direction:rtl!important;text-align:right!important;
- margin-inline-start:auto!important;margin-inline-end:0!important;
- max-width:min(650px,82%)!important;
- padding:clamp(14px,2vw,25px)!important;
- border-inline-start:1px solid rgba(220,190,132,.72);
- background:linear-gradient(90deg,rgba(44,12,25,.06),rgba(44,12,25,.32));
- backdrop-filter:blur(2px);
-}
-.hero-copy h1{
- font-family:"Amiri","Cairo",serif!important;
- font-weight:700!important;
- font-size:clamp(42px,6.3vw,82px)!important;
- line-height:1.28!important;
- letter-spacing:0!important;
- color:#fff9f0!important;
- text-shadow:0 4px 28px rgba(25,5,13,.55),0 1px 2px rgba(25,5,13,.7)!important;
- margin:0 0 12px!important;
- min-height:1.28em!important;
-}
-.hero-typewriter:after{
- background:linear-gradient(180deg,#f4dfb2,#b9985a)!important;
- width:2px!important;height:.78em!important;
- margin-inline-start:9px!important;
-}
-.hero-copy p{
- font-family:"Cairo",sans-serif!important;
- font-size:clamp(13px,1.5vw,17px)!important;
- font-weight:500!important;line-height:2!important;
- color:#fffaf3!important;
- text-shadow:0 2px 12px rgba(25,5,13,.65)!important;
- margin:0 0 20px!important;
-}
-.hero-copy button{
- pointer-events:auto!important;
- font-family:"Cairo",sans-serif!important;
- font-weight:700!important;font-size:13px!important;
- color:#4a1729!important;background:linear-gradient(135deg,#fffaf2,#e9d9bd)!important;
- border:1px solid rgba(185,152,90,.9)!important;
- border-radius:3px!important;
- padding:13px 30px!important;
- letter-spacing:.2px!important;
- box-shadow:0 12px 32px rgba(20,5,10,.25)!important;
- transition:transform .3s,box-shadow .3s!important;
-}
-.hero-copy button:hover{transform:translateY(-3px)!important;box-shadow:0 17px 38px rgba(20,5,10,.32)!important}
-@media(max-width:760px){
- .hero-slide{height:clamp(470px,76vh,650px)!important;min-height:470px!important}
- .hero-image-backdrop{filter:blur(18px) brightness(.7);opacity:.62}
- .hero-slide img.hero-product-image{object-fit:contain!important;object-position:center center!important}
- .hero-overlay{padding:18px 14px!important}
- .hero-copy{max-width:94%!important;padding:13px!important}
- .hero-copy h1{font-size:clamp(36px,10vw,54px)!important}
- .hero-copy p{font-size:12px!important}
- .hero-copy button{padding:11px 23px!important}
-}
-@media(prefers-reduced-motion:reduce){.hero-copy button{transition:none!important}}
-</style>
+
 
 <style id="espoza-premium-motion-performance">
 .hero-wrap{width:100%;max-width:none;margin:0;padding:0 0 22px}.hero{width:100%;max-width:none;border:0;border-radius:0;overflow:hidden;box-shadow:0 18px 48px rgba(48,12,25,.12);background:#eee7e2}
@@ -12109,5 +11991,22 @@ applyAssistantLanguage();
 }
 </style>
 
+
+<style id="espoza-legacy-hero-restored">
+.hero-wrap{max-width:1240px!important;margin:0 auto!important;padding:18px 18px 8px!important;width:auto!important}
+.hero{position:relative!important;overflow:hidden!important;border-radius:24px!important;background:#eee5e6!important;box-shadow:var(--shadow)!important;border:0!important}
+.slides-track{display:flex!important;direction:ltr!important;transition:transform .5s ease!important;will-change:auto!important}
+.hero-slide{flex:0 0 100%!important;min-width:100%!important;width:100%!important;height:420px!important;min-height:0!important;position:relative!important;background:#eee5e6!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;aspect-ratio:auto!important;border-radius:0!important}
+.hero-slide img{position:static!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center center!important;padding:0!important;display:block!important;filter:none!important}
+.hero-image-backdrop{display:none!important}
+.hero-slide:after{display:none!important}
+.hero-overlay{position:absolute!important;inset:0!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;padding:32px!important;height:auto!important;min-height:0!important;background:linear-gradient(to top,rgba(36,11,20,.55),rgba(36,11,20,.06) 56%,transparent)!important}
+.hero-copy{width:auto!important;max-width:none!important;margin:0!important;padding:0!important;text-align:center!important;color:#fff!important;direction:rtl!important;border:0!important;background:none!important;backdrop-filter:none!important}
+.hero-copy h1{font-family:"Playfair Display","Cairo",serif!important;font-size:clamp(30px,5vw,54px)!important;line-height:normal!important;min-height:0!important;margin:0 0 8px!important;color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.2)!important;animation:none!important}
+.hero-copy h1:after{display:none!important}
+.hero-copy p{margin:0 0 15px!important;font-size:14px!important;color:#fff!important;line-height:normal!important}
+.hero-copy button{border:0!important;background:#fff!important;color:var(--wine)!important;padding:10px 23px!important;border-radius:30px!important;font-weight:800!important;box-shadow:none!important;min-height:0!important}
+@media(max-width:700px){.hero-wrap{padding:12px 10px 8px!important}.hero{border-radius:19px!important}.hero-slide{height:420px!important}.hero-overlay{padding:22px!important}.hero-copy{max-width:100%!important}.hero-copy h1{font-size:clamp(26px,8vw,42px)!important}.hero-copy p{font-size:12px!important}}
+</style>
 </body>
 </html>
