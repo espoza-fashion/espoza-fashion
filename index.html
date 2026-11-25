@@ -3941,6 +3941,10 @@ placeholder="">
   <div class="home-new-tiles" id="homeNewArrivalsGrid"></div>
  </div>
 </section>
+<section class="home-editorial home-category-slider-section" id="homeCategorySliders">
+ <div class="home-editorial-head"><div><div class="eyebrow">EXPLORE BY CATEGORY</div><h2>اكتشفي كل قسم</h2><p>تصفّحي اختيارات كل مجموعة من منتجات إسبوزا.</p></div></div>
+ <div id="homeCategorySlidersGrid" class="home-category-sliders-grid"></div>
+</section>
 <section class="home-editorial" id="homeAllProducts">
  <div class="home-editorial-head"><div><div class="eyebrow">THE COLLECTION</div><h2>جميع المنتجات</h2></div><a class="home-all-link" href="#shopCatalogue"><span>تصفّحي الكتالوج كاملاً</span><span>←</span></a></div>
  <a class="home-catalog-entry" href="#shopCatalogue" onclick="setTimeout(()=>document.getElementById('shopCatalogue')?.scrollIntoView({behavior:'smooth'}),40)"><span class="catalog-entry-icon" aria-hidden="true">✦</span><span class="catalog-entry-copy"><strong>اكتشفي التشكيلة كاملة</strong><small>كل موديلات إسبوزا في مكان واحد</small></span><span class="catalog-entry-arrow" aria-hidden="true">←</span></a>
@@ -3959,8 +3963,19 @@ function renderHomeProductSections(){
  const newest=list.slice().sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0)).slice(0,6);
  fill("homeOffersGrid",offers,"عرض");
  fill("homeBestSellersGrid",(featured.length?featured:list).slice(0,10),"إسبوزا");
+ renderHomeCategorySliders(list,card);
  const newGrid=document.getElementById("homeNewArrivalsGrid");
  if(newGrid)newGrid.innerHTML=newest.map((p,i)=>`<div class="home-new-tile" role="button" tabindex="0" onclick="openProduct(${esc(JSON.stringify(p.id))})" onkeydown="if(event.key==='Enter'){openProduct(${esc(JSON.stringify(p.id))})}"><img loading="lazy" decoding="async" src="${esc(p.images[0].url)}" alt="${esc(productDisplayName(p))}" onerror="this.closest('.home-new-tile')?.remove()"><span>${esc(productDisplayName(p))} · ${money(p.price)} ₪</span></div>`).join("");
+ function renderHomeCategorySliders(list,card){
+  const host=document.getElementById("homeCategorySlidersGrid");
+  if(!host)return;
+  const categories=Array.from(getShopCategories(),([slug,label])=>({slug,label,items:list.filter(p=>matchesShopCategory(p,slug)).slice(0,10)})).filter(category=>category.items.length);
+  host.innerHTML=categories.map(category=>`
+   <section class="home-category-lane" aria-label="${esc(category.label)}">
+    <div class="home-category-lane-head"><div><span>ESPOZA COLLECTION</span><h3>${esc(category.label)}</h3></div><button type="button" onclick="goCategory(${esc(JSON.stringify(category.slug))})">${lang==="en"?"Discover all":lang==="he"?"לגלי הכל":"اكتشفي القسم"} <b>←</b></button></div>
+    <div class="home-category-lane-track">${category.items.map((p,i)=>card(p,i,category.label)).join("")}</div>
+   </section>`).join("");
+ }
  /* الكتالوج الكامل يظهر داخل قسم التسوق المخصص فقط. */
 }
 </script>
@@ -7723,11 +7738,23 @@ button_link:
 
 
 function activeSlides(){
-
-return Array.isArray(adminSliders)
-? adminSliders
-: fallbackSlides();
-
+  const source=Array.isArray(products)?products:[];
+  const choose=(slug)=>source.find(p=>matchesShopCategory(p,slug)&&p.images?.[0]?.url&&!String(p.images[0].url).includes("placeholder"));
+  const sets=choose("sets");
+  const dresses=choose("dresses");
+  const offers=choose("offers");
+  const copy=lang==="en"
+    ? {sets:"Discover the sets",dresses:"Discover the dresses",offers:"Discover the offers",new:"Discover the collection"}
+    : lang==="he"
+      ? {sets:"גלי את הסטים",dresses:"גלי את השמלות",offers:"גלי את המבצעים",new:"גלי את הקולקציה"}
+      : {sets:"اكتشفي الأطقم",dresses:"اكتشفي الفساتين",offers:"اكتشفي العروض"};
+  const slides=[
+    {id:"product-sets",image_url:sets?.images?.[0]?.url,title:copy.sets,subtitle:lang==="en"?"Elegant looks, selected for you":"اختيارات أنيقة بتفاصيل تستحق الاكتشاف",button_text:t().explore,button_link:"sets"},
+    {id:"product-dresses",image_url:dresses?.images?.[0]?.url,title:copy.dresses,subtitle:lang==="en"?"Find the look that feels like you":"فساتين بتفاصيل تكمّل أناقتك",button_text:t().explore,button_link:"dresses"},
+    {id:"product-offers",image_url:offers?.images?.[0]?.url,title:copy.offers||copy.new,subtitle:lang==="en"?"Special selections at current prices":"اختيارات مميزة من عروض إسبوزا",button_text:t().explore,button_link:"offers"}
+  ];
+  if(source.length && slides.some(slide=>slide.image_url)) return slides.filter(slide=>slide.image_url);
+  return Array.isArray(adminSliders)&&adminSliders.length?adminSliders:fallbackSlides();
 }
 
 
@@ -7774,9 +7801,7 @@ onerror="if(!this.dataset.localRetry){this.dataset.localRetry='1';try{this.src=d
 
 <div class="hero-copy">
 
-<h1>
-${esc(localizeDynamicText(s.title||t().newCollection,{"تشكيلة جديدة":t().newCollection,"مجموعة جديدة":t().newCollection}))}
-</h1>
+<h1 class="hero-typewriter" data-type-text="${esc(localizeDynamicText(s.title||t().newCollection,{"تشكيلة جديدة":t().newCollection,"مجموعة جديدة":t().newCollection}))}"></h1>
 
 ${
 s.subtitle
@@ -7818,11 +7843,24 @@ updateSliderTransform();
 
 
 function updateSliderTransform(){
+  $("slidesTrack").style.transform=`translateX(-${sliderIndex*100}%)`;
+  typeHeroHeadline();
+}
 
-$("slidesTrack")
-.style.transform=
-`translateX(-${sliderIndex*100}%)`;
-
+let heroTypingTimer=null;
+function typeHeroHeadline(){
+  if(heroTypingTimer)clearInterval(heroTypingTimer);
+  const slide=document.querySelectorAll("#slidesTrack .hero-slide")[sliderIndex];
+  const heading=slide?.querySelector(".hero-typewriter");
+  if(!heading)return;
+  const text=heading.dataset.typeText||"";
+  heading.textContent="";
+  let position=0;
+  heroTypingTimer=setInterval(()=>{
+    heading.textContent=text.slice(0,position+1);
+    position++;
+    if(position>=text.length)clearInterval(heroTypingTimer);
+  },62);
 }
 
 function moveSlide(delta){
@@ -11789,5 +11827,52 @@ applyAssistantLanguage();
 })();
 </script>
 
+<style id="espoza-luxury-carousel-upgrade">
+.hero-wrap{max-width:1360px;padding:22px 20px 12px}
+.hero{border-radius:28px;box-shadow:0 24px 70px rgba(48,12,25,.16);border:1px solid rgba(185,152,90,.32)}
+.hero-slide{height:clamp(360px,48vw,590px);background:linear-gradient(120deg,#32111f,#641f34 54%,#b9985a)}
+.hero-slide img{object-fit:cover!important;object-position:center 28%!important;filter:saturate(.94)}
+.hero-overlay{align-items:flex-end;justify-content:flex-start;padding:clamp(22px,5vw,64px);background:linear-gradient(90deg,rgba(35,9,19,.68),rgba(35,9,19,.12) 72%),linear-gradient(0deg,rgba(35,9,19,.45),transparent 60%)}
+.hero-copy{text-align:right;max-width:640px}
+.hero-copy h1{min-height:1.25em;font-size:clamp(30px,5.4vw,66px);letter-spacing:-.5px}
+.hero-typewriter:after{content:"";display:inline-block;width:2px;height:.9em;background:#e4c88f;margin-inline-start:7px;vertical-align:-.08em;animation:heroCaret .85s steps(2,end) infinite}
+@keyframes heroCaret{50%{opacity:0}}
+.hero-copy p{font-size:clamp(12px,1.5vw,16px);color:#fff4e8}
+.hero-copy button{border:1px solid rgba(255,255,255,.7);background:#f8f1e7;color:#531a2c;padding:12px 28px;border-radius:999px;box-shadow:0 10px 24px #17071030;transition:transform .25s,background .25s}
+.hero-copy button:hover{transform:translateY(-3px);background:#fff}
+.home-demo-grid,.home-new-tiles{display:flex!important;gap:16px!important;overflow-x:auto!important;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:5px 2px 18px;scrollbar-width:thin;scrollbar-color:#b9985a #f2e8e8}
+.home-demo-card{flex:0 0 clamp(190px,23vw,260px);scroll-snap-align:start}
+.home-new-tile{flex:0 0 clamp(180px,21vw,230px);scroll-snap-align:start}
+.home-category-sliders-grid{display:grid;gap:26px}
+.home-category-lane{padding:20px;border:1px solid #eadfe1;border-radius:24px;background:linear-gradient(145deg,#fffdfa,#f7eff0);box-shadow:0 12px 36px #4313210a;overflow:hidden}
+.home-category-lane-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.home-category-lane-head span{font-size:9px;letter-spacing:2px;color:#b9985a;font-weight:800}
+.home-category-lane-head h3{margin:4px 0 0;color:#431321;font-size:clamp(19px,2.4vw,27px)}
+.home-category-lane-head button{border:1px solid #e3d4d7;background:#fff;color:#641f34;border-radius:999px;padding:9px 15px;font-size:12px;font-weight:800;white-space:nowrap}
+.home-category-lane-head button b{color:#b9985a;margin-inline-start:5px}
+.home-category-lane-track{display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:3px 2px 14px;scrollbar-width:thin;scrollbar-color:#b9985a #f2e8e8}
+.home-category-lane-track .home-demo-card{flex:0 0 clamp(185px,22vw,245px);scroll-snap-align:start}
+.home-category-lane-track .home-demo-image{aspect-ratio:4/5;overflow:hidden;border-radius:16px;background:#f2e9e8}
+.home-category-lane-track .home-demo-image img{transition:transform .65s cubic-bezier(.2,.7,.2,1)}
+.home-category-lane-track .home-demo-card:hover img{transform:scale(1.055)}
+.home-category-lane-track .home-demo-info{padding:12px 4px}
+.home-category-lane-track .home-demo-info h3{color:#431321}
+.home-editorial{padding-inline:clamp(14px,3vw,28px)}
+@media(max-width:700px){
+ .hero-wrap{padding:10px 10px 8px}
+ .hero{border-radius:19px}
+ .hero-slide{height:430px}
+ .hero-overlay{padding:22px 18px}
+ .hero-copy{max-width:100%}
+ .hero-copy h1{font-size:clamp(29px,8vw,43px)}
+ .home-category-lane{padding:14px;border-radius:18px}
+ .home-category-lane-track .home-demo-card{flex-basis:68vw}
+ .home-demo-card{flex-basis:68vw}
+ .home-new-tile{flex-basis:62vw}
+ .home-category-lane-head{align-items:flex-start}
+ .home-category-lane-head button{font-size:10px;padding:8px 10px}
+}
+@media(prefers-reduced-motion:reduce){.hero-typewriter:after{animation:none}.home-category-lane-track .home-demo-image img{transition:none}}
+</style>
 </body>
 </html>
