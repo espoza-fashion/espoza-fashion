@@ -157,20 +157,20 @@ test('AI timeout restores input and releases send button',async()=>{
 test('FAQ backend mode is disclosed and completed exchanges enter history',async()=>{
  let bubble;const c=context(shop,['sendEspozaAssistant'],{navigator:{onLine:true},document:{getElementById:id=>c.$(id)},espozaAssistantHistory:[],CUSTOMER_SUPABASE_KEY:'public-test-key',AbortController,setElyraTyping:()=>()=>{},addEspozaAssistantBubble:()=>bubble={textContent:''},fetch:async()=>({ok:true,json:async()=>({mode:'faq',answer:'store answer'})})});c.$('espozaAssistantInput').value='hello';c.$('espozaAssistantInput').focus=()=>{};await c.sendEspozaAssistant({preventDefault(){}});assert.match(bubble.textContent,/معلومات المتجر فقط/);assert.equal(c.espozaAssistantHistory.length,2);
 });
-test('checkout does not request private order fields in the insert response',()=>{
- assert.match(shop,/await customerDb\.from\("orders"\)\.insert\(orderPayload\);/);
+test('checkout persists through the inventory RPC before opening WhatsApp',()=>{
+ assert.match(shop,/customerDb\\.rpc\\("espoza_create_order_with_inventory",\\{p_order:orderPayload\\}\\)/);
  assert.ok(shop.includes('if(orderSubmissionPending||!cart.length)return;'));
+ assert.ok(shop.indexOf('await customerDb.rpc("espoza_create_order_with_inventory"')<shop.indexOf('if(whatsappWindow)whatsappWindow.location.href=whatsappUrl'));
 });
 function checkoutContext(error){
- const product={id:'p',name:'Dress',category:'dresses',price:100,product_sizes:[{size:'40'}]};
+ const product={id:'p',name:'Dress',category:'dresses',price:100,product_sizes:[{size:'40'}],product_colors:[]};
  const calls=[];
  const db={from(table){
-  if(table==='products')return {select(){return this;},in(){return this;},eq:async()=>({data:[product]})};
-  assert.equal(table,'orders');
-  return {insert:async payload=>{calls.push(payload);return {error};}};
- }};
+  assert.equal(table,'products');
+  return {select(){return this;},in(){return this;},eq:async()=>({data:[product]})};
+ },rpc:async(name,args)=>{calls.push({name,args});return {data:error?null:{id:'qa-order'},error};}};
  const popup={location:{},close(){}};
- const c=context(shop,['sendOrder'],{orderSubmissionPending:false,cart:[{name:'Dress',qty:1,price:100,size:'40'}],cartModelKey:()=> 'p',store:{whatsapp:'0000000000',name:'Espoza'},selectedDelivery:()=>({name:'Test',price:20}),cartSubtotal:()=>100,getAutomaticOffer:()=>null,money:x=>String(x),productDisplayName:x=>x.name,lang:'ar',ensureCustomerProfile:async()=>null,getCustomerSupabase:()=>db,window:{open:()=>popup},t:()=>({saved:'saved',waOnly:'wa-only',cod:'الدفع الإلكتروني عند الاستلام فقط'}),toast(){},saveCart(){},syncCustomerCart:async()=>{},updateCartBadge(){},closeModal(){},console:{warn(){}},alert(){},calls,popup});
+ const c=context(shop,['sendOrder'],{orderSubmissionPending:false,cart:[{name:'Dress',qty:1,price:100,size:'40'}],cartModelKey:()=> 'p',store:{whatsapp:'0000000000',name:'Espoza'},selectedDelivery:()=>({name:'Test',name_ar:'Test',price:20}),cartSubtotal:()=>100,getAutomaticOffer:()=>null,money:x=>String(x),productDisplayName:x=>x.name,lang:'ar',ensureCustomerProfile:async()=>null,getCustomerSupabase:()=>db,refreshSupabaseProducts:async()=>{},window:{open:()=>popup},t:()=>({saved:'saved',waOnly:'wa-only',cod:'الدفع الإلكتروني عند الاستلام فقط'}),toast(){},saveCart(){},syncCustomerCart:async()=>{},updateCartBadge(){},closeModal(){},console:{warn(){}},alert(){},calls,popup});
  c.$('customerName').value='Test customer';
  c.$('customerPhone').value='0000000000';
  c.$('customerAddress').value='Test address';
