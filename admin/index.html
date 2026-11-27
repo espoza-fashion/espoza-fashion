@@ -710,6 +710,7 @@ adminLanguageObserver.observe(document.body,{subtree:true,childList:true,charact
 
 /* ===================== State ===================== */
 let orders = [], products = [], productImages = [], productSizes = [], productColors = [];
+let knownOrderIds = null;
 let feedbackRows = [];
 let customerReviewRows = [];
 let customerCarts = [], cartCustomers = [], cartsLoadError = "", cartsLoadedAt = null;
@@ -858,7 +859,7 @@ async function loadOrders(){
     .select("id,customer_name,phone,region,address,items,total,status,notes,created_at")
     .order("created_at",{ascending:false});
   if(error) throw error;
-  orders = (data||[]).map(o=>{
+  const incoming = (data||[]).map(o=>{
     const first = Array.isArray(o.items) ? o.items[0] : null;
     return {
       ...o,
@@ -868,6 +869,18 @@ async function loadOrders(){
       selected_size: first?.size || first?.selected_size || "—"
     };
   });
+  const incomingIds = new Set(incoming.map(o=>String(o.id)));
+  if(knownOrderIds!==null){
+    const newOrders=incoming.filter(o=>!knownOrderIds.has(String(o.id)));
+    newOrders.forEach(o=>{
+      toast("طلب جديد من "+(o.customer_name||"زبونة")+" — ₪"+money(o.total));
+      if("Notification" in window && Notification.permission==="granted" && document.hidden){
+        try{new Notification("Espoza Fashion — طلب جديد",{body:(o.customer_name||"زبونة")+" · ₪"+money(o.total)});}catch(_){}
+      }
+    });
+  }
+  knownOrderIds=incomingIds;
+  orders = incoming;
 }
 async function loadProducts(){
   const {data,error} = await sb.from("products").select("*").order("created_at",{ascending:false});
@@ -1906,6 +1919,25 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 });
 /* ===================== Init ===================== */
 initAdminAuth();
+// فحص دوري للطلبات الجديدة: يبدأ بعد تسجيل دخول المدير وأول تحميل للطلبات.
+let orderNotificationPoll=null;
+const startOrderNotificationPolling=()=>{
+  if(orderNotificationPoll)clearInterval(orderNotificationPoll);
+  orderNotificationPoll=setInterval(async()=>{
+    if(!adminAuthSession||document.hidden===false&&currentPage==="orders"&&document.visibilityState!=="visible")return;
+    try{
+      await requireAdminSession();
+      await loadOrders();
+      renderOrders();
+      renderDashboard();
+    }catch(error){console.warn("Order notification refresh failed:",error);}
+  },20000);
+};
+const originalLoadAll=loadAll;
+loadAll=async function(){
+  await originalLoadAll();
+  if(adminAuthSession)startOrderNotificationPolling();
+};
 </script>
 <script>
 if ("serviceWorker" in navigator && location.protocol === "https:") {
