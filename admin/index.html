@@ -350,9 +350,9 @@ input:checked + .slider-tgl:before{transform:translateX(-18px)}
           </div>
           <div class="table-wrap"><table>
             <thead><tr>
-              <th>العميل</th><th>الهاتف</th><th>المنتج</th><th>اللون/المقاس</th><th>المنطقة</th><th>المجموع</th><th>الحالة</th><th>التاريخ</th><th></th>
+              <th>رقم الطلب</th><th>العميل</th><th>الهاتف</th><th>المنتج</th><th>اللون/المقاس</th><th>المنطقة</th><th>المجموع</th><th>الحالة</th><th>التاريخ</th><th></th>
             </tr></thead>
-            <tbody id="ordersBody"><tr><td colspan="9" class="loading-row"><span class="spin"></span>جارٍ التحميل…</td></tr></tbody>
+            <tbody id="ordersBody"><tr><td colspan="10" class="loading-row"><span class="spin"></span>جارٍ التحميل…</td></tr></tbody>
           </table></div>
         </div>
       </section>
@@ -873,7 +873,7 @@ async function loadOrders(){
   if(knownOrderIds!==null){
     const newOrders=incoming.filter(o=>!knownOrderIds.has(String(o.id)));
     newOrders.forEach(o=>{
-      toast("طلب جديد من "+(o.customer_name||"زبونة")+" — ₪"+money(o.total));
+      toast("طلب جديد #"+String(o.id||"").slice(0,8)+" من "+(o.customer_name||"زبونة")+" — ₪"+money(o.total));
       if("Notification" in window && Notification.permission==="granted" && document.hidden){
         try{new Notification("Espoza Fashion — طلب جديد",{body:(o.customer_name||"زبونة")+" · ₪"+money(o.total)});}catch(_){}
       }
@@ -990,6 +990,7 @@ function renderOrders(){
 
   $("ordersBody").innerHTML = list.length ? list.map(o=>`
     <tr class="row-hover">
+      <td class="mono" dir="ltr">${esc(o.id||"—")}</td>
       <td><div class="tname">${esc(o.customer_name||"—")}</div><div class="tsub">${esc(o.address||"")}</div></td>
       <td class="mono">${esc(o.phone||"—")}</td>
       <td>${esc(o.product_name||"—")}</td>
@@ -1003,7 +1004,7 @@ function renderOrders(){
       </td>
       <td class="tsub">${fmtDate(o.created_at)}</td>
       <td>${o.notes?`<button class="btn sm" onclick="alert(this.dataset.note)" data-note="${esc(o.notes||"")}">ملاحظات</button>`:""}</td>
-    </tr>`).join("") : `<tr><td colspan="9"><div class="empty"><span class="big">🗂️</span>لا توجد طلبات مطابقة</div></td></tr>`;
+    </tr>`).join("") : `<tr><td colspan="10"><div class="empty"><span class="big">🗂️</span>لا توجد طلبات مطابقة</div></td></tr>`;
 }
 $("orderSearch").addEventListener("input",renderOrders);
 
