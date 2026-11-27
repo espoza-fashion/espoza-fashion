@@ -10112,9 +10112,9 @@ const saved=await customerDb.rpc("espoza_create_order_with_inventory",{p_order:o
 if(saved.error)throw saved.error;
 const persistedOrderId=typeof saved.data==="string"?saved.data:(saved.data?.id||saved.data?.order_id);
 if(!persistedOrderId)throw new Error("تم حفظ الطلب لكن لم نستلم رقم الطلب من قاعدة البيانات. يرجى التواصل مع المتجر قبل إعادة الطلب.");
-await refreshSupabaseProducts();
-if(profileForOrder)customerHasPreviousOrders=true;
 window.__espozaSavedOrder={id:persistedOrderId,payload:orderPayload};
+if(profileForOrder)customerHasPreviousOrders=true;
+try{await refreshSupabaseProducts();}catch(refreshError){console.warn("Order saved; product refresh will retry on next load:",refreshError);}
 }catch(error){
 console.warn("Order database save failed:",error);
 if(whatsappWindow){try{whatsappWindow.close();}catch(_){}}
