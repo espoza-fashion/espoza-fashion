@@ -180,6 +180,7 @@ test('checkout API failure preserves basket and releases submission lock',async(
  const c=checkoutContext({message:'permission denied'});
  await c.sendOrder();
  assert.equal(c.calls.length,1);
+ assert.equal(c.calls[0].name,'espoza_create_order_with_inventory');
  assert.equal(c.cart.length,1);
  assert.equal(c.orderSubmissionPending,false);
  assert.equal(c.$('sendOrderBtn').disabled,false);
@@ -188,9 +189,10 @@ test('checkout confirmed insert clears basket and releases submission lock',asyn
  const c=checkoutContext(null);
  await c.sendOrder();
  assert.equal(c.calls.length,1);
- assert.equal(c.calls[0].customer_id,null);
- assert.equal(c.calls[0].total,120);
- assert.equal(c.calls[0].payment_status,'cod');
+ assert.equal(c.calls[0].name,'espoza_create_order_with_inventory');
+ assert.equal(c.calls[0].args.p_order.customer_id,null);
+ assert.equal(c.calls[0].args.p_order.total,120);
+ assert.equal(c.calls[0].args.p_order.payment_status,'cod');
  assert.match(c.popup.location.href,/^https:\/\/wa\.me\//);
  assert.ok(new URL(c.popup.location.href).searchParams.get('text').endsWith(c.t().cod));
  assert.equal(c.cart.length,0);
