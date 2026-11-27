@@ -158,7 +158,7 @@ test('FAQ backend mode is disclosed and completed exchanges enter history',async
  let bubble;const c=context(shop,['sendEspozaAssistant'],{navigator:{onLine:true},document:{getElementById:id=>c.$(id)},espozaAssistantHistory:[],CUSTOMER_SUPABASE_KEY:'public-test-key',AbortController,setElyraTyping:()=>()=>{},addEspozaAssistantBubble:()=>bubble={textContent:''},fetch:async()=>({ok:true,json:async()=>({mode:'faq',answer:'store answer'})})});c.$('espozaAssistantInput').value='hello';c.$('espozaAssistantInput').focus=()=>{};await c.sendEspozaAssistant({preventDefault(){}});assert.match(bubble.textContent,/معلومات المتجر فقط/);assert.equal(c.espozaAssistantHistory.length,2);
 });
 test('checkout persists through the inventory RPC before opening WhatsApp',()=>{
- assert.match(shop,/customerDb\\.rpc\\("espoza_create_order_with_inventory",\\{p_order:orderPayload\\}\\)/);
+ assert.ok(shop.includes('customerDb.rpc("espoza_create_order_with_inventory",{p_order:orderPayload})'));
  assert.ok(shop.includes('if(orderSubmissionPending||!cart.length)return;'));
  assert.ok(shop.indexOf('await customerDb.rpc("espoza_create_order_with_inventory"')<shop.indexOf('if(whatsappWindow)whatsappWindow.location.href=whatsappUrl'));
 });
