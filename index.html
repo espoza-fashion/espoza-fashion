@@ -9898,139 +9898,30 @@ let orderSubmissionPending=false;
 async function sendOrder(){
 if(orderSubmissionPending||!cart.length)return;
 orderSubmissionPending=true;
-$("sendOrderBtn").disabled=true;
+const sendButton=$("sendOrderBtn");
+if(sendButton){sendButton.disabled=true;sendButton.dataset.originalText=sendButton.textContent;sendButton.textContent=lang==="en"?"Saving order…":lang==="he"?"שומר את ההזמנה…":"جارٍ حفظ الطلب…";}
 try{
 const modelCounts=new Map();
 for(const item of cart){
 const key=cartModelKey(item);
 modelCounts.set(key,(modelCounts.get(key)||0)+Math.max(0,Number(item.qty)||0));
 }
-if([...modelCounts.values()].some(count=>count>4)){
-alert(t().cartLimit);
-return;
-}
-const name=$("customerName")
-.value
-.trim();
+if([...modelCounts.values()].some(count=>count>4)){alert(t().cartLimit);return;}
+const name=$("customerName").value.trim();
+const phone=$("customerPhone").value.trim();
+const address=$("customerAddress").value.trim();
+const notes=$("customerNotes").value.trim();
+if(!name||!phone||!address){alert(t().fill);return;}
 
-
-const phone=
-$("customerPhone")
-.value
-.trim();
-
-
-const address=
-$("customerAddress")
-.value
-.trim();
-
-const notes=
-$("customerNotes")
-.value
-.trim();
-
-
-if(
-!name
-||
-!phone
-||
-!address
-){
-
-alert(
-t().fill
-);
-
-return;
-
-}
-
-
-const whatsapp=
-String(
-store.whatsapp||""
-)
-.replace(
-/\D/g,
-""
-);
-
-
-if(
-!whatsapp
-){
-
-alert(
-t().waMissing
-);
-
-return;
-
-}
-
-
-const delivery=
-selectedDelivery();
-
-
+const delivery=selectedDelivery();
 const itemsTotal=cartSubtotal();
 const offer=getAutomaticOffer();
 const discount=offer?.discount||0;
-const discountedSubtotal=Math.max(0,itemsTotal-discount);
-const grandTotal=discountedSubtotal+delivery.price;
-const offerAr=discount>0?"\n🎁 العرض "+offer.label+": خصم ₪"+money(discount):"";
-const offerEn=discount>0?"\n🎁 Offer "+offer.label+": −₪"+money(discount):"";
-const offerHe=discount>0?"\n🎁 מבצע "+offer.label+": הנחה של ₪"+money(discount):"";
+const grandTotal=Math.max(0,itemsTotal-discount)+delivery.price;
 
-
-const linesAr=
-cart
-.map(
-item=>
-`👗 ${productDisplayName(item)}
-   المقاس: ${item.size}${item.color?`
-   اللون: ${item.color}`:""}
-   الكمية: ${item.qty}
-   السعر: ₪${money(item.price*item.qty)}`
-)
-.join("\n\n");
-
-
-const linesEn=
-cart
-.map(
-item=>
-`👗 ${productDisplayName(item)}
-   Size: ${item.size}${item.color?`\n   Color: ${item.color}`:""}
-   Qty: ${item.qty}
-   Price: ₪${money(item.price*item.qty)}`
-)
-.join("\n\n");
-
-const linesHe=cart.map(item=>`👗 ${productDisplayName(item)}\n   מידה: ${item.size}${item.color?`\n   צבע: ${item.color_he||productColorDisplayName(item.color)}`:""}\n   כמות: ${item.qty}\n   מחיר: ₪${money(item.price*item.qty)}`).join("\n\n");
-
-
-/* رسالة واتساب */
-
-const orderDetails=lang==="ar"
-  ? `مرحبًا ${store.name} ❤️\n\nأرغب بطلب:\n\n${linesAr}\n\n👤 الاسم: ${name}\n📱 الهاتف: ${phone}\n📍 منطقة التوصيل: ${delivery.name}\n🏠 العنوان: ${address}${notes?`\n📝 ملاحظات: ${notes}`:""}\n\n💰 مجموع المنتجات: ₪${money(itemsTotal)}${offerAr}\n🚚 التوصيل: ₪${money(delivery.price)}\n💵 الإجمالي النهائي: ₪${money(grandTotal)}`
-  : lang==="he"
-    ? `שלום ${store.name} ❤️\n\nברצוני להזמין:\n\n${linesHe}\n\n👤 שם: ${name}\n📱 טלפון: ${phone}\n📍 אזור משלוח: ${delivery.name}\n🏠 כתובת: ${address}${notes?`\n📝 הערות: ${notes}`:""}\n\n💰 סכום הפריטים: ₪${money(itemsTotal)}${offerHe}\n🚚 משלוח: ₪${money(delivery.price)}\n💵 סך הכול לתשלום: ₪${money(grandTotal)}`
-    : `Hello ${store.name} ❤️\n\nI would like to order:\n\n${linesEn}\n\n👤 Name: ${name}\n📱 Phone: ${phone}\n📍 Delivery area: ${delivery.name}\n🏠 Address: ${address}${notes?`\n📝 Notes: ${notes}`:""}\n\n💰 Items total: ₪${money(itemsTotal)}${offerEn}\n🚚 Delivery: ₪${money(delivery.price)}\n💵 Grand total: ₪${money(grandTotal)}`;
-const message=`${orderDetails}\n💳 ${t().cod}`;
-
-
-const whatsappUrl=`https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
-/* جهّز نافذة واتساب من ضغطة المستخدم، لكن لا ترسل الزبونة إليها قبل تأكيد حفظ الطلب */
-let whatsappWindow=null;
-try{
-whatsappWindow=window.open("about:blank","_blank");
-if(whatsappWindow)whatsappWindow.opener=null;
-}catch(openError){console.warn("WhatsApp window open failed:",openError);}
 try{
 const customerDb=getCustomerSupabase();
+if(!customerDb)throw new Error("تعذّر الاتصال بقاعدة البيانات. حاولي مرة أخرى.");
 const profileForOrder=await ensureCustomerProfile();
 if(profileForOrder)customerProfile=profileForOrder;
 const cartProductNames=[...new Set(cart.map(item=>String(item.name||"").trim()).filter(Boolean))];
@@ -10043,12 +9934,11 @@ const databaseProducts=productLookup.data||[];
 const orderItems=cart.map(item=>{
 const dbProduct=databaseProducts.find(p=>String(p.name||"").trim()===String(item.name||"").trim());
 if(!dbProduct)throw new Error(t().orderProductMissing);
-const productId=dbProduct.id;
-if(!productId)throw new Error(t().orderProductIdMissing);
+if(!dbProduct.id)throw new Error(t().orderProductIdMissing);
 if(Number(item.price)!==Number(dbProduct.price))throw new Error(t().orderPriceChanged);
 const availableColors=dbProduct.product_colors||[];
 const matchedColor=availableColors.find(c=>c.name===item.color||c.name_en===item.color||c.name===item.color_db||c.name_en===item.color_db);
-let orderColor=matchedColor?.name||(availableColors.length===1?availableColors[0].name:String(item.color_db||item.color||""));
+const orderColor=matchedColor?.name||(availableColors.length===1?availableColors[0].name:String(item.color_db||item.color||""));
 if(availableColors.length&&!availableColors.some(c=>c.name===orderColor))throw new Error(t().orderColorUnavailable);
 const availableSizes=(dbProduct.product_sizes||[]).map(x=>String(x.size));
 let orderSize=String(item.size||"");
@@ -10056,26 +9946,68 @@ if(availableSizes.length&&!availableSizes.includes(orderSize)){
 if(availableSizes.length===1)orderSize=availableSizes[0];
 else throw new Error(t().orderSizeUnavailable);
 }
-return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name,name_en:dbProduct.name_en||item.name_en||"",name_he:dbProduct.name_he||item.name_he||"",price:Number(dbProduct.price),size:orderSize,color:orderColor,color_en:matchedColor?.name_en||item.color_en||"",color_he:matchedColor?.name_he||item.color_he||"",qty:Number(item.qty||1),image:item.image||""};
+return {product_id:dbProduct.id,category:dbProduct.category||"",name:dbProduct.name,name_en:dbProduct.name_en||item.name_en||"",name_he:dbProduct.name_he||item.name_he||"",price:Number(dbProduct.price),size:orderSize,color:orderColor,color_en:matchedColor?.name_en||item.color_en||"",color_he:matchedColor?.name_he||item.color_he||"",qty:Number(item.qty||1),image:item.image||""};
 });
 const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name_ar||delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.rpc("espoza_create_order_with_inventory",{p_order:orderPayload});
 if(saved.error)throw saved.error;
-await refreshSupabaseProducts();
+
+/* لا نُظهر النجاح ولا نفرّغ السلة إلا بعد نجاح عملية الحفظ الفعلية. */
+const resultData=saved.data;
+let orderRecord=Array.isArray(resultData)?resultData[0]:resultData;
+if(typeof orderRecord==="string")orderRecord={id:orderRecord};
+const orderId=orderRecord?.id||orderRecord?.order_id||orderRecord?.order_number||"";
 if(profileForOrder)customerHasPreviousOrders=true;
-}catch(error){
-console.warn("Order database save failed:",error);
-if(whatsappWindow){try{whatsappWindow.close();}catch(_){}}
-toast(error?.message||t().waOnly,"err");
-return;
-}
-if(whatsappWindow)whatsappWindow.location.href=whatsappUrl;
-else window.location.href=whatsappUrl;
-toast(t().saved);
 
+/* تحديث المخزون عملية لاحقة؛ فشل التحديث المرئي لا يلغي طلبًا تم حفظه بالفعل. */
+try{await refreshSupabaseProducts();}catch(refreshError){console.warn("Order saved; product refresh will retry:",refreshError);}
 
+const receiptItems=orderItems.map(item=>(
+"<div style='display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eee'>"+
+"<span>"+esc(item.name)+" · "+esc(item.size||"")+" · ×"+esc(item.qty)+"</span>"+
+"<b>₪"+money(item.price*item.qty)+"</b></div>"
+)).join("");
+const receiptNumber=orderId?String(orderId):"—";
+const receiptTitle=lang==="en"?"Order received successfully":lang==="he"?"ההזמנה התקבלה בהצלחה":"تم استلام طلبك بنجاح";
+const receiptMessage=lang==="en"?"Your order has been saved. Our team will contact you shortly.":lang==="he"?"ההזמנה נשמרה. ניצור איתך קשר בהקדם.":"تم إرسال طلبك بنجاح، سوف يتم التواصل معك قريبًا.";
+const receiptLabel=lang==="en"?"Order receipt":lang==="he"?"אישור הזמנה":"وصل الطلب";
+const orderNoLabel=lang==="en"?"Order number":lang==="he"?"מספר הזמנה":"رقم الطلب";
+const customerLabel=lang==="en"?"Customer":lang==="he"?"לקוחה":"اسم الزبونة";
+const phoneLabel=lang==="en"?"Phone":lang==="he"?"טלפון":"رقم الهاتف";
+const addressLabel=lang==="en"?"Address":lang==="he"?"כתובת":"العنوان";
+const deliveryLabel=lang==="en"?"Delivery":lang==="he"?"משלוח":"التوصيل";
+const totalLabel=lang==="en"?"Total":lang==="he"?"סה״כ":"الإجمالي";
+const closeLabel=lang==="en"?"Continue shopping":lang==="he"?"המשך קניות":"متابعة التسوق";
+let receipt=document.getElementById("espozaOrderReceipt");
+if(!receipt){receipt=document.createElement("div");receipt.id="espozaOrderReceipt";receipt.className="modal";receipt.style.zIndex="10050";receipt.innerHTML="<div class='modal-box' style='max-width:560px;max-height:90vh'><button type='button' class='close-btn' id='espozaReceiptClose' aria-label='Close'>×</button><div id='espozaReceiptContent'></div></div>";document.body.appendChild(receipt);}
+const content=receipt.querySelector("#espozaReceiptContent");
+content.innerHTML=
+"<div style='text-align:center;padding:12px 4px 18px'>"+
+"<div style='width:58px;height:58px;border-radius:50%;background:#e8f5ed;color:#198754;display:grid;place-items:center;font-size:30px;margin:0 auto 12px'>✓</div>"+
+"<h2 style='color:#641f34;margin:0 0 8px'>"+esc(receiptTitle)+"</h2>"+
+"<p style='color:#74666b;line-height:1.8;margin:0'>"+esc(receiptMessage)+"</p></div>"+
+"<div style='border:1px solid #eadfe1;border-radius:14px;padding:15px;margin:8px 0'>"+
+"<h3 style='margin:0 0 12px;color:#641f34'>"+esc(receiptLabel)+"</h3>"+
+"<p style='margin:6px 0'>"+esc(orderNoLabel)+": <b dir='ltr'>"+esc(receiptNumber)+"</b></p>"+
+"<p style='margin:6px 0'>"+esc(customerLabel)+": "+esc(name)+"</p>"+
+"<p style='margin:6px 0'>"+esc(phoneLabel)+": <b dir='ltr'>"+esc(phone)+"</b></p>"+
+"<p style='margin:6px 0'>"+esc(addressLabel)+": "+esc(address)+"</p>"+
+"<p style='margin:6px 0'>"+esc(deliveryLabel)+": "+esc(delivery.name)+" · ₪"+money(delivery.price)+"</p>"+
+"<div style='margin-top:14px;border-top:1px solid #eadfe1;padding-top:8px'>"+receiptItems+"</div>"+
+"<div style='display:flex;justify-content:space-between;gap:12px;font-size:18px;color:#641f34;padding-top:14px'><b>"+esc(totalLabel)+"</b><b>₪"+money(grandTotal)+"</b></div>"+
+(notes?"<p style='margin:12px 0 0;color:#74666b'>"+esc(lang==="en"?"Notes":lang==="he"?"הערות":"ملاحظات")+": "+esc(notes)+"</p>":"")+
+"</div>"+
+"<button type='button' id='espozaReceiptContinue' style='width:100%;border:0;border-radius:12px;background:#641f34;color:white;padding:13px;font-weight:800;margin-top:8px'>"+esc(closeLabel)+"</button>";
+const closeReceipt=()=>{
+receipt.classList.remove("open");
+document.body.style.overflow="";
+};
+receipt.querySelector("#espozaReceiptClose").onclick=closeReceipt;
+receipt.querySelector("#espozaReceiptContinue").onclick=closeReceipt;
+receipt.classList.add("open");
+document.body.style.overflow="hidden";
 
-
+/* تم حفظ الطلب؛ الآن فقط نفرّغ السلة ونزامنها. */
 cart=[];
 appliedManualCoupon=null;
 const couponInput=$("cartCouponCode"),couponMessage=$("cartCouponMessage");
@@ -10083,19 +10015,21 @@ if(couponInput)couponInput.value="";
 if(couponMessage)couponMessage.textContent="";
 saveCart();
 clearTimeout(window.__espozaCartSyncTimer);
-try{await syncCustomerCart();}catch(_){toast(t().cartSyncError);}
+try{await syncCustomerCart();}catch(syncError){console.warn("Saved order; cart sync failed:",syncError);}
 updateCartBadge();
-
-closeModal(
-"orderModal"
-);
+closeModal("orderModal");
+}catch(error){
+console.warn("Order database save failed:",error);
+toast(error?.message|| (lang==="en"?"Could not save the order. Please try again.":lang==="he"?"לא ניתן לשמור את ההזמנה. נסי שוב.":"تعذّر حفظ الطلب. يرجى المحاولة مرة أخرى."),"err");
+/* السلة والبيانات تبقى كما هي عند فشل الحفظ. */
+return;
+}
 }finally{
 orderSubmissionPending=false;
-$("sendOrderBtn").disabled=false;
+if(sendButton){sendButton.disabled=false;sendButton.textContent=sendButton.dataset.originalText|| (lang==="en"?"Confirm order":lang==="he"?"אישור הזמנה":"تأكيد الطلب");}
 window.dispatchEvent?.(new Event("espoza:order-idle"));
 }
 }
-
 
 
 /* ==========================================
