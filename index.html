@@ -2400,6 +2400,33 @@ body.modal-lock{overflow:hidden!important;touch-action:none}
 .wish-header-btn{position:relative}
 .cart-badge,.wish-header-badge{z-index:3}
 
+
+/* Order receipt */
+.receipt-modal{z-index:250;background:rgba(22,8,13,.72);padding:14px}
+.receipt-card{width:min(620px,100%);max-height:94vh;overflow:auto;background:#fff;border-radius:20px;padding:25px;color:#29181e;box-shadow:0 20px 60px rgba(0,0,0,.22)}
+.receipt-brand{text-align:center;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:16px}
+.receipt-brand strong{display:block;font:700 27px "Playfair Display",serif;letter-spacing:2px;color:var(--wine)}
+.receipt-success{text-align:center;color:#198754;font-weight:800;font-size:18px;margin:12px 0 4px}
+.receipt-note{text-align:center;color:var(--muted);font-size:13px;margin:0 0 18px}
+.receipt-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:var(--cream);padding:12px;border-radius:12px;font-size:12px;margin-bottom:15px}
+.receipt-meta b{display:block;color:var(--wine);overflow-wrap:anywhere}
+.receipt-items{border-collapse:collapse;width:100%;font-size:12px}
+.receipt-items th,.receipt-items td{padding:9px 5px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+.receipt-items th{color:var(--wine)}
+.receipt-totals{margin-top:14px;display:grid;gap:8px;font-size:13px}
+.receipt-total{border-top:1px solid var(--line);padding-top:10px;font-weight:800;color:var(--wine);font-size:17px}
+.receipt-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
+.receipt-actions button{flex:1;min-width:130px;border:1px solid var(--wine);border-radius:25px;padding:11px;background:var(--wine);color:white;font-weight:800}
+.receipt-actions button.secondary{background:#fff;color:var(--wine)}
+@media(max-width:480px){.receipt-card{padding:17px}.receipt-meta{grid-template-columns:1fr}.receipt-brand strong{font-size:23px}}
+@media print{
+ @page{size:A4;margin:14mm}
+ body.receipt-print *{visibility:hidden!important}
+ body.receipt-print #orderReceiptModal,body.receipt-print #orderReceiptModal *{visibility:visible!important}
+ body.receipt-print #orderReceiptModal{display:block!important;position:absolute!important;inset:0!important;background:#fff!important;padding:0!important}
+ body.receipt-print .receipt-card{width:100%!important;max-height:none!important;overflow:visible!important;box-shadow:none!important;border:0!important;padding:0!important}
+ body.receipt-print .receipt-actions,body.receipt-print .receipt-close{display:none!important}
+}
 </style>
 <style id="espoza-luxury-products">
 .products-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:24px 18px!important}
@@ -4646,6 +4673,7 @@ type="button">
 </div>
 
 
+<div class="modal receipt-modal" id="orderReceiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptTitle"><section class="receipt-card"><button class="close-btn receipt-close" type="button" aria-label="إغلاق" onclick="closeOrderReceipt()">×</button><div id="orderReceiptContent"></div><div class="receipt-actions"><button type="button" onclick="printOrderReceipt()">طباعة / حفظ PDF</button><button class="secondary" type="button" onclick="sendReceiptWhatsApp()">إرسال التفاصيل عبر واتساب</button><button class="secondary" type="button" onclick="closeOrderReceipt()">إغلاق</button></div></section></div>
 <!-- POLICIES -->
 
 <dialog class="policy-box" id="policiesModal" aria-labelledby="policiesHeading">
@@ -9894,6 +9922,27 @@ $("totalPrice").textContent=`₪${money(Math.max(0,subtotal-discount)+delivery.p
    إرسال الطلب
    ========================================== */
 
+
+let latestReceiptWhatsAppUrl="";
+function receiptEscape(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
+function showOrderReceipt(orderId,payload,whatsappUrl){
+ const date=new Date();
+ const fmt=n=>"₪"+Number(n||0).toLocaleString(lang==="en"?"en-US":lang==="he"?"he-IL":"ar",{minimumFractionDigits:2,maximumFractionDigits:2});
+ const itemRows=(payload.items||[]).map(item=>{
+  const name=lang==="en"?(item.name_en||item.name):lang==="he"?(item.name_he||item.name_en||item.name):item.name;
+  const size=item.size?(" · "+(lang==="en"?"Size":lang==="he"?"מידה":"المقاس")+": "+item.size):"";
+  const color=item.color?(" · "+(lang==="en"?"Color":lang==="he"?"צבע":"اللون")+": "+(lang==="he"?(item.color_he||item.color):lang==="en"?(item.color_en||item.color):item.color)):"";
+  return "<tr><td>"+receiptEscape(name)+"<small>"+receiptEscape(size+color)+"</small></td><td>"+Number(item.qty||1)+"</td><td>"+fmt(Number(item.price||0)*Number(item.qty||1))+"</td></tr>";
+ }).join("");
+ const L=lang==="en"?{success:"Your order has been received successfully",note:"We will contact you soon.",number:"Order number",date:"Date",customer:"Customer",phone:"Phone",products:"Products",qty:"Qty",price:"Price",subtotal:"Products subtotal",discount:"Discount",delivery:"Delivery",total:"Total"}:lang==="he"?{success:"ההזמנה התקבלה בהצלחה",note:"ניצור איתך קשר בקרוב.",number:"מספר הזמנה",date:"תאריך",customer:"שם הלקוחה",phone:"טלפון",products:"מוצרים",qty:"כמות",price:"מחיר",subtotal:"סכום המוצרים",discount:"הנחה",delivery:"משלוח",total:"הסכום הכולל"}:{success:"تم استلام طلبك بنجاح",note:"سوف يتم التواصل معك قريبًا",number:"رقم الطلب",date:"التاريخ",customer:"اسم الزبونة",phone:"رقم الهاتف",products:"المنتجات",qty:"الكمية",price:"السعر",subtotal:"مجموع المنتجات",discount:"الخصم",delivery:"التوصيل",total:"الإجمالي النهائي"};
+ latestReceiptWhatsAppUrl=whatsappUrl||"";
+ $("orderReceiptContent").innerHTML='<header class="receipt-brand"><strong>ESPOZA FASHION</strong><small>Since 2019</small></header><h2 id="receiptTitle" class="receipt-success">'+L.success+'</h2><p class="receipt-note">'+L.note+'</p><div class="receipt-meta"><div>'+L.number+'<b dir="ltr">'+receiptEscape(orderId)+'</b></div><div>'+L.date+'<b>'+receiptEscape(date.toLocaleString(lang==="en"?"en-US":lang==="he"?"he-IL":"ar"))+'</b></div><div>'+L.customer+'<b>'+receiptEscape(payload.customer_name)+'</b></div><div>'+L.phone+'<b dir="ltr">'+receiptEscape(payload.phone)+'</b></div></div><table class="receipt-items"><thead><tr><th>'+L.products+'</th><th>'+L.qty+'</th><th>'+L.price+'</th></tr></thead><tbody>'+itemRows+'</tbody></table><div class="receipt-totals"><div>'+L.subtotal+': <b>'+fmt(payload.subtotal)+'</b></div><div>'+L.discount+': <b>−'+fmt(payload.discount)+'</b></div><div>'+L.delivery+': <b>'+fmt(payload.delivery_fee)+'</b></div><div class="receipt-total">'+L.total+': '+fmt(payload.total)+'</div></div>';
+ $("orderReceiptModal").classList.add("open");document.body.style.overflow="hidden";
+}
+function closeOrderReceipt(){$("orderReceiptModal").classList.remove("open");document.body.classList.remove("receipt-print");document.body.style.overflow="";}
+function printOrderReceipt(){document.body.classList.add("receipt-print");window.print();setTimeout(()=>document.body.classList.remove("receipt-print"),800);}
+function sendReceiptWhatsApp(){if(latestReceiptWhatsAppUrl)window.open(latestReceiptWhatsAppUrl,"_blank","noopener");}
+
 let orderSubmissionPending=false;
 async function sendOrder(){
 if(orderSubmissionPending||!cart.length)return;
@@ -10061,17 +10110,21 @@ return {product_id:productId,category:dbProduct.category||"",name:dbProduct.name
 const orderPayload={customer_id:profileForOrder?.id||null,customer_name:name,phone:phone,region:delivery.name_ar||delivery.name,address:address,items:orderItems,coupon_id:discount>0&&offer?.id?offer.id:null,subtotal:Number(itemsTotal||0),discount:Number(discount||0),delivery_fee:Number(delivery.price||0),total:Number(grandTotal||0),status:"new",notes:[notes,discount>0?"عرض تلقائي: "+offer.label+" (خصم ₪"+money(discount)+")":""].filter(Boolean).join("\n")||null,payment_status:"cod",source:"website"};
 const saved=await customerDb.rpc("espoza_create_order_with_inventory",{p_order:orderPayload});
 if(saved.error)throw saved.error;
+const persistedOrderId=typeof saved.data==="string"?saved.data:(saved.data?.id||saved.data?.order_id);
+if(!persistedOrderId)throw new Error("تم حفظ الطلب لكن لم نستلم رقم الطلب من قاعدة البيانات. يرجى التواصل مع المتجر قبل إعادة الطلب.");
 await refreshSupabaseProducts();
 if(profileForOrder)customerHasPreviousOrders=true;
+window.__espozaSavedOrder={id:persistedOrderId,payload:orderPayload};
 }catch(error){
 console.warn("Order database save failed:",error);
 if(whatsappWindow){try{whatsappWindow.close();}catch(_){}}
 toast(error?.message||t().waOnly,"err");
 return;
 }
-if(whatsappWindow)whatsappWindow.location.href=whatsappUrl;
-else window.location.href=whatsappUrl;
-toast(lang==="ar"?"تم إرسال طلبك بنجاح، سوف يتم التواصل معك قريبًا.":lang==="he"?"ההזמנה נשלחה בהצלחה. ניצור איתך קשר בקרוב.":"Your order was submitted successfully. We will contact you soon.");
+const savedReceipt=window.__espozaSavedOrder;
+if(whatsappWindow){try{whatsappWindow.location.href=whatsappUrl;}catch(_){whatsappWindow=null;}}
+showOrderReceipt(savedReceipt.id,savedReceipt.payload,whatsappUrl);
+window.__espozaSavedOrder=null;
 
 
 
